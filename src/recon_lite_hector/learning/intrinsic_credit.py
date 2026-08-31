@@ -559,12 +559,97 @@ class IntrinsicCreditEngine:
             cycle_rejected,
         )
 
+    def _validated_explicit_successor_signal(
+        self,
+        signal: CompetenceSignal,
+        *,
+        recipient_id: str,
+    ) -> CompetenceSignal:
+        """Validate a caller-composed signal against registered grounding.
+
+        Some successor values are conservative compositions of several local
+        child queries (for example, the minimum over every opponent reply).
+        Re-resolving only the provider ID would discard that composed value.
+        This path therefore accepts the numeric composition while retaining
+        the same maturity, causal-grounding, and acyclic-provenance boundary as
+        ``successor_signal``.
+        """
+
+        if not isinstance(signal, CompetenceSignal):
+            raise TypeError(
+                "explicit_successor_signal must be a CompetenceSignal"
+            )
+        value = float(signal.value)
+        confidence = float(signal.confidence)
+        if not math.isfinite(value):
+            raise ValueError("explicit successor value must be finite")
+        if not self.config.value_min <= value <= self.config.value_max:
+            raise ValueError(
+                "explicit successor value is outside configured bounds"
+            )
+        if not math.isfinite(confidence) or not 0.0 < confidence <= 1.0:
+            raise ValueError(
+                "explicit successor confidence must be finite and in (0, 1]"
+            )
+        provider_ids = tuple(signal.provider_ids)
+        ancestors = tuple(signal.grounding_ancestors)
+        if (
+            not provider_ids
+            or any(not isinstance(item, str) or not item for item in provider_ids)
+            or tuple(sorted(set(provider_ids))) != provider_ids
+        ):
+            raise ValueError(
+                "explicit successor providers must be nonempty and canonical"
+            )
+        if (
+            any(not isinstance(item, str) or not item for item in ancestors)
+            or tuple(sorted(set(ancestors))) != ancestors
+        ):
+            raise ValueError(
+                "explicit successor ancestors must be canonical"
+            )
+        if (
+            isinstance(signal.grounding_level, bool)
+            or not isinstance(signal.grounding_level, int)
+            or signal.grounding_level < 0
+        ):
+            raise ValueError(
+                "explicit successor grounding level must be non-negative"
+            )
+
+        providers: list[CompetenceValueState] = []
+        for provider_id in provider_ids:
+            provider = self.states.get(provider_id)
+            if provider is None or not provider.can_emit(self.config):
+                raise ValueError(
+                    "explicit successor provider is not mature and grounded"
+                )
+            providers.append(provider)
+        expected_ancestors = set(provider_ids)
+        for provider in providers:
+            expected_ancestors.update(provider.grounding_ancestors)
+        if tuple(sorted(expected_ancestors)) != ancestors:
+            raise ValueError(
+                "explicit successor grounding ancestry does not match providers"
+            )
+        expected_level = 1 + max(
+            int(provider.grounding_level or 0) for provider in providers
+        )
+        if signal.grounding_level != expected_level:
+            raise ValueError(
+                "explicit successor grounding level does not match providers"
+            )
+        if recipient_id in expected_ancestors:
+            raise ValueError("explicit successor signal has circular provenance")
+        return signal
+
     def transition(
         self,
         decision_id: str,
         *,
         responsibilities: Optional[Sequence[Responsibility]] = None,
         successor_ids: Sequence[str] = (),
+        explicit_successor_signal: Optional[CompetenceSignal] = None,
         terminal_kind: Optional[str] = None,
         terminal_value: Optional[float] = None,
         real_step: bool = True,
@@ -575,18 +660,65 @@ class IntrinsicCreditEngine:
         decision = self._state(decision_id)
         if not real_step and (terminal_kind is not None or terminal_value is not None):
             raise ValueError("virtual frames cannot create terminal grounding evidence")
+        if explicit_successor_signal is not None:
+            if successor_ids:
+                raise ValueError(
+                    "explicit successor signal and successor IDs are mutually exclusive"
+                )
+            if terminal_kind is not None or terminal_value is not None:
+                raise ValueError(
+                    "explicit successor signal and terminal evidence are mutually exclusive"
+                )
+            if not real_step:
+                raise ValueError(
+                    "virtual frames cannot consume explicit successor signals"
+                )
+            explicit_successor_signal = self._validated_explicit_successor_signal(
+                explicit_successor_signal,
+                recipient_id=decision_id,
+            )
         if responsibilities is None:
             responsibilities = (Responsibility(decision_id),)
-        self.observe_responsibility(responsibilities)
+        # Validate the complete transition before decaying or adding any
+        # eligibility trace.  ``observe_responsibility`` is intentionally a
+        # mutator, so late failures here would otherwise leave a half-applied
+        # credit event.
+        responsibilities = tuple(responsibilities)
+        for item in responsibilities:
+            if not isinstance(item, Responsibility):
+                raise TypeError("responsibilities must contain Responsibility records")
+            self._state(item.cell_id)
+            weight = float(item.weight)
+            if not math.isfinite(weight):
+                raise ValueError("responsibility weights must be finite")
+            if isinstance(item.parent_distance, bool):
+                raise ValueError("responsibility parent distance must be an integer")
+            try:
+                distance = int(item.parent_distance)
+            except (TypeError, ValueError, OverflowError) as exc:
+                raise ValueError(
+                    "responsibility parent distance must be an integer"
+                ) from exc
+            if distance != item.parent_distance:
+                raise ValueError(
+                    "responsibility parent distance must be an integer"
+                )
 
-        signal: Optional[CompetenceSignal] = None
+        signal: Optional[CompetenceSignal] = explicit_successor_signal
         cycle_rejected = False
-        if terminal_kind is None and terminal_value is None:
+        if (
+            signal is None
+            and terminal_kind is None
+            and terminal_value is None
+        ):
             signal, cycle_rejected = self.successor_signal(successor_ids, recipient_id=decision_id)
 
         cost = self.config.real_move_cost if real_step else self.config.virtual_frame_cost
         immediate = -float(cost)
         if terminal_value is not None:
+            terminal_value = float(terminal_value)
+            if not math.isfinite(terminal_value):
+                raise ValueError("terminal_value must be finite")
             immediate += self._clip(terminal_value)
         elif terminal_kind is not None:
             immediate += self._terminal_value(terminal_kind)
@@ -600,6 +732,8 @@ class IntrinsicCreditEngine:
         if not math.isfinite(predicted):
             raise ValueError("prediction_override must be finite")
         td_error = self._clip(immediate + self.config.gamma * successor_value - predicted)
+
+        self.observe_responsibility(responsibilities)
 
         updated: dict[str, float] = {}
         for state in self.states.values():

@@ -4,6 +4,7 @@ from collections import Counter
 import copy
 from dataclasses import replace
 import hashlib
+import json
 import os
 from pathlib import Path
 import pickle
@@ -16,8 +17,12 @@ import chess
 import pytest
 
 from recon_lite import LinkType
+from recon_lite_chess.autogrowth import (
+    native_intrinsic_curriculum as curriculum_module,
+)
 
 from recon_lite_hector.learning import (
+    CompetenceGateExample,
     IntrinsicCreditConfig,
     IntrinsicCreditEngine,
     OutcomeCalibratedPrototypeGate,
@@ -28,12 +33,14 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     R1MechanisticArm,
     R0_BALANCED_STRATA,
     R0_COMPETENCE_ID,
+    GATE_FEATURE_NAMES,
     R1_BALANCED_STRATA,
     R1_RETIRED_DEVELOPMENT_FENS,
     R1CheckpointInterrupt,
     V2_PROSPECTIVE_AVAILABILITY,
     _Pools,
     _apply_child_value_control,
+    _attach_terminal_r1_regression_report,
     _balanced_r0_quotas,
     _balanced_r1_quotas,
     _build_r0_replay_memory,
@@ -42,6 +49,8 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _classify_r1_stratum,
     _disable_nonmature_composites,
     _execute_white_and_observe,
+    _evaluate_r1,
+    _fit_r0_gate,
     _generate_balanced_r0_split,
     _generate_balanced_r1_split,
     _mechanistic_r1_arms,
@@ -51,11 +60,13 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _r1_orbit_key,
     _r1_snapshot_fingerprint,
     _replay_r0,
+    run_native_intrinsic_curriculum,
     _restore_disabled_composites,
     _run_r1_arm,
     _v2_authoritative_predecessor_fens,
     _v2_r0_available,
     _v2_r0_observe_training_successor,
+    _write_live_r1_progress,
 )
 from recon_lite_chess.autogrowth.foundation_curriculum import (
     _forced_mate_in_two_first_moves,
@@ -70,13 +81,67 @@ from recon_lite_chess.autogrowth.native_single_graph_curriculum import (
 MATE_ONE_FEN = "k7/8/1K6/8/8/8/8/7R w - - 0 1"
 
 
+def test_r1_exhaustive_evaluation_never_opens_correct_move_labels(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fen = R1_RETIRED_DEVELOPMENT_FENS[0]
+    board = chess.Board(fen)
+    first = _forced_mate_in_two_first_moves(board)[0]
+    policy = {board.fen(): first}
+    after_first = board.copy(stack=False)
+    after_first.push(first)
+    for reply in tuple(after_first.legal_moves):
+        successor = after_first.copy(stack=False)
+        successor.push(reply)
+        mate_moves = _mate_moves(successor)
+        assert mate_moves
+        policy[successor.fen()] = mate_moves[0]
+
+    class ScriptedPolicy:
+        def choose(self, position, **_kwargs):
+            return policy.get(position.fen())
+
+    def forbidden_label_read(_board):
+        raise AssertionError("R1 evaluation opened a correct-move label")
+
+    monkeypatch.setattr(
+        curriculum_module,
+        "_forced_mate_in_two_first_moves",
+        forbidden_label_read,
+    )
+    result = _evaluate_r1(
+        ScriptedPolicy(),
+        (fen,),
+        max_samples=1,
+    )
+
+    assert result["conversion_count"] == 1
+    assert result["conversion_rate"] == 1.0
+    assert result["reply_evaluation_mode"] == "exhaustive"
+    assert result["samples"][0]["all_replies_mated"] is True
+    assert "parent_first_move_correct_count" not in result
+
+
 class _FakeV2Authority:
     """Minimal serialized authority double for curriculum-boundary tests."""
 
-    def __init__(self, *, certify_after: int = 1) -> None:
+    def __init__(self, *, certify_after: int = 1, grounded: bool = True) -> None:
         self.certify_after = int(certify_after)
+        self.grounded = bool(grounded)
         self.receipts = {}
-        self.base = SimpleNamespace(receipts=self.receipts)
+        self.base = SimpleNamespace(
+            receipts=self.receipts,
+            r0=SimpleNamespace(
+                provenance=SimpleNamespace(
+                    grounded=self.grounded,
+                    grounding_source=(
+                        "test_grounded_real_history"
+                        if self.grounded
+                        else None
+                    ),
+                )
+            ),
+        )
         self.accepted_real_references = {}
         self.consumed_receipts = {}
         self.pending_event = None
@@ -109,7 +174,13 @@ class _FakeV2Authority:
 
     def open_virtual(self, frame) -> dict[str, object]:
         actuation = self._actuation(frame.values["board"])
-        response = SimpleNamespace(available=self.certified)
+        response = SimpleNamespace(
+            available=self.certified,
+            grounded=self.grounded,
+            grounding_source=(
+                "test_grounded_real_history" if self.grounded else None
+            ),
+        )
         query = SimpleNamespace(
             actuation=actuation,
             response=response,
@@ -234,6 +305,493 @@ def test_native_intrinsic_graph_starts_with_empty_learned_state() -> None:
         "m3_update_count": 0,
         "m4_event_count": 0,
     }
+
+
+def test_r0_gate_selection_ignores_regression_until_final_report(monkeypatch) -> None:
+    """Gate maturity must be determined by train/validation only."""
+
+    def fake_example(_graph, label: str) -> CompetenceGateExample:
+        positive = label.startswith("positive")
+        value = 1.0 if positive else 0.0
+        return CompetenceGateExample(
+            features=(value,) * len(GATE_FEATURE_NAMES),
+            success=positive,
+        )
+
+    class RegressionBomb:
+        def __iter__(self):
+            raise AssertionError("gate fitting read the withheld regression split")
+
+        def __len__(self):
+            raise AssertionError("gate fitting inspected withheld regression size")
+
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._gate_example",
+        fake_example,
+    )
+    gate, selection = _fit_r0_gate(
+        object(),
+        train_positive=("positive-train",),
+        train_negative=("negative-train",),
+        validation_positive=("positive-validation",),
+        validation_negative=("negative-validation",),
+        regression_positive=RegressionBomb(),
+        regression_negative=RegressionBomb(),
+    )
+
+    assert gate.mature is True
+    assert selection["selection_split"] == "gate_validation"
+    assert selection["regression_metrics"] is None
+    assert selection["regression_withheld_until_final"] is True
+
+
+def test_top_level_r0_stage_entry_uses_validation_and_reports_regression_last(
+    tmp_path, monkeypatch
+) -> None:
+    """A bad held-out R0 split cannot block validation-selected stage entry."""
+
+    regression_fen = R1_RETIRED_DEVELOPMENT_FENS[0]
+    pools = _Pools(
+        r0_train=(MATE_ONE_FEN,),
+        r0_validation=(MATE_ONE_FEN,),
+        r0_regression=(regression_fen,),
+        gate_train_decoys=(R1_RETIRED_DEVELOPMENT_FENS[1],),
+        gate_validation_decoys=(R1_RETIRED_DEVELOPMENT_FENS[2],),
+        gate_regression_decoys=(R1_RETIRED_DEVELOPMENT_FENS[3],),
+        r1_train=(),
+        r1_validation=(),
+        r1_regression=(),
+        r0_train_strata=("test",),
+        r0_validation_strata=("test",),
+        r0_regression_strata=("test",),
+        r0_excluded_fens=(),
+        r0_pool_mode="test",
+        r1_train_strata=(),
+        r1_validation_strata=(),
+        r1_regression_strata=(),
+        r1_pool_mode="test",
+    )
+
+    class Gate:
+        mature = True
+
+        def to_dict(self):
+            return {"mature": True}
+
+        def evaluate(self, examples):
+            return {
+                "count": len(examples),
+                "true_positive": 0,
+                "false_positive": 0,
+                "true_negative": len(examples),
+                "false_negative": 0,
+                "precision": 0.0,
+                "recall": 0.0,
+            }
+
+    calls: list[tuple[str, ...]] = []
+
+    def fake_evaluate(_graph, fens, **_kwargs):
+        values = tuple(fens)
+        calls.append(values)
+        is_validation = values == pools.r0_validation
+        return {
+            "position_count": len(values),
+            "correct_count": len(values) if is_validation else 0,
+            "accuracy": 1.0 if is_validation else 0.0,
+            "null_selection_count": 0,
+            "illegal_move_count": 0,
+            "stalemate_count": 0,
+            "rook_loss_count": 0,
+            "samples": [],
+        }
+
+    def fake_train(*_args, **_kwargs):
+        return {
+            "episodes": 1,
+            "observed_mate_count": 1,
+            "observed_nonterminal_count": 0,
+            "observed_failure_count": 0,
+            "formal_confirmation_failure_count": 0,
+            "stopped_epoch": 1,
+            "validation_checkpoints": [],
+            "teacher_positive_move_sets_consumed": 0,
+            "forced_first_move_labels_consumed": 0,
+            "graph_after_training": {},
+            "duration_seconds": 0.0,
+        }
+
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._build_pools",
+        lambda _cfg: pools,
+    )
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._train_r0",
+        fake_train,
+    )
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._evaluate_r0",
+        fake_evaluate,
+    )
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._fit_r0_gate",
+        lambda *_args, **_kwargs: (Gate(), {"selection_split": "gate_validation"}),
+    )
+
+    result = run_native_intrinsic_curriculum(
+        config=NativeIntrinsicCurriculumConfig(
+            seed=123,
+            run_r1=False,
+            output_path=str(tmp_path / "result.json"),
+            progress_path=str(tmp_path / "progress.json"),
+        )
+    )
+
+    # Initial validation, validation-only intervention probe, and exactly one
+    # final report query on the withheld R0 regression pool.
+    assert calls == [pools.r0_validation, pools.r0_validation, pools.r0_regression]
+    assert result.payload["r0"]["pass"] is True
+    assert result.payload["r0"]["regression"]["accuracy"] == 0.0
+    assert result.payload["r0"]["regression_pass_report_only"] is False
+    progress = json.loads(Path(result.config.progress_path).read_text())
+    assert "regression_accuracy" not in progress["r0"]
+    assert progress["r0"]["regression_withheld_until_final"] is True
+
+
+def test_live_progress_removes_stale_regression_from_reused_file(tmp_path) -> None:
+    progress_path = tmp_path / "progress.json"
+    progress_path.write_text(
+        json.dumps({"r0": {"regression_accuracy": 0.25}}),
+        encoding="utf-8",
+    )
+    config = NativeIntrinsicCurriculumConfig(progress_path=str(progress_path))
+    _write_live_r1_progress(
+        config,
+        arm_name="full_intrinsic",
+        epoch=2,
+        checkpoint={
+            "validation_conversion_rate": 0.5,
+            "r0_retention_accuracy": 1.0,
+            "r0_validation_retention_accuracy": 1.0,
+        },
+        snapshot_path=tmp_path / "snapshot.pkl",
+        resumed=False,
+    )
+    payload = json.loads(progress_path.read_text(encoding="utf-8"))
+    assert "regression_accuracy" not in payload["r0"]
+    assert "regression" not in payload["active_r1_arm"]
+    assert payload["active_r1_arm"]["regression_withheld_until_final"] is True
+
+
+def test_terminal_r1_regression_is_attached_once_per_arm_after_training(
+    monkeypatch,
+) -> None:
+    """Terminal reports are queried only after the arm set is complete."""
+
+    pools = SimpleNamespace(
+        r1_regression=("r1-regression",),
+        r1_regression_strata=("test",),
+        r0_regression=("r0-regression",),
+    )
+    config = NativeIntrinsicCurriculumConfig(max_samples=0)
+    events: list[tuple[str, str]] = []
+    training_done: list[str] = []
+
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._disable_nonmature_composites",
+        lambda *_args, **_kwargs: None,
+    )
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._restore_disabled_composites",
+        lambda *_args, **_kwargs: None,
+    )
+
+    def fake_r1(_graph, fens, **_kwargs):
+        events.append(("r1_regression", fens[0]))
+        return {"conversion_rate": 0.0}
+
+    def fake_r0(_graph, fens, **_kwargs):
+        events.append(("r0_regression", fens[0]))
+        return {"accuracy": 0.0}
+
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._evaluate_r1",
+        fake_r1,
+    )
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._evaluate_r0",
+        fake_r0,
+    )
+
+    def deferred_arm(name: str) -> dict[str, object]:
+        graph = object()
+        return {
+            "regression": None,
+            "r0_regression_retention": None,
+            "routing_ablation": {
+                "child_priority_off": {
+                    "validation": {},
+                    "regression": None,
+                }
+            },
+            "_terminal_regression_context": {
+                "graph": graph,
+                "r0_child_triplet_ids": None,
+                "child_dispatch_cache": None,
+                "r0_child_authority": None,
+                "current_routing_name": "child_priority_off",
+            },
+            "name": name,
+        }
+
+    arms = {"full_intrinsic": deferred_arm("full_intrinsic")}
+    training_done.append("full_intrinsic")
+    # No report query is made while the control arm is still absent.
+    assert events == []
+    arms["no_bootstrap"] = deferred_arm("no_bootstrap")
+    training_done.append("no_bootstrap")
+
+    for arm in arms.values():
+        _attach_terminal_r1_regression_report(arm, pools, config)
+
+    assert training_done == ["full_intrinsic", "no_bootstrap"]
+    assert events == [
+        ("r1_regression", "r1-regression"),
+        ("r0_regression", "r0-regression"),
+        ("r1_regression", "r1-regression"),
+        ("r0_regression", "r0-regression"),
+    ]
+    for arm in arms.values():
+        assert arm["terminal_regression_evaluation"] == {
+            "evaluated_after_all_r1_arms": True,
+            "r1_regression_query_count": 1,
+            "r0_regression_retention_query_count": 1,
+            "selection_influenced": False,
+        }
+        assert "_terminal_regression_context" not in arm
+
+
+def test_r1_maturity_and_intervention_are_validation_only(monkeypatch, tmp_path) -> None:
+    """A validation win is actionable even when final regression is poor."""
+
+    pools = _Pools(
+        r0_train=(MATE_ONE_FEN,),
+        r0_validation=(MATE_ONE_FEN,),
+        r0_regression=(R1_RETIRED_DEVELOPMENT_FENS[0],),
+        gate_train_decoys=(R1_RETIRED_DEVELOPMENT_FENS[1],),
+        gate_validation_decoys=(R1_RETIRED_DEVELOPMENT_FENS[2],),
+        gate_regression_decoys=(R1_RETIRED_DEVELOPMENT_FENS[3],),
+        r1_train=(R1_RETIRED_DEVELOPMENT_FENS[4],),
+        r1_validation=(R1_RETIRED_DEVELOPMENT_FENS[5],),
+        r1_regression=(R1_RETIRED_DEVELOPMENT_FENS[6],),
+        r0_train_strata=("test",),
+        r0_validation_strata=("test",),
+        r0_regression_strata=("test",),
+        r0_excluded_fens=(),
+        r0_pool_mode="test",
+        r1_train_strata=("test",),
+        r1_validation_strata=("test",),
+        r1_regression_strata=("test",),
+        r1_pool_mode="test",
+    )
+
+    class Gate:
+        mature = True
+
+        def to_dict(self):
+            return {"mature": True}
+
+        def evaluate(self, examples):
+            return {
+                "count": len(examples),
+                "true_positive": 0,
+                "false_positive": 0,
+                "true_negative": len(examples),
+                "false_negative": 0,
+                "precision": 0.0,
+                "recall": 0.0,
+            }
+
+    events: list[str] = []
+
+    def fake_r0_eval(_graph, fens, **_kwargs):
+        values = tuple(fens)
+        is_validation = values == pools.r0_validation
+        if values == pools.r0_regression:
+            events.append("r0_regression")
+        return {
+            "position_count": len(values),
+            "correct_count": len(values) if is_validation else 0,
+            "accuracy": 1.0 if is_validation else 0.0,
+            "null_selection_count": 0,
+            "illegal_move_count": 0,
+            "stalemate_count": 0,
+            "rook_loss_count": 0,
+            "samples": [],
+        }
+
+    def fake_r0_train(*_args, **_kwargs):
+        return {
+            "episodes": 1,
+            "observed_mate_count": 1,
+            "observed_nonterminal_count": 0,
+            "observed_failure_count": 0,
+            "formal_confirmation_failure_count": 0,
+            "stopped_epoch": 1,
+            "validation_checkpoints": [],
+            "teacher_positive_move_sets_consumed": 0,
+            "forced_first_move_labels_consumed": 0,
+            "graph_after_training": {},
+            "duration_seconds": 0.0,
+        }
+
+    def fake_arm(_name, _graph, credit, *_args, **_kwargs):
+        events.append(f"train:{_name}")
+        credit.register("native_intrinsic_r1_mate_in_2", mature=False, hierarchy_depth=0)
+        is_full = _name == "full_intrinsic"
+        validation_rate = 1.0 if is_full else 0.0
+
+        # The primary arm is mutated only after both training arms return.
+        # Wrap the selected objects so the order assertion below covers every
+        # validation-selected mutation, not just the training calls.
+        original_set_mature = credit.set_mature
+        original_intervention = credit.record_paired_intervention
+        original_consolidate = credit.consolidate
+        original_graph_mature = _graph.mature_existing_graph
+        original_graph_freeze = _graph.freeze_existing_parameters
+
+        def set_mature(*args, **kwargs):
+            events.append("mutation:set_mature")
+            return original_set_mature(*args, **kwargs)
+
+        def record_intervention(*args, **kwargs):
+            events.append("mutation:paired_intervention")
+            return original_intervention(*args, **kwargs)
+
+        def consolidate(*args, **kwargs):
+            events.append("mutation:credit_consolidate")
+            return original_consolidate(*args, **kwargs)
+
+        def mature_graph(*args, **kwargs):
+            events.append("mutation:graph_mature")
+            return original_graph_mature(*args, **kwargs)
+
+        def freeze_graph(*args, **kwargs):
+            events.append("mutation:graph_freeze")
+            return original_graph_freeze(*args, **kwargs)
+
+        credit.set_mature = set_mature
+        credit.record_paired_intervention = record_intervention
+        credit.consolidate = consolidate
+        _graph.mature_existing_graph = mature_graph
+        _graph.freeze_existing_parameters = freeze_graph
+        return {
+            "training": {
+                "episodes": 1,
+                "stopped_epoch": 1,
+                "joint_mastery": False,
+                "child_handoff_count": 0,
+                "r0_replay_episode_count": 0,
+            },
+            "validation": {"conversion_rate": validation_rate},
+            "r0_validation_retention": {"accuracy": 1.0},
+            "regression": None,
+            "r0_regression_retention": None,
+            "r0_retention": None,
+            "routing_ablation": {
+                "child_priority_off": {
+                    "validation": {"conversion_rate": validation_rate},
+                    "regression": None,
+                }
+            },
+            "_terminal_regression_context": {
+                "graph": _graph,
+                "r0_child_triplet_ids": None,
+                "child_dispatch_cache": None,
+                "r0_child_authority": None,
+                "current_routing_name": "child_priority_off",
+            },
+        }
+
+    def fake_r1_eval(_graph, fens, **_kwargs):
+        assert tuple(fens) == pools.r1_regression
+        events.append("r1_regression")
+        return {"conversion_rate": 0.0}
+
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._build_pools",
+        lambda _cfg: pools,
+    )
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._train_r0",
+        fake_r0_train,
+    )
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._evaluate_r0",
+        fake_r0_eval,
+    )
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._fit_r0_gate",
+        lambda *_args, **_kwargs: (Gate(), {"selection_split": "gate_validation"}),
+    )
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._run_r1_arm",
+        fake_arm,
+    )
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._evaluate_r1",
+        fake_r1_eval,
+    )
+
+    result = run_native_intrinsic_curriculum(
+        config=NativeIntrinsicCurriculumConfig(
+            seed=456,
+            r0_epochs=1,
+            r1_epochs=1,
+            run_r1=True,
+            output_path=str(tmp_path / "result.json"),
+            progress_path=str(tmp_path / "progress.json"),
+        )
+    )
+
+    assert result.payload["decision"]["r1_validation_pass"] is True
+    assert result.payload["decision"]["r1_pass"] is False
+    assert result.payload["decision"]["r1_final_report_pass"] is False
+    assert result.payload["r1_arms"]["full_intrinsic"]["consolidation"][
+        "paired_intervention"
+    ]["enabled_return"] == pytest.approx(1.0)
+    assert result.payload["r1_arms"]["full_intrinsic"]["consolidation"][
+        "paired_intervention"
+    ]["disabled_return"] == pytest.approx(0.0)
+    assert result.payload["r1_arms"]["full_intrinsic"]["regression"][
+        "conversion_rate"
+    ] == 0.0
+    assert result.payload["r1_arms"]["full_intrinsic"]["credit"]["states"][
+        "native_intrinsic_r1_mate_in_2"
+    ]["mature"] is True
+    arm_graph = result.payload["r1_arms"]["full_intrinsic"]["graph"]
+    final_graph = result.payload["final_graph"]
+    assert {
+        key: arm_graph[key]
+        for key in ("node_count", "edge_count", "triplet_count", "m3_update_count")
+    } == {
+        key: final_graph[key]
+        for key in ("node_count", "edge_count", "triplet_count", "m3_update_count")
+    }
+    assert events == [
+        "train:full_intrinsic",
+        "train:no_bootstrap",
+        "mutation:set_mature",
+        "mutation:paired_intervention",
+        "mutation:graph_mature",
+        "mutation:graph_freeze",
+        "mutation:credit_consolidate",
+        "r1_regression",
+        "r0_regression",
+        "r1_regression",
+        "r0_regression",
+        "r0_regression",
+    ]
 
 
 def test_mechanistic_factorial_names_every_causal_factor_and_disables_growth() -> None:
@@ -890,6 +1448,64 @@ def test_v2_training_observation_cannot_bootstrap_itself_and_duplicate_is_virtua
     assert authority.continuation_digest() == after_real
 
 
+def test_v2_virtual_availability_fails_closed_when_response_is_ungrounded() -> None:
+    authority = _FakeV2Authority(certify_after=0, grounded=False)
+
+    available, response = _v2_r0_available(
+        authority,
+        chess.Board(MATE_ONE_FEN),
+        frame_id="v2-curriculum:ungrounded",
+    )
+
+    assert available is False
+    assert response["grounded"] is False
+    assert response["grounding_source"] is None
+
+    real_available, real_response, duplicate, _structural = (
+        _v2_r0_observe_training_successor(
+            _FakeV2Authority(certify_after=0, grounded=False),
+            chess.Board(MATE_ONE_FEN),
+            seen_predecessor_fens=set(),
+            frame_id="v2-curriculum:ungrounded-real",
+        )
+    )
+    assert real_available is False
+    assert duplicate is False
+    assert real_response["grounded"] is False
+
+
+@pytest.mark.parametrize("raw_grounded", (None, "false", 0, 1))
+def test_v2_grounding_adapter_preserves_malformed_raw_value_and_fails_closed(
+    raw_grounded,
+) -> None:
+    authority = _FakeV2Authority(certify_after=0, grounded=True)
+    authority.grounded = raw_grounded
+    authority.base.r0.provenance.grounded = raw_grounded
+
+    available, response = _v2_r0_available(
+        authority,
+        chess.Board(MATE_ONE_FEN),
+        frame_id="v2-curriculum:malformed-grounding",
+    )
+
+    assert available is False
+    assert response["grounded"] is raw_grounded
+
+    real_authority = _FakeV2Authority(certify_after=0, grounded=True)
+    real_authority.base.r0.provenance.grounded = raw_grounded
+    real_available, real_response, duplicate, _structural = (
+        _v2_r0_observe_training_successor(
+            real_authority,
+            chess.Board(MATE_ONE_FEN),
+            seen_predecessor_fens=set(),
+            frame_id="v2-curriculum:malformed-grounding-real",
+        )
+    )
+    assert real_available is False
+    assert duplicate is False
+    assert real_response["grounded"] is raw_grounded
+
+
 def test_v2_duplicate_index_reads_only_fen_bearing_receipt_ledgers() -> None:
     discovery_fen = MATE_ONE_FEN
     prospective_fen = R1_RETIRED_DEVELOPMENT_FENS[0]
@@ -992,6 +1608,21 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
         max_epochs=4,
         config=uninterrupted_config,
     )
+    assert all(
+        checkpoint.get("regression_withheld_from_selection") is True
+        and checkpoint["r0_retention_accuracy"]
+        == checkpoint["r0_validation_retention_accuracy"]
+        and not any(
+            key.startswith("regression_")
+            and key != "regression_withheld_from_selection"
+            for key in checkpoint
+        )
+        for checkpoint in uninterrupted["training"]["validation_checkpoints"]
+    )
+    assert sum(
+        row["regression"] is None
+        for row in uninterrupted["routing_ablation"].values()
+    ) == 1
 
     resume_config = NativeIntrinsicCurriculumConfig(
         progress_path=str(tmp_path / "resume_progress.json"),
@@ -1038,6 +1669,17 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
             development_peak_rss_ceiling_mib=4_096.0,
         ),
     )
+    assert all(
+        checkpoint.get("regression_withheld_from_selection") is True
+        and checkpoint["r0_retention_accuracy"]
+        == checkpoint["r0_validation_retention_accuracy"]
+        and not any(
+            key.startswith("regression_")
+            and key != "regression_withheld_from_selection"
+            for key in checkpoint
+        )
+        for checkpoint in resumed["training"]["validation_checkpoints"]
+    )
 
     ignored_training_keys = {
         "duration_seconds",
@@ -1076,6 +1718,157 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
         Path(path).exists()
         for path in resumed["training"]["history_snapshot_paths"]
     )
+
+
+def test_mastered_snapshot_resume_is_report_only_and_does_not_retrain(
+    tmp_path, monkeypatch
+) -> None:
+    """A committed mastery snapshot resumes without an extra epoch.
+
+    The validation interval intentionally does not divide the epoch budget;
+    the first epoch is still a valid observation because the runner always
+    observes epoch zero.  On resume, no current-checkpoint variable or epoch
+    body may be required.
+    """
+
+    base_graph = _graph()
+    base_credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
+    base_credit.register(R0_COMPETENCE_ID, mature=True)
+    gate = OutcomeCalibratedPrototypeGate(
+        feature_names=("probe",),
+        offsets=(0.0,),
+        scales=(1.0,),
+        prototypes=((0.0,), (1.0,)),
+        outcomes=(False, True),
+        neighbors=1,
+        threshold=0.5,
+        train_metrics={},
+        validation_metrics={},
+        mature=True,
+    )
+    r1_fen = R1_RETIRED_DEVELOPMENT_FENS[0]
+    pools = _Pools(
+        r0_train=(MATE_ONE_FEN,),
+        r0_validation=(MATE_ONE_FEN,),
+        r0_regression=(MATE_ONE_FEN,),
+        gate_train_decoys=(),
+        gate_validation_decoys=(),
+        gate_regression_decoys=(),
+        r1_train=(r1_fen,),
+        r1_validation=(r1_fen,),
+        r1_regression=(r1_fen,),
+        r0_train_strata=("test",),
+        r0_validation_strata=("test",),
+        r0_regression_strata=("test",),
+        r0_excluded_fens=(),
+        r0_pool_mode="test",
+        r1_train_strata=("test",),
+        r1_validation_strata=("test",),
+        r1_regression_strata=("test",),
+        r1_pool_mode="test",
+    )
+    common = dict(
+        r0_replay_per_r1_epoch=0,
+        r1_validation_interval=3,
+        r1_snapshot_interval=1,
+        r1_mastery_threshold=0.0,
+        r0_mastery_threshold=0.0,
+        mature_child_priority=False,
+        max_samples=0,
+    )
+    uninterrupted_config = NativeIntrinsicCurriculumConfig(
+        progress_path=str(tmp_path / "uninterrupted_progress.json"),
+        r1_snapshot_dir=str(tmp_path / "uninterrupted"),
+        resume_r1_snapshots=False,
+        **common,
+    )
+    uninterrupted_graph = copy.deepcopy(base_graph)
+    uninterrupted_credit = copy.deepcopy(base_credit)
+    uninterrupted = _run_r1_arm(
+        "full_intrinsic",
+        uninterrupted_graph,
+        uninterrupted_credit,
+        gate,
+        pools,
+        r0_replay_memory=(),
+        r0_child_triplet_ids=frozenset(),
+        max_epochs=4,
+        config=uninterrupted_config,
+    )
+    assert uninterrupted["training"]["joint_mastery"] is True
+    assert uninterrupted["training"]["stopped_epoch"] == 1
+    assert len(uninterrupted["training"]["validation_checkpoints"]) == 1
+
+    resume_config = NativeIntrinsicCurriculumConfig(
+        progress_path=str(tmp_path / "resume_progress.json"),
+        r1_snapshot_dir=str(tmp_path / "resume"),
+        resume_r1_snapshots=True,
+        **common,
+    )
+    with pytest.raises(R1CheckpointInterrupt) as interrupted:
+        _run_r1_arm(
+            "full_intrinsic",
+            copy.deepcopy(base_graph),
+            copy.deepcopy(base_credit),
+            gate,
+            pools,
+            r0_replay_memory=(),
+            r0_child_triplet_ids=frozenset(),
+            max_epochs=4,
+            config=resume_config,
+            stop_after_epoch=1,
+        )
+    assert interrupted.value.epoch == 1
+
+    def no_extra_training(*_args, **_kwargs):
+        raise AssertionError("mastered snapshot resumed an extra training epoch")
+
+    monkeypatch.setattr(
+        "recon_lite_chess.autogrowth.native_intrinsic_curriculum._scheduled_confirmed_action",
+        no_extra_training,
+    )
+    resumed_graph = copy.deepcopy(base_graph)
+    resumed_credit = copy.deepcopy(base_credit)
+    resumed = _run_r1_arm(
+        "full_intrinsic",
+        resumed_graph,
+        resumed_credit,
+        gate,
+        pools,
+        r0_replay_memory=(),
+        r0_child_triplet_ids=frozenset(),
+        max_epochs=4,
+        config=resume_config,
+    )
+
+    assert resumed["training"]["resumed_from_snapshot"] is True
+    assert resumed["training"]["resumed_from_mastered_snapshot"] is True
+    assert resumed["training"]["episodes"] == uninterrupted["training"]["episodes"]
+    for key in (
+        "child_handoff_count",
+        "availability_query_count",
+        "availability_positive_count",
+        "successor_value_sum",
+        "r0_replay_episode_count",
+        "formal_confirmation_failure_count",
+    ):
+        assert resumed["training"][key] == uninterrupted["training"][key]
+    assert resumed["training"]["validation_checkpoints"] == uninterrupted[
+        "training"
+    ]["validation_checkpoints"]
+    assert resumed["validation"] == uninterrupted["validation"]
+    assert resumed["regression"] == uninterrupted["regression"]
+    assert resumed["r0_validation_retention"] == uninterrupted[
+        "r0_validation_retention"
+    ]
+    assert resumed["r0_regression_retention"] == uninterrupted[
+        "r0_regression_retention"
+    ]
+    assert resumed_graph.learned_state_audit() == uninterrupted_graph.learned_state_audit()
+    assert resumed_graph.canonical_semantic_manifest() == (
+        uninterrupted_graph.canonical_semantic_manifest()
+    )
+    assert resumed_credit.snapshot() == uninterrupted_credit.snapshot()
 
 
 def test_r1_snapshot_fingerprint_ignores_only_operational_controls(tmp_path) -> None:
@@ -1549,6 +2342,179 @@ def test_virtual_frame_availability_uses_child_move_without_grounding() -> None:
         r0_child_triplet_ids=frozenset(graph.triplet_ids),
     )
     assert hierarchical == mating_move
+
+
+def _trained_r0_core_for_routing_tests() -> tuple[
+    NativeReConKRKGraph, chess.Board, chess.Move
+]:
+    graph = _graph()
+    board = chess.Board(MATE_ONE_FEN)
+    mating_move = next(
+        move
+        for move in board.legal_moves
+        if _execute_white_and_observe(board, move) == "mate"
+    )
+    graph.apply_intrinsic_td(
+        board,
+        mating_move,
+        td_error=1.0,
+        stage_diagnostic="R0_protected_core_routing_test",
+    )
+    graph.mature_existing_graph()
+    graph.freeze_existing_parameters(reason="R0_protected_core_routing_test")
+    return graph, board, mating_move
+
+
+class _FixedLocalCoreGate:
+    def __init__(self, confirms: bool) -> None:
+        self.mature = True
+        self._confirms = bool(confirms)
+
+    def confirms(self, _features) -> bool:
+        return self._confirms
+
+    def to_dict(self) -> dict[str, object]:
+        return {"gate": "fixed_local_test", "confirms": self._confirms}
+
+
+def test_protected_core_survives_grown_shared_topology_interference() -> None:
+    trained, board, mating_move = _trained_r0_core_for_routing_tests()
+    frozen_core = copy.deepcopy(trained)
+    grown = copy.deepcopy(trained)
+    for edge in grown.graph.edges:
+        edge.w = -100.0
+
+    assert grown.choose(board) != mating_move
+    selected = _choose_with_child_priority(
+        grown,
+        board,
+        r0_child_triplet_ids=frozenset(),
+        r0_core_graph=frozen_core,
+        r0_core_gate=_FixedLocalCoreGate(True),
+        r0_core_triplet_ids=frozenset(frozen_core.triplet_ids),
+    )
+    assert selected == mating_move
+
+
+def test_protected_core_abstention_leaves_r1_exploration_to_grown_graph() -> None:
+    trained, board, _mating_move = _trained_r0_core_for_routing_tests()
+    frozen_core = copy.deepcopy(trained)
+    grown = copy.deepcopy(trained)
+    for edge in grown.graph.edges:
+        edge.w = -100.0
+    grown_choice = grown.choose(board)
+
+    selected = _choose_with_child_priority(
+        grown,
+        board,
+        r0_child_triplet_ids=frozenset(),
+        r0_core_graph=frozen_core,
+        r0_core_gate=_FixedLocalCoreGate(False),
+        r0_core_triplet_ids=frozenset(frozen_core.triplet_ids),
+    )
+    assert selected == grown_choice
+
+
+def test_core_abstention_does_not_fall_into_mutable_virtual_child_fallback() -> None:
+    trained, board, _mating_move = _trained_r0_core_for_routing_tests()
+    frozen_core = copy.deepcopy(trained)
+    grown = copy.deepcopy(trained)
+    for edge in grown.graph.edges:
+        edge.w = -100.0
+    grown_choice = grown.choose(board)
+    authority = _FakeV2Authority(certify_after=100)
+
+    selected = _choose_with_child_priority(
+        grown,
+        board,
+        # Deliberately retain a nonempty legacy id set.  With a protected core,
+        # an UNKNOWN V2 result must not invoke virtual_frame_verified on the
+        # mutable grown graph and manufacture a core preemption.
+        r0_child_triplet_ids=frozenset(frozen_core.triplet_ids),
+        r0_child_authority=authority,
+        r0_core_graph=frozen_core,
+        r0_core_gate=_FixedLocalCoreGate(False),
+        r0_core_triplet_ids=frozenset(frozen_core.triplet_ids),
+    )
+    assert selected == grown_choice
+
+
+def test_available_protected_core_precedes_v2_descendant() -> None:
+    trained, board, mating_move = _trained_r0_core_for_routing_tests()
+    frozen_core = copy.deepcopy(trained)
+    grown = copy.deepcopy(trained)
+    for edge in grown.graph.edges:
+        edge.w = -100.0
+    authority = _FakeV2Authority(certify_after=0)
+
+    selected = _choose_with_child_priority(
+        grown,
+        board,
+        r0_child_triplet_ids=frozenset(),
+        r0_child_authority=authority,
+        r0_core_graph=frozen_core,
+        r0_core_gate=_FixedLocalCoreGate(True),
+        r0_core_triplet_ids=frozenset(frozen_core.triplet_ids),
+    )
+    assert selected == mating_move
+
+
+def test_protected_core_identity_is_bound_into_r1_resume_fingerprint() -> None:
+    trained, _board, _mating_move = _trained_r0_core_for_routing_tests()
+    frozen_core = copy.deepcopy(trained)
+    gate = _FixedLocalCoreGate(True)
+    credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
+    credit.register(R0_COMPETENCE_ID, mature=True)
+    pools = _Pools(
+        r0_train=(MATE_ONE_FEN,),
+        r0_validation=(MATE_ONE_FEN,),
+        r0_regression=(MATE_ONE_FEN,),
+        gate_train_decoys=(),
+        gate_validation_decoys=(),
+        gate_regression_decoys=(),
+        r1_train=(R1_RETIRED_DEVELOPMENT_FENS[0],),
+        r1_validation=(R1_RETIRED_DEVELOPMENT_FENS[1],),
+        r1_regression=(R1_RETIRED_DEVELOPMENT_FENS[2],),
+        r0_train_strata=("test",),
+        r0_validation_strata=("test",),
+        r0_regression_strata=("test",),
+        r0_excluded_fens=(),
+        r0_pool_mode="test",
+        r1_train_strata=("test",),
+        r1_validation_strata=("test",),
+        r1_regression_strata=("test",),
+        r1_pool_mode="test",
+    )
+    config = NativeIntrinsicCurriculumConfig(max_samples=0)
+    arm = R1MechanisticArm(name="full_intrinsic", bootstrap_enabled=True)
+    first = _r1_snapshot_fingerprint(
+        trained,
+        credit,
+        gate,
+        pools,
+        arm_name=arm.name,
+        arm_spec=arm,
+        r0_child_triplet_ids=frozenset(trained.triplet_ids),
+        r0_child_authority_digest=None,
+        config=config,
+        r0_core_graph=frozen_core,
+        r0_core_triplet_ids=frozenset(frozen_core.triplet_ids),
+    )
+    frozen_core.graph.edges[0].w += 0.25
+    second = _r1_snapshot_fingerprint(
+        trained,
+        credit,
+        gate,
+        pools,
+        arm_name=arm.name,
+        arm_spec=arm,
+        r0_child_triplet_ids=frozenset(trained.triplet_ids),
+        r0_child_authority_digest=None,
+        config=config,
+        r0_core_graph=frozen_core,
+        r0_core_triplet_ids=frozenset(frozen_core.triplet_ids),
+    )
+    assert second != first
 
 
 def test_r0_replay_uses_graph_selected_action_and_real_outcome() -> None:

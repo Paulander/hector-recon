@@ -46,6 +46,7 @@ from .native_intrinsic_curriculum import (
 )
 from .native_prospective_evidence_authority_v2 import (
     NativeProspectiveAuthorityV2,
+    StructuralMode,
     V2Mode,
 )
 from .native_single_graph_curriculum import NativeReConKRKGraph
@@ -61,6 +62,7 @@ DEFAULT_SEED = 2026082801
 DEVELOPMENT_FEN_FULLMOVE_BASE = 900_000
 DISCOVERY_POSITIVE_COUNT = 16
 DISCOVERY_NEGATIVE_COUNT = 16
+DISCOVERY_TAPE_COUNT = DISCOVERY_POSITIVE_COUNT + DISCOVERY_NEGATIVE_COUNT
 PROSPECTIVE_EVENTS_BEFORE_STRUCTURE = 64
 DEFAULT_OUTPUT_DIR = Path(
     "reports/autogrowth/development/"
@@ -87,19 +89,37 @@ def _atomic_write_json(path: Path, payload: Mapping[str, Any]) -> None:
     os.replace(temporary, path)
 
 
-def _interleave(left: Sequence[str], right: Sequence[str]) -> tuple[str, ...]:
-    if len(left) != len(right):
-        raise ValueError("V2 discovery requires balanced positive/negative rows")
-    return tuple(item for pair in zip(left, right, strict=True) for item in pair)
+def _neutral_discovery_tape(source_fens: Sequence[str]) -> tuple[str, ...]:
+    """Select and order discovery rows from content, without pool labels.
+
+    The source is intentionally treated as a multiset.  A stable digest rank
+    makes both the selected rows and their authority event order independent
+    of the named training pool (and of each pool's input order).  Equal FENs
+    remain repeated rows in the tape, preserving multiplicity.
+    """
+
+    if len(source_fens) < DISCOVERY_TAPE_COUNT:
+        raise ValueError("V2 discovery source is too small for fixed 32 rows")
+    ranked = sorted(
+        (
+            hashlib.sha256(
+                b"native-intrinsic-v2-neutral-discovery|"
+                + fen.encode("utf-8")
+            ).digest(),
+            fen,
+        )
+        for fen in source_fens
+    )
+    return tuple(fen for _digest, fen in ranked[:DISCOVERY_TAPE_COUNT])
 
 
 def _mint_discovery_receipts(
     source: TraceNativeCompetenceOrganism,
-    rows: Sequence[tuple[str, bool]],
+    fens: Sequence[str],
 ) -> tuple[Any, ...]:
     terminal = source.completion_terminal()
     receipts = []
-    for index, (fen, expected_outcome) in enumerate(rows):
+    for index, fen in enumerate(fens):
         board = chess.Board(fen)
         actuation, trace = source.r0.emit_action_with_trace(
             FrameContext(
@@ -112,12 +132,6 @@ def _mint_discovery_receipts(
             raise RuntimeError(f"frozen R0 emitted no discovery action at row {index}")
         successor = board.copy(stack=False)
         successor.push(chess.Move.from_uci(actuation.move_uci))
-        actual_outcome = successor.is_checkmate()
-        if actual_outcome is not expected_outcome:
-            raise RuntimeError(
-                "frozen graph-authority R0 outcome differs from the declared "
-                f"training role at discovery row {index}"
-            )
         receipts.append(terminal.mint(trace, board, successor))
     return tuple(receipts)
 
@@ -132,16 +146,18 @@ def build_same_run_v2_r0_authority(
 
     if config.r0_availability_mode != V2_PROSPECTIVE_AVAILABILITY:
         raise ValueError("same-run V2 factory requires v2_prospective mode")
-    if len(pools.r0_train) < DISCOVERY_POSITIVE_COUNT:
-        raise ValueError("R0 training pool is too small for fixed V2 discovery")
-    if len(pools.gate_train_decoys) < DISCOVERY_NEGATIVE_COUNT:
-        raise ValueError("R0 decoy training pool is too small for fixed V2 discovery")
+    training_source_fens = tuple(
+        (*pools.r0_train, *pools.gate_train_decoys)
+    )
+    if len(training_source_fens) < DISCOVERY_TAPE_COUNT:
+        raise ValueError("V2 discovery source is too small for fixed 32 rows")
     if not credit.states[R0_COMPETENCE_ID].mature:
         raise RuntimeError("V2 child construction requires mature R0 credit")
 
     graph_copy = copy.deepcopy(graph)
     credit_copy = copy.deepcopy(credit)
     pool_manifest = pools.manifest()
+    training_source_digest = _hash_json(tuple(sorted(training_source_fens)))
     r0 = NativeR0Organism(
         graph=graph_copy,
         credit=credit_copy,
@@ -154,7 +170,7 @@ def build_same_run_v2_r0_authority(
             "scientific_use_permitted": False,
             "same_run_empty_start_r0": True,
             "curriculum_seed": int(config.seed),
-            "pool_manifest_sha256": pool_manifest["combined_sha256"],
+            "training_source_fens_sha256": training_source_digest,
             "training_only_discovery": True,
         },
     )
@@ -176,24 +192,14 @@ def build_same_run_v2_r0_authority(
         ),
     )
     source.open_prospective_discovery_epoch()
-    positives = tuple(pools.r0_train[:DISCOVERY_POSITIVE_COUNT])
-    negatives = tuple(pools.gate_train_decoys[:DISCOVERY_NEGATIVE_COUNT])
-    ordered_fens = _interleave(positives, negatives)
-    roles = tuple(
-        item
-        for pair in zip(
-            ((fen, True) for fen in positives),
-            ((fen, False) for fen in negatives),
-            strict=True,
-        )
-        for item in pair
-    )
-    receipts = _mint_discovery_receipts(source, roles)
+    ordered_fens = _neutral_discovery_tape(training_source_fens)
+    receipts = _mint_discovery_receipts(source, ordered_fens)
     source.grow_from_grounded_receipts(
         receipts,
         finalize=True,
         mixed_outcome_disposition=MixedOutcomeDisposition.RETAIN_SHADOW,
     )
+    adaptive = bool(config.r0_boundary_ecology_enabled)
     absolute_structural_frontier = (
         source._next_event_ordinal + PROSPECTIVE_EVENTS_BEFORE_STRUCTURE
     )
@@ -201,7 +207,13 @@ def build_same_run_v2_r0_authority(
         source,
         mode=V2Mode.PROSPECTIVE,
         specialization_mode=SpecializationMode.LOCAL_CONTRAST,
-        structural_epoch_schedule=(absolute_structural_frontier,),
+        structural_epoch_schedule=(
+            () if adaptive else (absolute_structural_frontier,)
+        ),
+        structural_mode=(
+            StructuralMode.EVENT_DRIVEN
+            if adaptive else StructuralMode.SCHEDULED
+        ),
     )
     frozen_candidates = authority.close_nomination()
     dormant_shadow_count = sum(
@@ -219,8 +231,16 @@ def build_same_run_v2_r0_authority(
     restored = NativeProspectiveAuthorityV2.loads(payload)
     if restored.continuation_manifest() != authority.continuation_manifest():
         raise RuntimeError("initial same-run V2 authority failed roundtrip parity")
-    if set(ordered_fens) != {receipt.predecessor_fen for receipt in receipts}:
-        raise RuntimeError("V2 discovery receipt/FEN identity mismatch")
+    expected_predecessor_fens = tuple(
+        chess.Board(fen).fen() for fen in ordered_fens
+    )
+    actual_predecessor_fens = tuple(
+        receipt.predecessor_fen for receipt in receipts
+    )
+    if actual_predecessor_fens != expected_predecessor_fens:
+        raise RuntimeError(
+            "V2 discovery receipt/FEN sequence or multiplicity mismatch"
+        )
 
     audit = {
         "schema_version": SCHEMA_VERSION,
@@ -231,10 +251,21 @@ def build_same_run_v2_r0_authority(
         "training_only_discovery": True,
         "pool_manifest_sha256": pool_manifest["combined_sha256"],
         "discovery": {
-            "positive_count": len(positives),
-            "negative_count": len(negatives),
+            "r0_train_source_count": len(pools.r0_train),
+            "gate_decoy_source_count": len(pools.gate_train_decoys),
+            "combined_training_source_count": len(training_source_fens),
+            "selected_count": len(ordered_fens),
+            "training_source_fens_sha256": training_source_digest,
             "ordered_fens_sha256": _hash_json(ordered_fens),
             "receipt_count": len(receipts),
+            "observed_outcome_counts": {
+                "mate": sum(
+                    receipt.observed_terminal_result for receipt in receipts
+                ),
+                "non_mate": sum(
+                    not receipt.observed_terminal_result for receipt in receipts
+                ),
+            },
             "receipt_ids_sha256": _hash_json(
                 tuple(receipt.event_id for receipt in receipts)
             ),
@@ -245,11 +276,18 @@ def build_same_run_v2_r0_authority(
             state.prospectively_certified for state in authority.states.values()
         ),
         "structural_schedule": {
+            "mode": authority.structural_mode.value,
             "opening_event_ordinal": int(source._next_event_ordinal),
             "prospective_events_before_structure": (
-                PROSPECTIVE_EVENTS_BEFORE_STRUCTURE
+                None if adaptive else PROSPECTIVE_EVENTS_BEFORE_STRUCTURE
             ),
-            "absolute_event_frontiers": [absolute_structural_frontier],
+            "absolute_event_frontiers": (
+                [] if adaptive else [absolute_structural_frontier]
+            ),
+            "frontier_policy": (
+                "event_driven_at_quiescent_real_boundary"
+                if adaptive else "single_predetermined_event_frontier"
+            ),
         },
         "r0_persistent_state": dict(r0.persistent_state_audit()),
         "serialized_bytes": len(payload),

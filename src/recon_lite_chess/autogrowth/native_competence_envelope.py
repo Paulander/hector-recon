@@ -65,6 +65,12 @@ NOMINATION_READ_CATEGORIES = NOMINATION_READ_CATEGORIES_V1
 NOMINATION_ESCROW_V1 = "native_nomination_escrow.v1"
 NOMINATION_ESCROW_V2 = "native_nomination_escrow.v2_consensus_reads"
 NOMINATION_ESCROW_V3 = "native_nomination_escrow.v3_deferred_specialization"
+# V4 keeps the legacy wire shapes readable while allowing new authority
+# births to commit to the accepted-REAL prefix and category read sets without
+# copying their complete historical ID vectors into every child.
+NOMINATION_ESCROW_V4 = "native_nomination_escrow.v4_compact_provenance"
+PROVENANCE_COMMITMENT_V4 = "native_provenance_commitment.v4_merkle_dag"
+PROVENANCE_WITNESS_LIMIT = 4
 
 
 class AvailabilityState(str, Enum):
@@ -91,6 +97,76 @@ class DormantOrigin(str, Enum):
 
     MIXED_OUTCOME_SHADOW = "MIXED_OUTCOME_SHADOW"
     DEFERRED_SPECIALIZATION_CHILD = "DEFERRED_SPECIALIZATION_CHILD"
+    ADAPTIVE_BOUNDARY_CHILD = "ADAPTIVE_BOUNDARY_CHILD"
+
+
+@dataclass(frozen=True)
+class ProvenanceCommitment:
+    """Compact commitment for a canonical evidence/read set.
+
+    ``digest`` commits to the complete set or accepted-REAL prefix, while
+    ``count`` and ``exclusive_frontier`` make its intended extent explicit.
+    Only a bounded witness sample is retained in a live record.  Full
+    resolution is deliberately a boundary/audit operation, not a hot-path
+    requirement.
+    """
+
+    schema_version: str
+    digest: str
+    count: int
+    exclusive_frontier: int
+    witness_ids: tuple[str, ...] = ()
+    query_digest: str | None = None
+
+    def __post_init__(self) -> None:
+        if self.schema_version != PROVENANCE_COMMITMENT_V4:
+            raise ValueError("unsupported provenance commitment schema")
+        if (
+            not isinstance(self.digest, str)
+            or len(self.digest) != 64
+            or any(char not in "0123456789abcdef" for char in self.digest)
+        ):
+            raise ValueError("provenance commitment digest is not SHA-256")
+        if (
+            isinstance(self.count, bool)
+            or not isinstance(self.count, int)
+            or self.count < 0
+            or isinstance(self.exclusive_frontier, bool)
+            or not isinstance(self.exclusive_frontier, int)
+            or self.exclusive_frontier < -1
+        ):
+            raise ValueError("invalid provenance commitment cardinality")
+        witnesses = tuple(self.witness_ids)
+        if (
+            any(not isinstance(item, str) or not item for item in witnesses)
+            or tuple(sorted(set(witnesses))) != witnesses
+            or len(witnesses) > PROVENANCE_WITNESS_LIMIT
+            or len(witnesses) > self.count
+        ):
+            raise ValueError("noncanonical provenance commitment witnesses")
+        object.__setattr__(self, "witness_ids", witnesses)
+        if self.query_digest is not None:
+            if (
+                not isinstance(self.query_digest, str)
+                or len(self.query_digest) != 64
+                or any(
+                    char not in "0123456789abcdef"
+                    for char in self.query_digest
+                )
+            ):
+                raise ValueError("provenance query commitment is not SHA-256")
+
+    def manifest(self) -> dict[str, Any]:
+        result = {
+            "schema_version": self.schema_version,
+            "digest": self.digest,
+            "count": self.count,
+            "exclusive_frontier": self.exclusive_frontier,
+            "witness_ids": list(self.witness_ids),
+        }
+        if self.query_digest is not None:
+            result["query_digest"] = self.query_digest
+        return result
 
 
 @dataclass(frozen=True)
@@ -136,7 +212,12 @@ def canonical_structural_pattern_matches(
         if parent is None or parent.structural_state == StemCellState.PRUNED.name:
             return False
         if parent.structural_state == StemCellState.MATURE.name:
-            pass
+            if (
+                descriptor.nomination_operation == "specialization"
+                and descriptor.specialization_depth
+                != parent.specialization_depth + 1
+            ):
+                return False
         elif parent.structural_state in {
             StemCellState.DORMANT.name,
             StemCellState.PROBATION.name,
@@ -144,7 +225,6 @@ def canonical_structural_pattern_matches(
             if (
                 descriptor.lineage_parent_id != parent_id
                 or descriptor.nomination_operation != "specialization"
-                or descriptor.specialization_depth != 1
                 or descriptor.specialization_depth
                 != parent.specialization_depth + 1
                 or context_members != (f"context:{parent_id}",)
@@ -211,6 +291,13 @@ class NominationEscrow:
     parent_hypothesis_digest: str | None = None
     escrow_digest: str = ""
     escrow_schema_version: str = NOMINATION_ESCROW_V1
+    # V4 keeps bounded witnesses in the legacy tuple fields and binds the
+    # complete accepted-REAL prefix/read sets with compact commitments.
+    # ``None`` preserves the exact V1-V3 compatibility shape.
+    discovery_exclusion_commitment: ProvenanceCommitment | None = None
+    nomination_read_commitments: tuple[
+        tuple[str, ProvenanceCommitment], ...
+    ] = ()
 
     def __deepcopy__(
         self, memo: dict[int, Any]
@@ -234,6 +321,10 @@ class NominationEscrow:
             )
         if "parent_hypothesis_digest" not in state:
             object.__setattr__(self, "parent_hypothesis_digest", None)
+        if "discovery_exclusion_commitment" not in state:
+            object.__setattr__(self, "discovery_exclusion_commitment", None)
+        if "nomination_read_commitments" not in state:
+            object.__setattr__(self, "nomination_read_commitments", ())
         self.__post_init__()
 
     def __post_init__(self) -> None:
@@ -243,6 +334,11 @@ class NominationEscrow:
         if self.operation not in {"ordinary", "specialization"}:
             raise ValueError("unknown nomination operation")
         names = tuple(name for name, _ids in self.categorized_reads)
+        compact = (
+            self.escrow_schema_version == NOMINATION_ESCROW_V4
+            or self.discovery_exclusion_commitment is not None
+            or bool(self.nomination_read_commitments)
+        )
         expected_categories = (
             NOMINATION_READ_CATEGORIES_V1
             if self.escrow_schema_version == NOMINATION_ESCROW_V1
@@ -250,6 +346,12 @@ class NominationEscrow:
             if self.escrow_schema_version == NOMINATION_ESCROW_V2
             else NOMINATION_READ_CATEGORIES_V3
             if self.escrow_schema_version == NOMINATION_ESCROW_V3
+            else (
+                NOMINATION_READ_CATEGORIES_V3
+                if self.operation == "specialization"
+                else NOMINATION_READ_CATEGORIES_V2
+            )
+            if self.escrow_schema_version == NOMINATION_ESCROW_V4
             else ()
         )
         if names != expected_categories:
@@ -265,12 +367,60 @@ class NominationEscrow:
                 raise ValueError("noncanonical nomination provenance")
         direct_category = (
             "direct_child_matches"
-            if self.escrow_schema_version == NOMINATION_ESCROW_V3
-            else "direct"
+            if "direct_child_matches" in names else "direct"
         )
         if not dict(self.categorized_reads)[direct_category]:
             raise ValueError("nomination direct reads are empty")
-        if self.triggering_receipt_id not in self.discovery_exclusion_receipt_ids:
+        if compact:
+            if self.escrow_schema_version != NOMINATION_ESCROW_V4:
+                raise ValueError("compact provenance requires escrow V4")
+            if not isinstance(
+                self.discovery_exclusion_commitment,
+                ProvenanceCommitment,
+            ):
+                raise ValueError("V4 escrow lacks exclusion commitment")
+            if tuple(self.discovery_exclusion_receipt_ids) != tuple(
+                self.discovery_exclusion_commitment.witness_ids
+            ):
+                raise ValueError(
+                    "V4 exclusion witnesses differ from commitment"
+                )
+            if len(
+                self.transitive_ancestor_receipt_ids
+            ) > PROVENANCE_WITNESS_LIMIT:
+                raise ValueError(
+                    "V4 escrow retains excess ancestor witnesses"
+                )
+            read_commitments = tuple(self.nomination_read_commitments)
+            if tuple(name for name, _item in read_commitments) != names:
+                raise ValueError(
+                    "V4 nomination commitment categories differ"
+                )
+            if len({name for name, _item in read_commitments}) != len(names):
+                raise ValueError(
+                    "V4 nomination commitment categories duplicate"
+                )
+            category_map = dict(self.categorized_reads)
+            for name, commitment in read_commitments:
+                if not isinstance(commitment, ProvenanceCommitment):
+                    raise ValueError(
+                        f"V4 nomination category lacks commitment: {name}"
+                    )
+                if not set(category_map[name]).issubset(
+                    commitment.witness_ids
+                ):
+                    raise ValueError(
+                        f"V4 category witnesses omit direct reads: {name}"
+                    )
+            trigger_ids = {
+                *category_map[direct_category],
+                *category_map.get("contradiction_trigger", ()),
+            }
+            if self.triggering_receipt_id not in trigger_ids:
+                raise ValueError(
+                    "V4 trigger is not an explicit nomination read"
+                )
+        elif self.triggering_receipt_id not in self.discovery_exclusion_receipt_ids:
             raise ValueError("triggering receipt missing from discovery exclusion")
         for context_ids in (
             self.considered_context_ids, self.selected_context_ids,
@@ -289,7 +439,10 @@ class NominationEscrow:
         if self.birth_frontier != self.certification_frontier:
             raise ValueError("birth frontier differs from certification frontier")
         if self.operation == "specialization" and (
-            self.escrow_schema_version == NOMINATION_ESCROW_V3
+            self.escrow_schema_version in {
+                NOMINATION_ESCROW_V3,
+                NOMINATION_ESCROW_V4,
+            }
             and not self.parent_hypothesis_digest
         ):
             raise ValueError("deferred specialization lacks parent hypothesis")
@@ -335,6 +488,15 @@ class NominationEscrow:
             result["parent_hypothesis_digest"] = self.parent_hypothesis_digest
         if self.escrow_schema_version != NOMINATION_ESCROW_V1:
             result["escrow_schema_version"] = self.escrow_schema_version
+        if self.escrow_schema_version == NOMINATION_ESCROW_V4:
+            result["discovery_exclusion_commitment"] = (
+                None if self.discovery_exclusion_commitment is None
+                else self.discovery_exclusion_commitment.manifest()
+            )
+            result["nomination_read_commitments"] = {
+                name: commitment.manifest()
+                for name, commitment in self.nomination_read_commitments
+            }
         return result
 
     def manifest(self) -> dict[str, Any]:
@@ -694,6 +856,10 @@ class _GraphSpecializationRequest:
     context_member: str
     eligible_base_ids: tuple[str, ...]
     request_ordinal: int
+    # V2 supplies local request evidence so the content-blind genome can
+    # preserve authority-owned support ranking.  The empty default keeps the
+    # legacy envelope request contract unchanged.
+    eligible_base_support_counts: tuple[tuple[str, int], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -779,9 +945,20 @@ class CompetenceContextGrowthGenome:
 
         if not isinstance(request, _GraphSpecializationRequest):
             raise TypeError("specialization requires a graph-owned request")
-        selected = self._take(
-            request.eligible_base_ids, 1, 2, request.request_ordinal
-        )
+        if request.eligible_base_support_counts:
+            support_counts = dict(request.eligible_base_support_counts)
+            selected = tuple(sorted(
+                set(request.eligible_base_ids),
+                key=lambda identity: (
+                    -int(support_counts.get(identity, 0)),
+                    self._priority(identity, 2, request.request_ordinal),
+                    identity,
+                ),
+            )[:1])
+        else:
+            selected = self._take(
+                request.eligible_base_ids, 1, 2, request.request_ordinal
+            )
         if len(selected) != 1:
             return None
         return GrowthProposal(

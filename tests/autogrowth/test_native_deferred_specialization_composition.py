@@ -100,6 +100,53 @@ def test_canonical_matcher_rejects_unrelated_or_unbound_dormant_parent():
         )
 
 
+def test_canonical_matcher_accepts_arbitrary_recursive_child_depth():
+    root = _descriptor(
+        "root", ("opaque:a",), StemCellState.MATURE,
+        digest="root-digest",
+    )
+    child = _descriptor(
+        "child",
+        ("context:root", "opaque:b"),
+        StemCellState.DORMANT,
+        parent="root",
+        depth=1,
+        operation="specialization",
+        parent_digest="root-digest",
+        digest="child-digest",
+    )
+    grandchild = _descriptor(
+        "grandchild",
+        ("context:child", "opaque:c"),
+        StemCellState.DORMANT,
+        parent="child",
+        depth=2,
+        operation="specialization",
+        parent_digest="child-digest",
+        digest="grandchild-digest",
+    )
+    great_grandchild = _descriptor(
+        "great-grandchild",
+        ("context:grandchild", "opaque:d"),
+        StemCellState.DORMANT,
+        parent="grandchild",
+        depth=3,
+        operation="specialization",
+        parent_digest="grandchild-digest",
+        digest="great-grandchild-digest",
+    )
+    assert canonical_structural_pattern_matches(
+        "great-grandchild",
+        {
+            "root": root,
+            "child": child,
+            "grandchild": grandchild,
+            "great-grandchild": great_grandchild,
+        },
+        ("opaque:a", "opaque:b", "opaque:c", "opaque:d"),
+    )
+
+
 def _request(index: int) -> DeferredSpecializationRequest:
     receipt = f"receipt-{index:03d}"
     supporting_receipts = tuple(
@@ -159,15 +206,27 @@ def test_request_graph_truth_claims_are_explicit_booleans(field: str):
         DeferredSpecializationRequest(**values)
 
 
-def test_request_capacity_accepts_192_and_rejects_193_atomically():
+def test_request_capacity_counts_pending_not_append_only_history():
     authority = object.__new__(NativeProspectiveAuthorityV2)
     authority.request_queue = tuple(
         f"request-{index:03d}" for index in range(191)
     )
+    authority.request_consumptions = {}
     authority._validate_request_append_capacity((_request(191),))
+
+    # A full append-only queue is still admissible when all old requests have
+    # been consumed; only active, retryable requests occupy the bounded slot.
     authority.request_queue = tuple(
         f"request-{index:03d}" for index in range(192)
     )
+    authority.request_consumptions = {
+        request_id: object() for request_id in authority.request_queue
+    }
+    authority._validate_request_append_capacity((_request(192),))
+
+    # With no consumed history, the same 192 entries are active and the next
+    # append is rejected without changing the queue.
+    authority.request_consumptions = {}
     before = authority.request_queue
     with pytest.raises(
         ProspectiveV2IntegrityError, match="request queue capacity"

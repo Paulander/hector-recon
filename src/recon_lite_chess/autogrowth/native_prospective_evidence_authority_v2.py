@@ -1,6 +1,7 @@
 """Graph-native prospective competence-evidence authority V2."""
 from __future__ import annotations
 
+from bisect import bisect_left, bisect_right
 import copy
 from dataclasses import asdict, dataclass, field, replace
 from enum import Enum
@@ -30,8 +31,11 @@ from .native_competence_envelope import (
     AvailabilityState, CompetenceContextCell, CompetenceContextGrowthGenome,
     DormantOrigin, EnvelopeClassification, GrowthProposal,
     NOMINATION_READ_CATEGORIES_V1, NOMINATION_READ_CATEGORIES_V2,
-    NOMINATION_READ_CATEGORIES_V3, NOMINATION_ESCROW_V3,
-    NominationEscrow, SpecializationMode, StructuralMatchDescriptor,
+    NOMINATION_READ_CATEGORIES_V3, NOMINATION_ESCROW_V2,
+    NOMINATION_ESCROW_V3, NOMINATION_ESCROW_V4,
+    PROVENANCE_COMMITMENT_V4, PROVENANCE_WITNESS_LIMIT,
+    NominationEscrow, ProvenanceCommitment, SpecializationMode,
+    StructuralMatchDescriptor,
     _GraphSpecializationRequest, canonical_structural_pattern_matches,
     wilson_lower_bound,
 )
@@ -51,6 +55,7 @@ OUTCOME_TERMINAL_IDENTITY = "native_r0_real_completion_terminal"
 EXPOSURE_SCHEMA_VERSION = "native_v2_bound_exposure.v5"
 PHYSICAL_TRACE_PROJECTION_SCHEMA = "native_v2_physical_trace_projection.v1"
 _EXPOSURE_BINDING_SECRET = b"native-v2-bound-exposure-capability.v1"
+_HOT_APPEND_DIGEST_SCHEMA = "native_v2_hot_append_digest.v1"
 CELL_AUTHORITY_ROLES = (
     "commitment", "available", "refuted", "support", "contradiction",
     "maturity", "revocation", "specialization_request",
@@ -65,6 +70,37 @@ VIRTUAL_AVAILABLE_VALUE = 1.0
 VIRTUAL_RESPONSE_UNCERTAINTY = 0.0
 REQUEST_QUEUE_CAPACITY = 192
 DORMANT_SPECIALIZATION_CHILD_CAPACITY = 192
+# This is a fixed execution-resource bound, not a learner-facing parameter.
+# Candidate support remains exactly auditable at a full boundary; the live
+# graph only needs a deterministic beam to avoid duplicating a late history
+# prefix once per terminal leaf.
+SPECIALIZATION_CANDIDATE_BEAM_WIDTH = 64
+BOUNDARY_PROMOTION_REQUEST_SCHEMA = "native_v2_boundary_promotion_request.v1"
+BOUNDARY_PROMOTION_GATE_STATE = "ELIGIBLE"
+RETIREMENT_TOMBSTONE_SCHEMA = "native_v2_adaptive_retirement_tombstone.v1"
+DEFAULT_RETIREMENT_REASON = "resource_rent"
+# Generation-boundary ``prior_continuation_digest`` used to be the flat
+# SHA-256 of the complete continuation manifest.  That representation is
+# retained for old pickles, but it necessarily makes a historical boundary
+# replay quadratic when the append-only ledgers grow.  New authorities use a
+# versioned mutation-chain commitment: every durable mutation contributes one
+# canonical operation record, so a replay advances the commitment once per
+# event/boundary rather than rescanning the prefix.
+BOUNDARY_DIGEST_SCHEMA_LEGACY = "flat_continuation_manifest_sha256.v1"
+BOUNDARY_DIGEST_SCHEMA_BASE_V3 = "base_continuation_v3_sha256.v3"
+BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN = (
+    "native_v2_boundary_mutation_chain.v1"
+)
+_STRUCTURAL_CONSUMPTION_DISPOSITIONS = frozenset({
+    "REJECTED_EMPTY_ELIGIBILITY",
+    "REJECTED_DUPLICATE_PATTERN",
+    "PENDING_CHILD",
+    "MATERIALIZED",
+})
+_DEFERRED_BIRTH_DISPOSITIONS = frozenset({
+    "PENDING_MATERIALIZATION",
+    "MATERIALIZED",
+})
 INCREMENTAL_HISTORY_SCHEMA = "native_v2_incremental_real_history.v1"
 INCREMENTAL_HISTORY_EVENT_SCHEMA = (
     "native_v2_incremental_real_history_event.v1"
@@ -98,6 +134,320 @@ def _sha(value: Any) -> str:
     return hashlib.sha256(_json(value)).hexdigest()
 
 
+def _empty_hot_append_digest(kind: str) -> str:
+    return _sha({
+        "schema_version": _HOT_APPEND_DIGEST_SCHEMA,
+        "kind": kind,
+        "count": 0,
+    })
+
+
+def _next_hot_append_digest(previous: str, kind: str, value: Any, count: int) -> str:
+    return _sha({
+        "schema_version": _HOT_APPEND_DIGEST_SCHEMA,
+        "kind": kind,
+        "count": int(count),
+        "previous": previous,
+        "value": value,
+    })
+
+
+def _append_log_digest(values: Sequence[Any], *, kind: str) -> str:
+    """Build one append-log digest at initialization or a full boundary."""
+
+    digest = _empty_hot_append_digest(kind)
+    for count, value in enumerate(values, 1):
+        digest = _next_hot_append_digest(digest, kind, value, count)
+    return digest
+
+
+def _bounded_provenance_witnesses(
+    values: Sequence[str],
+    *,
+    limit: int = PROVENANCE_WITNESS_LIMIT,
+) -> tuple[str, ...]:
+    """Return deterministic bounded witnesses for a compact commitment.
+
+    Witnesses are diagnostic and replay cross-checks only; the digest/count/
+    frontier carry the authoritative extent.  Keeping this helper centralized
+    prevents a caller from accidentally retaining a lifetime prefix in a new
+    birth record.
+    """
+
+    if limit < 0 or limit > PROVENANCE_WITNESS_LIMIT:
+        raise ProspectiveV2IntegrityError("invalid provenance witness limit")
+    return tuple(sorted(set(map(str, values)))[:limit])
+
+
+def _compact_set_commitment(
+    values: Sequence[str],
+    *,
+    exclusive_frontier: int,
+    query_digest: str | None = None,
+    digest: str | None = None,
+) -> ProvenanceCommitment:
+    """Commit to a canonical read/support set without retaining its members."""
+
+    canonical = tuple(sorted(set(map(str, values))))
+    return ProvenanceCommitment(
+        schema_version=PROVENANCE_COMMITMENT_V4,
+        digest=_sha(list(canonical)) if digest is None else digest,
+        count=len(canonical),
+        exclusive_frontier=int(exclusive_frontier),
+        witness_ids=_bounded_provenance_witnesses(canonical),
+        query_digest=query_digest,
+    )
+
+
+def _compose_provenance_commitment(
+    commitments: Sequence[ProvenanceCommitment],
+    *,
+    exclusive_frontier: int,
+    query_digest: str | None = None,
+) -> ProvenanceCommitment:
+    """Build a bounded Merkle-DAG edge from already compact components."""
+
+    parts = tuple(item.manifest() for item in commitments)
+    witnesses = _bounded_provenance_witnesses(tuple(
+        receipt_id
+        for item in commitments
+        for receipt_id in item.witness_ids
+    ))
+    return ProvenanceCommitment(
+        schema_version=PROVENANCE_COMMITMENT_V4,
+        digest=_sha({
+            "schema_version": PROVENANCE_COMMITMENT_V4,
+            "components": parts,
+        }),
+        count=sum(item.count for item in commitments),
+        exclusive_frontier=int(exclusive_frontier),
+        witness_ids=witnesses,
+        query_digest=query_digest,
+    )
+
+
+def _compact_query_digest(value: Any) -> str:
+    """Bind the exact category/query recipe, not its potentially large result."""
+
+    return _sha({"schema_version": PROVENANCE_COMMITMENT_V4, "query": value})
+
+
+def _provenance_commitment_from_manifest(
+    value: Mapping[str, Any] | ProvenanceCommitment | None,
+) -> ProvenanceCommitment | None:
+    if value is None or isinstance(value, ProvenanceCommitment):
+        return value
+    return ProvenanceCommitment(
+        schema_version=value["schema_version"],
+        digest=value["digest"],
+        count=int(value["count"]),
+        exclusive_frontier=int(value["exclusive_frontier"]),
+        witness_ids=tuple(value.get("witness_ids", ())),
+        query_digest=value.get("query_digest"),
+    )
+
+
+class _AppendOnlyLedger(list):
+    """A list-backed append log with tuple-compatible equality.
+
+    The authority's public manifests continue to expose canonical lists and
+    old callers often compare the in-memory fields with tuples.  Internally,
+    however, REAL events must be able to append without allocating a copy of
+    the complete receipt/request history.  This tiny compatibility type keeps
+    that append-only storage detail out of the protocol surface.
+    """
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, (list, tuple)):
+            return list.__eq__(self, list(other))
+        return list.__eq__(self, other)
+
+    def __ne__(self, other: object) -> bool:
+        # ``list.__ne__`` bypasses an overridden ``__eq__`` and would report
+        # a tuple mismatch even when the canonical contents are identical.
+        return not self == other
+
+
+class _LiveAuthorityStateView(dict):
+    """Marker for the already-maintained bounded live-state index."""
+
+    # A digest-only topology is a property of the authority representation,
+    # not of the current live subset.  In particular, retiring the last live
+    # V4 child must not silently turn a new compact authority back into the
+    # legacy full-manifest topology.  This attribute is runtime-only and is
+    # restored from ``authority_topology`` at every explicit index refresh.
+    topology_schema_version: str | None = None
+
+
+class _ReferenceOverlay(Mapping[str, "AcceptedRealReference"]):
+    """O(1) lookup view over accepted history plus one current REAL item."""
+
+    def __init__(
+        self,
+        base: Mapping[str, "AcceptedRealReference"] | None,
+        current: "AcceptedRealReference" | None = None,
+    ) -> None:
+        self._base = base if base is not None else MappingProxyType({})
+        self._current = current
+
+    def __getitem__(self, key: str) -> "AcceptedRealReference":
+        if self._current is not None and key == self._current.receipt_id:
+            return self._current
+        return self._base[key]
+
+    def __iter__(self):
+        # Graph evaluation only performs keyed reads.  Iteration remains
+        # correct for boundary/debug callers without copying the base map.
+        if self._current is None or self._current.receipt_id in self._base:
+            yield from self._base
+            return
+        yield from self._base
+        yield self._current.receipt_id
+
+    def __len__(self) -> int:
+        if self._current is None or self._current.receipt_id in self._base:
+            return len(self._base)
+        return len(self._base) + 1
+
+    def __contains__(self, key: object) -> bool:
+        return bool(
+            self._current is not None
+            and key == self._current.receipt_id
+        ) or key in self._base
+
+    def get(
+        self,
+        key: str,
+        default: "AcceptedRealReference | None" = None,
+    ) -> "AcceptedRealReference | None":
+        if self._current is not None and key == self._current.receipt_id:
+            return self._current
+        return self._base.get(key, default)
+
+
+class _RealMutationJournal:
+    """Reversible, bounded mutation log for one REAL transaction.
+
+    Entries are recorded only for fields touched by the current matching
+    topology and for O(1) ledger additions.  No lifetime map is cloned.  The
+    journal is deliberately small and generic so late injected failures can
+    restore the exact object graph, including append-only state logs.
+    """
+
+    def __init__(self) -> None:
+        self._undo: list[Any] = []
+        self._closed = False
+
+    def set_attr(self, owner: Any, name: str, value: Any) -> None:
+        old = getattr(owner, name)
+        self._undo.append(lambda owner=owner, name=name, old=old: setattr(
+            owner, name, old
+        ))
+        setattr(owner, name, value)
+
+    def add_mapping(self, mapping: dict[Any, Any], key: Any, value: Any) -> None:
+        existed = key in mapping
+        old = mapping.get(key)
+        self._undo.append(
+            lambda mapping=mapping, key=key, existed=existed, old=old: (
+                mapping.__setitem__(key, old)
+                if existed
+                else mapping.pop(key, None)
+            )
+        )
+        mapping[key] = value
+
+    def add_set(self, values: set[Any], value: Any) -> None:
+        if value in values:
+            return
+        self._undo.append(lambda values=values, value=value: values.discard(
+            value
+        ))
+        values.add(value)
+
+    def append(self, values: list[Any], value: Any) -> None:
+        old_length = len(values)
+
+        def undo() -> None:
+            del values[old_length:]
+
+        self._undo.append(
+            undo
+        )
+        values.append(value)
+
+    def commit(self) -> None:
+        self._undo.clear()
+        self._closed = True
+
+    def rollback(self) -> None:
+        if self._closed:
+            return
+        for undo in reversed(self._undo):
+            undo()
+        self._undo.clear()
+        self._closed = True
+
+
+class _StructuralMutationJournal(_RealMutationJournal):
+    """Bounded rollback journal for one event-driven structural safe point.
+
+    The authority's frozen R0 and append-only evidence ledgers are never
+    copied.  Structural settlement touches only a bounded live state/queue
+    slice plus a finite set of newly appended ledger entries, all of which are
+    reversible through the inherited attribute/map/set operations.
+    """
+
+    def remove_list_item(self, values: list[Any], value: Any) -> None:
+        try:
+            index = values.index(value)
+        except ValueError:
+            return
+        old = values[index]
+        self._undo.append(
+            lambda values=values, index=index, old=old: values.insert(
+                index, old
+            )
+        )
+        values.pop(index)
+
+    def delete_mapping(self, mapping: dict[Any, Any], key: Any) -> None:
+        if key not in mapping:
+            return
+        old = mapping[key]
+        self._undo.append(
+            lambda mapping=mapping, key=key, old=old: mapping.__setitem__(
+                key, old
+            )
+        )
+        del mapping[key]
+
+    def discard_set(self, values: set[Any], value: Any) -> None:
+        if value not in values:
+            return
+        self._undo.append(lambda values=values, value=value: values.add(
+            value
+        ))
+        values.discard(value)
+
+
+def _specialization_feature_sort_key(
+    identity: str,
+    support_count: int,
+    *,
+    genome_seed: int = 0,
+    request_ordinal: int = 0,
+) -> tuple[int, bytes, str]:
+    """Rank one local candidate by evidence, then frozen genome order."""
+
+    genome = CompetenceContextGrowthGenome(genome_seed)
+    return (
+        -int(support_count),
+        genome._priority(identity, 2, request_ordinal),
+        identity,
+    )
+
+
 class ProspectiveV2IntegrityError(RuntimeError):
     """Fail-hard causal, structural, or authority contract violation."""
 
@@ -109,6 +459,13 @@ class ProspectiveProvenanceUnavailable(ProspectiveV2IntegrityError):
 class V2Mode(str, Enum):
     PROSPECTIVE = "prospective"
     LEGACY = "legacy_same_ledger"
+
+
+class StructuralMode(str, Enum):
+    """When deferred structural requests are allowed to settle."""
+
+    SCHEDULED = "scheduled"
+    EVENT_DRIVEN = "event_driven"
 
 
 class ProvenanceKind(str, Enum):
@@ -162,6 +519,32 @@ class FrozenHypothesis:
     parent_hypothesis_digest: str | None = None
     source_generation: int = 0
     discovery_support_receipt_ids: tuple[str, ...] = ()
+    # New recursive/deferred births use a Merkle-DAG edge to the parent and
+    # bounded witnesses here.  The old fields above intentionally remain in
+    # place so V1-V3/V7 pickles retain their historical manifest shape.
+    provenance_schema_version: str | None = None
+    discovery_read_commitment: ProvenanceCommitment | None = None
+    discovery_exclusion_commitment: ProvenanceCommitment | None = None
+    nomination_read_commitments: tuple[
+        tuple[str, ProvenanceCommitment], ...
+    ] = ()
+
+    def __setstate__(self, state: Mapping[str, Any]) -> None:
+        # FrozenHypothesis predates compact provenance.  Supply defaults but
+        # otherwise re-run the same validation/digest calculation so legacy
+        # load/replay remains exact and tampering is fail-closed.
+        for key, value in state.items():
+            object.__setattr__(self, key, value)
+        defaults = {
+            "provenance_schema_version": None,
+            "discovery_read_commitment": None,
+            "discovery_exclusion_commitment": None,
+            "nomination_read_commitments": (),
+        }
+        for key, value in defaults.items():
+            if not hasattr(self, key):
+                object.__setattr__(self, key, value)
+        self.__post_init__()
 
     def __post_init__(self) -> None:
         if self.polarity is None:
@@ -226,6 +609,73 @@ class FrozenHypothesis:
             )
         if self.source_generation < 0:
             raise ProspectiveV2IntegrityError("negative source generation")
+        compact = (
+            self.provenance_schema_version == PROVENANCE_COMMITMENT_V4
+            or self.discovery_read_commitment is not None
+            or self.discovery_exclusion_commitment is not None
+            or bool(self.nomination_read_commitments)
+        )
+        if compact:
+            if self.provenance_schema_version != PROVENANCE_COMMITMENT_V4:
+                raise ProspectiveV2IntegrityError(
+                    "compact hypothesis lacks V4 provenance schema"
+                )
+            if not isinstance(
+                self.discovery_read_commitment, ProvenanceCommitment
+            ) or not isinstance(
+                self.discovery_exclusion_commitment, ProvenanceCommitment
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "compact hypothesis lacks provenance commitments"
+                )
+            if (
+                self.discovery_read_commitment.digest
+                != self.discovery_receipt_digest
+                or tuple(self.discovery_receipt_ids)
+                != tuple(self.discovery_read_commitment.witness_ids)
+                or tuple(self.discovery_exclusion_receipt_ids)
+                != tuple(self.discovery_exclusion_commitment.witness_ids)
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "compact hypothesis witnesses/digest disagree"
+                )
+            read_commitments = tuple(self.nomination_read_commitments)
+            category_names = tuple(
+                name for name, _ids in self.nomination_read_sets
+            )
+            if tuple(name for name, _item in read_commitments) != category_names:
+                raise ProspectiveV2IntegrityError(
+                    "compact hypothesis read commitments disagree"
+                )
+            if len(set(category_names)) != len(category_names):
+                raise ProspectiveV2IntegrityError(
+                    "compact hypothesis read categories duplicate"
+                )
+            category_map = dict(self.nomination_read_sets)
+            for name, commitment in read_commitments:
+                if not isinstance(commitment, ProvenanceCommitment):
+                    raise ProspectiveV2IntegrityError(
+                        "compact hypothesis category lacks commitment"
+                    )
+                if not set(category_map[name]).issubset(commitment.witness_ids):
+                    raise ProspectiveV2IntegrityError(
+                        "compact hypothesis category witness mismatch"
+                    )
+            direct_category = (
+                "direct_child_matches"
+                if "direct_child_matches" in category_map else "direct"
+            )
+            if not category_map.get(direct_category):
+                raise ProspectiveV2IntegrityError(
+                    "compact hypothesis has no explicit direct trigger read"
+                )
+            if self.triggering_receipt_id not in {
+                *category_map.get(direct_category, ()),
+                *category_map.get("contradiction_trigger", ()),
+            }:
+                raise ProspectiveV2IntegrityError(
+                    "compact hypothesis trigger is not an explicit read"
+                )
         discovery_support = tuple(sorted(set(
             self.discovery_support_receipt_ids
         )))
@@ -233,23 +683,35 @@ class FrozenHypothesis:
             raise ProspectiveV2IntegrityError(
                 "noncanonical discovery support receipts"
             )
-        if not set(discovery_support).issubset(self.discovery_receipt_ids):
+        if not compact and not set(discovery_support).issubset(
+            self.discovery_receipt_ids
+        ):
             raise ProspectiveV2IntegrityError(
                 "discovery support is outside discovery reads"
             )
-        if self.source_generation > 0 and (
-            self.nomination_operation != "specialization"
-            or self.dormant_origin
-            is not DormantOrigin.DEFERRED_SPECIALIZATION_CHILD
-            or not self.parent_hypothesis_digest
-        ):
-            raise ProspectiveV2IntegrityError(
-                "successor hypothesis lacks deferred lineage binding"
+        if self.source_generation > 0:
+            deferred = (
+                self.nomination_operation == "specialization"
+                and self.dormant_origin
+                is DormantOrigin.DEFERRED_SPECIALIZATION_CHILD
+                and bool(self.parent_hypothesis_digest)
             )
+            adaptive = (
+                self.nomination_operation == "ordinary"
+                and self.dormant_origin
+                is DormantOrigin.ADAPTIVE_BOUNDARY_CHILD
+                and self.lineage_parent_id is None
+                and self.specialization_depth == 0
+                and self.parent_hypothesis_digest is None
+            )
+            if not (deferred or adaptive):
+                raise ProspectiveV2IntegrityError(
+                    "successor hypothesis lineage binding is invalid"
+                )
         if not self.members:
             raise ProspectiveV2IntegrityError("empty pattern at candidate birth")
         canonical = tuple(sorted(set(self.discovery_receipt_ids)))
-        if not canonical:
+        if not canonical and not compact:
             raise ProspectiveProvenanceUnavailable(
                 "prospective_provenance_unavailable: empty discovery set"
             )
@@ -257,7 +719,7 @@ class FrozenHypothesis:
             raise ProspectiveV2IntegrityError(
                 "discovery receipt IDs are not canonical"
             )
-        if self.discovery_receipt_digest != _sha(list(canonical)):
+        if not compact and self.discovery_receipt_digest != _sha(list(canonical)):
             raise ProspectiveV2IntegrityError("discovery receipt digest mismatch")
         categories = tuple(
             (str(name), tuple(sorted(set(receipt_ids))))
@@ -314,7 +776,7 @@ class FrozenHypothesis:
                 raise ProspectiveV2IntegrityError(
                     "prospective frozen escrow identity is incomplete"
                 )
-            if tuple(name for name, _ids in categories) not in {
+            if not compact and tuple(name for name, _ids in categories) not in {
                 NOMINATION_READ_CATEGORIES_V1,
                 NOMINATION_READ_CATEGORIES_V2,
                 NOMINATION_READ_CATEGORIES_V3,
@@ -327,11 +789,11 @@ class FrozenHypothesis:
                 for _name, receipt_ids in categories
                 for receipt_id in receipt_ids
             } | set(ancestors)))
-            if union != canonical:
+            if not compact and union != canonical:
                 raise ProspectiveV2IntegrityError(
                     "nomination read-set union differs from discovery ledger"
                 )
-            if not set(canonical).issubset(exclusion):
+            if not compact and not set(canonical).issubset(exclusion):
                 raise ProspectiveV2IntegrityError(
                     "discovery reads missing from exclusion set"
                 )
@@ -341,7 +803,7 @@ class FrozenHypothesis:
         object.__setattr__(self, "hypothesis_digest", expected_digest)
 
     def identity_manifest(self) -> dict[str, Any]:
-        return {
+        result = {
             "cell_id": self.cell_id,
             "members": list(self.members),
             "polarity": self.polarity.value,
@@ -382,12 +844,47 @@ class FrozenHypothesis:
                 self.discovery_support_receipt_ids
             ),
         }
+        if self.provenance_schema_version == PROVENANCE_COMMITMENT_V4:
+            result.update({
+                "provenance_schema_version": self.provenance_schema_version,
+                "discovery_read_commitment": (
+                    self.discovery_read_commitment.manifest()
+                    if self.discovery_read_commitment is not None else None
+                ),
+                "discovery_exclusion_commitment": (
+                    self.discovery_exclusion_commitment.manifest()
+                    if self.discovery_exclusion_commitment is not None else None
+                ),
+                "nomination_read_commitments": {
+                    name: commitment.manifest()
+                    for name, commitment in self.nomination_read_commitments
+                },
+            })
+        return result
 
     def manifest(self) -> dict[str, Any]:
         return {
             **self.identity_manifest(),
             "hypothesis_digest": self.hypothesis_digest,
         }
+
+
+def _receipt_is_post_birth(
+    hypothesis: FrozenHypothesis,
+    receipt: AcceptedRealReference | V2GroundedReceipt,
+) -> bool:
+    """Use the scalar compact event frontier, retaining legacy ID checks."""
+
+    commitment = hypothesis.discovery_exclusion_commitment
+    if (
+        hypothesis.provenance_schema_version == PROVENANCE_COMMITMENT_V4
+        and isinstance(commitment, ProvenanceCommitment)
+    ):
+        return receipt.ordinal >= commitment.exclusive_frontier
+    return bool(
+        receipt.ordinal > hypothesis.certification_frontier
+        and receipt.receipt_id not in hypothesis.discovery_exclusion_receipt_ids
+    )
 
 
 @dataclass(frozen=True)
@@ -436,6 +933,67 @@ class ProspectiveAuthorityState:
     success_lower_bound: float = 0.0
     contradiction_lower_bound: float = 0.0
     transition_rows: tuple[dict[str, Any], ...] = ()
+    # Retired adaptive candidates stay in this append-only state ledger so
+    # complete replay can still reconstruct every historical graph decision.
+    # They are excluded from the live authority topology by
+    # ``_live_authority_states``.  The defaults keep old pickles readable.
+    retired: bool = False
+    retirement_generation: int | None = None
+    retirement_ordinal: int | None = None
+    retirement_reason: str | None = None
+    retirement_tombstone_digest: str | None = None
+    # Runtime-only rolling summaries used by read-only VIRTUAL provenance.
+    certification_receipt_digest: str = field(
+        default="",
+        repr=False,
+        compare=False,
+    )
+
+    def __post_init__(self) -> None:
+        # Keep the protocol-facing tuple annotations for compatibility while
+        # storing append-only event logs as mutable lists.  A REAL event then
+        # appends in amortized O(1), and manifests/full replay canonicalize
+        # them back to lists without changing their wire representation.
+        for name in (
+            "certification_receipt_ids",
+            "support_receipt_ids",
+            "contradiction_receipt_ids",
+            "transition_rows",
+        ):
+            value = getattr(self, name)
+            if not isinstance(value, _AppendOnlyLedger):
+                setattr(self, name, _AppendOnlyLedger(value))
+        if not self.certification_receipt_digest:
+            self.certification_receipt_digest = (
+                _append_log_digest(
+                    self.certification_receipt_ids,
+                    kind="certification_receipt",
+                )
+            )
+
+    def __setstate__(self, state: Mapping[str, Any]) -> None:
+        """Make pre-metabolism authority pickles structurally readable."""
+
+        self.__dict__.update(state)
+        for name in (
+            "certification_receipt_ids",
+            "support_receipt_ids",
+            "contradiction_receipt_ids",
+            "transition_rows",
+        ):
+            value = getattr(self, name, ())
+            if not isinstance(value, _AppendOnlyLedger):
+                setattr(self, name, _AppendOnlyLedger(value))
+        if not getattr(self, "certification_receipt_digest", ""):
+            self.certification_receipt_digest = _append_log_digest(
+                self.certification_receipt_ids,
+                kind="certification_receipt",
+            )
+        self.__dict__.setdefault("retired", False)
+        self.__dict__.setdefault("retirement_generation", None)
+        self.__dict__.setdefault("retirement_ordinal", None)
+        self.__dict__.setdefault("retirement_reason", None)
+        self.__dict__.setdefault("retirement_tombstone_digest", None)
 
     def manifest(self) -> dict[str, Any]:
         return {
@@ -450,6 +1008,15 @@ class ProspectiveAuthorityState:
             "success_lower_bound": self.success_lower_bound,
             "contradiction_lower_bound": self.contradiction_lower_bound,
             "transition_rows": list(self.transition_rows),
+            "retired": bool(getattr(self, "retired", False)),
+            "retirement_generation": getattr(
+                self, "retirement_generation", None
+            ),
+            "retirement_ordinal": getattr(self, "retirement_ordinal", None),
+            "retirement_reason": getattr(self, "retirement_reason", None),
+            "retirement_tombstone_digest": getattr(
+                self, "retirement_tombstone_digest", None
+            ),
         }
 
 
@@ -617,6 +1184,21 @@ class SpecializationCandidateTerminalState:
     confirmed: bool
     node_state: str
     inspected_receipt_ids: tuple[str, ...]
+    evidence_schema_version: str | None = None
+    supporting_receipt_commitment: ProvenanceCommitment | None = None
+    inspected_receipt_commitment: ProvenanceCommitment | None = None
+
+    def __setstate__(self, state: Mapping[str, Any]) -> None:
+        for key, value in state.items():
+            object.__setattr__(self, key, value)
+        for key, value in {
+            "evidence_schema_version": None,
+            "supporting_receipt_commitment": None,
+            "inspected_receipt_commitment": None,
+        }.items():
+            if not hasattr(self, key):
+                object.__setattr__(self, key, value)
+        self.__post_init__()
 
     def __post_init__(self) -> None:
         object.__setattr__(
@@ -624,7 +1206,44 @@ class SpecializationCandidateTerminalState:
             "specialization_mode",
             SpecializationMode(self.specialization_mode),
         )
-        if self.supporting_occurrence_count != len(
+        compact = (
+            self.evidence_schema_version == PROVENANCE_COMMITMENT_V4
+            or self.supporting_receipt_commitment is not None
+            or self.inspected_receipt_commitment is not None
+        )
+        if compact:
+            if self.evidence_schema_version != PROVENANCE_COMMITMENT_V4:
+                raise ProspectiveV2IntegrityError(
+                    "compact eligibility lacks V4 evidence schema"
+                )
+            if not isinstance(
+                self.supporting_receipt_commitment,
+                ProvenanceCommitment,
+            ) or not isinstance(
+                self.inspected_receipt_commitment,
+                ProvenanceCommitment,
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "compact eligibility lacks evidence commitments"
+                )
+            if (
+                self.supporting_occurrence_count
+                != self.supporting_receipt_commitment.count
+                or tuple(self.supporting_receipt_ids)
+                != tuple(self.supporting_receipt_commitment.witness_ids)
+                or tuple(self.inspected_receipt_ids)
+                != tuple(self.inspected_receipt_commitment.witness_ids)
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "compact eligibility evidence disagrees"
+                )
+            if len(
+                self.supporting_stable_physical_interaction_ids
+            ) > PROVENANCE_WITNESS_LIMIT:
+                raise ProspectiveV2IntegrityError(
+                    "compact eligibility retains excess physical witnesses"
+                )
+        elif self.supporting_occurrence_count != len(
             self.supporting_receipt_ids
         ):
             raise ProspectiveV2IntegrityError(
@@ -640,8 +1259,11 @@ class SpecializationCandidateTerminalState:
             or tuple(sorted(
                 self.supporting_stable_physical_interaction_ids
             )) != self.supporting_stable_physical_interaction_ids
-            or len(self.supporting_receipt_ids)
-            != len(self.supporting_stable_physical_interaction_ids)
+            or (
+                not compact
+                and len(self.supporting_receipt_ids)
+                != len(self.supporting_stable_physical_interaction_ids)
+            )
         ):
             raise ProspectiveV2IntegrityError(
                 "noncanonical eligibility support evidence"
@@ -651,8 +1273,11 @@ class SpecializationCandidateTerminalState:
             != len(self.inspected_receipt_ids)
             or tuple(sorted(self.inspected_receipt_ids))
             != self.inspected_receipt_ids
-            or not set(self.supporting_receipt_ids).issubset(
-                self.inspected_receipt_ids
+            or (
+                not compact
+                and not set(self.supporting_receipt_ids).issubset(
+                    self.inspected_receipt_ids
+                )
             )
         ):
             raise ProspectiveV2IntegrityError(
@@ -685,7 +1310,7 @@ class SpecializationCandidateTerminalState:
             )
 
     def manifest(self) -> dict[str, Any]:
-        return {
+        result = {
             "identity": self.identity,
             "node_id": self.node_id,
             "role_permitted": self.role_permitted,
@@ -705,6 +1330,19 @@ class SpecializationCandidateTerminalState:
             "node_state": self.node_state,
             "inspected_receipt_ids": list(self.inspected_receipt_ids),
         }
+        if self.evidence_schema_version == PROVENANCE_COMMITMENT_V4:
+            result.update({
+                "evidence_schema_version": self.evidence_schema_version,
+                "supporting_receipt_commitment": (
+                    self.supporting_receipt_commitment.manifest()
+                    if self.supporting_receipt_commitment is not None else None
+                ),
+                "inspected_receipt_commitment": (
+                    self.inspected_receipt_commitment.manifest()
+                    if self.inspected_receipt_commitment is not None else None
+                ),
+            })
+        return result
 
 
 @dataclass(frozen=True)
@@ -727,6 +1365,29 @@ class DeferredSpecializationRequest:
     candidate_terminals: tuple[SpecializationCandidateTerminalState, ...]
     graph_revocation_confirmed: bool
     graph_request_confirmed: bool
+    provenance_schema_version: str | None = None
+    parent_discovery_commitment: ProvenanceCommitment | None = None
+    parent_discovery_support_commitment: ProvenanceCommitment | None = None
+    parent_prospective_support_commitment: ProvenanceCommitment | None = None
+    transitive_ancestor_commitment: ProvenanceCommitment | None = None
+    parent_query_commitment: str | None = None
+    candidate_inspected_commitment: ProvenanceCommitment | None = None
+
+    def __setstate__(self, state: Mapping[str, Any]) -> None:
+        for key, value in state.items():
+            object.__setattr__(self, key, value)
+        for key, value in {
+            "provenance_schema_version": None,
+            "parent_discovery_commitment": None,
+            "parent_discovery_support_commitment": None,
+            "parent_prospective_support_commitment": None,
+            "transitive_ancestor_commitment": None,
+            "parent_query_commitment": None,
+            "candidate_inspected_commitment": None,
+        }.items():
+            if not hasattr(self, key):
+                object.__setattr__(self, key, value)
+        self.__post_init__()
 
     def __post_init__(self) -> None:
         object.__setattr__(
@@ -780,11 +1441,72 @@ class DeferredSpecializationRequest:
             raise ProspectiveV2IntegrityError(
                 "uncertified mixed-evidence request claims revocation"
             )
+        compact = (
+            self.provenance_schema_version == PROVENANCE_COMMITMENT_V4
+            or self.parent_discovery_commitment is not None
+            or self.parent_discovery_support_commitment is not None
+            or self.parent_prospective_support_commitment is not None
+            or self.transitive_ancestor_commitment is not None
+            or self.candidate_inspected_commitment is not None
+        )
+        if compact:
+            if self.provenance_schema_version != PROVENANCE_COMMITMENT_V4:
+                raise ProspectiveV2IntegrityError(
+                    "compact request lacks V4 provenance schema"
+                )
+            commitments = (
+                self.parent_discovery_commitment,
+                self.parent_discovery_support_commitment,
+                self.parent_prospective_support_commitment,
+                self.transitive_ancestor_commitment,
+                self.candidate_inspected_commitment,
+            )
+            if any(
+                not isinstance(item, ProvenanceCommitment)
+                for item in commitments
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "compact request lacks provenance commitment"
+                )
+            for values, commitment in zip(
+                (
+                    self.parent_discovery_receipt_ids,
+                    self.parent_discovery_support_receipt_ids,
+                    self.parent_prospective_support_receipt_ids,
+                    self.transitive_ancestor_receipt_ids,
+                ),
+                commitments[:4],
+            ):
+                if tuple(values) != tuple(commitment.witness_ids):
+                    raise ProspectiveV2IntegrityError(
+                        "compact request witness mismatch"
+                    )
+            if self.parent_query_commitment is not None and (
+                len(self.parent_query_commitment) != 64
+                or any(
+                    char not in "0123456789abcdef"
+                    for char in self.parent_query_commitment
+                )
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "compact request query commitment is not SHA-256"
+                )
+            if any(
+                item.evidence_schema_version != PROVENANCE_COMMITMENT_V4
+                for item in self.candidate_terminals
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "compact request contains legacy candidate evidence"
+                )
+            if len(self.candidate_terminals) > SPECIALIZATION_CANDIDATE_BEAM_WIDTH:
+                raise ProspectiveV2IntegrityError(
+                    "compact request exceeds specialization candidate beam"
+                )
 
     def identity_manifest(self) -> dict[str, Any]:
         """All causal request fields bound by ``request_id``."""
 
-        return {
+        result = {
             "source_generation": self.source_generation,
             "parent_cell_id": self.parent_cell_id,
             "parent_hypothesis_digest": self.parent_hypothesis_digest,
@@ -815,6 +1537,34 @@ class DeferredSpecializationRequest:
             "graph_revocation_confirmed": self.graph_revocation_confirmed,
             "graph_request_confirmed": self.graph_request_confirmed,
         }
+        if self.provenance_schema_version == PROVENANCE_COMMITMENT_V4:
+            result.update({
+                "provenance_schema_version": self.provenance_schema_version,
+                "parent_discovery_commitment": (
+                    self.parent_discovery_commitment.manifest()
+                    if self.parent_discovery_commitment is not None else None
+                ),
+                "parent_discovery_support_commitment": (
+                    self.parent_discovery_support_commitment.manifest()
+                    if self.parent_discovery_support_commitment is not None
+                    else None
+                ),
+                "parent_prospective_support_commitment": (
+                    self.parent_prospective_support_commitment.manifest()
+                    if self.parent_prospective_support_commitment is not None
+                    else None
+                ),
+                "transitive_ancestor_commitment": (
+                    self.transitive_ancestor_commitment.manifest()
+                    if self.transitive_ancestor_commitment is not None else None
+                ),
+                "parent_query_commitment": self.parent_query_commitment,
+                "candidate_inspected_commitment": (
+                    self.candidate_inspected_commitment.manifest()
+                    if self.candidate_inspected_commitment is not None else None
+                ),
+            })
+        return result
 
     @property
     def eligible_base_ids(self) -> tuple[str, ...]:
@@ -828,6 +1578,257 @@ class DeferredSpecializationRequest:
             "request_id": self.request_id,
             **self.identity_manifest(),
         }
+
+
+def _boundary_promotion_gate_manifest(
+    *,
+    candidate_id: str,
+    members: Sequence[str],
+    fixed_polarity: AvailabilityState,
+    triggering_receipt_id: str,
+    supporting_receipt_ids: Sequence[str],
+    inspected_receipt_ids: Sequence[str],
+    promotion_gate_state: str,
+) -> dict[str, Any]:
+    """Return the small, content-blind gate payload bound by a request."""
+
+    return {
+        "candidate_id": candidate_id,
+        "members": list(members),
+        "fixed_polarity": fixed_polarity.value,
+        "triggering_receipt_id": triggering_receipt_id,
+        "supporting_receipt_ids": list(supporting_receipt_ids),
+        "inspected_receipt_ids": list(inspected_receipt_ids),
+        "promotion_gate_state": promotion_gate_state,
+    }
+
+
+@dataclass(frozen=True)
+class BoundaryPromotionRequest:
+    """Immutable authority input for one promoted ordinary boundary sketch."""
+
+    candidate_id: str
+    members: tuple[str, ...]
+    fixed_polarity: AvailabilityState
+    triggering_receipt_id: str
+    supporting_receipt_ids: tuple[str, ...]
+    inspected_receipt_ids: tuple[str, ...]
+    source_generation: int
+    promotion_gate_state: str = BOUNDARY_PROMOTION_GATE_STATE
+    promotion_gate_digest: str = ""
+    provenance_schema_version: str | None = None
+    supporting_receipt_commitment: ProvenanceCommitment | None = None
+    inspected_receipt_commitment: ProvenanceCommitment | None = None
+
+    def __setstate__(self, state: Mapping[str, Any]) -> None:
+        for key, value in state.items():
+            object.__setattr__(self, key, value)
+        for key, value in {
+            "provenance_schema_version": None,
+            "supporting_receipt_commitment": None,
+            "inspected_receipt_commitment": None,
+        }.items():
+            if not hasattr(self, key):
+                object.__setattr__(self, key, value)
+        self.__post_init__()
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.candidate_id, str) or not self.candidate_id:
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion candidate identity is required"
+            )
+        members = tuple(self.members)
+        if (
+            not members
+            or len(members) > 3
+            or any(
+                not isinstance(item, str)
+                or not item
+                or item.startswith("context:")
+                or item == "internal:policy_response"
+                for item in members
+            )
+            or tuple(sorted(set(members))) != members
+        ):
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion members are not canonical opaque signals"
+            )
+        object.__setattr__(self, "members", members)
+        polarity = self.fixed_polarity
+        if isinstance(polarity, bool):
+            polarity = (
+                AvailabilityState.AVAILABLE
+                if polarity else AvailabilityState.REFUTED
+            )
+        try:
+            polarity = AvailabilityState(polarity)
+        except (TypeError, ValueError) as exc:
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion polarity is not fixed"
+            ) from exc
+        if polarity is AvailabilityState.UNKNOWN:
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion polarity cannot be UNKNOWN"
+            )
+        object.__setattr__(self, "fixed_polarity", polarity)
+        if (
+            not isinstance(self.triggering_receipt_id, str)
+            or not self.triggering_receipt_id
+        ):
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion trigger receipt is required"
+            )
+        for name in (
+            "supporting_receipt_ids", "inspected_receipt_ids",
+        ):
+            values = tuple(getattr(self, name))
+            if (
+                any(not isinstance(item, str) or not item for item in values)
+                or len(set(values)) != len(values)
+            ):
+                raise ProspectiveV2IntegrityError(
+                    f"boundary promotion {name} are not canonical"
+                )
+            object.__setattr__(self, name, tuple(sorted(values)))
+        compact = (
+            self.provenance_schema_version == PROVENANCE_COMMITMENT_V4
+            or self.supporting_receipt_commitment is not None
+            or self.inspected_receipt_commitment is not None
+        )
+        if compact:
+            if self.provenance_schema_version != PROVENANCE_COMMITMENT_V4:
+                raise ProspectiveV2IntegrityError(
+                    "compact boundary request lacks V4 provenance schema"
+                )
+            if not isinstance(
+                self.supporting_receipt_commitment, ProvenanceCommitment
+            ) or not isinstance(
+                self.inspected_receipt_commitment, ProvenanceCommitment
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "compact boundary request lacks evidence commitment"
+                )
+            if (
+                self.supporting_receipt_ids
+                != self.supporting_receipt_commitment.witness_ids
+                or self.inspected_receipt_ids
+                != self.inspected_receipt_commitment.witness_ids
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "compact boundary request witness mismatch"
+                )
+        if (
+            isinstance(self.source_generation, bool)
+            or not isinstance(self.source_generation, int)
+            or self.source_generation < 0
+        ):
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion source generation is invalid"
+            )
+        gate_state = self.promotion_gate_state
+        if isinstance(gate_state, bool):
+            gate_state = (
+                BOUNDARY_PROMOTION_GATE_STATE
+                if gate_state else "REJECTED"
+            )
+        if gate_state != BOUNDARY_PROMOTION_GATE_STATE:
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion gate did not confirm"
+            )
+        object.__setattr__(self, "promotion_gate_state", gate_state)
+        expected_gate_digest = _sha(self.gate_manifest())
+        if self.promotion_gate_digest:
+            if self.promotion_gate_digest != expected_gate_digest:
+                raise ProspectiveV2IntegrityError(
+                    "boundary promotion gate digest mismatch"
+                )
+        else:
+            object.__setattr__(
+                self, "promotion_gate_digest", expected_gate_digest
+            )
+
+    def gate_manifest(self) -> dict[str, Any]:
+        result = _boundary_promotion_gate_manifest(
+            candidate_id=self.candidate_id,
+            members=self.members,
+            fixed_polarity=self.fixed_polarity,
+            triggering_receipt_id=self.triggering_receipt_id,
+            supporting_receipt_ids=self.supporting_receipt_ids,
+            inspected_receipt_ids=self.inspected_receipt_ids,
+            promotion_gate_state=self.promotion_gate_state,
+        )
+        if self.provenance_schema_version == PROVENANCE_COMMITMENT_V4:
+            result["supporting_receipt_commitment"] = (
+                self.supporting_receipt_commitment.manifest()
+                if self.supporting_receipt_commitment is not None else None
+            )
+            result["inspected_receipt_commitment"] = (
+                self.inspected_receipt_commitment.manifest()
+                if self.inspected_receipt_commitment is not None else None
+            )
+        return result
+
+    def identity_manifest(self) -> dict[str, Any]:
+        result = {
+            "schema_version": BOUNDARY_PROMOTION_REQUEST_SCHEMA,
+            **self.gate_manifest(),
+            "source_generation": self.source_generation,
+            "promotion_gate_digest": self.promotion_gate_digest,
+        }
+        if self.provenance_schema_version == PROVENANCE_COMMITMENT_V4:
+            result["provenance_schema_version"] = self.provenance_schema_version
+        return result
+
+    @property
+    def request_digest(self) -> str:
+        return _sha({
+            "kind": "V2_BOUNDARY_PROMOTION_REQUEST_V1",
+            "request": self.identity_manifest(),
+        })
+
+    def manifest(self) -> dict[str, Any]:
+        return {
+            **self.identity_manifest(),
+            "request_digest": self.request_digest,
+        }
+
+    @classmethod
+    def from_manifest(
+        cls, value: Mapping[str, Any]
+    ) -> "BoundaryPromotionRequest":
+        if value.get("schema_version") != BOUNDARY_PROMOTION_REQUEST_SCHEMA:
+            raise ProspectiveV2IntegrityError(
+                "unsupported boundary promotion request schema"
+            )
+        item = cls(
+            candidate_id=value["candidate_id"],
+            members=tuple(value["members"]),
+            fixed_polarity=value["fixed_polarity"],
+            triggering_receipt_id=value["triggering_receipt_id"],
+            supporting_receipt_ids=tuple(value["supporting_receipt_ids"]),
+            inspected_receipt_ids=tuple(value["inspected_receipt_ids"]),
+            source_generation=value.get("source_generation", 0),
+            promotion_gate_state=value.get(
+                "promotion_gate_state", BOUNDARY_PROMOTION_GATE_STATE
+            ),
+            promotion_gate_digest=value.get("promotion_gate_digest", ""),
+            provenance_schema_version=value.get("provenance_schema_version"),
+            supporting_receipt_commitment=(
+                _provenance_commitment_from_manifest(
+                    value.get("supporting_receipt_commitment")
+                )
+            ),
+            inspected_receipt_commitment=(
+                _provenance_commitment_from_manifest(
+                    value.get("inspected_receipt_commitment")
+                )
+            ),
+        )
+        if value.get("request_digest") not in {None, item.request_digest}:
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion request digest mismatch"
+            )
+        return item
 
 
 @dataclass(frozen=True)
@@ -850,6 +1851,20 @@ class StructuralRequestConsumption:
             "disposition": self.disposition,
             "child_cell_id": self.child_cell_id,
         }
+
+
+@dataclass(frozen=True)
+class _DeferredRequestPlan:
+    """Pure preview of one deferred genome request.
+
+    A plan is intentionally separate from the mutable consumption record.  It
+    lets a safe point run the organism-owned genome exactly once for every
+    pending request, forecast the complete batch, and only then mutate the
+    authority.  The resulting ``StructuralRequestConsumption`` is copied into
+    the append-only ledger when the plan is committed.
+    """
+
+    consumption: StructuralRequestConsumption
 
 
 @dataclass(frozen=True)
@@ -888,9 +1903,18 @@ class GenerationBoundary:
     candidate_manifest_digest: str
     parent_decision_history_digest: str
     specialization_genome_seed: int
+    # The first structural boundary is anchored to the frozen base V3
+    # continuation.  Subsequent boundaries in new authorities use the
+    # authority mutation-chain commitment; old pickles omit this field and
+    # remain on the flat-manifest verifier.
+    prior_digest_schema: str = BOUNDARY_DIGEST_SCHEMA_LEGACY
+    # Adaptive live-slot reclamations committed by this structural
+    # transaction.  This is an audit-only projection: IDs remain tombstoned
+    # in the authority state and are never reused.
+    retired_cell_ids: tuple[str, ...] = ()
 
     def manifest(self) -> dict[str, Any]:
-        return {
+        manifest = {
             "generation": self.generation,
             "phase": self.phase.value,
             "event_frontier": self.event_frontier,
@@ -905,7 +1929,16 @@ class GenerationBoundary:
                 self.parent_decision_history_digest
             ),
             "specialization_genome_seed": self.specialization_genome_seed,
+            "retired_cell_ids": list(getattr(self, "retired_cell_ids", ())),
         }
+        # Do not alter the canonical shape of pre-chain pickles: their flat
+        # continuation digests were computed before this field existed.
+        schema = getattr(
+            self, "prior_digest_schema", BOUNDARY_DIGEST_SCHEMA_LEGACY
+        )
+        if schema != BOUNDARY_DIGEST_SCHEMA_LEGACY:
+            manifest["prior_digest_schema"] = schema
+        return manifest
 
 
 @dataclass(frozen=True)
@@ -991,15 +2024,25 @@ def _cell_node_ids(cell_id: str) -> tuple[str, ...]:
     return tuple(f"v2:{role}:{cell_id}" for role in CELL_AUTHORITY_ROLES)
 
 
-def _cell_topology_identity(cell_id: str) -> str:
-    return _sha({
+def _cell_topology_identity(
+    cell_id: str,
+    hypothesis_digest: str | None = None,
+) -> str:
+    payload = {
         "cell_id": cell_id,
         "nodes": list(_cell_node_ids(cell_id)),
         "edges": [
             [ROLE_ROOTS[role], f"v2:{role}:{cell_id}", "SUB_SUR"]
             for role in CELL_AUTHORITY_ROLES
         ],
-    })
+    }
+    # Legacy invariants intentionally retain their historical identity.  A
+    # V4 leaf, however, is executable only together with its immutable
+    # hypothesis commitment; bind that digest so replacing its provenance
+    # cannot leave a stale structural identity behind.
+    if hypothesis_digest is not None:
+        payload["hypothesis_digest"] = hypothesis_digest
+    return _sha(payload)
 
 
 def _structural_match_descriptors(
@@ -1021,7 +2064,28 @@ def _structural_match_descriptors(
             hypothesis_digest=value.hypothesis.hypothesis_digest,
         )
         for item_id, value in states.items()
+        if not getattr(value, "retired", False)
     })
+
+
+def _live_authority_states(
+    states: Mapping[str, ProspectiveAuthorityState],
+) -> dict[str, ProspectiveAuthorityState]:
+    """Return the bounded live view while retaining retired state for replay.
+
+    Retirement is an authority lifecycle operation, not deletion from the
+    append-only evidence ledger.  Every graph constructor goes through this
+    helper so a retired candidate can never match, emit, or consume a live
+    successor slot even though its immutable evidence remains auditable.
+    """
+
+    if isinstance(states, _LiveAuthorityStateView):
+        return states
+    return {
+        cell_id: state
+        for cell_id, state in states.items()
+        if not getattr(state, "retired", False)
+    }
 
 
 def _structural_pattern_matches_descriptors(
@@ -1111,9 +2175,11 @@ def _specialization_request_basis(
         matched
         and post_frontier
         and (supports or contradicts)
-        and state.hypothesis.specialization_depth == 0
-        and state.hypothesis.dormant_origin
-        is DormantOrigin.MIXED_OUTCOME_SHADOW
+        and state.hypothesis.dormant_origin in {
+            DormantOrigin.MIXED_OUTCOME_SHADOW,
+            DormantOrigin.DEFERRED_SPECIALIZATION_CHILD,
+            DormantOrigin.ADAPTIVE_BOUNDARY_CHILD,
+        }
         and not already_requested
         and specialization_mode is not SpecializationMode.DISCONNECTED
     ):
@@ -1168,6 +2234,68 @@ def _validate_current_real_reference(
         )
 
 
+def _bounded_specialization_evidence_ids(
+    *,
+    support_receipt_ids: Sequence[str],
+    contradiction_receipt_ids: Sequence[str],
+    discovery_support_receipt_ids: Sequence[str],
+    emission_receipt_id: str,
+    supports: bool,
+    contradicts: bool,
+    basis: RequestBasis,
+) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+    """Select the deterministic, bounded evidence window for one trigger.
+
+    A request needs only enough prospective support to establish
+    ``MIN_SUPPORT`` and one contradiction anchor.  The append-only ledgers
+    remain complete for replay, but a late trigger must not materialize or
+    sort their lifetime-sized contents.  Support ledgers are chronological,
+    so their tail is sufficient; contradiction ledgers are chronological as
+    well, making the first entry the earliest anchor in O(1).  Discovery
+    support is an immutable R0-derived read set, not a per-event ledger, and
+    is retained in full to preserve the request's existing candidate
+    vocabulary semantics.  Thus the only growing history touched here is the
+    fixed-size prospective window plus one contradiction anchor.
+
+    ``support_receipt_ids`` and ``contradiction_receipt_ids`` describe the
+    evidence *before* the triggering receipt.  The hot path naturally passes
+    the pre-event state; full-boundary reconstruction supplies the same
+    prefix explicitly.
+    """
+
+    prior_support_count = MIN_SUPPORT - 1 if supports else MIN_SUPPORT
+    prior_support_ids = (
+        () if prior_support_count <= 0
+        else tuple(support_receipt_ids[-prior_support_count:])
+    )
+    prospective_support_ids = (
+        (*prior_support_ids, emission_receipt_id)
+        if supports else prior_support_ids
+    )
+    discovery_support_ids = (
+        discovery_support_receipt_ids
+        if isinstance(discovery_support_receipt_ids, tuple)
+        else tuple(discovery_support_receipt_ids)
+    )
+    if basis is RequestBasis.CERTIFIED_REVOCATION:
+        contradiction_ids = (emission_receipt_id,)
+    elif contradiction_receipt_ids:
+        contradiction_ids = (contradiction_receipt_ids[0],)
+    elif contradicts:
+        contradiction_ids = (emission_receipt_id,)
+    else:
+        contradiction_ids = ()
+    all_support_ids = tuple(sorted({
+        *discovery_support_ids,
+        *prospective_support_ids,
+    }))
+    return (
+        tuple(sorted(prospective_support_ids)),
+        contradiction_ids,
+        all_support_ids,
+    )
+
+
 def _derive_specialization_request_trigger(
     state: ProspectiveAuthorityState,
     receipt: V2GroundedReceipt,
@@ -1184,10 +2312,7 @@ def _derive_specialization_request_trigger(
     if not current_reference_validated:
         _validate_current_real_reference(receipt, current_reference)
     post_frontier = bool(
-        receipt.receipt_id
-        and receipt.ordinal > state.hypothesis.certification_frontier
-        and receipt.receipt_id
-        not in state.hypothesis.discovery_exclusion_receipt_ids
+        receipt.receipt_id and _receipt_is_post_birth(state.hypothesis, receipt)
     )
     supports = bool(post_frontier and _receipt_supports(state, receipt))
     contradicts = bool(post_frontier and not supports)
@@ -1203,19 +2328,26 @@ def _derive_specialization_request_trigger(
     if basis is None:
         return None
 
-    prospective_support_ids = (
-        *state.support_receipt_ids,
-        *((receipt.receipt_id,) if supports else ()),
-    )
-    contradiction_ids = (
-        *state.contradiction_receipt_ids,
-        *((receipt.receipt_id,) if contradicts else ()),
+    (
+        prospective_support_ids,
+        contradiction_ids,
+        all_support_ids,
+    ) = _bounded_specialization_evidence_ids(
+        support_receipt_ids=state.support_receipt_ids,
+        contradiction_receipt_ids=state.contradiction_receipt_ids,
+        discovery_support_receipt_ids=(
+            state.hypothesis.discovery_support_receipt_ids
+        ),
+        emission_receipt_id=receipt.receipt_id,
+        supports=supports,
+        contradicts=contradicts,
+        basis=basis,
     )
     missing = tuple(sorted(
         receipt_id for receipt_id in {
             *prospective_support_ids,
             *contradiction_ids,
-            *state.hypothesis.discovery_support_receipt_ids,
+            *all_support_ids,
             receipt.receipt_id,
         }
         if receipt_id not in references
@@ -1229,21 +2361,15 @@ def _derive_specialization_request_trigger(
         raise ProspectiveV2IntegrityError(
             "specialization request has no contradiction anchor"
         )
-    contradiction_reference = min(
-        (references[item] for item in contradiction_ids),
-        key=lambda item: (item.ordinal, item.receipt_id),
-    )
+    # ``contradiction_ids`` contains only the chronological first anchor (or
+    # the current receipt for certified revocation), so lookup is O(1).
+    contradiction_reference = references[contradiction_ids[0]]
     return _SpecializationRequestTrigger(
         basis=basis,
         emission_reference=current_reference,
         contradiction_reference=contradiction_reference,
-        parent_prospective_support_receipt_ids=tuple(sorted(
-            prospective_support_ids
-        )),
-        all_support_receipt_ids=tuple(sorted({
-            *state.hypothesis.discovery_support_receipt_ids,
-            *prospective_support_ids,
-        })),
+        parent_prospective_support_receipt_ids=prospective_support_ids,
+        all_support_receipt_ids=all_support_ids,
     )
 
 
@@ -1286,15 +2412,19 @@ class _AuthorityTerminalEvaluationCache:
         states: Mapping[str, ProspectiveAuthorityState],
         env: Mapping[str, Any],
     ) -> _AuthorityTerminalEvaluationCache:
+        requested = env.get("lifetime_requested_parent_ids", ())
+        # The live authority supplies its persistent O(1) membership index.
+        # Only legacy/boundary callers which hand us a sequence need a local
+        # immutable conversion (those paths are not the REAL hot path).
+        if not isinstance(requested, (set, frozenset)):
+            requested = frozenset(requested)
         return cls(
             snapshot=snapshot,
             states=states,
             specialization_mode=SpecializationMode(env.get(
                 "specialization_mode", SpecializationMode.DISCONNECTED.value
             )),
-            lifetime_requested_parent_ids=frozenset(
-                env.get("lifetime_requested_parent_ids", ())
-            ),
+            lifetime_requested_parent_ids=requested,
             structural_matches=_StructuralPatternMatchCache(
                 descriptors=_structural_match_descriptors(states),
                 active_signal_ids=frozenset(
@@ -1319,9 +2449,7 @@ class _AuthorityTerminalEvaluationCache:
             post_frontier = bool(
                 receipt is not None
                 and receipt.receipt_id
-                and receipt.ordinal > state.hypothesis.certification_frontier
-                and receipt.receipt_id
-                not in state.hypothesis.discovery_exclusion_receipt_ids
+                and _receipt_is_post_birth(state.hypothesis, receipt)
             )
             supports = bool(
                 post_frontier
@@ -1490,8 +2618,11 @@ def _v2_specialization_eligibility_terminal(
 
 def _build_authority_graph(
     states: Mapping[str, ProspectiveAuthorityState],
+    *,
+    legacy_full_hypothesis_meta: bool = False,
 ) -> Graph:
     """Build the canonical organism-owned authority graph."""
+    states = _live_authority_states(states)
     graph = Graph()
     for role in CELL_AUTHORITY_ROLES:
         graph.add_node(Node(
@@ -1500,15 +2631,25 @@ def _build_authority_graph(
         ))
         for cell_id in sorted(states):
             node_id = f"v2:{role}:{cell_id}"
+            leaf_meta = {
+                "terminal_kind": f"PROSPECTIVE_{role.upper()}",
+                "authority_role": role,
+                "cell_id": cell_id,
+            }
+            if legacy_full_hypothesis_meta:
+                # Schema-less V1--V3 checkpoints persisted this exact leaf
+                # payload.  It is rebuilt only for compatibility reclosure;
+                # runtime execution always uses the compact digest identity.
+                leaf_meta["frozen_hypothesis"] = (
+                    states[cell_id].hypothesis.manifest()
+                )
+            else:
+                leaf_meta["hypothesis_digest"] = (
+                    states[cell_id].hypothesis.hypothesis_digest
+                )
             graph.add_node(Node(
                 node_id, NodeType.TERMINAL, predicate=_authority_terminal,
-                meta={
-                    "terminal_kind": f"PROSPECTIVE_{role.upper()}",
-                    "authority_role": role,
-                    "cell_id": cell_id,
-                    "frozen_hypothesis":
-                        states[cell_id].hypothesis.manifest(),
-                },
+                meta=leaf_meta,
             ))
             graph.add_hierarchy_pair(ROLE_ROOTS[role], node_id)
     return graph
@@ -1605,9 +2746,31 @@ def _executed_authority_topology_manifest(
 ) -> dict[str, Any]:
     """Describe the exact freshly built graph that authority executes."""
 
-    graph = _build_authority_graph(states)
-    return {
-        "graph_snapshot": graph.to_snapshot(),
+    sticky_schema = getattr(states, "topology_schema_version", None)
+    compact = (
+        sticky_schema == "native_v2_authority_topology.v2_digest_only"
+        if sticky_schema is not None
+        else any(
+            state.hypothesis.provenance_schema_version
+            == PROVENANCE_COMMITMENT_V4
+            for state in states.values()
+        )
+    )
+    if compact and hasattr(states, "topology_schema_version"):
+        # Once a live V4 birth has selected the compact representation, keep
+        # that representation even if the birth is subsequently retired and
+        # no V4 state remains in this bounded live view.
+        setattr(
+            states,
+            "topology_schema_version",
+            "native_v2_authority_topology.v2_digest_only",
+        )
+    graph = _build_authority_graph(
+        states,
+        legacy_full_hypothesis_meta=not compact,
+    )
+    graph_snapshot = graph.to_snapshot()
+    result = {
         "predicate_identities": {
             node_id: _predicate_identity(getattr(node, "predicate", None))
             for node_id, node in sorted(graph.nodes.items())
@@ -1632,6 +2795,20 @@ def _executed_authority_topology_manifest(
             ),
         },
     }
+    if compact:
+        # New compact authorities rebuild the execution graph from state and
+        # bind only its digest in durable topology.  Legacy authorities keep
+        # their old full snapshot so V1-V3/V7 load/replay remains exact.
+        result.update({
+            "topology_schema_version": (
+                "native_v2_authority_topology.v2_digest_only"
+            ),
+            "graph_snapshot_digest": _sha(graph_snapshot),
+            "graph_node_count": len(graph.nodes),
+        })
+    else:
+        result["graph_snapshot"] = graph_snapshot
+    return result
 
 
 def _run_authority_graph(
@@ -1642,7 +2819,12 @@ def _run_authority_graph(
     current_real_reference: AcceptedRealReference | None = None,
     specialization_mode: SpecializationMode = SpecializationMode.DISCONNECTED,
     lifetime_requested_parent_ids: Sequence[str] = (),
+    specialization_genome_seed: int = 0,
+    compact_provenance: bool = False,
 ) -> dict[str, Any]:
+    # Retired adaptive candidates remain in the replay state ledger, but are
+    # deliberately absent from every live graph invocation.
+    states = _live_authority_states(states)
     if not states:
         return {
             **{role: () for role in AUTHORITY_ROLES},
@@ -1657,9 +2839,10 @@ def _run_authority_graph(
             "authority_snapshot": snapshot,
             "authority_states": states,
             "specialization_mode": specialization_mode.value,
-            "lifetime_requested_parent_ids": tuple(
-                lifetime_requested_parent_ids
-            ),
+            # This is a persistent membership index on the REAL path.  Do not
+            # rebuild a tuple/frozenset from the lifetime request ledger for
+            # every terminal evaluation.
+            "lifetime_requested_parent_ids": lifetime_requested_parent_ids,
         },
     )
     result: dict[str, Any] = {
@@ -1676,7 +2859,9 @@ def _run_authority_graph(
     ] = []
     confirmed_tokens: list[str] = []
     receipt = snapshot.grounded_receipt
-    references = dict(accepted_real_references or {})
+    references: Mapping[str, AcceptedRealReference] = _ReferenceOverlay(
+        accepted_real_references
+    )
     if receipt is None:
         if current_real_reference is not None:
             raise ProspectiveV2IntegrityError(
@@ -1693,8 +2878,9 @@ def _run_authority_graph(
             raise ProspectiveV2IntegrityError(
                 "grounded graph REAL reference collision"
             )
-        references[current_real_reference.receipt_id] = (
-            current_real_reference
+        references = _ReferenceOverlay(
+            accepted_real_references,
+            current_real_reference,
         )
     if request_parents and receipt is None:
         raise ProspectiveV2IntegrityError(
@@ -1710,7 +2896,13 @@ def _run_authority_graph(
             },
         ))
         eligibility_plans: list[
-            tuple[str, tuple[str, ...], tuple[str, ...]]
+            tuple[
+                str,
+                tuple[str, ...],
+                tuple[str, ...],
+                int,
+                tuple[AcceptedRealReference, ...],
+            ]
         ] = []
         for parent_id in request_parents:
             state = states[parent_id]
@@ -1741,17 +2933,39 @@ def _run_authority_graph(
                 raise ProspectiveV2IntegrityError(
                     "request-bound support vocabulary is incomplete"
                 )
-            vocabulary = tuple(sorted({
+            vocabulary_set = {
                 identity
                 for reference in support_refs
                 for identity in reference.ordered_signal_identities
                 if _specialization_identity_role_permitted(
                     reference, identity
                 )
-            }))
+            }
+            support_counts = {
+                identity: sum(
+                    identity in reference.ordered_signal_identities
+                    for reference in support_refs
+                )
+                for identity in vocabulary_set
+            }
+            vocabulary = tuple(sorted(
+                vocabulary_set,
+                key=lambda identity: _specialization_feature_sort_key(
+                    identity,
+                    support_counts[identity],
+                    genome_seed=specialization_genome_seed,
+                    request_ordinal=0,
+                ),
+            ))[:SPECIALIZATION_CANDIDATE_BEAM_WIDTH]
             contradiction_signal_ids = (
                 trigger.contradiction_reference.ordered_signal_identities
             )
+            inspected = tuple(sorted({
+                *support_ids,
+                trigger.contradiction_reference.receipt_id,
+                trigger.emission_reference.receipt_id,
+            }))
+            inspected_witnesses = _bounded_provenance_witnesses(inspected)
             for identity in vocabulary:
                 occurrence_refs = tuple(
                     reference for reference in support_refs
@@ -1790,9 +3004,19 @@ def _run_authority_graph(
                         "recursively_implied_by_parent": (
                             identity in implied_ids
                         ),
-                        "supporting_receipt_ids": supporting_receipt_ids,
+                        "supporting_receipt_ids": (
+                            _bounded_provenance_witnesses(
+                                supporting_receipt_ids
+                            )
+                            if compact_provenance
+                            else supporting_receipt_ids
+                        ),
                         "supporting_stable_physical_interaction_ids": (
-                            supporting_physical_ids
+                            _bounded_provenance_witnesses(
+                                supporting_physical_ids
+                            )
+                            if compact_provenance
+                            else supporting_physical_ids
                         ),
                         "supporting_occurrence_count": len(
                             supporting_receipt_ids
@@ -1806,16 +3030,18 @@ def _run_authority_graph(
                 graph.add_hierarchy_pair(
                     ROLE_ROOTS["specialization_eligibility"], node_id
                 )
-            inspected = tuple(sorted({
-                *support_ids,
-                trigger.contradiction_reference.receipt_id,
-                trigger.emission_reference.receipt_id,
-            }))
-            eligibility_plans.append((parent_id, vocabulary, inspected))
+            eligibility_plans.append((
+                parent_id,
+                vocabulary,
+                inspected,
+                trigger.emission_reference.ordinal + 1,
+                support_refs,
+            ))
 
         if any(
             vocabulary
-            for _parent, vocabulary, _inspected in eligibility_plans
+            for _parent, vocabulary, _inspected, _frontier, _support_refs
+            in eligibility_plans
         ):
             _run_authority_component(
                 graph,
@@ -1823,7 +3049,13 @@ def _run_authority_graph(
                 env={},
             )
 
-        for parent_id, vocabulary, inspected in eligibility_plans:
+        for (
+            parent_id,
+            vocabulary,
+            inspected,
+            inspection_frontier,
+            support_refs,
+        ) in eligibility_plans:
             terminal_rows: list[SpecializationCandidateTerminalState] = []
             for identity in vocabulary:
                 token = hashlib.sha256(
@@ -1860,7 +3092,33 @@ def _run_authority_graph(
                     ),
                     confirmed=confirmed,
                     node_state=graph.nodes[node_id].state.name,
-                    inspected_receipt_ids=inspected,
+                    inspected_receipt_ids=(
+                        _bounded_provenance_witnesses(inspected)
+                        if compact_provenance else inspected
+                    ),
+                    evidence_schema_version=(
+                        PROVENANCE_COMMITMENT_V4
+                        if compact_provenance else None
+                    ),
+                    supporting_receipt_commitment=(
+                        _compact_set_commitment(
+                            tuple(
+                                reference.receipt_id
+                                for reference in support_refs
+                                if identity
+                                in reference.ordered_signal_identities
+                            ),
+                            exclusive_frontier=inspection_frontier,
+                        )
+                        if compact_provenance else None
+                    ),
+                    inspected_receipt_commitment=(
+                        _compact_set_commitment(
+                            inspected,
+                            exclusive_frontier=inspection_frontier,
+                        )
+                        if compact_provenance else None
+                    ),
                 ))
             candidate_states.append((parent_id, tuple(terminal_rows)))
     result["specialization_eligibility"] = tuple(sorted(confirmed_tokens))
@@ -2110,6 +3368,16 @@ class NativeProspectiveAuthorityV2:
     discovery_prefix_physical_fingerprints: tuple[str, ...]
     discovery_prefix_physical_fingerprint_digest: str
     specialization_genome_seed: int
+    # The tuple is the canonical persisted exclusion ledger.  REAL admission
+    # uses this immutable set projection so a long discovery prefix is not
+    # linearly rescanned for every post-nomination event.
+    _discovery_prefix_physical_fingerprint_set: frozenset[str] = field(
+        default_factory=frozenset, repr=False, compare=False
+    )
+    # Historical native-pruned cells and adaptive retirements are separate:
+    # the former belong to the frozen discovery ledger, while the latter are
+    # authority-local live-slot reclamations after prospective birth.
+    retired_tombstones: dict[str, dict[str, Any]] = field(default_factory=dict)
     specialization_mode: SpecializationMode = SpecializationMode.DISCONNECTED
     structural_epoch_schedule: tuple[int, ...] = ()
     current_generation: int = 0
@@ -2131,6 +3399,12 @@ class NativeProspectiveAuthorityV2:
     deferred_child_escrows: dict[str, NominationEscrow] = field(
         default_factory=dict
     )
+    boundary_promotion_requests: dict[str, BoundaryPromotionRequest] = field(
+        default_factory=dict
+    )
+    adaptive_boundary_escrows: dict[str, NominationEscrow] = field(
+        default_factory=dict
+    )
     generation_boundaries: tuple[GenerationBoundary, ...] = ()
     sealed_request_ids: tuple[str, ...] = ()
     sealed_request_queue_digest: str | None = None
@@ -2146,6 +3420,56 @@ class NativeProspectiveAuthorityV2:
     nomination_events: tuple[dict[str, Any], ...] = ()
     experimental_identity: dict[str, Any] | None = None
     incremental_history_state: IncrementalHistoryValidationState | None = None
+    # New authorities commit boundary chronology with an append-only
+    # mutation chain.  The legacy default is intentional for unpickled
+    # authorities created before this versioned field existed.
+    boundary_digest_schema: str = BOUNDARY_DIGEST_SCHEMA_LEGACY
+    _boundary_commitment_origin_digest: str = field(
+        default="", repr=False, compare=False
+    )
+    _boundary_commitment_digest: str = field(
+        default="", repr=False, compare=False
+    )
+    _boundary_commitment_count: int = field(
+        default=0, repr=False, compare=False
+    )
+    _boundary_accepted_real_digest: str = field(
+        default="", repr=False, compare=False
+    )
+    _boundary_candidate_digest: str = field(
+        default="", repr=False, compare=False
+    )
+    _boundary_decision_digest: str = field(
+        default="", repr=False, compare=False
+    )
+    _boundary_schedule_digest: str = field(
+        default="", repr=False, compare=False
+    )
+    _boundary_structure_digest: str = field(
+        default="", repr=False, compare=False
+    )
+    _boundary_request_digest_cache: dict[tuple[str, ...], str] = field(
+        default_factory=dict, repr=False, compare=False
+    )
+    # Replay-only indexes.  They are seeded once from the immutable ledgers
+    # and then updated by the same structural deltas that replay applies.
+    # Keeping them off the continuation manifest avoids making runtime cache
+    # layout part of the persisted protocol.
+    _boundary_replay_active_promotion_ids: set[str] = field(
+        default_factory=set, repr=False, compare=False
+    )
+    _boundary_replay_promotions_by_generation: dict[
+        int, tuple[tuple[str, BoundaryPromotionRequest], ...]
+    ] = field(default_factory=dict, repr=False, compare=False)
+    _boundary_replay_promotion_by_child: dict[str, str] = field(
+        default_factory=dict, repr=False, compare=False
+    )
+    _active_boundary_promotion_ids: set[str] = field(
+        default_factory=set, repr=False, compare=False
+    )
+    _boundary_promotion_by_child: dict[str, str] = field(
+        default_factory=dict, repr=False, compare=False
+    )
     schema_version: str = SCHEMA_VERSION
     _receipt_secret: bytes = field(
         default=b"native-prospective-v2-environment-terminal"
@@ -2155,6 +3479,343 @@ class NativeProspectiveAuthorityV2:
         repr=False,
         compare=False,
     )
+    structural_mode: StructuralMode = StructuralMode.SCHEDULED
+    # A scheduled successor previews its whole sealed batch at the structural
+    # safe point.  Keeping those immutable plans through the subsequent
+    # one-at-a-time compatibility API prevents a second genome call after a
+    # snapshot/resume.  They are not learner state; the manifest nevertheless
+    # records them so an interrupted structural phase is exact on reload.
+    structural_request_plans: dict[str, StructuralRequestConsumption] = field(
+        default_factory=dict,
+        repr=False,
+        compare=False,
+    )
+    # Runtime-only indexes.  They are rebuilt by the full invariant boundary
+    # and let REAL/VIRTUAL graph calls see only the bounded live topology.
+    _live_authority_state_cache: dict[str, ProspectiveAuthorityState] = field(
+        default_factory=dict,
+        repr=False,
+        compare=False,
+    )
+    _requested_parent_index: set[str] = field(
+        default_factory=set,
+        repr=False,
+        compare=False,
+    )
+    _pending_request_index: set[str] = field(
+        default_factory=set,
+        repr=False,
+        compare=False,
+    )
+    _pending_request_order: list[str] = field(
+        default_factory=list,
+        repr=False,
+        compare=False,
+    )
+    _request_queue_hot_digest: str = field(
+        default="",
+        repr=False,
+        compare=False,
+    )
+    _requested_parent_hot_digest: str = field(
+        default="",
+        repr=False,
+        compare=False,
+    )
+    _hot_path_revision: int = field(
+        default=0,
+        repr=False,
+        compare=False,
+    )
+    _hot_path_indexes_ready: bool = field(
+        default=False,
+        repr=False,
+        compare=False,
+    )
+    _hot_structure_digest: str = field(
+        default="",
+        repr=False,
+        compare=False,
+    )
+    _hot_boundary_promotion_digest: str = field(
+        default="",
+        repr=False,
+        compare=False,
+    )
+    # Bounded successor-slot occupancy.  ``states`` and the deferred birth
+    # ledger are append-only for replay, so scanning either collection at
+    # every event-driven safe point would reintroduce lifetime-linear work.
+    # This set is rebuilt only at an explicit full boundary and then changed
+    # transactionally with each reservation, materialization, or retirement.
+    _successor_capacity_occupant_ids: set[str] = field(
+        default_factory=set,
+        repr=False,
+        compare=False,
+    )
+    _pending_child_birth_request_ids: set[str] = field(
+        default_factory=set,
+        repr=False,
+        compare=False,
+    )
+    _reserved_member_pairs: set[tuple[str, ...]] = field(
+        default_factory=set,
+        repr=False,
+        compare=False,
+    )
+    _accepted_real_reference_order: list[str] = field(
+        default_factory=list,
+        repr=False,
+        compare=False,
+    )
+    _accepted_real_prefix_witness_ids: tuple[str, ...] = field(
+        default=(),
+        repr=False,
+        compare=False,
+    )
+    _accepted_real_reference_ordinals: list[int] = field(
+        default_factory=list,
+        repr=False,
+        compare=False,
+    )
+    _accepted_real_by_signal_identity: dict[str, list[str]] = field(
+        default_factory=dict,
+        repr=False,
+        compare=False,
+    )
+
+    def __post_init__(self) -> None:
+        # The append-only ledgers are intentionally list-backed; conversion is
+        # one-time initialization and never occurs on a REAL append.
+        for name in (
+            "request_queue",
+            "lifetime_requested_parent_ids",
+            "generation_boundaries",
+        ):
+            value = getattr(self, name)
+            if not isinstance(value, _AppendOnlyLedger):
+                setattr(self, name, _AppendOnlyLedger(value))
+        if not isinstance(self._pending_request_order, list):
+            self._pending_request_order = list(self._pending_request_order)
+        self.structural_mode = StructuralMode(self.structural_mode)
+        self.boundary_digest_schema = str(getattr(
+            self,
+            "boundary_digest_schema",
+            BOUNDARY_DIGEST_SCHEMA_LEGACY,
+        ))
+        self._boundary_commitment_origin_digest = str(getattr(
+            self, "_boundary_commitment_origin_digest", ""
+        ))
+        self._boundary_commitment_digest = str(getattr(
+            self, "_boundary_commitment_digest", ""
+        ))
+        self._boundary_commitment_count = int(getattr(
+            self, "_boundary_commitment_count", 0
+        ))
+        for name in (
+            "_boundary_accepted_real_digest",
+            "_boundary_candidate_digest",
+            "_boundary_decision_digest",
+            "_boundary_schedule_digest",
+            "_boundary_structure_digest",
+        ):
+            setattr(self, name, str(getattr(self, name, "")))
+        self._boundary_request_digest_cache = dict(getattr(
+            self, "_boundary_request_digest_cache", {}
+        ))
+        self._discovery_prefix_physical_fingerprint_set = frozenset(
+            getattr(
+                self,
+                "discovery_prefix_physical_fingerprints",
+                (),
+            )
+        )
+        self._boundary_replay_active_promotion_ids = set(getattr(
+            self, "_boundary_replay_active_promotion_ids", set()
+        ))
+        self._boundary_replay_promotions_by_generation = dict(getattr(
+            self, "_boundary_replay_promotions_by_generation", {}
+        ))
+        self._boundary_replay_promotion_by_child = dict(getattr(
+            self, "_boundary_replay_promotion_by_child", {}
+        ))
+        self._active_boundary_promotion_ids = set(getattr(
+            self, "_active_boundary_promotion_ids", set()
+        ))
+        self._boundary_promotion_by_child = dict(getattr(
+            self, "_boundary_promotion_by_child", {}
+        ))
+        self._successor_capacity_occupant_ids = set(getattr(
+            self, "_successor_capacity_occupant_ids", set()
+        ))
+        self._pending_child_birth_request_ids = set(getattr(
+            self, "_pending_child_birth_request_ids", set()
+        ))
+        self._reserved_member_pairs = {
+            tuple(item) for item in getattr(
+                self, "_reserved_member_pairs", set()
+            )
+        }
+        self._accepted_real_reference_order = list(getattr(
+            self, "_accepted_real_reference_order", []
+        ))
+        self._accepted_real_prefix_witness_ids = tuple(getattr(
+            self, "_accepted_real_prefix_witness_ids", ()
+        ))
+        self._accepted_real_reference_ordinals = list(getattr(
+            self, "_accepted_real_reference_ordinals", []
+        ))
+        self._accepted_real_by_signal_identity = {
+            str(identity): list(receipt_ids)
+            for identity, receipt_ids in getattr(
+                self, "_accepted_real_by_signal_identity", {}
+            ).items()
+        }
+
+    def __setstate__(self, state: Mapping[str, Any]) -> None:
+        # Pickles produced before the explicit structural-mode field are
+        # still scheduled authorities, preserving their old semantics.
+        self.__dict__.update(state)
+        self.structural_mode = StructuralMode(
+            getattr(self, "structural_mode", StructuralMode.SCHEDULED)
+        )
+        self.boundary_digest_schema = str(getattr(
+            self,
+            "boundary_digest_schema",
+            BOUNDARY_DIGEST_SCHEMA_LEGACY,
+        ))
+        self._boundary_commitment_origin_digest = str(getattr(
+            self, "_boundary_commitment_origin_digest", ""
+        ))
+        self._boundary_commitment_digest = str(getattr(
+            self, "_boundary_commitment_digest", ""
+        ))
+        self._boundary_commitment_count = int(getattr(
+            self, "_boundary_commitment_count", 0
+        ))
+        for name in (
+            "_boundary_accepted_real_digest",
+            "_boundary_candidate_digest",
+            "_boundary_decision_digest",
+            "_boundary_schedule_digest",
+            "_boundary_structure_digest",
+        ):
+            setattr(self, name, str(getattr(self, name, "")))
+        self._boundary_request_digest_cache = dict(getattr(
+            self, "_boundary_request_digest_cache", {}
+        ))
+        self._discovery_prefix_physical_fingerprint_set = frozenset(
+            getattr(
+                self,
+                "discovery_prefix_physical_fingerprints",
+                (),
+            )
+        )
+        self._boundary_replay_active_promotion_ids = set(getattr(
+            self, "_boundary_replay_active_promotion_ids", set()
+        ))
+        self._boundary_replay_promotions_by_generation = dict(getattr(
+            self, "_boundary_replay_promotions_by_generation", {}
+        ))
+        self._boundary_replay_promotion_by_child = dict(getattr(
+            self, "_boundary_replay_promotion_by_child", {}
+        ))
+        self._active_boundary_promotion_ids = set(getattr(
+            self, "_active_boundary_promotion_ids", set()
+        ))
+        self._boundary_promotion_by_child = dict(getattr(
+            self, "_boundary_promotion_by_child", {}
+        ))
+        self.boundary_promotion_requests = dict(getattr(
+            self, "boundary_promotion_requests", {}
+        ))
+        self.adaptive_boundary_escrows = dict(getattr(
+            self, "adaptive_boundary_escrows", {}
+        ))
+        self.retired_tombstones = dict(getattr(
+            self, "retired_tombstones", {}
+        ))
+        self.structural_request_plans = dict(getattr(
+            self, "structural_request_plans", {}
+        ))
+        for name in (
+            "request_queue",
+            "lifetime_requested_parent_ids",
+            "generation_boundaries",
+        ):
+            value = getattr(self, name, ())
+            if not isinstance(value, _AppendOnlyLedger):
+                setattr(self, name, _AppendOnlyLedger(value))
+        # Preserve the marker type across pickle/deepcopy.  A plain dict here
+        # would make the next predecessor digest rebuild a filtered copy of
+        # the complete state ledger even when the cached live view is current.
+        self._live_authority_state_cache = _LiveAuthorityStateView(
+            getattr(self, "_live_authority_state_cache", {})
+        )
+        restored_topology = getattr(self, "authority_topology", None)
+        self._live_authority_state_cache.topology_schema_version = (
+            restored_topology.get("topology_schema_version")
+            if isinstance(restored_topology, Mapping)
+            else None
+        )
+        self._requested_parent_index = set(getattr(
+            self, "_requested_parent_index", set()
+        ))
+        self._pending_request_index = set(getattr(
+            self, "_pending_request_index", set()
+        ))
+        pending_order = getattr(self, "_pending_request_order", None)
+        if pending_order is None:
+            # Older pickles do not carry this bounded cache.  Force one full
+            # refresh before the next structural safe point rather than
+            # deriving it from the lifetime queue on the hot path.
+            self._pending_request_order = []
+            self._hot_path_indexes_ready = False
+        else:
+            self._pending_request_order = list(pending_order)
+        self._request_queue_hot_digest = str(getattr(
+            self, "_request_queue_hot_digest", ""
+        ))
+        self._requested_parent_hot_digest = str(getattr(
+            self, "_requested_parent_hot_digest", ""
+        ))
+        self._hot_path_revision = int(getattr(
+            self, "_hot_path_revision", 0
+        ))
+        self._hot_path_indexes_ready = bool(getattr(
+            self, "_hot_path_indexes_ready", False
+        ))
+        self._hot_structure_digest = str(getattr(
+            self, "_hot_structure_digest", ""
+        ))
+        self._hot_boundary_promotion_digest = str(getattr(
+            self, "_hot_boundary_promotion_digest", ""
+        ))
+        self._successor_capacity_occupant_ids = set(getattr(
+            self, "_successor_capacity_occupant_ids", set()
+        ))
+        self._pending_child_birth_request_ids = set(getattr(
+            self, "_pending_child_birth_request_ids", set()
+        ))
+        self._reserved_member_pairs = {
+            tuple(item) for item in getattr(
+                self, "_reserved_member_pairs", set()
+            )
+        }
+        self._accepted_real_reference_order = list(getattr(
+            self, "_accepted_real_reference_order", []
+        ))
+        self._accepted_real_prefix_witness_ids = tuple(getattr(
+            self, "_accepted_real_prefix_witness_ids", ()
+        ))
+        self._accepted_real_reference_ordinals = list(getattr(
+            self, "_accepted_real_reference_ordinals", []
+        ))
+        self._accepted_real_by_signal_identity = {
+            str(identity): list(receipt_ids)
+            for identity, receipt_ids in getattr(
+                self, "_accepted_real_by_signal_identity", {}
+            ).items()
+        }
 
     @classmethod
     def from_organism(
@@ -2165,6 +3826,8 @@ class NativeProspectiveAuthorityV2:
         frontier: int | None = None,
         specialization_mode: SpecializationMode = SpecializationMode.DISCONNECTED,
         structural_epoch_schedule: Sequence[int] = (),
+        structural_mode: StructuralMode = StructuralMode.SCHEDULED,
+        event_driven: bool | None = None,
     ) -> "NativeProspectiveAuthorityV2":
         if frontier is not None:
             raise ProspectiveV2IntegrityError(
@@ -2172,12 +3835,26 @@ class NativeProspectiveAuthorityV2:
             )
         mode = V2Mode(mode)
         specialization_mode = SpecializationMode(specialization_mode)
+        if event_driven is not None:
+            requested_structural_mode = (
+                StructuralMode.EVENT_DRIVEN
+                if event_driven else StructuralMode.SCHEDULED
+            )
+            structural_mode = requested_structural_mode
+        structural_mode = StructuralMode(structural_mode)
         schedule = tuple(map(int, structural_epoch_schedule))
         if tuple(sorted(set(schedule))) != schedule or any(
             item < 0 for item in schedule
         ):
             raise ProspectiveV2IntegrityError(
                 "structural epoch schedule is not canonical"
+            )
+        if (
+            structural_mode is StructuralMode.EVENT_DRIVEN
+            and schedule
+        ):
+            raise ProspectiveV2IntegrityError(
+                "event-driven structural mode cannot carry a schedule"
             )
         base = copy.deepcopy(source)
         epoch = base.open_prospective_discovery_epoch()
@@ -2344,6 +4021,8 @@ class NativeProspectiveAuthorityV2:
             specialization_genome_seed=base.learning_config.genome_seed,
             specialization_mode=specialization_mode,
             structural_epoch_schedule=schedule,
+            structural_mode=structural_mode,
+            boundary_digest_schema=BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN,
             accepted_real_references={
                 reference.receipt_id: reference
                 for reference in cls._historical_real_references(base)
@@ -2412,6 +4091,15 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "polarity=None at live candidate birth is forbidden"
             )
+        compact_hypothesis_digest = None
+        if (
+            isinstance(cell.nomination_escrow, NominationEscrow)
+            and cell.nomination_escrow.escrow_schema_version
+            == NOMINATION_ESCROW_V4
+        ):
+            compact_hypothesis_digest = getattr(
+                cell, "immutable_hypothesis_digest", None
+            )
         return CellStructuralInvariant(
             cell_id=cell.cell_id,
             members=tuple(cell.members),
@@ -2420,7 +4108,9 @@ class NativeProspectiveAuthorityV2:
             specialization_depth=cell.specialization_depth,
             structural_state=cell.state.name,
             authority_node_ids=_cell_node_ids(cell.cell_id),
-            authority_topology_identity=_cell_topology_identity(cell.cell_id),
+            authority_topology_identity=_cell_topology_identity(
+                cell.cell_id, compact_hypothesis_digest
+            ),
             dormant_origin=getattr(cell, "dormant_origin", None),
             immutable_hypothesis_digest=getattr(
                 cell, "immutable_hypothesis_digest", None
@@ -2437,12 +4127,988 @@ class NativeProspectiveAuthorityV2:
             for cell_id, invariant in sorted(self.structural_invariants.items())
         }
 
-    def _structure_invariant_digest(self) -> str:
+    def _canonical_structure_invariant_digest(self) -> str:
+        """Hash the current structural topology once at a safe point.
+
+        New authorities carry a mutation-chain projection of this value for
+        chronological replay.  Keeping the canonical calculation separate
+        prevents a replay boundary from accidentally re-scanning the full
+        lifetime ledgers merely to validate a predecessor.
+        """
+
         return _sha({
             "live": self._structural_manifest(),
             "authority_topology": self.authority_topology,
             "tombstones": self.historical_tombstones,
+            "retired_tombstones": self.retired_tombstones,
         })
+
+    def _structure_invariant_digest(self) -> str:
+        if getattr(self, "boundary_digest_schema", BOUNDARY_DIGEST_SCHEMA_LEGACY) == (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            structure_digest = getattr(self, "_boundary_structure_digest", "")
+            if structure_digest:
+                return structure_digest
+        return self._canonical_structure_invariant_digest()
+
+    @staticmethod
+    def _boundary_decision_row(
+        cell_id: str,
+        state: ProspectiveAuthorityState,
+    ) -> dict[str, Any]:
+        def ledger_tail(values: Sequence[Any]) -> dict[str, Any]:
+            # Boundary decisions are emitted on the REAL hot path.  Counts
+            # and the newest entry are enough to bind the append-only prefix
+            # because the complete ledgers are independently reclosed at an
+            # explicit full boundary; materializing ``list(values)`` here
+            # would rescan lifetime evidence for every event.
+            return {
+                "count": len(values),
+                "last": None if not values else values[-1],
+            }
+
+        return {
+            "cell_id": cell_id,
+            "prospectively_certified": state.prospectively_certified,
+            "transition_rows": ledger_tail(state.transition_rows),
+            "support_receipt_ids": ledger_tail(state.support_receipt_ids),
+            "contradiction_receipt_ids": ledger_tail(
+                state.contradiction_receipt_ids
+            ),
+        }
+
+    def _boundary_seed_accepted_real_digest(self) -> str:
+        values = [
+            item.manifest() for item in sorted(
+                self.accepted_real_references.values(),
+                key=lambda row: (row.ordinal, row.receipt_id),
+            )
+        ]
+        return self._append_log_digest(
+            values, kind="boundary_accepted_real"
+        )
+
+    def _boundary_seed_candidate_digest(self) -> str:
+        epoch = self.base.envelope.nomination_epoch
+        if epoch is None:
+            raise ProspectiveV2IntegrityError(
+                "prospective discovery epoch is absent"
+            )
+        return _sha({
+            "hypotheses": {
+                key: value.hypothesis.manifest()
+                for key, value in sorted(self.states.items())
+            },
+            "tombstones": self.historical_tombstones,
+            "retired_tombstones": self.retired_tombstones,
+            "epoch_candidate_manifest_digest": (
+                epoch.frozen_candidate_manifest_digest
+            ),
+        })
+
+    def _boundary_seed_decision_digest(self) -> str:
+        return _sha({
+            cell_id: self._boundary_decision_row(cell_id, state)
+            for cell_id, state in sorted(self.states.items())
+        })
+
+    @staticmethod
+    def _advance_boundary_field_digest(
+        previous: str,
+        *,
+        field: str,
+        operation: str,
+        payload: Mapping[str, Any] | Sequence[Any] | str,
+    ) -> str:
+        return _sha({
+            "schema_version": BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN,
+            "field": field,
+            "previous": previous,
+            "operation": operation,
+            "payload": payload,
+        })
+
+    def _boundary_commitment_origin_payload(self) -> dict[str, Any]:
+        """Return the immutable post-nomination seed for the chain.
+
+        The seed is intentionally a flat canonical manifest computed once at
+        authority initialization.  It excludes only the append-only boundary
+        log and the chain's own mutable bookkeeping; every later durable
+        mutation is represented by an operation record in the chain.
+        """
+
+        manifest = self.continuation_manifest()
+        for key in (
+            "generation_boundaries",
+            "boundary_commitment_origin_digest",
+            "boundary_commitment_digest",
+            "boundary_commitment_count",
+            "boundary_accepted_real_digest",
+            "boundary_candidate_digest",
+            "boundary_decision_digest",
+            "boundary_schedule_digest",
+            "boundary_structure_digest",
+        ):
+            manifest.pop(key, None)
+        return {
+            "schema_version": BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN,
+            "manifest": manifest,
+        }
+
+    def _active_mutation_journal(self) -> _RealMutationJournal | None:
+        """Return the current reversible transaction, if any."""
+
+        structural = getattr(self, "_structural_mutation_journal", None)
+        if structural is not None:
+            return structural
+        return getattr(self, "_real_mutation_journal", None)
+
+    def _mutation_set_attr(self, owner: Any, name: str, value: Any) -> None:
+        journal = self._active_mutation_journal()
+        if journal is None:
+            setattr(owner, name, value)
+        else:
+            journal.set_attr(owner, name, value)
+
+    def _mutation_append(self, values: list[Any], value: Any) -> None:
+        journal = self._active_mutation_journal()
+        if journal is None:
+            values.append(value)
+        else:
+            journal.append(values, value)
+
+    def _mutation_add_mapping(
+        self,
+        mapping: dict[Any, Any],
+        key: Any,
+        value: Any,
+    ) -> None:
+        journal = self._active_mutation_journal()
+        if journal is None:
+            mapping[key] = value
+        else:
+            journal.add_mapping(mapping, key, value)
+
+    def _mutation_delete_mapping(
+        self,
+        mapping: dict[Any, Any],
+        key: Any,
+    ) -> None:
+        journal = self._active_mutation_journal()
+        if journal is None:
+            mapping.pop(key, None)
+        elif isinstance(journal, _StructuralMutationJournal):
+            journal.delete_mapping(mapping, key)
+        else:
+            if key not in mapping:
+                return
+            old = mapping[key]
+            journal._undo.append(
+                lambda mapping=mapping, key=key, old=old: mapping.__setitem__(
+                    key, old
+                )
+            )
+            del mapping[key]
+
+    def _mutation_pop_mapping(
+        self,
+        mapping: dict[Any, Any],
+        key: Any,
+        default: Any = None,
+    ) -> Any:
+        if key not in mapping:
+            return default
+        value = mapping[key]
+        self._mutation_delete_mapping(mapping, key)
+        return value
+
+    def _mutation_remove_list_item(
+        self,
+        values: list[Any],
+        value: Any,
+    ) -> None:
+        journal = self._active_mutation_journal()
+        if journal is None:
+            try:
+                values.remove(value)
+            except ValueError:
+                pass
+        elif isinstance(journal, _StructuralMutationJournal):
+            journal.remove_list_item(values, value)
+        else:
+            try:
+                index = values.index(value)
+            except ValueError:
+                return
+            old = values[index]
+            journal._undo.append(
+                lambda values=values, index=index, old=old: values.insert(
+                    index, old
+                )
+            )
+            values.pop(index)
+
+    def _mutation_add_set(self, values: set[Any], value: Any) -> None:
+        journal = self._active_mutation_journal()
+        if journal is None:
+            values.add(value)
+        else:
+            journal.add_set(values, value)
+
+    def _mutation_discard_set(self, values: set[Any], value: Any) -> None:
+        journal = self._active_mutation_journal()
+        if journal is None:
+            values.discard(value)
+        elif isinstance(journal, _StructuralMutationJournal):
+            journal.discard_set(values, value)
+        elif value in values:
+            # The REAL journal currently only needs additive set entries;
+            # retaining this branch keeps its rollback semantics explicit.
+            journal._undo.append(
+                lambda values=values, value=value: values.add(value)
+            )
+            values.discard(value)
+
+    def _initialize_boundary_commitment(self) -> None:
+        """Initialize the versioned chain exactly once after nomination."""
+
+        if self.boundary_digest_schema != (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            return
+        origin = _sha(self._boundary_commitment_origin_payload())
+        existing = getattr(self, "_boundary_commitment_origin_digest", "")
+        if existing and existing != origin:
+            raise ProspectiveV2IntegrityError(
+                "generation-boundary commitment origin changed"
+            )
+        self._boundary_commitment_origin_digest = origin
+        self._boundary_commitment_digest = origin
+        self._boundary_commitment_count = 0
+        self._boundary_accepted_real_digest = (
+            self._boundary_seed_accepted_real_digest()
+        )
+        self._boundary_candidate_digest = (
+            self._boundary_seed_candidate_digest()
+        )
+        self._boundary_decision_digest = (
+            self._boundary_seed_decision_digest()
+        )
+        self._boundary_schedule_digest = _sha(
+            list(self.structural_epoch_schedule)
+        )
+        self._boundary_structure_digest = (
+            self._canonical_structure_invariant_digest()
+        )
+        self._boundary_request_digest_cache = {}
+
+    def _advance_boundary_commitment(
+        self,
+        operation: str,
+        payload: Mapping[str, Any] | Sequence[Any] | str,
+    ) -> None:
+        """Append one canonical durable mutation to the boundary chain.
+
+        This is deliberately an append-only SHA operation log, not the
+        incremental predecessor digest used by REAL admission.  The latter
+        is a hot-path projection; this chain is the versioned commitment used
+        for exact boundary chronology.  Final full-manifest equality remains
+        the independent closure for fields not represented by a delta.
+        """
+
+        if self.boundary_digest_schema != (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            return
+        if not getattr(self, "_boundary_commitment_origin_digest", ""):
+            self._initialize_boundary_commitment()
+        count = int(getattr(self, "_boundary_commitment_count", 0))
+        previous = getattr(self, "_boundary_commitment_digest", "")
+        if not previous:
+            raise ProspectiveV2IntegrityError(
+                "generation-boundary commitment is uninitialized"
+            )
+        new_digest = _sha({
+            "schema_version": BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN,
+            "position": count,
+            "previous": previous,
+            "operation": operation,
+            "payload": payload,
+        })
+        self._mutation_set_attr(
+            self, "_boundary_commitment_digest", new_digest
+        )
+        self._mutation_set_attr(
+            self, "_boundary_commitment_count", count + 1
+        )
+
+    @staticmethod
+    def _boundary_structural_consumption_payload(
+        consumption: StructuralRequestConsumption,
+    ) -> dict[str, Any]:
+        """Return the pre-materialization identity committed at consumption.
+
+        The compatibility API records a request consumption before its child
+        is materialized, then upgrades the durable disposition to
+        ``MATERIALIZED``.  Replay sees the final ledger, so the chain payload
+        must use the immutable pre-materialization disposition in both paths.
+        The final continuation still binds the upgraded disposition itself.
+        """
+
+        payload = consumption.manifest()
+        if payload["disposition"] == "MATERIALIZED":
+            payload["disposition"] = "PENDING_CHILD"
+        return payload
+
+    def _record_boundary_accepted_real(
+        self, reference: AcceptedRealReference
+    ) -> None:
+        if self.boundary_digest_schema != (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            return
+        previous = self._boundary_accepted_real_digest
+        if not previous:
+            previous = self._boundary_seed_accepted_real_digest()
+        self._mutation_set_attr(
+            self,
+            "_boundary_accepted_real_digest",
+            _next_hot_append_digest(
+                previous,
+                "boundary_accepted_real",
+                reference.manifest(),
+                len(self.accepted_real_references),
+            ),
+        )
+
+    def _record_boundary_candidate(
+        self,
+        operation: str,
+        payload: Mapping[str, Any] | Sequence[Any] | str,
+    ) -> None:
+        if self.boundary_digest_schema != (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            return
+        previous = self._boundary_candidate_digest
+        if not previous:
+            previous = self._boundary_seed_candidate_digest()
+        self._mutation_set_attr(
+            self,
+            "_boundary_candidate_digest",
+            self._advance_boundary_field_digest(
+                previous,
+                field="candidate_manifest",
+                operation=operation,
+                payload=payload,
+            ),
+        )
+
+    def _record_boundary_decision(
+        self,
+        operation: str,
+        payload: Mapping[str, Any] | Sequence[Any] | str,
+    ) -> None:
+        if self.boundary_digest_schema != (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            return
+        previous = self._boundary_decision_digest
+        if not previous:
+            previous = self._boundary_seed_decision_digest()
+        self._mutation_set_attr(
+            self,
+            "_boundary_decision_digest",
+            self._advance_boundary_field_digest(
+                previous,
+                field="parent_decision_history",
+                operation=operation,
+                payload=payload,
+            ),
+        )
+
+    def _record_boundary_structure(
+        self,
+        operation: str,
+        payload: Mapping[str, Any] | Sequence[Any] | str,
+    ) -> None:
+        """Advance the structural commitment after one topology mutation.
+
+        ``structure_invariant_digest`` is used by REAL transactions.  The
+        canonical structural manifest is seeded once after nomination; each
+        later child birth or retirement advances this independent chain with
+        its exact local mutation payload.  Replay can therefore reclose
+        transaction structure digests without rebuilding a lifetime manifest
+        at every generation boundary.
+        """
+
+        if self.boundary_digest_schema != (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            return
+        previous = self._boundary_structure_digest
+        if not previous:
+            previous = self._canonical_structure_invariant_digest()
+        new_digest = self._advance_boundary_field_digest(
+            previous,
+            field="structure_invariant",
+            operation=operation,
+            payload=payload,
+        )
+        self._mutation_set_attr(
+            self,
+            "_boundary_structure_digest",
+            new_digest,
+        )
+        # REAL admission compares against the same commitment that replay
+        # uses for structure reclosure.  Keep this bounded projection in sync
+        # with the chain while the structural journal can still roll it back.
+        self._mutation_set_attr(self, "_hot_structure_digest", new_digest)
+
+    def _refresh_active_boundary_promotion_digest(
+        self,
+        active_ids: set[str],
+    ) -> None:
+        """Refresh the bounded active-promotion projection in O(capacity)."""
+
+        self._mutation_set_attr(
+            self,
+            "_hot_boundary_promotion_digest",
+            _sha({
+                candidate_id: self.boundary_promotion_requests[
+                    candidate_id
+                ].manifest()
+                for candidate_id in sorted(active_ids)
+            }),
+        )
+
+    def _boundary_replay_refresh_promotion_digest(self) -> None:
+        self._refresh_active_boundary_promotion_digest(
+            self._boundary_replay_active_promotion_ids
+        )
+
+    def _boundary_replay_add_live_state(
+        self,
+        replay: "NativeProspectiveAuthorityV2",
+        cell_id: str,
+    ) -> None:
+        """Apply one replayed birth to the bounded live-state index."""
+
+        replay._live_authority_state_cache[cell_id] = replay.states[cell_id]
+        replay._successor_capacity_occupant_ids.add(cell_id)
+        replay._hot_structure_digest = replay._boundary_structure_digest
+
+    def _boundary_replay_retire_live_state(
+        self,
+        replay: "NativeProspectiveAuthorityV2",
+        cell_id: str,
+    ) -> None:
+        """Apply one replayed retirement to the bounded live index."""
+
+        replay._live_authority_state_cache.pop(cell_id, None)
+        replay._successor_capacity_occupant_ids.discard(cell_id)
+        candidate_id = replay._boundary_replay_promotion_by_child.get(
+            cell_id
+        )
+        if candidate_id is not None:
+            replay._boundary_replay_active_promotion_ids.discard(
+                candidate_id
+            )
+            replay._boundary_replay_refresh_promotion_digest()
+        replay._hot_structure_digest = replay._boundary_structure_digest
+
+    def _boundary_queue_digest(self, request_ids: Sequence[str]) -> str:
+        """Digest one canonical queue projection with one-entry memoization."""
+
+        ids = tuple(request_ids)
+        if self.boundary_digest_schema != (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            return self._request_queue_digest(ids)
+        cached = self._boundary_request_digest_cache.get(ids)
+        if cached is not None:
+            return cached
+        digest = self._append_log_digest(
+            [self.deferred_requests[item].manifest() for item in ids],
+            kind="boundary_request_queue",
+        )
+        # Only the current projection is useful on a hot safe point.  Keeping
+        # every historical queue tuple here would turn a bounded cache into a
+        # second lifetime ledger and make it grow once per boundary.
+        journal = self._active_mutation_journal()
+        replacement = {ids: digest}
+        if journal is None:
+            self._boundary_request_digest_cache = replacement
+        else:
+            self._mutation_set_attr(
+                self, "_boundary_request_digest_cache", replacement
+            )
+        return digest
+
+    def _boundary_prior_continuation_digest(self) -> str:
+        """Return the exact versioned boundary prior commitment."""
+
+        if self.boundary_digest_schema == (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            if not getattr(self, "_boundary_commitment_origin_digest", ""):
+                self._initialize_boundary_commitment()
+            return self._boundary_commitment_digest
+        return self.continuation_digest()
+
+    def _append_generation_boundary(self, boundary: GenerationBoundary) -> None:
+        """Persist one boundary and commit its complete canonical fields."""
+
+        if not isinstance(self.generation_boundaries, _AppendOnlyLedger):
+            self._mutation_set_attr(
+                self,
+                "generation_boundaries",
+                _AppendOnlyLedger(self.generation_boundaries),
+            )
+        journal = self._active_mutation_journal()
+        if journal is None:
+            self.generation_boundaries.append(boundary)
+        else:
+            journal.append(self.generation_boundaries, boundary)
+        self._advance_boundary_commitment(
+            "generation_boundary", boundary.manifest()
+        )
+
+    @staticmethod
+    def _append_log_digest(
+        values: Sequence[Any],
+        *,
+        kind: str,
+    ) -> str:
+        """Build a rolling digest at a full boundary or after restoration."""
+
+        digest = _empty_hot_append_digest(kind)
+        for count, value in enumerate(values, 1):
+            digest = _next_hot_append_digest(
+                digest, kind, value, count
+            )
+        return digest
+
+    def _refresh_hot_path_indexes(self) -> None:
+        """Rebuild runtime indexes at a structural/full-history boundary."""
+
+        # Keep the canonical tuple and its exact membership projection
+        # separate: the former is serialized and reclosed, while the latter
+        # makes discovery-evidence exclusion O(1) on each REAL event.
+        self._discovery_prefix_physical_fingerprint_set = frozenset(
+            self.discovery_prefix_physical_fingerprints
+        )
+        live_states = {
+            cell_id: state
+            for cell_id, state in self.states.items()
+            if not getattr(state, "retired", False)
+        }
+        self._live_authority_state_cache = _LiveAuthorityStateView(
+            live_states
+        )
+        prior_topology_schema = None
+        if isinstance(self.authority_topology, Mapping):
+            prior_topology_schema = self.authority_topology.get(
+                "topology_schema_version"
+            )
+        self._live_authority_state_cache.topology_schema_version = (
+            prior_topology_schema
+        )
+        self._successor_capacity_occupant_ids = {
+            cell_id for cell_id, state in live_states.items()
+            if state.hypothesis.source_generation > 0
+        }
+        self._successor_capacity_occupant_ids.update(
+            birth.child_cell_id
+            for birth in self.deferred_child_births.values()
+            if birth.child_cell_id not in getattr(
+                self, "retired_tombstones", {}
+            )
+        )
+        self._pending_child_birth_request_ids = {
+            request_id
+            for request_id, birth in self.deferred_child_births.items()
+            if birth.disposition == "PENDING_MATERIALIZATION"
+        }
+        self._reserved_member_pairs = {
+            tuple(state.hypothesis.members)
+            for state in self.states.values()
+        }
+        self._reserved_member_pairs.update(
+            tuple(birth.members)
+            for birth in self.deferred_child_births.values()
+        )
+        self._reserved_member_pairs.update(
+            tuple(consumption.selected_members)
+            for consumption in self.request_consumptions.values()
+            if consumption.selected_members
+        )
+        self._requested_parent_index = set(
+            self.lifetime_requested_parent_ids
+        )
+        # Keep the deterministic append order separately from the lifetime
+        # queue.  The queue is retained forever for replay, whereas this
+        # order contains only the currently pending (bounded) requests.  A
+        # full boundary is the one place where rebuilding it may scan the
+        # historical queue; event-driven safe points consume this cache.
+        self._pending_request_order = [
+            request_id for request_id in self.request_queue
+            if request_id not in self.request_consumptions
+        ]
+        self._pending_request_index = set(self._pending_request_order)
+        self._request_queue_hot_digest = self._append_log_digest(
+            self.request_queue,
+            kind="request_queue",
+        )
+        self._accepted_real_reference_order = [
+            reference.receipt_id
+            for reference in sorted(
+                self.accepted_real_references.values(),
+                key=lambda item: (item.ordinal, item.receipt_id),
+            )
+        ]
+        self._accepted_real_prefix_witness_ids = (
+            _bounded_provenance_witnesses(
+                self._accepted_real_reference_order
+            )
+        )
+        self._accepted_real_reference_ordinals = [
+            self.accepted_real_references[receipt_id].ordinal
+            for receipt_id in self._accepted_real_reference_order
+        ]
+        by_signal: dict[str, list[str]] = {}
+        for reference in self.accepted_real_references.values():
+            for identity in reference.ordered_signal_identities:
+                by_signal.setdefault(identity, []).append(
+                    reference.receipt_id
+                )
+        self._accepted_real_by_signal_identity = {
+            identity: _AppendOnlyLedger(receipt_ids)
+            for identity, receipt_ids in by_signal.items()
+        }
+        self._requested_parent_hot_digest = self._append_log_digest(
+            self.lifetime_requested_parent_ids,
+            kind="requested_parent",
+        )
+        active_boundary_promotions = {}
+        promotion_by_child = {}
+        for candidate_id, request in sorted(
+            getattr(self, "boundary_promotion_requests", {}).items()
+        ):
+            child_id = self._adaptive_boundary_child_id(request)
+            promotion_by_child[child_id] = candidate_id
+            if child_id in self._live_authority_state_cache:
+                active_boundary_promotions[candidate_id] = request.manifest()
+        self._active_boundary_promotion_ids = set(active_boundary_promotions)
+        self._boundary_promotion_by_child = promotion_by_child
+        self._hot_boundary_promotion_digest = _sha(
+            active_boundary_promotions
+        )
+        self._hot_path_indexes_ready = True
+        self._hot_path_revision = int(getattr(self, "_hot_path_revision", 0)) + 1
+        self._hot_structure_digest = self._structure_invariant_digest()
+
+    def _ensure_hot_path_indexes(self) -> None:
+        if not getattr(self, "_hot_path_indexes_ready", False):
+            # Normal authorities reach this through from_organism()'s full
+            # boundary check or loads().  The fallback keeps hand-built test
+            # fixtures safe; it is intentionally never taken per event after
+            # initialization.
+            self._refresh_hot_path_indexes()
+
+    def _hot_live_states(self) -> Mapping[str, ProspectiveAuthorityState]:
+        self._ensure_hot_path_indexes()
+        return self._live_authority_state_cache
+
+    def _hot_path_guard_digest(self) -> str:
+        """Cheap mutation guard over only live topology and scalar ledgers."""
+
+        self._ensure_hot_path_indexes()
+        live = self._live_authority_state_cache
+        lifecycle = {
+            cell_id: {
+                "hypothesis_digest": state.hypothesis.hypothesis_digest,
+                "prospectively_certified": bool(
+                    state.prospectively_certified
+                ),
+                "successes": int(state.successes),
+                "contradictions": int(state.contradictions),
+                "support": int(state.support),
+                "success_lower_bound": state.success_lower_bound,
+                "contradiction_lower_bound": (
+                    state.contradiction_lower_bound
+                ),
+                "certification_count": len(state.certification_receipt_ids),
+                "last_certification": (
+                    state.certification_receipt_ids[-1]
+                    if state.certification_receipt_ids else None
+                ),
+                "support_count": len(state.support_receipt_ids),
+                "last_support": (
+                    state.support_receipt_ids[-1]
+                    if state.support_receipt_ids else None
+                ),
+                "contradiction_count": len(
+                    state.contradiction_receipt_ids
+                ),
+                "last_contradiction": (
+                    state.contradiction_receipt_ids[-1]
+                    if state.contradiction_receipt_ids else None
+                ),
+                "transition_count": len(state.transition_rows),
+                "last_transition": (
+                    state.transition_rows[-1]
+                    if state.transition_rows else None
+                ),
+            }
+            for cell_id, state in sorted(live.items())
+        }
+        history = self.incremental_history_state
+        return _sha({
+            "schema_version": INCREMENTAL_HISTORY_SCHEMA,
+            "revision": int(self._hot_path_revision),
+            "generation": int(self.current_generation),
+            "phase": GenerationPhase(self.generation_phase).value,
+            "next_ordinal": int(self.next_expected_ordinal),
+            "evaluation_sealed": bool(self.evaluation_sealed),
+            "structure_digest": getattr(self, "_hot_structure_digest", ""),
+            "boundary_promotion_digest": (
+                self._hot_boundary_promotion_digest
+            ),
+            "request_queue_digest": self._request_queue_hot_digest,
+            "request_queue_count": len(self.request_queue),
+            "pending_request_count": len(self._pending_request_index),
+            "requested_parent_digest": self._requested_parent_hot_digest,
+            "requested_parent_count": len(
+                self.lifetime_requested_parent_ids
+            ),
+            "history": (
+                None if history is None else {
+                    "event_count": history.event_count,
+                    "last_ordinal": history.last_ordinal,
+                    "last_receipt_id": history.last_receipt_id,
+                    "last_event_digest": history.last_event_digest,
+                    "history_digest": history.history_digest,
+                }
+            ),
+            "consumed_count": len(self.consumed_receipts),
+            "reference_count": len(self.accepted_real_references),
+            "transaction_count": len(self.event_transactions),
+            "pending_token": (
+                None if self.pending_event is None
+                else self.pending_event.pending_token
+            ),
+            "live_lifecycle": lifecycle,
+        })
+
+    def _validate_real_hot_path(
+        self,
+        *,
+        require_pending: bool = False,
+        frozen_base_continuation_digest: str | None = None,
+        virtual: bool = False,
+    ) -> None:
+        """Validate cheap local contracts before one REAL transaction.
+
+        Full topology/history reconstruction is reserved for explicit
+        structural, serialization, and ``verify_full_history_boundary`` calls.
+        This validator checks only fixed source identity, scalar cardinalities,
+        the cached bounded live view, and the one pending transaction.
+        """
+
+        self._ensure_hot_path_indexes()
+        if self.schema_version != SCHEMA_VERSION:
+            raise ProspectiveV2IntegrityError("unsupported V2 schema")
+        if (
+            not virtual
+            and GenerationPhase(self.generation_phase)
+            is not GenerationPhase.PROSPECTIVE_OPEN
+        ):
+            raise ProspectiveV2IntegrityError(
+                "REAL event outside PROSPECTIVE_OPEN"
+            )
+        if not virtual and self.evaluation_sealed:
+            raise ProspectiveV2IntegrityError(
+                "sealed evaluation cannot consume evidence"
+            )
+        epoch = self.base.envelope.nomination_epoch
+        if epoch is None or (not virtual and not epoch.nomination_closed):
+            raise ProspectiveV2IntegrityError(
+                "first certification event requires closed nomination"
+            )
+        if frozen_base_continuation_digest is not None:
+            # A frame session already captured this immutable digest.  The
+            # session's R0 close check owns the expensive source reclosure;
+            # merely require a well-formed digest here.
+            if len(str(frozen_base_continuation_digest)) != 64:
+                raise ProspectiveV2IntegrityError(
+                    "frozen base continuation digest is malformed"
+                )
+        history = self.incremental_history_state
+        count = len(self.consumed_receipts)
+        if history is None:
+            if count:
+                raise ProspectiveV2IntegrityError(
+                    "incremental history missing for accepted REAL events"
+                )
+        elif (
+            history.schema_version != INCREMENTAL_HISTORY_SCHEMA
+            or history.event_count != count
+            or self.next_expected_ordinal
+            != history.first_ordinal + history.event_count
+            or len(history.history_digest) != 64
+        ):
+            raise ProspectiveV2IntegrityError(
+                "incremental history scalar state mismatch"
+            )
+        if (
+            len(self.consumed_tokens) != count
+            or len(self.prospective_physical_fingerprints) != count
+            or len(self.emissions) != count
+            or len(self.accepted_real_references)
+            != len(self.base.receipts) + count
+        ):
+            raise ProspectiveV2IntegrityError(
+                "REAL ledger cardinality mismatch"
+            )
+        if len(self._live_authority_state_cache) > (
+            len(self.states)
+        ):
+            raise ProspectiveV2IntegrityError(
+                "live authority index exceeds state ledger"
+            )
+        pending = self.pending_event
+        if pending is None:
+            if require_pending:
+                raise ProspectiveV2IntegrityError("receipt before prediction")
+            if len(self.event_transactions) != count:
+                raise ProspectiveV2IntegrityError(
+                    "transaction ledger cardinality mismatch"
+                )
+            return
+        if (
+            pending.state != "OPEN"
+            or pending.ordinal != self.next_expected_ordinal
+            or pending.structure_invariant_digest
+            != getattr(self, "_hot_structure_digest", "")
+            or self.event_transactions.get(pending.pending_token)
+            != pending.manifest()
+        ):
+            raise ProspectiveV2IntegrityError(
+                "pending REAL transaction local identity mismatch"
+            )
+        if history is not None and pending.predecessor_continuation_digest != (
+            self._incremental_predecessor_continuation_digest()
+        ):
+            raise ProspectiveV2IntegrityError(
+                "incremental pending predecessor disagreement"
+            )
+        if len(self.event_transactions) != count + 1:
+            raise ProspectiveV2IntegrityError(
+                "transaction ledger cardinality mismatch"
+            )
+
+    def _validate_structural_hot_path(
+        self,
+        *,
+        expected_authority_topology: Mapping[str, Any] | None = None,
+    ) -> None:
+        """Validate one event-driven structural commit without reclosure.
+
+        Structural safe points already have a bounded mutation journal and
+        maintain the live/request/capacity projections incrementally.  A
+        full invariant pass here would scan append-only state and evidence
+        ledgers once per budding event, recreating the lifetime-quadratic
+        behavior this journal is meant to remove.  Full canonical replay is
+        still required at explicit load/checkpoint/audit boundaries.
+        """
+
+        if self.structural_mode is not StructuralMode.EVENT_DRIVEN:
+            raise ProspectiveV2IntegrityError(
+                "structural hot validation requires event-driven mode"
+            )
+        if self.generation_phase is not GenerationPhase.PROSPECTIVE_OPEN:
+            raise ProspectiveV2IntegrityError(
+                "structural hot validation requires PROSPECTIVE_OPEN"
+            )
+        if self.pending_event is not None or self.evaluation_sealed:
+            raise ProspectiveV2IntegrityError(
+                "structural hot validation requires a quiescent authority"
+            )
+        if not getattr(self, "_hot_path_indexes_ready", False):
+            raise ProspectiveV2IntegrityError(
+                "structural hot indexes are not initialized"
+            )
+        pending_order = self._pending_request_order
+        pending_index = self._pending_request_index
+        if (
+            len(pending_order) != len(pending_index)
+            or len(pending_order) > REQUEST_QUEUE_CAPACITY
+            or len(set(pending_order)) != len(pending_order)
+            or set(pending_order) != pending_index
+        ):
+            raise ProspectiveV2IntegrityError(
+                "pending structural request projection is inconsistent"
+            )
+        occupancy = self._successor_capacity_occupant_ids
+        if len(occupancy) > DORMANT_SPECIALIZATION_CHILD_CAPACITY:
+            raise ProspectiveV2IntegrityError(
+                "successor capacity projection exceeds bounded pool"
+            )
+        pending_births = self._pending_child_birth_request_ids
+        if len(pending_births) > len(occupancy):
+            raise ProspectiveV2IntegrityError(
+                "pending child projection exceeds successor occupancy"
+            )
+        for request_id in pending_births:
+            birth = self.deferred_child_births.get(request_id)
+            if (
+                birth is None
+                or birth.disposition != "PENDING_MATERIALIZATION"
+                or birth.child_cell_id not in occupancy
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "pending child projection has no live reservation"
+                )
+        for cell_id in occupancy:
+            state = self._live_authority_state_cache.get(cell_id)
+            if state is not None and getattr(state, "retired", False):
+                raise ProspectiveV2IntegrityError(
+                    "retired state remains in live structural projection"
+                )
+        active_promotions = self._active_boundary_promotion_ids
+        if not active_promotions.issubset(
+            self.boundary_promotion_requests
+        ):
+            raise ProspectiveV2IntegrityError(
+                "active promotion projection names an unknown request"
+            )
+        ordinary_live = {
+            cell_id for cell_id, state in self._live_authority_state_cache.items()
+            if (
+                state.hypothesis.dormant_origin
+                is DormantOrigin.ADAPTIVE_BOUNDARY_CHILD
+            )
+        }
+        if not ordinary_live.issubset(self._boundary_promotion_by_child):
+            raise ProspectiveV2IntegrityError(
+                "ordinary child missing promotion index"
+            )
+        if (
+            self.boundary_digest_schema == BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+            and self._hot_structure_digest
+            != self._boundary_structure_digest
+        ):
+            raise ProspectiveV2IntegrityError(
+                "hot structure digest differs from structural commitment"
+            )
+        if expected_authority_topology is not None and (
+            self.authority_topology != expected_authority_topology
+        ):
+            raise ProspectiveV2IntegrityError(
+                "event-driven topology differs from committed safe point"
+            )
 
     def _build_experimental_identity(
         self,
@@ -2478,6 +5144,7 @@ class NativeProspectiveAuthorityV2:
                 for cell_id, value in sorted(self.states.items())
             },
             "tombstones": copy.deepcopy(self.historical_tombstones),
+            "retired_tombstones": copy.deepcopy(self.retired_tombstones),
             "epoch_close": epoch.manifest(),
             "executed_authority_topology": copy.deepcopy(
                 self.authority_topology
@@ -2487,6 +5154,7 @@ class NativeProspectiveAuthorityV2:
             "schema_version": self.schema_version,
             "implementation_identity": IMPLEMENTATION_IDENTITY,
             "mode": self.mode.value,
+            "structural_mode": self.structural_mode.value,
             "source": {
                 "organism_identity": (
                     self.base.r0.source_organism_identity()
@@ -2559,6 +5227,7 @@ class NativeProspectiveAuthorityV2:
             "schema_version": INCREMENTAL_HISTORY_SCHEMA,
             "implementation_identity": IMPLEMENTATION_IDENTITY,
             "mode": self.mode.value,
+            "structural_mode": self.structural_mode.value,
             "specialization_mode": self.specialization_mode.value,
             "first_ordinal": self._history_expected_start(),
             "source_organism_identity": (
@@ -2647,6 +5316,15 @@ class NativeProspectiveAuthorityV2:
             "last_transition": (
                 state.transition_rows[-1] if state.transition_rows else None
             ),
+            "retired": bool(getattr(state, "retired", False)),
+            "retirement_generation": getattr(
+                state, "retirement_generation", None
+            ),
+            "retirement_ordinal": getattr(state, "retirement_ordinal", None),
+            "retirement_reason": getattr(state, "retirement_reason", None),
+            "retirement_tombstone_digest": getattr(
+                state, "retirement_tombstone_digest", None
+            ),
         }
 
     def _incremental_predecessor_digest_from_parts(
@@ -2658,11 +5336,62 @@ class NativeProspectiveAuthorityV2:
         next_ordinal: int,
         request_ids: Sequence[str],
         lifetime_requested_parent_ids: Sequence[str],
+        request_queue_digest: str | None = None,
+        requested_parent_digest: str | None = None,
+        boundary_promotion_digest: str | None = None,
     ) -> str:
-        active = {
-            cell_id: state for cell_id, state in states.items()
-            if state.hypothesis.source_generation <= generation
-        }
+        active = (
+            states
+            if isinstance(states, _LiveAuthorityStateView)
+            else {
+                cell_id: state for cell_id, state in states.items()
+                if state.hypothesis.source_generation <= generation
+                and not getattr(state, "retired", False)
+            }
+        )
+        topology_states: Mapping[str, ProspectiveAuthorityState] = active
+        if not isinstance(states, _LiveAuthorityStateView) and any(
+            state.hypothesis.source_generation <= generation
+            and state.hypothesis.provenance_schema_version
+            == PROVENANCE_COMMITMENT_V4
+            for state in states.values()
+        ):
+            # Replay filters retired states out of ``active`` before deriving
+            # the predecessor digest.  Compact topology is nevertheless a
+            # sticky representation choice once a V4 state has existed in
+            # this generation; otherwise retiring the last V4 leaf would
+            # make replay silently fall back to the legacy full snapshot.
+            compact_active = _LiveAuthorityStateView(active)
+            compact_active.topology_schema_version = (
+                "native_v2_authority_topology.v2_digest_only"
+            )
+            topology_states = compact_active
+        if request_queue_digest is None:
+            request_queue_digest = self._append_log_digest(
+                request_ids,
+                kind="request_queue",
+            )
+        if requested_parent_digest is None:
+            requested_parent_digest = self._append_log_digest(
+                lifetime_requested_parent_ids,
+                kind="requested_parent",
+            )
+        if boundary_promotion_digest is None:
+            if isinstance(states, _LiveAuthorityStateView):
+                boundary_promotion_digest = (
+                    self._hot_boundary_promotion_digest
+                )
+            else:
+                boundary_promotion_digest = _sha({
+                    candidate_id: request.manifest()
+                    for candidate_id, request in sorted(
+                        self.boundary_promotion_requests.items()
+                    )
+                    if (
+                        self._adaptive_boundary_child_id(request)
+                        in active
+                    )
+                })
         return _sha({
             "schema_version": INCREMENTAL_HISTORY_SCHEMA,
             "history": history.manifest(),
@@ -2678,28 +5407,43 @@ class NativeProspectiveAuthorityV2:
                 for cell_id in sorted(active)
             },
             "active_authority_topology_digest": _sha(
-                _executed_authority_topology_manifest(active)
+                _executed_authority_topology_manifest(topology_states)
             ),
-            "request_ids": list(request_ids),
-            "lifetime_requested_parent_ids": list(
+            # Rolling digests retain the exact append order while avoiding a
+            # lifetime list materialization on each REAL predecessor check.
+            "request_ids_digest": request_queue_digest,
+            "request_ids_count": len(request_ids),
+            "lifetime_requested_parent_digest": requested_parent_digest,
+            "lifetime_requested_parent_count": len(
                 lifetime_requested_parent_ids
             ),
+            "adaptive_boundary_promotions_digest": boundary_promotion_digest,
         })
 
-    def _incremental_predecessor_continuation_digest(self) -> str:
-        history = self.incremental_history_state
+    def _incremental_predecessor_continuation_digest(
+        self,
+        history: IncrementalHistoryValidationState | None = None,
+    ) -> str:
+        history = (
+            self.incremental_history_state
+            if history is None
+            else history
+        )
         if history is None:
             raise ProspectiveV2IntegrityError(
                 "incremental history is not initialized"
             )
         return self._incremental_predecessor_digest_from_parts(
             history=history,
-            states=self.states,
+            states=self._hot_live_states(),
             generation=self.current_generation,
             next_ordinal=self.next_expected_ordinal,
             request_ids=self.request_queue,
-            lifetime_requested_parent_ids=(
-                self.lifetime_requested_parent_ids
+            lifetime_requested_parent_ids=self.lifetime_requested_parent_ids,
+            request_queue_digest=self._request_queue_hot_digest,
+            requested_parent_digest=self._requested_parent_hot_digest,
+            boundary_promotion_digest=(
+                self._hot_boundary_promotion_digest
             ),
         )
 
@@ -2786,13 +5530,20 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "incremental history is not initialized at append"
             )
-        self.incremental_history_state = self._next_incremental_history_state(
+        next_history = self._next_incremental_history_state(
             prior,
             receipt=receipt,
             transaction=transaction,
             reference=reference,
             emission=emission,
         )
+        journal = getattr(self, "_real_mutation_journal", None)
+        if journal is None:
+            self.incremental_history_state = next_history
+        else:
+            journal.set_attr(
+                self, "incremental_history_state", next_history
+            )
 
     def _verify_incremental_history_state(self) -> None:
         if self._history_validation_mode not in HISTORY_VALIDATION_MODES:
@@ -2884,9 +5635,11 @@ class NativeProspectiveAuthorityV2:
             self._verify_invariants()
             if self._history_validation_mode != HISTORY_VALIDATION_LEGACY:
                 self._verify_ledger_derived_state()
+            self._verify_generation_boundary_replay()
             self._verify_deferred_specialization_requests(
                 reconstruct_evidence=True
             )
+            self._verify_boundary_promotion_request_history()
         except ProspectiveV2IntegrityError as exc:
             raise ProspectiveV2IntegrityError(
                 f"full history boundary {boundary} failed: {exc}"
@@ -2899,6 +5652,7 @@ class NativeProspectiveAuthorityV2:
 
         requested_parents: list[str] = []
         references = self.accepted_real_references
+        protected_parents = self._retirement_protected_parent_ids()
         for request_id, request in sorted(self.deferred_requests.items()):
             if request.request_id != request_id or request_id != _sha({
                 "kind": "V2_GRAPH_SPECIALIZATION_REQUEST_V7",
@@ -2912,7 +5666,76 @@ class NativeProspectiveAuthorityV2:
                 raise ProspectiveV2IntegrityError(
                     "specialization request parent is absent"
                 )
+            if (
+                getattr(state, "retired", False)
+                and request.parent_cell_id
+                in protected_parents
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "specialization request parent retired before its "
+                    "live dependency was released"
+                )
             hypothesis = state.hypothesis
+            compact_request = request.provenance_schema_version == (
+                PROVENANCE_COMMITMENT_V4
+            )
+            if compact_request:
+                expected_parent_query_commitment = _compact_query_digest({
+                    "parent_cell_id": request.parent_cell_id,
+                    "parent_hypothesis_digest": (
+                        request.parent_hypothesis_digest
+                    ),
+                    "triggering_receipt_id": (
+                        request.request_emission_receipt_id
+                    ),
+                    "contradiction_receipt_id": (
+                        request.contradiction_receipt_id
+                    ),
+                    "specialization_mode": (
+                        request.specialization_mode.value
+                    ),
+                })
+                if request.parent_query_commitment != (
+                    expected_parent_query_commitment
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        "specialization request parent query commitment mismatch"
+                    )
+                expected_parent_discovery = (
+                    hypothesis.discovery_read_commitment
+                )
+                if expected_parent_discovery is None:
+                    expected_parent_discovery = ProvenanceCommitment(
+                        schema_version=PROVENANCE_COMMITMENT_V4,
+                        digest=hypothesis.discovery_receipt_digest,
+                        count=len(hypothesis.discovery_receipt_ids),
+                        exclusive_frontier=(
+                            hypothesis.certification_frontier + 1
+                        ),
+                        witness_ids=_bounded_provenance_witnesses(
+                            hypothesis.discovery_receipt_ids
+                        ),
+                    )
+                expected_parent_support = dict(
+                    hypothesis.nomination_read_commitments
+                ).get("parent_discovery_support")
+                if expected_parent_support is None:
+                    expected_parent_support = _compact_set_commitment(
+                        hypothesis.discovery_support_receipt_ids,
+                        exclusive_frontier=(
+                            hypothesis.certification_frontier + 1
+                        ),
+                    )
+                expected_parent_ancestors = dict(
+                    hypothesis.nomination_read_commitments
+                ).get("transitive_ancestor_reads")
+                if expected_parent_ancestors is None:
+                    expected_parent_ancestors = _compact_set_commitment(
+                        hypothesis.transitive_ancestor_receipt_ids,
+                        exclusive_frontier=(
+                            hypothesis.certification_frontier + 1
+                        ),
+                    )
             if (
                 request.specialization_mode != self.specialization_mode
                 or request.source_generation > self.current_generation
@@ -2920,15 +5743,29 @@ class NativeProspectiveAuthorityV2:
                 or hypothesis.hypothesis_digest
                 != request.parent_hypothesis_digest
                 or hypothesis.polarity is not request.fixed_polarity
-                or hypothesis.specialization_depth != 0
-                or hypothesis.dormant_origin
-                is not DormantOrigin.MIXED_OUTCOME_SHADOW
-                or request.parent_discovery_receipt_ids
-                != hypothesis.discovery_receipt_ids
-                or request.parent_discovery_support_receipt_ids
-                != hypothesis.discovery_support_receipt_ids
-                or request.transitive_ancestor_receipt_ids
-                != hypothesis.transitive_ancestor_receipt_ids
+                or hypothesis.dormant_origin not in {
+                    DormantOrigin.MIXED_OUTCOME_SHADOW,
+                    DormantOrigin.DEFERRED_SPECIALIZATION_CHILD,
+                    DormantOrigin.ADAPTIVE_BOUNDARY_CHILD,
+                }
+                or (
+                    (
+                        request.parent_discovery_receipt_ids
+                        != hypothesis.discovery_receipt_ids
+                        or request.parent_discovery_support_receipt_ids
+                        != hypothesis.discovery_support_receipt_ids
+                        or request.transitive_ancestor_receipt_ids
+                        != hypothesis.transitive_ancestor_receipt_ids
+                    )
+                    if not compact_request else (
+                        request.parent_discovery_commitment
+                        != expected_parent_discovery
+                        or request.parent_discovery_support_commitment
+                        != expected_parent_support
+                        or request.transitive_ancestor_commitment
+                        != expected_parent_ancestors
+                    )
+                )
             ):
                 raise ProspectiveV2IntegrityError(
                     "specialization request parent contract mismatch"
@@ -3005,21 +5842,46 @@ class NativeProspectiveAuthorityV2:
                 continue
 
             try:
-                prospective_support_ids = tuple(sorted(
+                # The complete state ledgers are intentionally scanned only
+                # at this explicit full-history boundary, where they are
+                # already being reconstructed.  Feed the bounded prefix into
+                # the same window selector used by the hot trigger: state
+                # ledgers here include the triggering receipt, so strict
+                # ``<`` recovers the pre-event history passed on the hot path.
+                support_history = tuple(
                     receipt_id for receipt_id in state.support_receipt_ids
                     if references[receipt_id].ordinal
-                    <= request.request_emission_ordinal
-                ))
-                contradiction_ids = tuple(sorted(
+                    < request.request_emission_ordinal
+                )
+                contradiction_history = tuple(
                     receipt_id
                     for receipt_id in state.contradiction_receipt_ids
                     if references[receipt_id].ordinal
-                    <= request.request_emission_ordinal
-                ))
-                all_support_ids = tuple(sorted({
-                    *request.parent_discovery_support_receipt_ids,
-                    *prospective_support_ids,
-                }))
+                    < request.request_emission_ordinal
+                )
+                (
+                    prospective_support_ids,
+                    contradiction_ids,
+                    all_support_ids,
+                ) = _bounded_specialization_evidence_ids(
+                    support_receipt_ids=support_history,
+                    contradiction_receipt_ids=contradiction_history,
+                    discovery_support_receipt_ids=(
+                        state.hypothesis.discovery_support_receipt_ids
+                    ),
+                    emission_receipt_id=(
+                        request.request_emission_receipt_id
+                    ),
+                    supports=(
+                        request.parent_cell_id
+                        in emission.supporting_cell_ids
+                    ),
+                    contradicts=(
+                        request.parent_cell_id
+                        in emission.contradiction_cell_ids
+                    ),
+                    basis=request.request_basis,
+                )
                 all_support_references = tuple(
                     references[item] for item in all_support_ids
                 )
@@ -3028,8 +5890,18 @@ class NativeProspectiveAuthorityV2:
                     "specialization request references unknown REAL evidence"
                 ) from exc
             if (
-                prospective_support_ids
-                != request.parent_prospective_support_receipt_ids
+                (
+                    prospective_support_ids
+                    != request.parent_prospective_support_receipt_ids
+                ) if not compact_request else (
+                    _compact_set_commitment(
+                        prospective_support_ids,
+                        exclusive_frontier=(
+                            request.request_emission_ordinal + 1
+                        ),
+                    )
+                    != request.parent_prospective_support_commitment
+                )
                 or not contradiction_ids
                 or any(
                     reference.observed_outcome is not expected_outcome
@@ -3039,10 +5911,7 @@ class NativeProspectiveAuthorityV2:
                 raise ProspectiveV2IntegrityError(
                     "specialization request support contract mismatch"
                 )
-            earliest_contradiction = min(
-                (references[item] for item in contradiction_ids),
-                key=lambda item: (item.ordinal, item.receipt_id),
-            )
+            earliest_contradiction = references[contradiction_ids[0]]
             if earliest_contradiction != contradiction_reference:
                 raise ProspectiveV2IntegrityError(
                     "specialization request did not anchor its earliest "
@@ -3120,19 +5989,47 @@ class NativeProspectiveAuthorityV2:
             implied_ids = _recursively_implied_signal_ids(
                 request.parent_cell_id, self.states
             )
-            vocabulary = tuple(sorted({
+            vocabulary_set = {
                 identity
                 for reference in all_support_references
                 for identity in reference.ordered_signal_identities
                 if _specialization_identity_role_permitted(
                     reference, identity
                 )
-            }))
+            }
+            vocabulary = tuple(sorted(
+                vocabulary_set,
+                key=lambda identity: _specialization_feature_sort_key(
+                    identity,
+                    sum(
+                        identity in reference.ordered_signal_identities
+                        for reference in all_support_references
+                    ),
+                    genome_seed=self.specialization_genome_seed,
+                    request_ordinal=0,
+                ),
+            ))[:SPECIALIZATION_CANDIDATE_BEAM_WIDTH]
             inspected_ids = tuple(sorted({
                 *all_support_ids,
                 request.contradiction_receipt_id,
                 request.request_emission_receipt_id,
             }))
+            inspected_witnesses = _bounded_provenance_witnesses(inspected_ids)
+            expected_inspected_commitment = (
+                _compact_set_commitment(
+                    inspected_ids,
+                    exclusive_frontier=(
+                        request.request_emission_ordinal + 1
+                    ),
+                )
+                if compact_request else None
+            )
+            if compact_request and request.candidate_inspected_commitment != (
+                expected_inspected_commitment
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "specialization request inspected commitment mismatch"
+                )
             expected_candidates: list[
                 SpecializationCandidateTerminalState
             ] = []
@@ -3185,9 +6082,15 @@ class NativeProspectiveAuthorityV2:
                         recursively_implied_by_parent=(
                             identity in implied_ids
                         ),
-                        supporting_receipt_ids=supporting_ids,
+                        supporting_receipt_ids=(
+                            _bounded_provenance_witnesses(supporting_ids)
+                            if compact_request else supporting_ids
+                        ),
                         supporting_stable_physical_interaction_ids=(
-                            supporting_physical_ids
+                            _bounded_provenance_witnesses(
+                                supporting_physical_ids
+                            )
+                            if compact_request else supporting_physical_ids
                         ),
                         supporting_occurrence_count=len(supporting_ids),
                         present_in_triggering_contradiction=(
@@ -3199,7 +6102,28 @@ class NativeProspectiveAuthorityV2:
                             NodeState.CONFIRMED.name
                             if confirmed else NodeState.FAILED.name
                         ),
-                        inspected_receipt_ids=inspected_ids,
+                        inspected_receipt_ids=(
+                            inspected_witnesses
+                            if compact_request else inspected_ids
+                        ),
+                        evidence_schema_version=(
+                            PROVENANCE_COMMITMENT_V4
+                            if compact_request else None
+                        ),
+                        supporting_receipt_commitment=(
+                            _compact_set_commitment(
+                                supporting_ids,
+                                exclusive_frontier=(
+                                    request.request_emission_ordinal + 1
+                                ),
+                            )
+                            if compact_request else None
+                        ),
+                        inspected_receipt_commitment=(
+                            expected_inspected_commitment
+                            if compact_request
+                            else None
+                        ),
                     )
                 )
             if tuple(expected_candidates) != request.candidate_terminals:
@@ -3214,10 +6138,15 @@ class NativeProspectiveAuthorityV2:
                 raise ProspectiveV2IntegrityError(
                     "specialization candidate read beyond request emission"
                 )
+        expected_parent_log = tuple(
+            self.deferred_requests[request_id].parent_cell_id
+            for request_id in self.request_queue
+        )
         if (
             len(requested_parents) != len(set(requested_parents))
-            or tuple(sorted(requested_parents))
-            != self.lifetime_requested_parent_ids
+            or len(expected_parent_log) != len(set(expected_parent_log))
+            or tuple(self.lifetime_requested_parent_ids)
+            != expected_parent_log
         ):
             raise ProspectiveV2IntegrityError(
                 "lifetime specialization request ledger mismatch"
@@ -3228,9 +6157,65 @@ class NativeProspectiveAuthorityV2:
         *,
         allow_unregistered: bool = False,
         frozen_base_continuation_digest: str | None = None,
+        expected_authority_topology: Mapping[str, Any] | None = None,
     ) -> None:
         if self.schema_version != SCHEMA_VERSION:
             raise ProspectiveV2IntegrityError("unsupported V2 schema")
+        boundary_schema = str(getattr(
+            self,
+            "boundary_digest_schema",
+            BOUNDARY_DIGEST_SCHEMA_LEGACY,
+        ))
+        if boundary_schema not in {
+            BOUNDARY_DIGEST_SCHEMA_LEGACY,
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN,
+        }:
+            raise ProspectiveV2IntegrityError(
+                "unknown generation-boundary digest schema"
+            )
+        if boundary_schema == BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN:
+            commitment_count = getattr(self, "_boundary_commitment_count", 0)
+            commitment_origin = getattr(
+                self, "_boundary_commitment_origin_digest", ""
+            )
+            commitment_digest = getattr(
+                self, "_boundary_commitment_digest", ""
+            )
+            if (
+                isinstance(commitment_count, bool)
+                or not isinstance(commitment_count, int)
+                or commitment_count < 0
+                or any(
+                    value and len(value) != 64
+                    for value in (
+                        commitment_origin,
+                        commitment_digest,
+                        getattr(self, "_boundary_structure_digest", ""),
+                    )
+                )
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "generation-boundary mutation commitment is malformed"
+                )
+        # Full invariant checks are an explicit reclosure boundary.  Refresh
+        # the bounded runtime indexes before any capacity/queue assertions so
+        # those assertions cannot rely on a stale cache after restoration or
+        # deliberate ledger tampering.  REAL/VIRTUAL hot paths use the cache
+        # without calling this full verifier.
+        self._refresh_hot_path_indexes()
+        try:
+            structural_mode = StructuralMode(self.structural_mode)
+        except (TypeError, ValueError) as exc:
+            raise ProspectiveV2IntegrityError(
+                "unknown structural execution mode"
+            ) from exc
+        if (
+            structural_mode is StructuralMode.EVENT_DRIVEN
+            and self.structural_epoch_schedule
+        ):
+            raise ProspectiveV2IntegrityError(
+                "event-driven structural mode carries a schedule"
+            )
         if (
             isinstance(self.specialization_genome_seed, bool)
             or not isinstance(self.specialization_genome_seed, int)
@@ -3265,8 +6250,131 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "live invariant/state identity mismatch"
             )
+        retired_tombstones = self.retired_tombstones
+        retired_ids = {
+            cell_id for cell_id, state in self.states.items()
+            if getattr(state, "retired", False)
+        }
+        if retired_ids != set(retired_tombstones):
+            raise ProspectiveV2IntegrityError(
+                "retired state/tombstone identity mismatch"
+            )
+        if set(retired_tombstones).intersection(self.historical_tombstones):
+            raise ProspectiveV2IntegrityError(
+                "adaptive retirement collides with historical tombstone"
+            )
+        protected_parents = self._retirement_protected_parent_ids()
+        for cell_id in sorted(registered):
+            state = self.states[cell_id]
+            if not getattr(state, "retired", False):
+                if any(
+                    getattr(state, name, None) is not None
+                    for name in (
+                        "retirement_generation",
+                        "retirement_ordinal",
+                        "retirement_reason",
+                        "retirement_tombstone_digest",
+                    )
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        f"live state carries retirement metadata: {cell_id}"
+                    )
+                continue
+            if (
+                state.hypothesis.source_generation <= 0
+                or state.hypothesis.initialization_origin
+                is not InitializationOrigin.PROSPECTIVE
+                or cell_id in protected_parents
+                or not isinstance(
+                    getattr(state, "retirement_generation", None), int
+                )
+                or not isinstance(
+                    getattr(state, "retirement_ordinal", None), int
+                )
+                or getattr(state, "retirement_generation") < 0
+                or getattr(state, "retirement_generation")
+                > self.current_generation
+                or getattr(state, "retirement_ordinal") < 0
+                or getattr(state, "retirement_ordinal")
+                > self.next_expected_ordinal
+                or not getattr(state, "retirement_reason", None)
+                or not getattr(state, "retirement_tombstone_digest", None)
+            ):
+                raise ProspectiveV2IntegrityError(
+                    f"retired state is not a replaceable adaptive leaf: {cell_id}"
+                )
+            self._validate_retirement_tombstone(
+                cell_id, state, retired_tombstones[cell_id]
+            )
+        self._verify_generation_boundary_retirements()
+        if any(
+            not isinstance(request, BoundaryPromotionRequest)
+            or request.candidate_id != candidate_id
+            for candidate_id, request
+            in self.boundary_promotion_requests.items()
+        ):
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion request ledger is malformed"
+            )
+        compact_prefix_frontiers = tuple(
+            hypothesis.birth_frontier + 1
+            for hypothesis in (
+                state.hypothesis for state in self.states.values()
+            )
+            if hypothesis.provenance_schema_version
+            == PROVENANCE_COMMITMENT_V4
+        )
+        compact_prefix_commitments = (
+            self._accepted_real_prefix_commitments(
+                compact_prefix_frontiers
+            )
+            if compact_prefix_frontiers else {}
+        )
+        deferred_birth_by_child: dict[
+            str, tuple[DeferredSpecializationRequest, DeferredChildBirth]
+        ] = {}
+        for request_id, birth in self.deferred_child_births.items():
+            if birth.disposition != "MATERIALIZED":
+                continue
+            request = self.deferred_requests.get(request_id)
+            if (
+                request is None
+                or birth.child_cell_id in deferred_birth_by_child
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "deferred child birth/request identity is ambiguous"
+                )
+            deferred_birth_by_child[birth.child_cell_id] = (
+                request, birth
+            )
         for cell_id in sorted(registered):
             hypothesis = self.states[cell_id].hypothesis
+            if hypothesis.source_generation > self.current_generation:
+                raise ProspectiveV2IntegrityError(
+                    f"hypothesis source generation is in the future: {cell_id}"
+                )
+            if hypothesis.provenance_schema_version == (
+                PROVENANCE_COMMITMENT_V4
+            ):
+                self._validate_compact_exclusion_commitment(
+                    hypothesis.discovery_exclusion_commitment,
+                    birth_frontier=hypothesis.birth_frontier,
+                    label=f"hypothesis {cell_id}",
+                    prefix_commitments=compact_prefix_commitments,
+                )
+            if (
+                hypothesis.nomination_operation == "specialization"
+                and hypothesis.lineage_parent_id is not None
+            ):
+                parent_state = self.states.get(hypothesis.lineage_parent_id)
+                if (
+                    parent_state is not None
+                    and hypothesis.specialization_depth
+                    != parent_state.hypothesis.specialization_depth + 1
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        f"specialization child depth is not parent+1: {cell_id}"
+                    )
             if hypothesis.source_generation > 0:
                 invariant = self.structural_invariants[cell_id]
                 if (
@@ -3288,13 +6396,111 @@ class NativeProspectiveAuthorityV2:
                     raise ProspectiveV2IntegrityError(
                         f"successor structural invariant mutation: {cell_id}"
                     )
+                if hypothesis.dormant_origin is DormantOrigin.ADAPTIVE_BOUNDARY_CHILD:
+                    if (
+                        hypothesis.nomination_operation != "ordinary"
+                        or hypothesis.structural_state != StemCellState.DORMANT.name
+                        or hypothesis.lineage_parent_id is not None
+                        or hypothesis.specialization_depth != 0
+                        or hypothesis.parent_hypothesis_digest is not None
+                    ):
+                        raise ProspectiveV2IntegrityError(
+                            f"adaptive boundary child lineage mismatch: {cell_id}"
+                        )
+                    candidate_id = self._boundary_promotion_by_child.get(
+                        cell_id
+                    )
+                    request = (
+                        None if candidate_id is None
+                        else self.boundary_promotion_requests.get(candidate_id)
+                    )
+                    if request is None:
+                        raise ProspectiveV2IntegrityError(
+                            f"adaptive boundary child request is absent: {cell_id}"
+                        )
+                    if hypothesis.source_generation != request.source_generation + 1:
+                        raise ProspectiveV2IntegrityError(
+                            f"adaptive boundary child generation mismatch: {cell_id}"
+                        )
+                    escrow = self.adaptive_boundary_escrows.get(cell_id)
+                    if not isinstance(escrow, NominationEscrow):
+                        raise ProspectiveV2IntegrityError(
+                            f"adaptive boundary child lacks escrow: {cell_id}"
+                        )
+                    if (
+                        escrow.escrow_schema_version not in {
+                            NOMINATION_ESCROW_V2, NOMINATION_ESCROW_V4
+                        }
+                        or escrow.operation != "ordinary"
+                        or escrow.fixed_polarity is not hypothesis.polarity
+                        or hypothesis.nomination_escrow_digest
+                        != escrow.escrow_digest
+                        or hypothesis.nomination_read_sets
+                        != escrow.categorized_reads
+                        or hypothesis.discovery_exclusion_receipt_ids
+                        != escrow.discovery_exclusion_receipt_ids
+                        or hypothesis.discovery_support_receipt_ids
+                        != request.supporting_receipt_ids
+                        or hypothesis.provenance_schema_version
+                        != (
+                            PROVENANCE_COMMITMENT_V4
+                            if escrow.escrow_schema_version
+                            == NOMINATION_ESCROW_V4 else None
+                        )
+                        or hypothesis.discovery_exclusion_commitment
+                        != escrow.discovery_exclusion_commitment
+                        or hypothesis.nomination_read_commitments
+                        != escrow.nomination_read_commitments
+                        or escrow.triggering_receipt_id
+                        != request.triggering_receipt_id
+                    ):
+                        raise ProspectiveV2IntegrityError(
+                            f"adaptive boundary child escrow mismatch: {cell_id}"
+                        )
+                    if self.boundary_promotion_requests.get(
+                        request.candidate_id
+                    ) != request:
+                        raise ProspectiveV2IntegrityError(
+                            f"adaptive boundary child request mismatch: {cell_id}"
+                        )
+                    if escrow.escrow_schema_version == NOMINATION_ESCROW_V4:
+                        self._validate_compact_ordinary_birth_contract(
+                            request, escrow, hypothesis
+                        )
+                    continue
+                if hypothesis.nomination_operation != "specialization":
+                    raise ProspectiveV2IntegrityError(
+                        f"unknown successor hypothesis origin: {cell_id}"
+                    )
                 escrow = self.deferred_child_escrows.get(cell_id)
                 if not isinstance(escrow, NominationEscrow):
                     raise ProspectiveV2IntegrityError(
                         f"successor child lacks V3 escrow: {cell_id}"
                     )
+                parent_id = hypothesis.lineage_parent_id
+                parent_state = (
+                    None if parent_id is None else self.states.get(parent_id)
+                )
+                if parent_state is None:
+                    raise ProspectiveV2IntegrityError(
+                        f"successor child parent is absent: {cell_id}"
+                    )
+                if hypothesis.specialization_depth != (
+                    parent_state.hypothesis.specialization_depth + 1
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        f"successor child depth is not parent+1: {cell_id}"
+                    )
+                if hypothesis.parent_hypothesis_digest != (
+                    parent_state.hypothesis.hypothesis_digest
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        f"successor child parent digest mismatch: {cell_id}"
+                    )
                 if (
-                    escrow.escrow_schema_version != NOMINATION_ESCROW_V3
+                    escrow.escrow_schema_version not in {
+                        NOMINATION_ESCROW_V3, NOMINATION_ESCROW_V4
+                    }
                     or hypothesis.nomination_escrow_digest
                     != escrow.escrow_digest
                     or hypothesis.nomination_read_sets
@@ -3303,9 +6509,29 @@ class NativeProspectiveAuthorityV2:
                     != escrow.discovery_exclusion_receipt_ids
                     or hypothesis.parent_hypothesis_digest
                     != escrow.parent_hypothesis_digest
+                    or hypothesis.provenance_schema_version
+                    != (
+                        PROVENANCE_COMMITMENT_V4
+                        if escrow.escrow_schema_version
+                        == NOMINATION_ESCROW_V4 else None
+                    )
+                    or hypothesis.discovery_exclusion_commitment
+                    != escrow.discovery_exclusion_commitment
+                    or hypothesis.nomination_read_commitments
+                    != escrow.nomination_read_commitments
                 ):
                     raise ProspectiveV2IntegrityError(
                         f"successor child escrow mismatch: {cell_id}"
+                    )
+                if escrow.escrow_schema_version == NOMINATION_ESCROW_V4:
+                    request_birth = deferred_birth_by_child.get(cell_id)
+                    if request_birth is None:
+                        raise ProspectiveV2IntegrityError(
+                            f"compact successor child request is absent: {cell_id}"
+                        )
+                    request, birth = request_birth
+                    self._validate_compact_deferred_birth_contract(
+                        request, birth, escrow, hypothesis
                     )
                 continue
             cell = self.base.envelope.cells.get(cell_id)
@@ -3377,6 +6603,25 @@ class NativeProspectiveAuthorityV2:
                     raise ProspectiveV2IntegrityError(
                         f"native escrow/hypothesis mismatch: {cell_id}"
                     )
+        for request in self.boundary_promotion_requests.values():
+            child_id = self._adaptive_boundary_child_id(request)
+            if child_id not in self.states:
+                raise ProspectiveV2IntegrityError(
+                    "boundary promotion request lacks materialized child"
+                )
+            if child_id not in self.adaptive_boundary_escrows:
+                raise ProspectiveV2IntegrityError(
+                    "boundary promotion child escrow is absent"
+                )
+        adaptive_state_ids = {
+            cell_id for cell_id, state in self.states.items()
+            if state.hypothesis.dormant_origin
+            is DormantOrigin.ADAPTIVE_BOUNDARY_CHILD
+        }
+        if set(self.adaptive_boundary_escrows) != adaptive_state_ids:
+            raise ProspectiveV2IntegrityError(
+                "adaptive boundary escrow ledger mismatch"
+            )
         current_tombstones = {
             cell_id: cell.to_manifest()
             for cell_id, cell in sorted(self.base.envelope.cells.items())
@@ -3398,7 +6643,14 @@ class NativeProspectiveAuthorityV2:
                 "unregistered live or tombstone candidate: "
                 + ",".join(sorted(unknown))
             )
-        if self.authority_topology != _executed_authority_topology_manifest(self.states):
+        expected_topology = (
+            _executed_authority_topology_manifest(
+                self._live_authority_state_cache
+            )
+            if expected_authority_topology is None
+            else expected_authority_topology
+        )
+        if self.authority_topology != expected_topology:
             raise ProspectiveV2IntegrityError(
                 "authority topology identity mismatch"
             )
@@ -3421,9 +6673,11 @@ class NativeProspectiveAuthorityV2:
                 "open nomination carries experimental identity"
             )
 
-        if len(self.request_queue) > REQUEST_QUEUE_CAPACITY:
+        if len(self._pending_request_ids()) > REQUEST_QUEUE_CAPACITY:
             raise ProspectiveV2IntegrityError("request queue capacity exceeded")
-        if len(successor_ids) > DORMANT_SPECIALIZATION_CHILD_CAPACITY:
+        if len(self._successor_capacity_occupants()) > (
+            DORMANT_SPECIALIZATION_CHILD_CAPACITY
+        ):
             raise ProspectiveV2IntegrityError(
                 "dormant specialization-child capacity exceeded"
             )
@@ -3431,6 +6685,45 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "deferred request/queue identity mismatch"
             )
+        request_ids_by_generation: dict[int, list[str]] = {}
+        request_attempt_ordinals: dict[str, int] = {}
+        for request_id in self.request_queue:
+            request = self.deferred_requests[request_id]
+            generation_ids = request_ids_by_generation.setdefault(
+                request.source_generation, []
+            )
+            request_attempt_ordinals[request_id] = len(generation_ids)
+            generation_ids.append(request_id)
+        structural_plans = getattr(self, "structural_request_plans", {})
+        for request_id, plan in sorted(structural_plans.items()):
+            if (
+                request_id not in self.sealed_request_ids
+                or request_id in self.request_consumptions
+                or self.generation_phase
+                is not GenerationPhase.STRUCTURAL_OPEN
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "structural request plan cache is stale or malformed"
+                )
+            self._validate_structural_consumption_fields(
+                request_id,
+                plan,
+                attempt_ordinal=request_attempt_ordinals[request_id],
+            )
+            if plan.disposition == "MATERIALIZED":
+                raise ProspectiveV2IntegrityError(
+                    "structural request plan is already materialized"
+                )
+            if plan.child_cell_id is not None:
+                expected_child_id = (
+                    f"v2_deferred_specialization_"
+                    f"g{self.current_generation:02d}_"
+                    f"{plan.attempt_ordinal:04d}"
+                )
+                if plan.child_cell_id != expected_child_id:
+                    raise ProspectiveV2IntegrityError(
+                        "structural request plan child identity mismatch"
+                    )
         ordered_queue = tuple(sorted(
             self.request_queue,
             key=lambda request_id: (
@@ -3447,33 +6740,35 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "consumption exists outside request queue"
             )
-        consumed_member_tuples: set[tuple[str, ...]] = set()
-        for request_id, consumption in sorted(
-            self.request_consumptions.items()
-        ):
+        consumed_member_tuples: set[tuple[str, ...]] = {
+            state.hypothesis.members
+            for state in self.states.values()
+        }
+        for birth in self.deferred_child_births.values():
+            consumed_member_tuples.discard(birth.members)
+        for request_id in self.request_queue:
+            consumption = self.request_consumptions.get(request_id)
+            if consumption is None:
+                continue
             request = self.deferred_requests[request_id]
-            generation_ids = tuple(
-                item for item in self.request_queue
-                if self.deferred_requests[item].source_generation
-                == request.source_generation
+            self._validate_structural_consumption_fields(
+                request_id,
+                consumption,
+                attempt_ordinal=request_attempt_ordinals[request_id],
             )
-            if (
-                consumption.request_id != request_id
-                or consumption.attempt_ordinal
-                != generation_ids.index(request_id)
-                or consumption.genome_seed
-                != self.specialization_genome_seed
-                or consumption.genome_call_count != 1
-            ):
-                raise ProspectiveV2IntegrityError(
-                    "structural request consumption identity mismatch"
-                )
             if consumption.selected_members:
-                if consumption.selected_members in consumed_member_tuples:
-                    if consumption.disposition != "REJECTED_DUPLICATE_PATTERN":
+                already_reserved = consumption.selected_members in (
+                    consumed_member_tuples
+                )
+                if consumption.disposition == "REJECTED_DUPLICATE_PATTERN":
+                    if not already_reserved:
                         raise ProspectiveV2IntegrityError(
-                            "repeated specialization tuple was not rejected"
+                            "duplicate specialization tuple has no prior reservation"
                         )
+                elif already_reserved:
+                    raise ProspectiveV2IntegrityError(
+                        "repeated specialization tuple was not rejected"
+                    )
                 else:
                     consumed_member_tuples.add(
                         consumption.selected_members
@@ -3488,11 +6783,85 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "sealed requests were skipped or reordered"
             )
-        if set(self.deferred_child_births).difference(
-            self.request_consumptions
-        ):
+        materialized_child_ids: set[str] = set()
+        for request_id, birth in sorted(self.deferred_child_births.items()):
+            if not isinstance(birth, DeferredChildBirth):
+                raise ProspectiveV2IntegrityError(
+                    "deferred child birth is malformed"
+                )
+            consumption = self.request_consumptions.get(request_id)
+            if consumption is None:
+                raise ProspectiveV2IntegrityError(
+                    "child birth exists without consumed request"
+                )
+            request = self.deferred_requests.get(request_id)
+            if request is None:
+                raise ProspectiveV2IntegrityError(
+                    "child birth names an unknown request"
+                )
+            if (
+                birth.request_id != request_id
+                or birth.child_cell_id != consumption.child_cell_id
+                or birth.members != consumption.selected_members
+                or birth.genome_seed != consumption.genome_seed
+                or birth.proposal_ordinal != consumption.attempt_ordinal
+                or isinstance(birth.source_generation, bool)
+                or not isinstance(birth.source_generation, int)
+                or birth.source_generation <= 0
+                or birth.source_generation > self.current_generation
+                or birth.disposition not in _DEFERRED_BIRTH_DISPOSITIONS
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "deferred child birth differs from request consumption"
+                )
+            expected_child_id = (
+                f"v2_deferred_specialization_"
+                f"g{birth.source_generation:02d}_"
+                f"{birth.proposal_ordinal:04d}"
+            )
+            if birth.child_cell_id != expected_child_id:
+                raise ProspectiveV2IntegrityError(
+                    "deferred child birth identity differs from safe point"
+                )
+            if birth.disposition == "PENDING_MATERIALIZATION":
+                if (
+                    consumption.disposition != "PENDING_CHILD"
+                    or birth.child_cell_id in self.states
+                    or birth.child_cell_id in self.deferred_child_escrows
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        "pending deferred birth has materialized state"
+                    )
+                continue
+            if consumption.disposition != "MATERIALIZED":
+                raise ProspectiveV2IntegrityError(
+                    "materialized deferred birth has non-materialized disposition"
+                )
+            state = self.states.get(birth.child_cell_id)
+            escrow = self.deferred_child_escrows.get(birth.child_cell_id)
+            if state is None or not isinstance(escrow, NominationEscrow):
+                raise ProspectiveV2IntegrityError(
+                    "materialized deferred birth lacks state or escrow"
+                )
+            hypothesis = state.hypothesis
+            if (
+                hypothesis.cell_id != birth.child_cell_id
+                or hypothesis.members != birth.members
+                or hypothesis.lineage_parent_id != request.parent_cell_id
+                or hypothesis.parent_hypothesis_digest
+                != request.parent_hypothesis_digest
+                or hypothesis.source_generation != birth.source_generation
+                or hypothesis.nomination_operation != "specialization"
+                or hypothesis.dormant_origin
+                is not DormantOrigin.DEFERRED_SPECIALIZATION_CHILD
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "materialized deferred birth state differs from ledger"
+                )
+            materialized_child_ids.add(birth.child_cell_id)
+        if set(self.deferred_child_escrows) != materialized_child_ids:
             raise ProspectiveV2IntegrityError(
-                "child birth exists without consumed request"
+                "deferred child escrow/birth identity mismatch"
             )
         if self.specialization_mode is SpecializationMode.DISCONNECTED and (
             self.request_queue or self.deferred_requests
@@ -3516,6 +6885,20 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "accepted REAL physical identity replay"
             )
+
+        for cell_id, state in self.states.items():
+            expected_certification_digest = _append_log_digest(
+                state.certification_receipt_ids,
+                kind="certification_receipt",
+            )
+            if (
+                getattr(state, "certification_receipt_digest", "")
+                != expected_certification_digest
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "certification receipt rolling digest mismatch: "
+                    f"{cell_id}"
+                )
 
         if self._history_validation_mode == HISTORY_VALIDATION_LEGACY:
             self._verify_ledger_derived_state()
@@ -3613,6 +6996,931 @@ class NativeProspectiveAuthorityV2:
                 "accepted receipt lacks consumed pre-outcome transaction"
             )
 
+    def _boundary_replay_seed(self) -> "NativeProspectiveAuthorityV2":
+        """Make the post-nomination authority state used by full replay.
+
+        A boundary digest is a digest of the authority *at that point*, not a
+        digest of the final cache with a historical label attached.  The
+        replay therefore starts with the immutable generation-zero population
+        and the frozen historical ledger, then applies boundaries and REAL
+        receipts in their causal order.  This is deliberately private and is
+        used only at explicit full-history boundaries.
+        """
+
+        replay = copy.deepcopy(self)
+        initial_ids = tuple(sorted(
+            cell_id for cell_id, state in self.states.items()
+            if state.hypothesis.source_generation == 0
+        ))
+        replay.states = {
+            cell_id: ProspectiveAuthorityState(
+                hypothesis=self.states[cell_id].hypothesis,
+                prospectively_certified=(
+                    self.mode is V2Mode.LEGACY
+                    and self.states[cell_id].hypothesis.structural_state
+                    == StemCellState.MATURE.name
+                ),
+            )
+            for cell_id in initial_ids
+        }
+        replay.structural_invariants = {
+            cell_id: self.structural_invariants[cell_id]
+            for cell_id in initial_ids
+        }
+        # ``copy.deepcopy(self)`` carried the final live cache.  Replace it
+        # before the seed topology is built so replay starts from the actual
+        # generation-zero projection rather than a stale lifetime view.
+        replay._live_authority_state_cache = _LiveAuthorityStateView(
+            replay.states
+        )
+        replay._successor_capacity_occupant_ids = set()
+        replay._pending_child_birth_request_ids = set()
+        replay._reserved_member_pairs = {
+            tuple(state.hypothesis.members)
+            for state in replay.states.values()
+        }
+        replay.authority_topology = _executed_authority_topology_manifest(
+            replay._live_authority_state_cache
+        )
+        replay.retired_tombstones = {}
+        replay.current_generation = 0
+        replay.generation_phase = GenerationPhase.PROSPECTIVE_OPEN
+        replay.accepted_real_references = {
+            reference.receipt_id: reference
+            for reference in self._historical_real_references(replay.base)
+        }
+        replay.deferred_requests = {}
+        replay.request_queue = _AppendOnlyLedger()
+        replay.lifetime_requested_parent_ids = _AppendOnlyLedger()
+        replay.request_consumptions = {}
+        replay.deferred_child_births = {}
+        replay.deferred_child_escrows = {}
+        replay.boundary_promotion_requests = {}
+        replay.adaptive_boundary_escrows = {}
+        replay.generation_boundaries = _AppendOnlyLedger()
+        replay.sealed_request_ids = ()
+        replay.sealed_request_queue_digest = None
+        replay.evaluation_sealed = False
+        replay.pending_event = None
+        replay.consumed_receipts = {}
+        replay.consumed_tokens = set()
+        replay.prospective_physical_fingerprints = {}
+        replay.emissions = {}
+        replay.event_transactions = {}
+        replay.structural_request_plans = {}
+        replay.incremental_history_state = None
+        replay.next_expected_ordinal = self._history_expected_start()
+        # Nomination events and experimental identity are created before the
+        # first generation boundary and are immutable thereafter.
+        replay.nomination_events = tuple(self.nomination_events)
+        replay.experimental_identity = copy.deepcopy(
+            self.experimental_identity
+        )
+        replay._history_validation_mode = HISTORY_VALIDATION_INCREMENTAL
+        if replay.boundary_digest_schema == (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            expected_origin = _sha(
+                replay._boundary_commitment_origin_payload()
+            )
+            if expected_origin != self._boundary_commitment_origin_digest:
+                raise ProspectiveV2IntegrityError(
+                    "generation-boundary commitment origin differs from replay"
+                )
+            replay._boundary_commitment_origin_digest = expected_origin
+            replay._boundary_commitment_digest = expected_origin
+            replay._boundary_commitment_count = 0
+            replay._boundary_accepted_real_digest = (
+                replay._boundary_seed_accepted_real_digest()
+            )
+            replay._boundary_candidate_digest = (
+                replay._boundary_seed_candidate_digest()
+            )
+            replay._boundary_decision_digest = (
+                replay._boundary_seed_decision_digest()
+            )
+            replay._boundary_schedule_digest = _sha(
+                list(replay.structural_epoch_schedule)
+            )
+            replay._boundary_structure_digest = (
+                replay._canonical_structure_invariant_digest()
+            )
+            replay._boundary_request_digest_cache = {}
+            replay._boundary_replay_active_promotion_ids = set()
+            by_generation: dict[
+                int, list[tuple[str, BoundaryPromotionRequest]]
+            ] = {}
+            by_child: dict[str, str] = {}
+            for candidate_id, request in sorted(
+                self.boundary_promotion_requests.items()
+            ):
+                child_id = self._adaptive_boundary_child_id(request)
+                state = self.states.get(child_id)
+                if state is None:
+                    raise ProspectiveV2IntegrityError(
+                        "boundary promotion history lacks materialized child"
+                    )
+                generation = state.hypothesis.source_generation
+                by_generation.setdefault(generation, []).append(
+                    (candidate_id, request)
+                )
+                by_child[child_id] = candidate_id
+            replay._boundary_replay_promotions_by_generation = {
+                generation: tuple(sorted(
+                    items,
+                    key=lambda item: (
+                        item[1].request_digest,
+                        item[0],
+                    ),
+                ))
+                for generation, items in by_generation.items()
+            }
+            replay._boundary_replay_promotion_by_child = by_child
+        replay._refresh_hot_path_indexes()
+        if replay.boundary_digest_schema == (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            # The refresh above seeds the live view from generation zero.  It
+            # must not recreate the lifetime promotion projection: no
+            # post-nomination child is live in this replay seed.
+            replay._boundary_replay_active_promotion_ids = set()
+            replay._boundary_replay_refresh_promotion_digest()
+        return replay
+
+    @staticmethod
+    def _boundary_replay_classification(
+        value: Mapping[str, Any],
+    ) -> EnvelopeClassification:
+        """Decode the persisted pre-outcome classification without trust."""
+
+        try:
+            return EnvelopeClassification(
+                state=AvailabilityState(value["state"]),
+                probability=float(value["probability"]),
+                uncertainty=float(value["uncertainty"]),
+                available_cell_ids=tuple(value["available_cell_ids"]),
+                refuted_cell_ids=tuple(value["refuted_cell_ids"]),
+                formal_available=bool(value["formal_available"]),
+                formal_refuted=bool(value["formal_refuted"]),
+                policy_response=bool(value["policy_response"]),
+            )
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ProspectiveV2IntegrityError(
+                "replayed transaction classification is malformed"
+            ) from exc
+
+    @classmethod
+    def _boundary_replay_pending(
+        cls,
+        receipt: V2GroundedReceipt,
+        transaction: Mapping[str, Any],
+    ) -> PendingRealEvent:
+        """Reconstruct the exact pending event committed before a receipt."""
+
+        try:
+            pending = PendingRealEvent(
+                ordinal=int(transaction["ordinal"]),
+                frame_id=str(transaction["frame_id"]),
+                trace_digest=str(transaction["trace_digest"]),
+                typed_signal_digest=str(transaction["typed_signal_digest"]),
+                source_organism_identity=str(
+                    transaction["source_organism_identity"]
+                ),
+                source_state_identity=str(transaction["source_state_identity"]),
+                predecessor_fen=str(transaction["predecessor_fen"]),
+                actuation=GraphActuation(**dict(transaction["actuation"])),
+                pre_outcome_classification=(
+                    cls._boundary_replay_classification(
+                        transaction["pre_outcome_classification"]
+                    )
+                ),
+                matching_cell_ids=tuple(transaction["matching_cell_ids"]),
+                matching_cell_digest=str(transaction["matching_cell_digest"]),
+                structure_invariant_digest=str(
+                    transaction["structure_invariant_digest"]
+                ),
+                predecessor_continuation_digest=str(
+                    transaction["predecessor_continuation_digest"]
+                ),
+                pending_token=str(transaction["pending_token"]),
+                outcome_terminal_identity=str(
+                    transaction["outcome_terminal_identity"]
+                ),
+                environment_outcome_terminal_identity=str(
+                    transaction["environment_outcome_terminal_identity"]
+                ),
+                state="OPEN",
+            )
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ProspectiveV2IntegrityError(
+                "replayed transaction pending event is malformed"
+            ) from exc
+        if pending.pending_token != receipt.pending_token:
+            raise ProspectiveV2IntegrityError(
+                "replayed transaction token differs from receipt"
+            )
+        manifest = pending.manifest()
+        if any(
+            transaction.get(key) != value
+            for key, value in manifest.items()
+            if key != "state"
+        ) or transaction.get("state") != "CONSUMED" or transaction.get(
+            "consumed_receipt_id"
+        ) != receipt.receipt_id:
+            raise ProspectiveV2IntegrityError(
+                "consumed transaction does not close its pending manifest"
+            )
+        return pending
+
+    @staticmethod
+    def _boundary_replay_reset_state(
+        state: ProspectiveAuthorityState,
+    ) -> None:
+        """Keep a newly born child at its zero-evidence lifecycle state."""
+
+        # This helper documents the invariant and gives callers one place to
+        # assert it; construction through ProspectiveAuthorityState already
+        # initializes these values to zero.
+        if any((
+            state.certification_receipt_ids,
+            state.support_receipt_ids,
+            state.contradiction_receipt_ids,
+            state.successes,
+            state.contradictions,
+            state.support,
+            state.prospectively_certified,
+        )):
+            raise ProspectiveV2IntegrityError(
+                "replayed child was born with lifecycle evidence"
+            )
+
+    def _boundary_replay_retire(
+        self,
+        replay: "NativeProspectiveAuthorityV2",
+        cell_ids: Sequence[str],
+    ) -> None:
+        """Apply one safe-point retirement batch and verify ``state_before``."""
+
+        for cell_id in tuple(cell_ids):
+            state = replay.states.get(cell_id)
+            tombstone = self.retired_tombstones.get(cell_id)
+            if state is None or not isinstance(tombstone, Mapping):
+                raise ProspectiveV2IntegrityError(
+                    "boundary retirement names an unknown state"
+                )
+            if cell_id in replay.retired_tombstones:
+                raise ProspectiveV2IntegrityError(
+                    "boundary retirement is applied twice"
+                )
+            if dict(tombstone.get("state_before", {})) != state.manifest():
+                raise ProspectiveV2IntegrityError(
+                    "retirement tombstone state_before differs from replay"
+                )
+            state.retired = True
+            state.prospectively_certified = False
+            state.retirement_generation = tombstone.get(
+                "retirement_generation"
+            )
+            state.retirement_ordinal = tombstone.get("retirement_ordinal")
+            state.retirement_reason = tombstone.get("retirement_reason")
+            state.retirement_tombstone_digest = tombstone.get(
+                "retirement_tombstone_digest"
+            )
+            replay.retired_tombstones[cell_id] = copy.deepcopy(dict(tombstone))
+            self._validate_retirement_tombstone(
+                cell_id, state, replay.retired_tombstones[cell_id]
+            )
+        if cell_ids:
+            retirement_payload = {
+                "tombstones": [
+                    copy.deepcopy(replay.retired_tombstones[cell_id])
+                    for cell_id in cell_ids
+                ],
+            }
+            replay._record_boundary_structure(
+                "adaptive_retirement", retirement_payload
+            )
+            replay._record_boundary_candidate(
+                "adaptive_retirement", retirement_payload
+            )
+            replay._advance_boundary_commitment(
+                "adaptive_retirement",
+                {
+                    "retirement": retirement_payload,
+                    "structure_digest": replay._boundary_structure_digest,
+                },
+            )
+            for cell_id in cell_ids:
+                self._boundary_replay_retire_live_state(replay, cell_id)
+        if cell_ids:
+            replay.authority_topology = _executed_authority_topology_manifest(
+                replay._live_authority_state_cache
+            )
+
+    def _boundary_replay_materialize_children(
+        self,
+        replay: "NativeProspectiveAuthorityV2",
+        *,
+        generation: int,
+        request_ids: Sequence[str],
+        include_promotions: bool,
+    ) -> None:
+        """Replay one structural settlement from immutable birth ledgers."""
+
+        def replay_deferred(request_id: str) -> None:
+            if request_id in replay.request_consumptions:
+                raise ProspectiveV2IntegrityError(
+                    "structural request was replay-consumed twice"
+                )
+            consumption = self.request_consumptions.get(request_id)
+            request = self.deferred_requests.get(request_id)
+            if consumption is None or request is None:
+                raise ProspectiveV2IntegrityError(
+                    "boundary settlement names an unknown request"
+                )
+            replay.request_consumptions[request_id] = consumption
+            replay._pending_request_index.discard(request_id)
+            try:
+                replay._pending_request_order.remove(request_id)
+            except ValueError:
+                pass
+            replay._advance_boundary_commitment(
+                "structural_consume",
+                replay._boundary_structural_consumption_payload(consumption),
+            )
+            birth = self.deferred_child_births.get(request_id)
+            if birth is None:
+                if consumption.child_cell_id is not None:
+                    raise ProspectiveV2IntegrityError(
+                        "accepted structural request lacks child birth"
+                    )
+                return
+            if birth.source_generation != generation:
+                raise ProspectiveV2IntegrityError(
+                    "structural child birth generation differs from boundary"
+                )
+            replay.deferred_child_births[request_id] = birth
+            replay._pending_child_birth_request_ids.add(request_id)
+            replay._successor_capacity_occupant_ids.add(
+                birth.child_cell_id
+            )
+            replay._reserved_member_pairs.add(tuple(birth.members))
+            child_id = birth.child_cell_id
+            if child_id in replay.states:
+                raise ProspectiveV2IntegrityError(
+                    "structural child was replay-materialized twice"
+                )
+            final_state = self.states.get(child_id)
+            invariant = self.structural_invariants.get(child_id)
+            escrow = self.deferred_child_escrows.get(child_id)
+            if (
+                final_state is None
+                or invariant is None
+                or not isinstance(escrow, NominationEscrow)
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "structural child lacks replay birth artifacts"
+                )
+            hypothesis = final_state.hypothesis
+            if hypothesis.provenance_schema_version == (
+                PROVENANCE_COMMITMENT_V4
+            ):
+                expected_birth_frontier = replay.next_expected_ordinal - 1
+                if (
+                    hypothesis.birth_frontier != expected_birth_frontier
+                    or hypothesis.certification_frontier
+                    != expected_birth_frontier
+                    or escrow.birth_frontier != expected_birth_frontier
+                    or escrow.certification_frontier
+                    != expected_birth_frontier
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        "compact deferred birth frontier differs from its "
+                        "structural safe point"
+                    )
+            state = ProspectiveAuthorityState(
+                hypothesis=hypothesis,
+                prospectively_certified=False,
+            )
+            self._boundary_replay_reset_state(state)
+            replay.states[child_id] = state
+            replay.structural_invariants[child_id] = invariant
+            replay.deferred_child_escrows[child_id] = escrow
+            child_payload = {
+                "request_id": request_id,
+                "birth": birth.manifest(),
+                "state": state.manifest(),
+                "escrow": escrow.manifest(),
+            }
+            replay._record_boundary_structure(
+                "deferred_child_materialize", child_payload
+            )
+            self._boundary_replay_add_live_state(replay, child_id)
+            replay._pending_child_birth_request_ids.discard(request_id)
+            replay._record_boundary_candidate(
+                "deferred_child_materialize", child_payload
+            )
+            replay._record_boundary_decision(
+                "deferred_child_materialize",
+                {
+                    "cell_id": child_id,
+                    "row": replay._boundary_decision_row(child_id, state),
+                },
+            )
+            replay._advance_boundary_commitment(
+                "deferred_child_materialize",
+                {
+                    "child": child_payload,
+                    "structure_digest": replay._boundary_structure_digest,
+                },
+            )
+
+        def replay_promotion(
+            candidate_id: str,
+            request: BoundaryPromotionRequest,
+        ) -> None:
+            child_id = self._adaptive_boundary_child_id(request)
+            final_state = self.states.get(child_id)
+            if final_state is None or (
+                final_state.hypothesis.source_generation != generation
+            ):
+                return
+            if child_id in replay.states:
+                raise ProspectiveV2IntegrityError(
+                    "ordinary boundary child was replay-materialized twice"
+                )
+            invariant = self.structural_invariants.get(child_id)
+            escrow = self.adaptive_boundary_escrows.get(child_id)
+            if invariant is None or not isinstance(escrow, NominationEscrow):
+                raise ProspectiveV2IntegrityError(
+                    "ordinary child lacks replay birth artifacts"
+                )
+            hypothesis = final_state.hypothesis
+            if hypothesis.provenance_schema_version == (
+                PROVENANCE_COMMITMENT_V4
+            ):
+                expected_birth_frontier = replay.next_expected_ordinal - 1
+                if (
+                    hypothesis.birth_frontier != expected_birth_frontier
+                    or hypothesis.certification_frontier
+                    != expected_birth_frontier
+                    or escrow.birth_frontier != expected_birth_frontier
+                    or escrow.certification_frontier
+                    != expected_birth_frontier
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        "compact ordinary birth frontier differs from its "
+                        "structural safe point"
+                    )
+            state = ProspectiveAuthorityState(
+                hypothesis=hypothesis,
+                prospectively_certified=False,
+            )
+            self._boundary_replay_reset_state(state)
+            replay.states[child_id] = state
+            replay.structural_invariants[child_id] = invariant
+            replay.boundary_promotion_requests[candidate_id] = request
+            replay.adaptive_boundary_escrows[child_id] = escrow
+            replay._reserved_member_pairs.add(tuple(final_state.hypothesis.members))
+            promotion_payload = {
+                "candidate_id": candidate_id,
+                "child_id": child_id,
+                "request": request.manifest(),
+                "state": state.manifest(),
+                "escrow": escrow.manifest(),
+            }
+            replay._record_boundary_structure(
+                "boundary_promotion_materialize", promotion_payload
+            )
+            self._boundary_replay_add_live_state(replay, child_id)
+            replay._boundary_replay_active_promotion_ids.add(candidate_id)
+            replay._boundary_replay_refresh_promotion_digest()
+            replay._record_boundary_candidate(
+                "boundary_promotion_materialize", promotion_payload
+            )
+            replay._record_boundary_decision(
+                "boundary_promotion_materialize",
+                {
+                    "cell_id": child_id,
+                    "row": replay._boundary_decision_row(child_id, state),
+                },
+            )
+            replay._advance_boundary_commitment(
+                "boundary_promotion_materialize",
+                {
+                    "promotion": promotion_payload,
+                    "structure_digest": replay._boundary_structure_digest,
+                },
+            )
+
+        # Event-driven settlement materializes ordinary promotions first and
+        # then consumes deferred requests.  Scheduled settlement has no
+        # promotion batch, but follows the same request order.
+        if include_promotions:
+            for candidate_id, request in (
+                replay._boundary_replay_promotions_by_generation.get(
+                    generation, ()
+                )
+            ):
+                replay_promotion(candidate_id, request)
+        for request_id in request_ids:
+            replay_deferred(request_id)
+
+        replay.authority_topology = _executed_authority_topology_manifest(
+            replay._live_authority_state_cache
+        )
+
+    def _boundary_replay_assert_fields(
+        self,
+        replay: "NativeProspectiveAuthorityV2",
+        boundary: GenerationBoundary,
+        *,
+        queue_ids: Sequence[str],
+        prior_digest: str,
+        prior_digest_schema: str,
+    ) -> None:
+        """Compare every persisted GenerationBoundary field to replay state."""
+
+        try:
+            phase = GenerationPhase(boundary.phase)
+        except (TypeError, ValueError) as exc:
+            raise ProspectiveV2IntegrityError(
+                "generation boundary phase is malformed"
+            ) from exc
+        boundary_prior_schema = getattr(
+            boundary, "prior_digest_schema", BOUNDARY_DIGEST_SCHEMA_LEGACY
+        )
+        if (
+            boundary.generation != replay.current_generation
+            or boundary.event_frontier != replay.next_expected_ordinal
+            or phase is not replay.generation_phase
+            or boundary.prior_continuation_digest != prior_digest
+            or boundary_prior_schema != prior_digest_schema
+            or boundary.accepted_real_ledger_digest
+            != replay._accepted_real_ledger_digest()
+            or boundary.request_queue_digest
+            != replay._request_queue_digest(queue_ids)
+            or boundary.structural_epoch_schedule_digest
+            != replay._boundary_schedule_digest
+            or boundary.candidate_manifest_digest
+            != replay._candidate_manifest_digest()
+            or boundary.parent_decision_history_digest
+            != replay._parent_decision_history_digest()
+            or boundary.specialization_genome_seed
+            != replay.specialization_genome_seed
+        ):
+            raise ProspectiveV2IntegrityError(
+                "generation boundary causal field differs from replay"
+            )
+        if tuple(getattr(boundary, "retired_cell_ids", ())) != tuple(
+            sorted(getattr(boundary, "retired_cell_ids", ()))
+        ):
+            raise ProspectiveV2IntegrityError(
+                "generation boundary retirement IDs are not canonical"
+            )
+
+    def _verify_generation_boundary_replay(self) -> None:
+        """Causally reclose boundaries, transactions, references and retirements.
+
+        The replay is a single chronological pass.  In particular, it never
+        replays the complete REAL ledger once per boundary; each receipt is
+        consumed once while the boundary cursor advances at its event
+        frontier.
+        """
+
+        boundaries = tuple(self.generation_boundaries)
+        replay = self._boundary_replay_seed()
+        ordered = tuple(sorted(
+            self.consumed_receipts.values(),
+            key=lambda item: (item.ordinal, item.receipt_id),
+        ))
+        receipt_index = 0
+        boundary_index = 0
+
+        def consume_receipt(receipt: V2GroundedReceipt) -> None:
+            transaction = self.event_transactions.get(receipt.pending_token)
+            if not isinstance(transaction, Mapping):
+                raise ProspectiveV2IntegrityError(
+                    "replay receipt lacks its event transaction"
+                )
+            expected_reference = replay._reference_from_v2_receipt(
+                receipt, source_generation=replay.current_generation
+            )
+            stored_reference = self.accepted_real_references.get(
+                receipt.receipt_id
+            )
+            if stored_reference != expected_reference:
+                raise ProspectiveV2IntegrityError(
+                    "accepted REAL reference generation differs from boundary "
+                    "chronology"
+                )
+            if transaction.get("structure_invariant_digest") != (
+                replay._structure_invariant_digest()
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "consumed transaction structure digest differs from replay"
+                )
+            replay._ensure_incremental_history_initialized()
+            pending = self._boundary_replay_pending(receipt, transaction)
+            replay.pending_event = pending
+            replay.event_transactions[pending.pending_token] = pending.manifest()
+            replay._advance_boundary_commitment(
+                "real_open", pending.manifest()
+            )
+            replay._consume_in_place_core(receipt)
+
+        def apply_boundary(boundary: GenerationBoundary) -> None:
+            nonlocal boundary_index
+            try:
+                phase = GenerationPhase(boundary.phase)
+            except (TypeError, ValueError) as exc:
+                raise ProspectiveV2IntegrityError(
+                    "generation boundary phase is malformed"
+                ) from exc
+            if (
+                isinstance(boundary.generation, bool)
+                or not isinstance(boundary.generation, int)
+                or boundary.generation < 0
+                or isinstance(boundary.event_frontier, bool)
+                or not isinstance(boundary.event_frontier, int)
+                or boundary.event_frontier < 0
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "generation boundary ordinal or generation is malformed"
+                )
+            if boundary.event_frontier != replay.next_expected_ordinal:
+                raise ProspectiveV2IntegrityError(
+                    "generation boundary is outside replay frontier"
+                )
+            first_initial_structural = (
+                boundary_index == 0
+                and not replay.generation_boundaries
+                and phase is GenerationPhase.STRUCTURAL_OPEN
+                and boundary.generation == 0
+            )
+            current = replay.generation_phase
+            initial_boundary_phase: GenerationPhase | None = None
+            prepared_structural_successor = False
+            queue_ids: tuple[str, ...] = ()
+            if (
+                current is GenerationPhase.STRUCTURAL_OPEN
+                and phase is GenerationPhase.PROSPECTIVE_OPEN
+                and replay.current_generation > 0
+            ):
+                # The prospective boundary is emitted after the structural
+                # compatibility API has consumed/materialized its sealed
+                # queue.  Reconstruct that state before hashing ``prior``.
+                if boundary.generation != replay.current_generation:
+                    raise ProspectiveV2IntegrityError(
+                        "prospective boundary generation differs from replay"
+                    )
+                queue_ids = tuple(replay.sealed_request_ids)
+                if replay.structural_mode is StructuralMode.EVENT_DRIVEN:
+                    self._boundary_replay_retire(
+                        replay, getattr(boundary, "retired_cell_ids", ())
+                    )
+                trailing_ids = tuple(
+                    request_id for request_id in queue_ids
+                    if request_id in self.request_consumptions
+                    and request_id not in replay.request_consumptions
+                )
+                self._boundary_replay_materialize_children(
+                    replay,
+                    generation=replay.current_generation,
+                    request_ids=trailing_ids,
+                    include_promotions=(
+                        replay.structural_mode is StructuralMode.EVENT_DRIVEN
+                    ),
+                )
+                replay.structural_request_plans = {}
+                prepared_structural_successor = True
+
+            prior = (
+                replay.base.continuation_digest_v3()
+                if first_initial_structural
+                else replay._boundary_prior_continuation_digest()
+            )
+            prior_schema = (
+                BOUNDARY_DIGEST_SCHEMA_BASE_V3
+                if first_initial_structural
+                else replay.boundary_digest_schema
+            )
+            if boundary.prior_continuation_digest != prior:
+                raise ProspectiveV2IntegrityError(
+                    "generation boundary prior continuation differs from replay"
+                )
+
+            if first_initial_structural:
+                if getattr(boundary, "retired_cell_ids", ()):
+                    raise ProspectiveV2IntegrityError(
+                        "initial structural boundary retires a state"
+                    )
+                # ``close_nomination`` records the initial structural
+                # boundary before mutating the live phase.  The immediately
+                # following generation-zero prospective boundary therefore
+                # hashes a continuation whose phase is still OPEN.
+                initial_boundary_phase = replay.generation_phase
+                replay.generation_phase = GenerationPhase.STRUCTURAL_OPEN
+                queue_ids: tuple[str, ...] = ()
+            elif prepared_structural_successor:
+                replay.generation_phase = GenerationPhase.PROSPECTIVE_OPEN
+            elif (
+                current is GenerationPhase.PROSPECTIVE_OPEN
+                and phase is GenerationPhase.PROSPECTIVE_SEALED
+            ):
+                if boundary.generation != replay.current_generation:
+                    raise ProspectiveV2IntegrityError(
+                        "sealed boundary generation differs from replay"
+                    )
+                # The replay seed maintains the bounded pending order.  Do
+                # not rescan the append-only lifetime request queue at every
+                # sealed boundary.
+                queue_ids = tuple(
+                    request_id for request_id in replay._pending_request_order
+                    if (
+                        replay.deferred_requests[request_id].source_generation
+                        == replay.current_generation
+                    )
+                )
+                replay.sealed_request_ids = queue_ids
+                replay.sealed_request_queue_digest = replay._request_queue_digest(
+                    queue_ids
+                )
+                replay.generation_phase = GenerationPhase.PROSPECTIVE_SEALED
+            elif (
+                current is GenerationPhase.PROSPECTIVE_SEALED
+                and phase is GenerationPhase.STRUCTURAL_OPEN
+            ):
+                if boundary.generation != replay.current_generation + 1:
+                    raise ProspectiveV2IntegrityError(
+                        "structural boundary generation skips replay"
+                    )
+                replay.current_generation += 1
+                replay.generation_phase = GenerationPhase.STRUCTURAL_OPEN
+                queue_ids = tuple(replay.sealed_request_ids)
+                if replay.structural_mode is StructuralMode.SCHEDULED:
+                    self._boundary_replay_retire(
+                        replay, getattr(boundary, "retired_cell_ids", ())
+                    )
+                    replay.structural_request_plans = {
+                        request_id: self.structural_request_plans[request_id]
+                        for request_id in queue_ids
+                        if request_id in self.structural_request_plans
+                    }
+                elif getattr(boundary, "retired_cell_ids", ()):
+                    raise ProspectiveV2IntegrityError(
+                        "event-driven structural boundary retires a state"
+                    )
+            elif (
+                current is GenerationPhase.STRUCTURAL_OPEN
+                and phase is GenerationPhase.PROSPECTIVE_OPEN
+            ):
+                if boundary.generation != replay.current_generation:
+                    raise ProspectiveV2IntegrityError(
+                        "prospective boundary generation differs from replay"
+                    )
+                queue_ids = tuple(replay.sealed_request_ids)
+                if replay.structural_mode is StructuralMode.EVENT_DRIVEN:
+                    self._boundary_replay_retire(
+                        replay, getattr(boundary, "retired_cell_ids", ())
+                    )
+                self._boundary_replay_materialize_children(
+                    replay,
+                    generation=replay.current_generation,
+                    request_ids=queue_ids,
+                    include_promotions=(
+                        replay.structural_mode is StructuralMode.EVENT_DRIVEN
+                    ),
+                )
+                replay.structural_request_plans = {}
+                replay.generation_phase = GenerationPhase.PROSPECTIVE_OPEN
+            elif (
+                current is GenerationPhase.PROSPECTIVE_OPEN
+                and phase is GenerationPhase.PROSPECTIVE_OPEN
+            ):
+                if boundary.generation != replay.current_generation:
+                    raise ProspectiveV2IntegrityError(
+                        "direct retirement boundary generation differs"
+                    )
+                queue_ids = tuple(replay.sealed_request_ids)
+                self._boundary_replay_retire(
+                    replay, getattr(boundary, "retired_cell_ids", ())
+                )
+            else:
+                raise ProspectiveV2IntegrityError(
+                    "generation boundary phase chronology is invalid"
+                )
+
+            self._boundary_replay_assert_fields(
+                replay,
+                boundary,
+                queue_ids=queue_ids,
+                prior_digest=prior,
+                prior_digest_schema=prior_schema,
+            )
+            if initial_boundary_phase is not None:
+                replay.generation_phase = initial_boundary_phase
+            replay.generation_boundaries.append(boundary)
+            replay._advance_boundary_commitment(
+                "generation_boundary", boundary.manifest()
+            )
+            boundary_index += 1
+
+        while receipt_index < len(ordered) or boundary_index < len(boundaries):
+            next_frontier = (
+                boundaries[boundary_index].event_frontier
+                if boundary_index < len(boundaries)
+                else None
+            )
+            if (
+                next_frontier is not None
+                and receipt_index < len(ordered)
+                and ordered[receipt_index].ordinal < next_frontier
+            ):
+                receipt = ordered[receipt_index]
+                if receipt.ordinal != replay.next_expected_ordinal:
+                    raise ProspectiveV2IntegrityError(
+                        "replay receipt ordinal differs from frontier"
+                    )
+                consume_receipt(receipt)
+                receipt_index += 1
+                continue
+            if boundary_index < len(boundaries):
+                apply_boundary(boundaries[boundary_index])
+                continue
+            if receipt_index < len(ordered):
+                receipt = ordered[receipt_index]
+                if receipt.ordinal != replay.next_expected_ordinal:
+                    raise ProspectiveV2IntegrityError(
+                        "replay receipt ordinal differs from frontier"
+                    )
+                consume_receipt(receipt)
+                receipt_index += 1
+
+        # A scheduled structural safe point is intentionally resumable: the
+        # boundary is recorded before its one-at-a-time compatibility API
+        # consumes/materializes the sealed queue, and the prospective boundary
+        # is recorded only when that API is closed.  Replay those trailing
+        # ledger entries when a checkpoint was taken in STRUCTURAL_OPEN.
+        if replay.generation_phase is GenerationPhase.STRUCTURAL_OPEN:
+            trailing_ids = tuple(
+                request_id for request_id in replay.sealed_request_ids
+                if request_id in self.request_consumptions
+                and request_id not in replay.request_consumptions
+            )
+            self._boundary_replay_materialize_children(
+                replay,
+                generation=replay.current_generation,
+                request_ids=trailing_ids,
+                include_promotions=False,
+            )
+            replay.structural_request_plans = {
+                request_id: self.structural_request_plans[request_id]
+                for request_id in replay.sealed_request_ids
+                if request_id in self.structural_request_plans
+            }
+
+        if self.pending_event is not None:
+            pending = self.pending_event
+            transaction = self.event_transactions.get(pending.pending_token)
+            if not isinstance(transaction, Mapping):
+                raise ProspectiveV2IntegrityError(
+                    "pending event lacks its transaction during replay"
+                )
+            if transaction.get("structure_invariant_digest") != (
+                replay._structure_invariant_digest()
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "pending transaction structure digest differs from replay"
+                )
+            if pending.structure_invariant_digest != (
+                replay._structure_invariant_digest()
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "pending event structure digest differs from replay"
+                )
+            replay._ensure_incremental_history_initialized()
+            replay.pending_event = pending
+            replay.event_transactions[pending.pending_token] = pending.manifest()
+            replay._advance_boundary_commitment(
+                "real_open", pending.manifest()
+            )
+
+        # This final equality closes all fields not represented by a boundary
+        # digest as well, while still keeping the actual reconstruction to one
+        # chronological pass.
+        replay_manifest = replay.continuation_manifest()
+        persisted_manifest = self.continuation_manifest()
+        if replay_manifest != persisted_manifest:
+            differing = tuple(
+                key for key in persisted_manifest
+                if replay_manifest.get(key) != persisted_manifest[key]
+            )
+            raise ProspectiveV2IntegrityError(
+                "full boundary replay differs from persisted continuation: "
+                + ",".join(differing)
+            )
+
     def _verify_ledger_derived_state(self) -> None:
         epoch = self.base.envelope.nomination_epoch
         if epoch is None:
@@ -3625,11 +7933,116 @@ class NativeProspectiveAuthorityV2:
                 prospectively_certified=(
                     self.mode is V2Mode.LEGACY
                     and state.hypothesis.structural_state
-                    == StemCellState.MATURE.name
+                        == StemCellState.MATURE.name
                 ),
             )
             for cell_id, state in self.states.items()
         }
+        retirement_metadata = {
+            cell_id: {
+                "retirement_generation": getattr(
+                    state, "retirement_generation", None
+                ),
+                "retirement_ordinal": getattr(
+                    state, "retirement_ordinal", None
+                ),
+                "retirement_reason": getattr(
+                    state, "retirement_reason", None
+                ),
+                "retirement_tombstone_digest": getattr(
+                    state, "retirement_tombstone_digest", None
+                ),
+            }
+            for cell_id, state in self.states.items()
+            if getattr(state, "retired", False)
+        }
+        for cell_id, metadata in retirement_metadata.items():
+            if not isinstance(metadata["retirement_ordinal"], int):
+                raise ProspectiveV2IntegrityError(
+                    "retired state lacks a replayable retirement ordinal"
+                )
+
+        births_by_generation: dict[
+            int, list[tuple[str, ProspectiveAuthorityState]]
+        ] = {}
+        for cell_id, state in derived.items():
+            births_by_generation.setdefault(
+                state.hypothesis.source_generation, []
+            ).append((cell_id, state))
+        birth_generations = tuple(sorted(births_by_generation))
+        next_birth_generation = 0
+        active_derived = _LiveAuthorityStateView()
+        promotion_by_child = {
+            self._adaptive_boundary_child_id(request): (
+                candidate_id, request.manifest()
+            )
+            for candidate_id, request in self.boundary_promotion_requests.items()
+        }
+        active_promotion_manifests: dict[str, dict[str, Any]] = {}
+
+        def activate_births_through(generation: int) -> None:
+            """Enter each born state into replay's bounded live index once."""
+
+            nonlocal next_birth_generation
+            while (
+                next_birth_generation < len(birth_generations)
+                and birth_generations[next_birth_generation] <= generation
+            ):
+                birth_generation = birth_generations[next_birth_generation]
+                for cell_id, state in births_by_generation[birth_generation]:
+                    if not state.retired:
+                        active_derived[cell_id] = state
+                        promotion = promotion_by_child.get(cell_id)
+                        if promotion is not None:
+                            candidate_id, manifest = promotion
+                            active_promotion_manifests[candidate_id] = manifest
+                    if state.hypothesis.provenance_schema_version == (
+                        PROVENANCE_COMMITMENT_V4
+                    ):
+                        active_derived.topology_schema_version = (
+                            "native_v2_authority_topology.v2_digest_only"
+                        )
+                next_birth_generation += 1
+
+        retirement_schedule = tuple(sorted(
+            (
+                int(metadata["retirement_ordinal"]),
+                cell_id,
+                metadata,
+            )
+            for cell_id, metadata in retirement_metadata.items()
+        ))
+        next_retirement = 0
+
+        def apply_retirements_through(ordinal: int) -> None:
+            """Apply safe-point retirements at their exact ledger ordinal."""
+
+            nonlocal next_retirement
+            while (
+                next_retirement < len(retirement_schedule)
+                and retirement_schedule[next_retirement][0] <= ordinal
+            ):
+                retirement_ordinal, cell_id, metadata = (
+                    retirement_schedule[next_retirement]
+                )
+                next_retirement += 1
+                state = derived[cell_id]
+                if state.retired:
+                    continue
+                state.retired = True
+                state.prospectively_certified = False
+                state.retirement_generation = metadata[
+                    "retirement_generation"
+                ]
+                state.retirement_ordinal = retirement_ordinal
+                state.retirement_reason = metadata["retirement_reason"]
+                state.retirement_tombstone_digest = metadata[
+                    "retirement_tombstone_digest"
+                ]
+                active_derived.pop(cell_id, None)
+                promotion = promotion_by_child.get(cell_id)
+                if promotion is not None:
+                    active_promotion_manifests.pop(promotion[0], None)
         ordered = sorted(
             self.consumed_receipts.values(),
             key=lambda item: (item.ordinal, item.receipt_id),
@@ -3645,7 +8058,12 @@ class NativeProspectiveAuthorityV2:
         replay_references = dict(historical_references)
         replay_requests: dict[str, DeferredSpecializationRequest] = {}
         replay_queue: list[str] = []
-        replay_lifetime: set[str] = set()
+        replay_lifetime: list[str] = []
+        replay_lifetime_index: set[str] = set()
+        replay_queue_digest = _empty_hot_append_digest("request_queue")
+        replay_lifetime_digest = _empty_hot_append_digest(
+            "requested_parent"
+        )
         if ordered and self.incremental_history_state is None:
             raise ProspectiveV2IntegrityError(
                 "incremental history missing for accepted REAL events"
@@ -3655,20 +8073,35 @@ class NativeProspectiveAuthorityV2:
             if self.incremental_history_state is not None
             else None
         )
+        replay_generation = -1
         for offset, receipt in enumerate(ordered):
             if receipt.ordinal != expected_start + offset:
                 raise ProspectiveV2IntegrityError(
                     "accepted receipt ledger has ordinal gap"
                 )
+            reference = self.accepted_real_references.get(receipt.receipt_id)
+            if reference is None:
+                raise ProspectiveV2IntegrityError(
+                    "accepted REAL reference is absent"
+                )
+            if reference.source_generation < replay_generation:
+                raise ProspectiveV2IntegrityError(
+                    "accepted REAL source generation is not monotone"
+                )
+            replay_generation = reference.source_generation
+            activate_births_through(replay_generation)
+            # A retirement is committed at ``next_expected_ordinal``.  It is
+            # therefore visible to the predecessor graph of a receipt at the
+            # same ordinal, but remains live for every earlier receipt.
+            apply_retirements_through(receipt.ordinal)
             if self.consumed_receipts.get(receipt.receipt_id) != receipt:
                 raise ProspectiveV2IntegrityError(
                     "accepted receipt key differs from receipt identity"
                 )
             if receipt.pending_token in expected_tokens:
                 raise ProspectiveV2IntegrityError("duplicate consumed token")
-            if (
-                receipt.interaction_fingerprint
-                in self.discovery_prefix_physical_fingerprints
+            if receipt.interaction_fingerprint in (
+                self._discovery_prefix_physical_fingerprint_set
             ):
                 raise ProspectiveV2IntegrityError(
                     "discovery-evidence replay in certification ledger"
@@ -3683,11 +8116,6 @@ class NativeProspectiveAuthorityV2:
                     "accepted receipt lacks pre-outcome transaction"
                 )
             self._validate_replayed_receipt(receipt, transaction)
-            reference = self.accepted_real_references.get(receipt.receipt_id)
-            if reference is None:
-                raise ProspectiveV2IntegrityError(
-                    "accepted REAL reference is absent"
-                )
             if reference != self._reference_from_v2_receipt(
                 receipt, source_generation=reference.source_generation
             ):
@@ -3698,23 +8126,16 @@ class NativeProspectiveAuthorityV2:
             predecessor_digest = (
                 self._incremental_predecessor_digest_from_parts(
                     history=replay_history,
-                    states=derived,
+                    states=active_derived,
                     generation=reference.source_generation,
                     next_ordinal=receipt.ordinal,
-                    request_ids=tuple(sorted(
-                        replay_queue,
-                        key=lambda request_id: (
-                            replay_requests[
-                                request_id
-                            ].request_emission_ordinal,
-                            replay_requests[
-                                request_id
-                            ].parent_cell_id,
-                        ),
-                    )),
-                    lifetime_requested_parent_ids=tuple(sorted(
-                        replay_lifetime
-                    )),
+                    request_ids=replay_queue,
+                    lifetime_requested_parent_ids=replay_lifetime,
+                    request_queue_digest=replay_queue_digest,
+                    requested_parent_digest=replay_lifetime_digest,
+                    boundary_promotion_digest=_sha(
+                        active_promotion_manifests
+                    ),
                 )
             )
             if transaction.get(
@@ -3724,17 +8145,17 @@ class NativeProspectiveAuthorityV2:
                     "incremental history predecessor disagreement "
                     f"at ordinal {receipt.ordinal}"
                 )
-            active_derived = {
-                cell_id: state for cell_id, state in derived.items()
-                if state.hypothesis.source_generation
-                <= reference.source_generation
-            }
             pre_graph = _run_authority_graph(
                 active_derived,
                 AuthorityMeasurementSnapshot(receipt.trace, None),
                 accepted_real_references=replay_references,
                 specialization_mode=self.specialization_mode,
-                lifetime_requested_parent_ids=tuple(sorted(replay_lifetime)),
+                lifetime_requested_parent_ids=replay_lifetime_index,
+                specialization_genome_seed=self.specialization_genome_seed,
+                compact_provenance=(
+                    self.boundary_digest_schema
+                    == BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+                ),
             )
             matching = pre_graph["commitment"]
             if list(matching) != transaction.get("matching_cell_ids"):
@@ -3772,7 +8193,12 @@ class NativeProspectiveAuthorityV2:
                 accepted_real_references=replay_references,
                 current_real_reference=reference,
                 specialization_mode=self.specialization_mode,
-                lifetime_requested_parent_ids=tuple(sorted(replay_lifetime)),
+                lifetime_requested_parent_ids=replay_lifetime_index,
+                specialization_genome_seed=self.specialization_genome_seed,
+                compact_provenance=(
+                    self.boundary_digest_schema
+                    == BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+                ),
             )
             supporting = graph["support"]
             contradictions = graph["contradiction"]
@@ -3791,29 +8217,39 @@ class NativeProspectiveAuthorityV2:
                     current_reference_validated=True,
                     source_generation=reference.source_generation,
                     specialization_mode=self.specialization_mode,
-                    already_requested=parent_id in replay_lifetime,
+                    already_requested=parent_id in replay_lifetime_index,
                     graph_revocation_confirmed=(
                         parent_id in graph["revocation"]
                     ),
                     candidate_rows=request_rows.get(parent_id, ()),
+                    compact_provenance=(
+                        self.boundary_digest_schema
+                        == BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+                    ),
                 )
                 for parent_id in graph["specialization_request"]
             )
             for cell_id in matching:
                 state = active_derived[cell_id]
                 state.support += 1
-                state.certification_receipt_ids = (
-                    *state.certification_receipt_ids, receipt.receipt_id
+                self._append_state_ledger(
+                    state,
+                    "certification_receipt_ids",
+                    receipt.receipt_id,
                 )
                 if cell_id in supporting:
                     state.successes += 1
-                    state.support_receipt_ids = (
-                        *state.support_receipt_ids, receipt.receipt_id
+                    self._append_state_ledger(
+                        state,
+                        "support_receipt_ids",
+                        receipt.receipt_id,
                     )
                 else:
                     state.contradictions += 1
-                    state.contradiction_receipt_ids = (
-                        *state.contradiction_receipt_ids, receipt.receipt_id
+                    self._append_state_ledger(
+                        state,
+                        "contradiction_receipt_ids",
+                        receipt.receipt_id,
                     )
                 state.success_lower_bound = wilson_lower_bound(
                     state.successes, state.support, WILSON_Z
@@ -3829,8 +8265,9 @@ class NativeProspectiveAuthorityV2:
                     state.prospectively_certified = False
                     transition = "GRAPH_LOCAL_REVOCATION"
                 if transition is not None:
-                    state.transition_rows = (
-                        *state.transition_rows,
+                    self._append_state_ledger(
+                        state,
+                        "transition_rows",
                         {
                             "transition": transition,
                             "receipt_id": receipt.receipt_id,
@@ -3841,7 +8278,21 @@ class NativeProspectiveAuthorityV2:
             for request in requests:
                 replay_requests[request.request_id] = request
                 replay_queue.append(request.request_id)
-                replay_lifetime.add(request.parent_cell_id)
+                replay_queue_digest = _next_hot_append_digest(
+                    replay_queue_digest,
+                    "request_queue",
+                    request.request_id,
+                    len(replay_queue),
+                )
+                if request.parent_cell_id not in replay_lifetime_index:
+                    replay_lifetime_index.add(request.parent_cell_id)
+                    replay_lifetime.append(request.parent_cell_id)
+                    replay_lifetime_digest = _next_hot_append_digest(
+                        replay_lifetime_digest,
+                        "requested_parent",
+                        request.parent_cell_id,
+                        len(replay_lifetime),
+                    )
             expected_emissions[receipt.receipt_id] = V2CertificationEmission(
                 receipt_id=receipt.receipt_id,
                 matching_cell_ids=matching,
@@ -3881,6 +8332,14 @@ class NativeProspectiveAuthorityV2:
                 transaction=transaction,
                 reference=reference,
                 emission=expected_emissions[receipt.receipt_id],
+            )
+        apply_retirements_through(expected_start + len(ordered))
+        replay_retirements = self._retirement_state_projection(derived)
+        if self._boundary_retirement_projection(
+            self.generation_boundaries
+        ) != replay_retirements:
+            raise ProspectiveV2IntegrityError(
+                "generation boundary retirement audit differs from replay"
             )
         if derived != self.states:
             raise ProspectiveV2IntegrityError(
@@ -3926,7 +8385,7 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "request queue differs from graph replay"
             )
-        if self.lifetime_requested_parent_ids != tuple(sorted(replay_lifetime)):
+        if tuple(self.lifetime_requested_parent_ids) != tuple(replay_lifetime):
             raise ProspectiveV2IntegrityError(
                 "lifetime request ledger differs from graph replay"
             )
@@ -3960,13 +8419,16 @@ class NativeProspectiveAuthorityV2:
         if receipt is not None and current_real_reference is None:
             current_real_reference = self._reference_from_v2_receipt(receipt)
         return _run_authority_graph(
-            self.states,
+            self._hot_live_states(),
             AuthorityMeasurementSnapshot(trace, receipt),
             accepted_real_references=self.accepted_real_references,
             current_real_reference=current_real_reference,
             specialization_mode=self.specialization_mode,
-            lifetime_requested_parent_ids=(
-                self.lifetime_requested_parent_ids
+            lifetime_requested_parent_ids=self._requested_parent_index,
+            specialization_genome_seed=self.specialization_genome_seed,
+            compact_provenance=(
+                self.boundary_digest_schema
+                == BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
             ),
         )
 
@@ -4001,6 +8463,391 @@ class NativeProspectiveAuthorityV2:
             )),
         )
 
+    def _accepted_real_prefix_commitment(
+        self,
+        accepted_real_references: Mapping[str, AcceptedRealReference],
+        current_reference: AcceptedRealReference | None = None,
+        *,
+        query_digest: str | None = None,
+    ) -> ProvenanceCommitment:
+        """Commit to the accepted-REAL prefix without copying its IDs.
+
+        The normal REAL path advances the already-maintained mutation-chain
+        digest once for the current reference.  Replay/audit callers may pass
+        a detached mapping; those are explicitly allowed to reconstruct the
+        digest once, never once per persisted child.
+        """
+
+        current_is_authority_ledger = (
+            accepted_real_references is self.accepted_real_references
+        )
+        if current_is_authority_ledger:
+            digest = self._accepted_real_ledger_digest()
+            count = len(accepted_real_references)
+            if current_reference is not None and (
+                current_reference.receipt_id not in accepted_real_references
+            ):
+                digest = _next_hot_append_digest(
+                    digest,
+                    "boundary_accepted_real",
+                    current_reference.manifest(),
+                    count + 1,
+                )
+                count += 1
+        else:
+            ordered = tuple(sorted(
+                accepted_real_references.values(),
+                key=lambda item: (item.ordinal, item.receipt_id),
+            ))
+            if current_reference is not None and all(
+                item.receipt_id != current_reference.receipt_id
+                for item in ordered
+            ):
+                ordered = (*ordered, current_reference)
+                ordered = tuple(sorted(
+                    ordered,
+                    key=lambda item: (item.ordinal, item.receipt_id),
+                ))
+            digest = _append_log_digest(
+                tuple(item.manifest() for item in ordered),
+                kind="boundary_accepted_real",
+            )
+            count = len(ordered)
+        witnesses = ()
+        if current_is_authority_ledger:
+            witnesses = tuple(getattr(
+                self, "_accepted_real_prefix_witness_ids", ()
+            ))
+            if current_reference is not None and (
+                current_reference.receipt_id
+                not in accepted_real_references
+            ):
+                witnesses = _bounded_provenance_witnesses((
+                    *witnesses,
+                    current_reference.receipt_id,
+                ))
+        else:
+            witnesses = _bounded_provenance_witnesses(
+                tuple(item.receipt_id for item in ordered)
+            )
+        return ProvenanceCommitment(
+            schema_version=PROVENANCE_COMMITMENT_V4,
+            digest=digest,
+            count=count,
+            exclusive_frontier=(
+                self.next_expected_ordinal
+                if current_reference is None
+                else max(self.next_expected_ordinal, current_reference.ordinal + 1)
+            ),
+            witness_ids=witnesses,
+            query_digest=query_digest,
+        )
+
+    def _accepted_real_prefix_commitment_at(
+        self,
+        exclusive_frontier: int,
+    ) -> ProvenanceCommitment:
+        """Reclose one accepted-REAL prefix at an explicit audit boundary.
+
+        V4 births retain only this commitment and bounded witnesses.  The
+        complete chronology is therefore reconstructed only here (load/full
+        history validation), never once per event or per child on the hot
+        path.  The same append-log kind and ordinal order as the maintained
+        rolling digest are used so a count/frontier or digest tamper cannot
+        be hidden by the bounded witness sample.
+        """
+
+        try:
+            frontier = int(exclusive_frontier)
+        except (TypeError, ValueError) as exc:
+            raise ProspectiveV2IntegrityError(
+                "compact exclusion frontier is malformed"
+            ) from exc
+        if isinstance(exclusive_frontier, bool) or frontier < 0:
+            raise ProspectiveV2IntegrityError(
+                "compact exclusion frontier is malformed"
+            )
+        return self._accepted_real_prefix_commitments((frontier,))[frontier]
+
+    def _accepted_real_prefix_commitments(
+        self,
+        exclusive_frontiers: Sequence[int],
+    ) -> dict[int, ProvenanceCommitment]:
+        """Reclose any number of historical prefixes in one ledger pass."""
+
+        frontiers: list[int] = []
+        for value in exclusive_frontiers:
+            try:
+                frontier = int(value)
+            except (TypeError, ValueError) as exc:
+                raise ProspectiveV2IntegrityError(
+                    "compact exclusion frontier is malformed"
+                ) from exc
+            if isinstance(value, bool) or frontier < 0:
+                raise ProspectiveV2IntegrityError(
+                    "compact exclusion frontier is malformed"
+                )
+            if frontier > self.next_expected_ordinal:
+                raise ProspectiveV2IntegrityError(
+                    "compact exclusion frontier exceeds the accepted REAL "
+                    "ledger"
+                )
+            frontiers.append(frontier)
+        requested = tuple(sorted(set(frontiers)))
+        if not requested:
+            return {}
+        ordered_ids = tuple(getattr(
+            self, "_accepted_real_reference_order", ()
+        ))
+        if (
+            len(ordered_ids) != len(self.accepted_real_references)
+            or set(ordered_ids) != set(self.accepted_real_references)
+        ):
+            ordered_ids = tuple(
+                reference.receipt_id
+                for reference in sorted(
+                    self.accepted_real_references.values(),
+                    key=lambda item: (item.ordinal, item.receipt_id),
+                )
+            )
+        ordered = tuple(
+            self.accepted_real_references[receipt_id]
+            for receipt_id in ordered_ids
+        )
+        result: dict[int, ProvenanceCommitment] = {}
+        digest = _empty_hot_append_digest("boundary_accepted_real")
+        count = 0
+        witnesses: tuple[str, ...] = ()
+        for frontier in requested:
+            while count < len(ordered) and ordered[count].ordinal < frontier:
+                reference = ordered[count]
+                digest = _next_hot_append_digest(
+                    digest,
+                    "boundary_accepted_real",
+                    reference.manifest(),
+                    count + 1,
+                )
+                witnesses = _bounded_provenance_witnesses((
+                    *witnesses,
+                    reference.receipt_id,
+                ))
+                count += 1
+            result[frontier] = ProvenanceCommitment(
+                schema_version=PROVENANCE_COMMITMENT_V4,
+                digest=digest,
+                count=count,
+                exclusive_frontier=frontier,
+                witness_ids=witnesses,
+            )
+        return result
+
+    def _validate_compact_exclusion_commitment(
+        self,
+        commitment: ProvenanceCommitment,
+        *,
+        birth_frontier: int,
+        label: str,
+        prefix_commitments: Mapping[int, ProvenanceCommitment] | None = None,
+    ) -> None:
+        """Fail closed when a compact discovery prefix disagrees with REAL."""
+
+        if not isinstance(commitment, ProvenanceCommitment):
+            raise ProspectiveV2IntegrityError(
+                f"{label} lacks compact exclusion commitment"
+            )
+        if commitment.exclusive_frontier != birth_frontier + 1:
+            raise ProspectiveV2IntegrityError(
+                f"{label} compact exclusion frontier mismatch"
+            )
+        expected = (
+            prefix_commitments.get(commitment.exclusive_frontier)
+            if prefix_commitments is not None
+            else self._accepted_real_prefix_commitment_at(
+                commitment.exclusive_frontier
+            )
+        )
+        if expected is None:
+            raise ProspectiveV2IntegrityError(
+                f"{label} compact exclusion frontier was not reclosed"
+            )
+        if expected != commitment:
+            raise ProspectiveV2IntegrityError(
+                f"{label} compact exclusion commitment mismatch"
+            )
+
+    @staticmethod
+    def _validate_compact_ordinary_birth_contract(
+        request: BoundaryPromotionRequest,
+        escrow: NominationEscrow,
+        hypothesis: FrozenHypothesis,
+    ) -> None:
+        """Re-derive every V4 ordinary birth edge from its exact request."""
+
+        frontier = escrow.birth_frontier + 1
+        consensus = tuple(sorted(
+            set(request.inspected_receipt_ids)
+            - {request.triggering_receipt_id}
+        ))
+        expected_categories = (
+            ("direct", (request.triggering_receipt_id,)),
+            ("parent_support", ()),
+            ("eligibility", ()),
+            ("contradiction_trigger", ()),
+            ("consensus_reads", consensus),
+        )
+        expected_categories = tuple(
+            (name, _bounded_provenance_witnesses(receipt_ids))
+            for name, receipt_ids in expected_categories
+        )
+        expected_read_commitments = (
+            ("direct", _compact_set_commitment(
+                (request.triggering_receipt_id,),
+                exclusive_frontier=frontier,
+            )),
+            ("parent_support", _compact_set_commitment(
+                (), exclusive_frontier=frontier
+            )),
+            ("eligibility", _compact_set_commitment(
+                (), exclusive_frontier=frontier
+            )),
+            ("contradiction_trigger", _compact_set_commitment(
+                (), exclusive_frontier=frontier
+            )),
+            ("consensus_reads", request.inspected_receipt_commitment),
+        )
+        if any(
+            not isinstance(commitment, ProvenanceCommitment)
+            for _name, commitment in expected_read_commitments
+        ):
+            raise ProspectiveV2IntegrityError(
+                "compact ordinary birth lacks request commitment"
+            )
+        expected_discovery = _compose_provenance_commitment(
+            tuple(item for _name, item in expected_read_commitments),
+            exclusive_frontier=frontier,
+            query_digest=_compact_query_digest({
+                "operation": "ordinary",
+                "candidate_id": request.candidate_id,
+            }),
+        )
+        if (
+            escrow.categorized_reads != expected_categories
+            or escrow.nomination_read_commitments
+            != expected_read_commitments
+            or hypothesis.nomination_read_sets != expected_categories
+            or hypothesis.nomination_read_commitments
+            != expected_read_commitments
+            or hypothesis.discovery_read_commitment != expected_discovery
+            or hypothesis.discovery_receipt_digest
+            != expected_discovery.digest
+            or hypothesis.discovery_receipt_ids
+            != expected_discovery.witness_ids
+            or hypothesis.discovery_support_receipt_ids
+            != _bounded_provenance_witnesses(
+                request.supporting_receipt_ids
+            )
+        ):
+            raise ProspectiveV2IntegrityError(
+                "compact ordinary birth diverges from promotion request"
+            )
+
+    @staticmethod
+    def _validate_compact_deferred_birth_contract(
+        request: DeferredSpecializationRequest,
+        birth: DeferredChildBirth,
+        escrow: NominationEscrow,
+        hypothesis: FrozenHypothesis,
+    ) -> None:
+        """Re-derive every V4 specialization edge from request/candidate."""
+
+        selected_identity = birth.members[1]
+        try:
+            candidate = next(
+                item for item in request.candidate_terminals
+                if item.identity == selected_identity
+            )
+        except StopIteration as exc:
+            raise ProspectiveV2IntegrityError(
+                "compact deferred birth selected an unknown candidate"
+            ) from exc
+        commitments = (
+            ("direct_child_matches", candidate.supporting_receipt_commitment),
+            ("parent_discovery_reads", request.parent_discovery_commitment),
+            (
+                "parent_discovery_support",
+                request.parent_discovery_support_commitment,
+            ),
+            (
+                "parent_prospective_support",
+                request.parent_prospective_support_commitment,
+            ),
+            ("eligibility_reads", candidate.inspected_receipt_commitment),
+            ("contradiction_trigger", _compact_set_commitment(
+                (request.contradiction_receipt_id,),
+                exclusive_frontier=request.contradiction_ordinal + 1,
+            )),
+            ("transitive_ancestor_reads", request.transitive_ancestor_commitment),
+        )
+        if any(
+            not isinstance(commitment, ProvenanceCommitment)
+            for _name, commitment in commitments
+        ):
+            raise ProspectiveV2IntegrityError(
+                "compact deferred birth lacks request commitment"
+            )
+        categories = (
+            ("direct_child_matches", candidate.supporting_receipt_ids),
+            (
+                "parent_discovery_reads",
+                request.parent_discovery_receipt_ids,
+            ),
+            (
+                "parent_discovery_support",
+                request.parent_discovery_support_receipt_ids,
+            ),
+            (
+                "parent_prospective_support",
+                request.parent_prospective_support_receipt_ids,
+            ),
+            ("eligibility_reads", candidate.inspected_receipt_ids),
+            ("contradiction_trigger", (request.contradiction_receipt_id,)),
+            (
+                "transitive_ancestor_reads",
+                request.transitive_ancestor_receipt_ids,
+            ),
+        )
+        expected_categories = tuple(
+            (name, _bounded_provenance_witnesses(receipt_ids))
+            for name, receipt_ids in categories
+        )
+        expected_discovery = _compose_provenance_commitment(
+            tuple(item for _name, item in commitments),
+            exclusive_frontier=escrow.birth_frontier + 1,
+            query_digest=_compact_query_digest({
+                "operation": "specialization",
+                "parent_hypothesis_digest": (
+                    request.parent_hypothesis_digest
+                ),
+            }),
+        )
+        if (
+            escrow.categorized_reads != expected_categories
+            or escrow.nomination_read_commitments != commitments
+            or escrow.transitive_ancestor_receipt_ids
+            != tuple(sorted(request.transitive_ancestor_receipt_ids))
+            or hypothesis.nomination_read_sets != expected_categories
+            or hypothesis.nomination_read_commitments != commitments
+            or hypothesis.discovery_read_commitment != expected_discovery
+            or hypothesis.discovery_receipt_digest
+            != expected_discovery.digest
+            or hypothesis.discovery_receipt_ids
+            != expected_discovery.witness_ids
+            or hypothesis.discovery_support_receipt_ids
+        ):
+            raise ProspectiveV2IntegrityError(
+                "compact deferred birth diverges from specialization request"
+            )
+
     @staticmethod
     def _request_from_graph_state(
         *,
@@ -4015,15 +8862,21 @@ class NativeProspectiveAuthorityV2:
         already_requested: bool,
         graph_revocation_confirmed: bool,
         candidate_rows: tuple[SpecializationCandidateTerminalState, ...],
+        compact_provenance: bool = False,
     ) -> DeferredSpecializationRequest:
         hypothesis = state.hypothesis
-        references = dict(accepted_real_references)
+        # Request construction needs keyed access to the accepted ledger and
+        # the current receipt.  A mapping overlay avoids cloning the full
+        # lifetime reference map for each matching parent.
+        references: Mapping[str, AcceptedRealReference] = _ReferenceOverlay(
+            accepted_real_references,
+            current_reference,
+        )
         prior = references.get(current_reference.receipt_id)
         if prior is not None and prior != current_reference:
             raise ProspectiveV2IntegrityError(
                 "request builder REAL reference collision"
             )
-        references[current_reference.receipt_id] = current_reference
         trigger = _derive_specialization_request_trigger(
             state,
             receipt,
@@ -4049,6 +8902,82 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "request generation differs from emission reference"
             )
+        if not compact_provenance:
+            draft = DeferredSpecializationRequest(
+                request_id="UNBOUND_V7_SPECIALIZATION_REQUEST",
+                source_generation=source_generation,
+                parent_cell_id=parent_cell_id,
+                parent_hypothesis_digest=hypothesis.hypothesis_digest,
+                fixed_polarity=hypothesis.polarity,
+                request_basis=trigger.basis,
+                request_emission_receipt_id=receipt.receipt_id,
+                request_emission_ordinal=receipt.ordinal,
+                contradiction_receipt_id=(
+                    trigger.contradiction_reference.receipt_id
+                ),
+                contradiction_ordinal=trigger.contradiction_reference.ordinal,
+                specialization_mode=specialization_mode,
+                parent_discovery_receipt_ids=(
+                    hypothesis.discovery_receipt_ids
+                ),
+                parent_discovery_support_receipt_ids=(
+                    hypothesis.discovery_support_receipt_ids
+                ),
+                parent_prospective_support_receipt_ids=(
+                    trigger.parent_prospective_support_receipt_ids
+                ),
+                transitive_ancestor_receipt_ids=(
+                    hypothesis.transitive_ancestor_receipt_ids
+                ),
+                candidate_terminals=candidate_rows,
+                graph_revocation_confirmed=graph_revocation_confirmed,
+                graph_request_confirmed=True,
+            )
+            return replace(draft, request_id=_sha({
+                "kind": "V2_GRAPH_SPECIALIZATION_REQUEST_V7",
+                "request": draft.identity_manifest(),
+            }))
+        existing_reads = dict(hypothesis.nomination_read_commitments)
+        parent_discovery_commitment = hypothesis.discovery_read_commitment
+        if parent_discovery_commitment is None:
+            parent_discovery_commitment = ProvenanceCommitment(
+                schema_version=PROVENANCE_COMMITMENT_V4,
+                digest=hypothesis.discovery_receipt_digest,
+                count=len(hypothesis.discovery_receipt_ids),
+                exclusive_frontier=hypothesis.certification_frontier + 1,
+                witness_ids=_bounded_provenance_witnesses(
+                    hypothesis.discovery_receipt_ids
+                ),
+            )
+        parent_support_ids = hypothesis.discovery_support_receipt_ids
+        parent_support_commitment = existing_reads.get(
+            "parent_discovery_support"
+        ) or existing_reads.get("parent_discovery_support_receipts")
+        if parent_support_commitment is None:
+            parent_support_commitment = _compact_set_commitment(
+                parent_support_ids,
+                exclusive_frontier=hypothesis.certification_frontier + 1,
+            )
+        parent_ancestor_commitment = existing_reads.get(
+            "transitive_ancestor_reads"
+        )
+        if parent_ancestor_commitment is None:
+            parent_ancestor_commitment = _compact_set_commitment(
+                hypothesis.transitive_ancestor_receipt_ids,
+                exclusive_frontier=hypothesis.certification_frontier + 1,
+            )
+        prospective_support_commitment = _compact_set_commitment(
+            trigger.parent_prospective_support_receipt_ids,
+            exclusive_frontier=receipt.ordinal + 1,
+        )
+        candidate_inspected_commitment = (
+            candidate_rows[0].inspected_receipt_commitment
+            if candidate_rows
+            else _compact_set_commitment(
+                (receipt.receipt_id,),
+                exclusive_frontier=receipt.ordinal + 1,
+            )
+        )
         draft = DeferredSpecializationRequest(
             request_id="UNBOUND_V7_SPECIALIZATION_REQUEST",
             source_generation=source_generation,
@@ -4064,20 +8993,37 @@ class NativeProspectiveAuthorityV2:
             contradiction_ordinal=trigger.contradiction_reference.ordinal,
             specialization_mode=specialization_mode,
             parent_discovery_receipt_ids=(
-                hypothesis.discovery_receipt_ids
+                parent_discovery_commitment.witness_ids
             ),
             parent_discovery_support_receipt_ids=(
-                hypothesis.discovery_support_receipt_ids
+                parent_support_commitment.witness_ids
             ),
             parent_prospective_support_receipt_ids=(
-                trigger.parent_prospective_support_receipt_ids
+                prospective_support_commitment.witness_ids
             ),
             transitive_ancestor_receipt_ids=(
-                hypothesis.transitive_ancestor_receipt_ids
+                parent_ancestor_commitment.witness_ids
             ),
             candidate_terminals=candidate_rows,
             graph_revocation_confirmed=graph_revocation_confirmed,
             graph_request_confirmed=True,
+            provenance_schema_version=PROVENANCE_COMMITMENT_V4,
+            parent_discovery_commitment=parent_discovery_commitment,
+            parent_discovery_support_commitment=parent_support_commitment,
+            parent_prospective_support_commitment=(
+                prospective_support_commitment
+            ),
+            transitive_ancestor_commitment=parent_ancestor_commitment,
+            parent_query_commitment=_compact_query_digest({
+                "parent_cell_id": parent_cell_id,
+                "parent_hypothesis_digest": hypothesis.hypothesis_digest,
+                "triggering_receipt_id": receipt.receipt_id,
+                "contradiction_receipt_id": (
+                    trigger.contradiction_reference.receipt_id
+                ),
+                "specialization_mode": specialization_mode.value,
+            }),
+            candidate_inspected_commitment=candidate_inspected_commitment,
         )
         return replace(draft, request_id=_sha({
             "kind": "V2_GRAPH_SPECIALIZATION_REQUEST_V7",
@@ -4089,8 +9035,20 @@ class NativeProspectiveAuthorityV2:
         states: Mapping[str, ProspectiveAuthorityState],
         emissions: Mapping[str, tuple[str, ...]],
     ) -> EnvelopeClassification:
-        available = tuple(emissions["available"])
-        refuted = tuple(emissions["refuted"])
+        available = tuple(
+            item for item in emissions["available"]
+            if item in states and not getattr(states[item], "retired", False)
+        )
+        refuted = tuple(
+            item for item in emissions["refuted"]
+            if item in states and not getattr(states[item], "retired", False)
+        )
+        # Keep the authority's raw prospective classification faithful to all
+        # active hypotheses.  ``source_generation == 0`` identifies discovery
+        # provenance, not the immutable native core graph/local gate.  Core
+        # precedence is an execution-level routing decision in the curriculum;
+        # filtering adaptive refutations here would hide descendant evidence
+        # whenever the local core abstains and would corrupt REAL accounting.
         if available and not refuted:
             state = AvailabilityState.AVAILABLE
             probability = max(
@@ -4143,10 +9101,52 @@ class NativeProspectiveAuthorityV2:
             )
         ))
 
+    @staticmethod
+    def _append_state_ledger(
+        state: ProspectiveAuthorityState,
+        name: str,
+        value: Any,
+        *,
+        journal: _RealMutationJournal | None = None,
+    ) -> None:
+        values = getattr(state, name)
+        if not isinstance(values, _AppendOnlyLedger):
+            converted = _AppendOnlyLedger(values)
+            if journal is None:
+                setattr(state, name, converted)
+            else:
+                journal.set_attr(state, name, converted)
+            values = converted
+        if journal is None:
+            values.append(value)
+        else:
+            journal.append(values, value)
+        if name == "certification_receipt_ids":
+            previous = getattr(state, "certification_receipt_digest", "")
+            if not previous:
+                previous = _empty_hot_append_digest("certification_receipt")
+            digest = _next_hot_append_digest(
+                previous,
+                "certification_receipt",
+                value,
+                len(values),
+            )
+            if journal is None:
+                state.certification_receipt_digest = digest
+            else:
+                journal.set_attr(
+                    state, "certification_receipt_digest", digest
+                )
+
     def frame_session(self) -> NativeV2FrameSession:
         """Open one non-serializable frozen-R0 execution session."""
 
-        self._verify_invariants()
+        # Opening a curriculum frame session is a hot-path operation.  The
+        # session freezes only the base/R0 source; the authority-local REAL
+        # contracts are already covered by the bounded projection validator.
+        # Full ledger/topology reclosure remains explicit at serialization or
+        # audit boundaries.
+        self._validate_real_hot_path(virtual=True)
         return NativeV2FrameSession(self)
 
     def open_real_event(
@@ -4157,31 +9157,12 @@ class NativeProspectiveAuthorityV2:
     ) -> tuple[PendingRealEvent, GraphSignalTrace]:
         if frame_session is not None:
             frame_session._require_open(self)
-        self._verify_invariants(
+        self._validate_real_hot_path(
             frozen_base_continuation_digest=(
                 None
                 if frame_session is None
                 else frame_session.base_continuation_digest
             )
-        )
-        if self.generation_phase is not GenerationPhase.PROSPECTIVE_OPEN:
-            raise ProspectiveV2IntegrityError(
-                "REAL event outside PROSPECTIVE_OPEN"
-            )
-        if self.evaluation_sealed:
-            raise ProspectiveV2IntegrityError(
-                "sealed evaluation cannot open a REAL transaction"
-            )
-        epoch = self.base.envelope.nomination_epoch
-        if epoch is None or not epoch.nomination_closed:
-            raise ProspectiveV2IntegrityError(
-                "first certification event requires closed nomination"
-            )
-        self._ensure_incremental_history_initialized()
-        before = (
-            self.continuation_digest()
-            if frame_session is None
-            else frame_session.continuation_digest(self)
         )
         if frame.kind is not FrameKind.REAL:
             raise ProspectiveV2IntegrityError(
@@ -4194,6 +9175,16 @@ class NativeProspectiveAuthorityV2:
         board = frame.values.get("board")
         if not isinstance(board, chess.Board):
             raise TypeError("REAL event requires chess.Board")
+        before = self._hot_path_guard_digest()
+        frozen_r0 = self.base.r0
+        frozen_r0_guard = (
+            frozen_r0.inference_guard_identity()
+            if frame_session is None
+            else None
+        )
+        history = self.incremental_history_state
+        if history is None:
+            history = self._new_incremental_history_state()
         if frame_session is None:
             actuation, trace = self.base.r0.emit_action_with_trace(frame)
         else:
@@ -4204,6 +9195,13 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "graph emitted no REAL actuation"
             )
+        if (
+            frozen_r0_guard is not None
+            and frozen_r0.inference_guard_identity() != frozen_r0_guard
+        ):
+            raise ProspectiveV2IntegrityError(
+                "REAL prediction mutated its shared frozen R0 source"
+            )
         graph = self._graph_measure(trace)
         matching = graph["commitment"]
         classification = self._classification_from_emissions(
@@ -4212,9 +9210,13 @@ class NativeProspectiveAuthorityV2:
         typed_digest = _sha([
             asdict(item) for item in trace.terminal_signals
         ])
-        structure_digest = self._structure_invariant_digest()
+        structure_digest = getattr(self, "_hot_structure_digest", "")
+        if not structure_digest:
+            raise ProspectiveV2IntegrityError(
+                "cached structure invariant digest is unavailable"
+            )
         predecessor_continuation_digest = (
-            self._incremental_predecessor_continuation_digest()
+            self._incremental_predecessor_continuation_digest(history)
         )
         token = _sha({
             "implementation": IMPLEMENTATION_IDENTITY,
@@ -4249,17 +9251,19 @@ class NativeProspectiveAuthorityV2:
                 environment_terminal_identity
             ),
         )
-        after = (
-            self.continuation_digest()
-            if frame_session is None
-            else frame_session.continuation_digest(self)
-        )
+        after = self._hot_path_guard_digest()
         if after != before:
             raise ProspectiveV2IntegrityError(
                 "prediction mutated persistent state"
             )
+        if self.incremental_history_state is None:
+            self.incremental_history_state = history
         self.pending_event = pending
         self.event_transactions[token] = pending.manifest()
+        self._advance_boundary_commitment(
+            "real_open", pending.manifest()
+        )
+        self._hot_path_revision += 1
         return pending, trace
 
     def mint_environment_receipt(
@@ -4466,7 +9470,13 @@ class NativeProspectiveAuthorityV2:
         *,
         frame_session: NativeV2FrameSession | None = None,
     ) -> V2CertificationEmission:
-        """Atomically consume one REAL result; never materialize a child."""
+        """Atomically consume one REAL result; never materialize a child.
+
+        The old implementation deep-copied the complete authority before
+        every append.  This path now mutates only the bounded matching states
+        and append-only ledgers under a reversible journal; a late failure
+        restores the exact pre-transaction object graph.
+        """
 
         frozen_r0 = self.base.r0
         frozen_r0_guard = (
@@ -4476,13 +9486,11 @@ class NativeProspectiveAuthorityV2:
         )
         if frame_session is not None:
             frame_session._require_open(self)
-        candidate = copy.deepcopy(self, {id(frozen_r0): frozen_r0})
-        if candidate.base.r0 is not frozen_r0:
-            raise ProspectiveV2IntegrityError(
-                "REAL transaction failed to share the frozen R0 source"
-            )
+        journal = _RealMutationJournal()
+        prior_journal = getattr(self, "_real_mutation_journal", None)
+        self._real_mutation_journal = journal
         try:
-            result = candidate._consume_in_place(
+            result = self._consume_in_place(
                 receipt,
                 frozen_base_continuation_digest=(
                     None
@@ -4490,7 +9498,6 @@ class NativeProspectiveAuthorityV2:
                     else frame_session.base_continuation_digest
                 ),
             )
-        finally:
             if (
                 frozen_r0_guard is not None
                 and frozen_r0.inference_guard_identity() != frozen_r0_guard
@@ -4498,9 +9505,17 @@ class NativeProspectiveAuthorityV2:
                 raise ProspectiveV2IntegrityError(
                     "REAL transaction mutated its shared frozen R0 source"
                 )
-        self.__dict__.clear()
-        self.__dict__.update(candidate.__dict__)
-        return result
+        except Exception:
+            journal.rollback()
+            raise
+        else:
+            journal.commit()
+            return result
+        finally:
+            if prior_journal is None:
+                self.__dict__.pop("_real_mutation_journal", None)
+            else:
+                self._real_mutation_journal = prior_journal
 
     def _consume_in_place(
         self,
@@ -4508,7 +9523,43 @@ class NativeProspectiveAuthorityV2:
         *,
         frozen_base_continuation_digest: str | None = None,
     ) -> V2CertificationEmission:
-        self._verify_invariants(
+        """Journalled implementation wrapper used by direct test callers."""
+
+        active = getattr(self, "_real_mutation_journal", None)
+        if active is not None:
+            return self._consume_in_place_core(
+                receipt,
+                frozen_base_continuation_digest=(
+                    frozen_base_continuation_digest
+                ),
+            )
+        journal = _RealMutationJournal()
+        self._real_mutation_journal = journal
+        try:
+            result = self._consume_in_place_core(
+                receipt,
+                frozen_base_continuation_digest=(
+                    frozen_base_continuation_digest
+                ),
+            )
+        except Exception:
+            journal.rollback()
+            raise
+        else:
+            journal.commit()
+            return result
+        finally:
+            self.__dict__.pop("_real_mutation_journal", None)
+
+    def _consume_in_place_core(
+        self,
+        receipt: V2GroundedReceipt,
+        *,
+        frozen_base_continuation_digest: str | None = None,
+    ) -> V2CertificationEmission:
+        journal = getattr(self, "_real_mutation_journal", None)
+        self._validate_real_hot_path(
+            require_pending=False,
             frozen_base_continuation_digest=(
                 frozen_base_continuation_digest
             )
@@ -4524,7 +9575,7 @@ class NativeProspectiveAuthorityV2:
         if (
             self.pending_event is not None
             and self.pending_event.structure_invariant_digest
-            != self._structure_invariant_digest()
+            != getattr(self, "_hot_structure_digest", "")
         ):
             raise ProspectiveV2IntegrityError(
                 "live structure changed between open and consume"
@@ -4536,9 +9587,8 @@ class NativeProspectiveAuthorityV2:
                     "receipt ID collision"
                 )
             return self.emissions[receipt.receipt_id]
-        if (
-            receipt.interaction_fingerprint
-            in self.discovery_prefix_physical_fingerprints
+        if receipt.interaction_fingerprint in (
+            self._discovery_prefix_physical_fingerprint_set
         ):
             raise ProspectiveV2IntegrityError(
                 "discovery-evidence replay under certification identity"
@@ -4593,18 +9643,15 @@ class NativeProspectiveAuthorityV2:
                 matched=True,
                 post_frontier=bool(
                     receipt.receipt_id
-                    and receipt.ordinal > self.states[
-                        cell_id
-                    ].hypothesis.certification_frontier
-                    and receipt.receipt_id not in self.states[
-                        cell_id
-                    ].hypothesis.discovery_exclusion_receipt_ids
+                    and _receipt_is_post_birth(
+                        self.states[cell_id].hypothesis, receipt
+                    )
                 ),
                 supports=cell_id in supporting_set,
                 contradicts=cell_id in contradiction_set,
                 specialization_mode=self.specialization_mode,
                 already_requested=(
-                    cell_id in self.lifetime_requested_parent_ids
+                    cell_id in self._requested_parent_index
                 ),
             ) is not None
         ))
@@ -4623,58 +9670,110 @@ class NativeProspectiveAuthorityV2:
                 source_generation=self.current_generation,
                 specialization_mode=self.specialization_mode,
                 already_requested=(
-                    parent_id in self.lifetime_requested_parent_ids
+                    parent_id in self._requested_parent_index
                 ),
                 graph_revocation_confirmed=(
                     parent_id in graph["revocation"]
                 ),
                 candidate_rows=candidate_rows_by_parent.get(parent_id, ()),
+                compact_provenance=(
+                    self.boundary_digest_schema
+                    == BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+                ),
             )
             for parent_id in request_parent_ids
         )
         self._validate_request_append_capacity(new_requests)
         for cell_id in pending.matching_cell_ids:
             state = self.states[cell_id]
-            state.support += 1
-            state.certification_receipt_ids = (
-                *state.certification_receipt_ids,
+            if journal is None:
+                state.support += 1
+            else:
+                journal.set_attr(state, "support", state.support + 1)
+            self._append_state_ledger(
+                state,
+                "certification_receipt_ids",
                 receipt.receipt_id,
+                journal=journal,
             )
             if cell_id in supporting:
-                state.successes += 1
-                state.support_receipt_ids = (
-                    *state.support_receipt_ids,
+                if journal is None:
+                    state.successes += 1
+                else:
+                    journal.set_attr(state, "successes", state.successes + 1)
+                self._append_state_ledger(
+                    state,
+                    "support_receipt_ids",
                     receipt.receipt_id,
+                    journal=journal,
                 )
             else:
-                state.contradictions += 1
-                state.contradiction_receipt_ids = (
-                    *state.contradiction_receipt_ids,
+                if journal is None:
+                    state.contradictions += 1
+                else:
+                    journal.set_attr(
+                        state,
+                        "contradictions",
+                        state.contradictions + 1,
+                    )
+                self._append_state_ledger(
+                    state,
+                    "contradiction_receipt_ids",
                     receipt.receipt_id,
+                    journal=journal,
                 )
-            state.success_lower_bound = wilson_lower_bound(
+            success_lower_bound = wilson_lower_bound(
                 state.successes, state.support, WILSON_Z
             )
-            state.contradiction_lower_bound = wilson_lower_bound(
+            contradiction_lower_bound = wilson_lower_bound(
                 state.contradictions, state.support, WILSON_Z
             )
+            if journal is None:
+                state.success_lower_bound = success_lower_bound
+                state.contradiction_lower_bound = contradiction_lower_bound
+            else:
+                journal.set_attr(
+                    state, "success_lower_bound", success_lower_bound
+                )
+                journal.set_attr(
+                    state,
+                    "contradiction_lower_bound",
+                    contradiction_lower_bound,
+                )
             transition = None
             if cell_id in graph["maturity"]:
-                state.prospectively_certified = True
+                if journal is None:
+                    state.prospectively_certified = True
+                else:
+                    journal.set_attr(state, "prospectively_certified", True)
                 transition = "GRAPH_PROSPECTIVE_MATURITY"
             if cell_id in graph["revocation"]:
-                state.prospectively_certified = False
+                if journal is None:
+                    state.prospectively_certified = False
+                else:
+                    journal.set_attr(state, "prospectively_certified", False)
                 transition = "GRAPH_LOCAL_REVOCATION"
             if transition is not None:
-                state.transition_rows = (
-                    *state.transition_rows,
+                self._append_state_ledger(
+                    state,
+                    "transition_rows",
                     {
                         "transition": transition,
                         "receipt_id": receipt.receipt_id,
                         "ordinal": receipt.ordinal,
                         "pending_token": receipt.pending_token,
                     },
+                    journal=journal,
                 )
+        self._record_boundary_decision(
+            "real_consume",
+            {
+                cell_id: self._boundary_decision_row(
+                    cell_id, self.states[cell_id]
+                )
+                for cell_id in pending.matching_cell_ids
+            },
+        )
         emission = V2CertificationEmission(
             receipt_id=receipt.receipt_id,
             matching_cell_ids=pending.matching_cell_ids,
@@ -4699,67 +9798,1028 @@ class NativeProspectiveAuthorityV2:
             ),
             prequential_false_authority_ids=prequential_false_ids,
         )
-        self.consumed_receipts[receipt.receipt_id] = receipt
-        self.consumed_tokens.add(receipt.pending_token)
-        self.prospective_physical_fingerprints[
-            receipt.interaction_fingerprint
-        ] = receipt.receipt_id
-        self.emissions[receipt.receipt_id] = emission
+        if journal is None:
+            self.consumed_receipts[receipt.receipt_id] = receipt
+            self.consumed_tokens.add(receipt.pending_token)
+            self.prospective_physical_fingerprints[
+                receipt.interaction_fingerprint
+            ] = receipt.receipt_id
+            self.emissions[receipt.receipt_id] = emission
+        else:
+            journal.add_mapping(
+                self.consumed_receipts, receipt.receipt_id, receipt
+            )
+            journal.add_set(self.consumed_tokens, receipt.pending_token)
+            journal.add_mapping(
+                self.prospective_physical_fingerprints,
+                receipt.interaction_fingerprint,
+                receipt.receipt_id,
+            )
+            journal.add_mapping(
+                self.emissions, receipt.receipt_id, emission
+            )
         reference = current_reference
         if reference.receipt_id in self.accepted_real_references:
             raise ProspectiveV2IntegrityError(
                 "accepted REAL reference identity collision"
             )
-        self.accepted_real_references[reference.receipt_id] = reference
+        if journal is None:
+            self.accepted_real_references[reference.receipt_id] = reference
+        else:
+            journal.add_mapping(
+                self.accepted_real_references,
+                reference.receipt_id,
+                reference,
+            )
+        self._mutation_append(
+            self._accepted_real_reference_order, reference.receipt_id
+        )
+        self._mutation_append(
+            self._accepted_real_reference_ordinals, reference.ordinal
+        )
+        self._mutation_set_attr(
+            self,
+            "_accepted_real_prefix_witness_ids",
+            _bounded_provenance_witnesses((
+                *self._accepted_real_prefix_witness_ids,
+                reference.receipt_id,
+            )),
+        )
+        for identity in reference.ordered_signal_identities:
+            signal_index = self._accepted_real_by_signal_identity.get(identity)
+            if signal_index is None:
+                signal_index = _AppendOnlyLedger()
+                self._mutation_add_mapping(
+                    self._accepted_real_by_signal_identity,
+                    identity,
+                    signal_index,
+                )
+            self._mutation_append(signal_index, reference.receipt_id)
+        self._record_boundary_accepted_real(reference)
         for request in new_requests:
             if request.request_id in self.deferred_requests:
                 raise ProspectiveV2IntegrityError(
                     "deferred request identity collision"
                 )
-            self.deferred_requests[request.request_id] = request
-        self.request_queue = tuple(sorted(
-            (*self.request_queue, *(item.request_id for item in new_requests)),
-            key=lambda request_id: (
-                self.deferred_requests[
-                    request_id
-                ].request_emission_ordinal,
-                self.deferred_requests[request_id].parent_cell_id,
-            ),
-        ))
-        self.lifetime_requested_parent_ids = tuple(sorted({
-            *self.lifetime_requested_parent_ids,
-            *request_parent_ids,
-        }))
-        self.next_expected_ordinal += 1
+            if journal is None:
+                self.deferred_requests[request.request_id] = request
+            else:
+                journal.add_mapping(
+                    self.deferred_requests,
+                    request.request_id,
+                    request,
+                )
+        queue = self.request_queue
+        lifetime = self.lifetime_requested_parent_ids
+        for request in new_requests:
+            if journal is None:
+                queue.append(request.request_id)
+            else:
+                journal.append(queue, request.request_id)
+            if journal is None:
+                self._pending_request_order.append(request.request_id)
+            else:
+                journal.append(
+                    self._pending_request_order, request.request_id
+                )
+            if journal is None:
+                self._pending_request_index.add(request.request_id)
+            else:
+                journal.add_set(
+                    self._pending_request_index, request.request_id
+                )
+            queue_count = len(queue)
+            if journal is None:
+                self._request_queue_hot_digest = _next_hot_append_digest(
+                    self._request_queue_hot_digest,
+                    "request_queue",
+                    request.request_id,
+                    queue_count,
+                )
+            else:
+                journal.set_attr(
+                    self,
+                    "_request_queue_hot_digest",
+                    _next_hot_append_digest(
+                        self._request_queue_hot_digest,
+                        "request_queue",
+                        request.request_id,
+                        queue_count,
+                    ),
+                )
+        for parent_id in request_parent_ids:
+            if parent_id in self._requested_parent_index:
+                continue
+            if journal is None:
+                self._requested_parent_index.add(parent_id)
+                lifetime.append(parent_id)
+            else:
+                journal.add_set(self._requested_parent_index, parent_id)
+                journal.append(lifetime, parent_id)
+            parent_count = len(lifetime)
+            new_digest = _next_hot_append_digest(
+                self._requested_parent_hot_digest,
+                "requested_parent",
+                parent_id,
+                parent_count,
+            )
+            if journal is None:
+                self._requested_parent_hot_digest = new_digest
+            else:
+                journal.set_attr(
+                    self, "_requested_parent_hot_digest", new_digest
+                )
+        if journal is None:
+            self.next_expected_ordinal += 1
+        else:
+            journal.set_attr(
+                self,
+                "next_expected_ordinal",
+                self.next_expected_ordinal + 1,
+            )
         transaction = {
             **pending.manifest(),
             "state": "CONSUMED",
             "consumed_receipt_id": receipt.receipt_id,
         }
-        self.event_transactions[receipt.pending_token] = transaction
+        if journal is None:
+            self.event_transactions[receipt.pending_token] = transaction
+        else:
+            journal.add_mapping(
+                self.event_transactions,
+                receipt.pending_token,
+                transaction,
+            )
         self._append_incremental_history(
             receipt=receipt,
             transaction=transaction,
             reference=reference,
             emission=emission,
         )
-        self.pending_event = None
-        self._verify_invariants(
-            frozen_base_continuation_digest=(
-                frozen_base_continuation_digest
+        if journal is not None:
+            journal.set_attr(self, "pending_event", None)
+            journal.set_attr(
+                self, "_hot_path_revision", self._hot_path_revision + 1
             )
+        else:
+            self.pending_event = None
+        self._validate_real_hot_path()
+        self._advance_boundary_commitment(
+            "real_consume",
+            {
+                "receipt": receipt.manifest(),
+                "transaction": transaction,
+                "accepted_reference": reference.manifest(),
+                "emission": emission.manifest(),
+            },
         )
         return emission
+
+    def _pending_request_ids(self) -> tuple[str, ...]:
+        """Return the bounded, retryable part of the request ledger.
+
+        ``request_queue`` is deliberately append-only for replay and audit,
+        so its length is a lifetime cardinality rather than a resource
+        occupancy.  Only requests which have not yet been consumed occupy the
+        active structural queue slot.
+        """
+
+        pending_order = getattr(self, "_pending_request_order", None)
+        if pending_order is not None:
+            if not getattr(self, "_hot_path_indexes_ready", False):
+                if not hasattr(self, "structural_invariants"):
+                    # Minimal object.__new__ structural fixtures have no REAL
+                    # topology to refresh.  Keep their compatibility path
+                    # outside production rather than forcing a fabricated
+                    # authority manifest merely to consume a sealed batch.
+                    queue = tuple(getattr(self, "request_queue", ())) or tuple(
+                        getattr(self, "sealed_request_ids", ())
+                    )
+                    consumptions = set(getattr(
+                        self, "request_consumptions", {}
+                    ))
+                    return tuple(
+                        request_id for request_id in queue
+                        if request_id not in consumptions
+                    )
+                # One-time compatibility path for pre-cache pickles (and
+                # freshly hand-built authorities).  It performs the required
+                # full refresh once; subsequent event-driven safe points use
+                # the maintained order directly.
+                self._ensure_hot_path_indexes()
+                pending_order = self._pending_request_order
+            # Do not derive this from request_queue/request_consumptions on a
+            # REAL/VIRTUAL safe point: both are lifetime ledgers.  The order
+            # is maintained incrementally and is bounded by queue capacity.
+            return tuple(pending_order)
+        # Small data-free structural harnesses and pre-cache pickles may not
+        # carry the runtime cache.  This compatibility fallback is confined
+        # to those old/non-production objects; normal authorities always
+        # receive the cache at the first full boundary.
+        queue = tuple(getattr(self, "request_queue", ()))
+        if not queue:
+            queue = tuple(getattr(self, "sealed_request_ids", ()))
+        consumptions = set(getattr(self, "request_consumptions", {}))
+        return tuple(
+            request_id for request_id in queue
+            if request_id not in consumptions
+        )
+
+    def _validate_structural_consumption_fields(
+        self,
+        request_id: str,
+        consumption: StructuralRequestConsumption,
+        *,
+        attempt_ordinal: int,
+    ) -> None:
+        """Validate one immutable request disposition before using it.
+
+        Dispositions are a closed protocol, not free-form annotations.  In
+        particular, capacity is handled by the safe-point planner before a
+        request is consumed, so the historical ledger must never contain a
+        synthetic capacity rejection.  This helper intentionally validates
+        only the request-local record; the caller separately checks whether a
+        deferred birth, live state, and escrow agree with that record.
+        """
+
+        if not isinstance(consumption, StructuralRequestConsumption):
+            raise ProspectiveV2IntegrityError(
+                "structural request consumption is malformed"
+            )
+        request = self.deferred_requests.get(request_id)
+        if request is None:
+            raise ProspectiveV2IntegrityError(
+                "structural request consumption names an unknown request"
+            )
+        if (
+            consumption.request_id != request_id
+            or isinstance(consumption.attempt_ordinal, bool)
+            or not isinstance(consumption.attempt_ordinal, int)
+            or consumption.attempt_ordinal != attempt_ordinal
+            or isinstance(consumption.genome_seed, bool)
+            or not isinstance(consumption.genome_seed, int)
+            or consumption.genome_seed != self.specialization_genome_seed
+            or isinstance(consumption.genome_call_count, bool)
+            or not isinstance(consumption.genome_call_count, int)
+            or consumption.genome_call_count != 1
+        ):
+            raise ProspectiveV2IntegrityError(
+                "structural request consumption identity mismatch"
+            )
+        if consumption.disposition not in _STRUCTURAL_CONSUMPTION_DISPOSITIONS:
+            if consumption.disposition == "REJECTED_CHILD_CAPACITY":
+                raise ProspectiveV2IntegrityError(
+                    "REJECTED_CHILD_CAPACITY is not a legal disposition"
+                )
+            raise ProspectiveV2IntegrityError(
+                "unknown structural request disposition"
+            )
+        if not isinstance(consumption.selected_members, tuple):
+            raise ProspectiveV2IntegrityError(
+                "structural request selected members are not canonical"
+            )
+        if any(
+            not isinstance(member, str) or not member
+            for member in consumption.selected_members
+        ):
+            raise ProspectiveV2IntegrityError(
+                "structural request selected members are malformed"
+            )
+        if consumption.disposition == "REJECTED_EMPTY_ELIGIBILITY":
+            if consumption.selected_members or consumption.child_cell_id is not None:
+                raise ProspectiveV2IntegrityError(
+                    "empty-eligibility disposition carries a child"
+                )
+            return
+        if len(consumption.selected_members) != 2:
+            raise ProspectiveV2IntegrityError(
+                "structural request child members are not a context pair"
+            )
+        if (
+            consumption.selected_members[0]
+            != f"context:{request.parent_cell_id}"
+            or consumption.selected_members[1] not in request.eligible_base_ids
+        ):
+            raise ProspectiveV2IntegrityError(
+                "structural request child is outside request eligibility"
+            )
+        if consumption.disposition == "REJECTED_DUPLICATE_PATTERN":
+            if consumption.child_cell_id is not None:
+                raise ProspectiveV2IntegrityError(
+                    "duplicate disposition carries a child identity"
+                )
+            return
+        if (
+            not isinstance(consumption.child_cell_id, str)
+            or not consumption.child_cell_id
+        ):
+            raise ProspectiveV2IntegrityError(
+                "child disposition lacks a child identity"
+            )
+
+    @staticmethod
+    def _retirement_state_projection(
+        states: Mapping[str, ProspectiveAuthorityState],
+    ) -> tuple[tuple[int, int, tuple[str, ...]], ...]:
+        """Project tombstoned states into deterministic safe-point batches."""
+
+        grouped: dict[tuple[int, int], list[str]] = {}
+        for cell_id, state in states.items():
+            if not getattr(state, "retired", False):
+                continue
+            generation = getattr(state, "retirement_generation", None)
+            ordinal = getattr(state, "retirement_ordinal", None)
+            if not isinstance(generation, int) or not isinstance(ordinal, int):
+                raise ProspectiveV2IntegrityError(
+                    "retired state lacks a replayable retirement safe point"
+                )
+            grouped.setdefault((generation, ordinal), []).append(cell_id)
+        return tuple(
+            (generation, ordinal, tuple(sorted(cell_ids)))
+            for (generation, ordinal), cell_ids in sorted(grouped.items())
+        )
+
+    @staticmethod
+    def _boundary_retirement_projection(
+        boundaries: Sequence[GenerationBoundary],
+    ) -> tuple[tuple[int, int, tuple[str, ...]], ...]:
+        """Project recorded boundary retirement batches for audit comparison."""
+
+        grouped: dict[tuple[int, int], list[str]] = {}
+        seen_ids: set[str] = set()
+        for boundary in boundaries:
+            cell_ids = getattr(boundary, "retired_cell_ids", ())
+            if not isinstance(cell_ids, tuple):
+                raise ProspectiveV2IntegrityError(
+                    "generation boundary retirement IDs are not canonical"
+                )
+            if tuple(sorted(set(cell_ids))) != cell_ids:
+                raise ProspectiveV2IntegrityError(
+                    "generation boundary retirement IDs are not canonical"
+                )
+            if not cell_ids:
+                continue
+            if boundary.phase not in {
+                GenerationPhase.STRUCTURAL_OPEN,
+                GenerationPhase.PROSPECTIVE_OPEN,
+            }:
+                raise ProspectiveV2IntegrityError(
+                    "retirement IDs recorded outside a structural safe point"
+                )
+            if (
+                isinstance(boundary.generation, bool)
+                or not isinstance(boundary.generation, int)
+                or isinstance(boundary.event_frontier, bool)
+                or not isinstance(boundary.event_frontier, int)
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "generation boundary retirement safe point is malformed"
+                )
+            if seen_ids.intersection(cell_ids):
+                raise ProspectiveV2IntegrityError(
+                    "retirement ID is recorded at multiple safe points"
+                )
+            seen_ids.update(cell_ids)
+            grouped.setdefault(
+                (boundary.generation, boundary.event_frontier), []
+            ).extend(cell_ids)
+        return tuple(
+            (generation, ordinal, tuple(sorted(cell_ids)))
+            for (generation, ordinal), cell_ids
+            in sorted(grouped.items())
+        )
+
+    def _verify_generation_boundary_retirements(self) -> None:
+        """Require every adaptive retirement to be audited exactly once."""
+
+        expected = self._retirement_state_projection(self.states)
+        actual = self._boundary_retirement_projection(
+            self.generation_boundaries
+        )
+        if expected != actual:
+            raise ProspectiveV2IntegrityError(
+                "generation boundary retirement audit differs from tombstones"
+            )
+        for generation, ordinal, cell_ids in actual:
+            for cell_id in cell_ids:
+                state = self.states.get(cell_id)
+                if state is None or not getattr(state, "retired", False):
+                    raise ProspectiveV2IntegrityError(
+                        "generation boundary retires a non-retired state"
+                    )
+                if (
+                    state.retirement_generation != generation
+                    or state.retirement_ordinal != ordinal
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        "generation boundary retirement safe point mismatch"
+                    )
 
     def _validate_request_append_capacity(
         self, requests: Sequence[DeferredSpecializationRequest]
     ) -> None:
-        if len(self.request_queue) + len(requests) > REQUEST_QUEUE_CAPACITY:
+        """Validate active request capacity without charging old history."""
+
+        if not hasattr(self, "_pending_request_index"):
+            # A few structural unit fixtures intentionally use object.__new__
+            # with only the historical queue fields.  They are outside the
+            # event path, so retain their simple derived fallback.
+            pending = len(self._pending_request_ids())
+        else:
+            self._ensure_hot_path_indexes()
+            pending = len(self._pending_request_index)
+        incoming_ids = {
+            request.request_id for request in requests
+        }
+        # The caller subsequently rejects identity collisions.  Count only
+        # genuinely new queue entries here so replaying an exact request does
+        # not spuriously consume capacity.
+        deferred_requests = getattr(self, "deferred_requests", {})
+        pending += sum(
+            request_id not in deferred_requests
+            for request_id in incoming_ids
+        )
+        if pending > REQUEST_QUEUE_CAPACITY:
             raise ProspectiveV2IntegrityError(
                 "request queue capacity exceeded"
             )
 
+    def _deferred_request_plan(
+        self,
+        request_id: str,
+        *,
+        attempt_ordinal: int,
+        target_generation: int,
+        reserved_members: set[tuple[str, ...]],
+    ) -> _DeferredRequestPlan:
+        """Preview one request with exactly one organism-owned genome call."""
+
+        request = self.deferred_requests.get(request_id)
+        if request is None:
+            raise ProspectiveV2IntegrityError(
+                "cannot plan an unknown structural request"
+            )
+        genome = CompetenceContextGrowthGenome(
+            self.specialization_genome_seed
+        )
+        proposal = genome.propose_specialization(_GraphSpecializationRequest(
+            context_member=f"context:{request.parent_cell_id}",
+            eligible_base_ids=request.eligible_base_ids,
+            # Candidate rows use the frozen genome/hash order with a stable
+            # zero tie ordinal; reuse it at consumption for exact parity.
+            request_ordinal=0,
+            eligible_base_support_counts=tuple(
+                (
+                    item.identity,
+                    item.supporting_occurrence_count,
+                )
+                for item in request.candidate_terminals
+                if item.confirmed
+            ),
+        ))
+        disposition = "PENDING_CHILD"
+        members: tuple[str, ...] = ()
+        child_id: str | None = None
+        if proposal is None:
+            disposition = "REJECTED_EMPTY_ELIGIBILITY"
+        else:
+            members = tuple(proposal.members)
+            expected_context = f"context:{request.parent_cell_id}"
+            if (
+                len(members) != 2
+                or members[0] != expected_context
+                or members[1] not in request.eligible_base_ids
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "genome emitted an ineligible specialization child"
+                )
+            if members in reserved_members:
+                disposition = "REJECTED_DUPLICATE_PATTERN"
+            else:
+                child_id = (
+                    f"v2_deferred_specialization_"
+                    f"g{target_generation:02d}_{attempt_ordinal:04d}"
+                )
+                if (
+                    child_id in self.states
+                    or child_id in getattr(self, "retired_tombstones", {})
+                    or child_id in self._successor_capacity_occupants()
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        "deferred child identity collision"
+                    )
+                reserved_members.add(members)
+        return _DeferredRequestPlan(StructuralRequestConsumption(
+            request_id=request_id,
+            attempt_ordinal=attempt_ordinal,
+            genome_seed=self.specialization_genome_seed,
+            genome_call_count=1,
+            selected_members=members,
+            disposition=disposition,
+            child_cell_id=child_id,
+        ))
+
+    def _plan_deferred_request_births(
+        self,
+        request_ids: Sequence[str],
+        *,
+        target_generation: int,
+        incoming_promotion_members: Sequence[tuple[str, ...]] = (),
+    ) -> tuple[_DeferredRequestPlan, ...]:
+        """Preview all pending births without mutating authority state.
+
+        The planner is deterministic and content-blind: it reads only the
+        frozen requests, existing structural identities, and the optional
+        incoming promotion members.  It deliberately does not inspect game
+        outcomes.  Every request receives one genome call, including empty or
+        duplicate proposals; capacity is handled by the caller after all
+        concrete proposals are known.
+        """
+
+        request_tuple = tuple(request_ids)
+        if len(set(request_tuple)) != len(request_tuple):
+            raise ProspectiveV2IntegrityError(
+                "deferred request planner received duplicate IDs"
+            )
+        pending = set(self._pending_request_ids())
+        if not set(request_tuple).issubset(pending):
+            raise ProspectiveV2IntegrityError(
+                "deferred request planner received a non-pending request"
+            )
+        reserved_members = set(getattr(self, "_reserved_member_pairs", ()))
+        reserved_members.update(tuple(item) for item in incoming_promotion_members)
+
+        # In scheduled mode the sealed queue defines attempt ordinals.  In
+        # event-driven mode the queue is sealed immediately after this preview,
+        # so pending order is the equivalent canonical source.
+        sealed_index = {
+            request_id: index
+            for index, request_id in enumerate(self.sealed_request_ids)
+        }
+        plans: list[_DeferredRequestPlan] = []
+        for pending_index, request_id in enumerate(request_tuple):
+            attempt = sealed_index.get(request_id, pending_index)
+            plans.append(self._deferred_request_plan(
+                request_id,
+                attempt_ordinal=attempt,
+                target_generation=target_generation,
+                reserved_members=reserved_members,
+            ))
+        return tuple(plans)
+
+    def _successor_capacity_occupants(self) -> frozenset[str]:
+        """Return each committed or reserved successor slot exactly once.
+
+        Deferred child births occupy a live slot as soon as the genome accepts
+        a proposal, even before structural materialization. Once such a birth
+        is materialized, its child is also present in ``states``; the set
+        union deliberately counts that reservation and materialization once
+        rather than charging the shared cap twice. Ordinary boundary
+        promotions enter through ``states`` and share this accounting.
+        Retired states remain in the replay ledger but release their slot.
+        """
+
+        if getattr(self, "_hot_path_indexes_ready", False):
+            return frozenset(self._successor_capacity_occupant_ids)
+
+        materialized = {
+            cell_id for cell_id, state in self.states.items()
+            if (
+                state.hypothesis.source_generation > 0
+                and not getattr(state, "retired", False)
+            )
+        }
+        reserved = {
+            birth.child_cell_id
+            for birth in self.deferred_child_births.values()
+            if birth.child_cell_id not in getattr(
+                self, "retired_tombstones", {}
+            )
+        }
+        return frozenset(materialized | reserved)
+
+    @staticmethod
+    def _retirement_tombstone_payload(
+        *,
+        cell_id: str,
+        state_before: Mapping[str, Any],
+        state_after: Mapping[str, Any],
+        retirement_generation: int,
+        retirement_ordinal: int,
+        retirement_reason: str,
+    ) -> dict[str, Any]:
+        """Return the content-blind, replay-stable retirement record.
+
+        ``state_after`` deliberately carries a null tombstone digest in the
+        hashed payload.  The digest is then written both to the live state and
+        to the outer tombstone without creating a self-referential hash.
+        """
+
+        normalized_after = copy.deepcopy(dict(state_after))
+        normalized_after["retirement_tombstone_digest"] = None
+        return {
+            "schema_version": RETIREMENT_TOMBSTONE_SCHEMA,
+            "cell_id": cell_id,
+            "retirement_generation": int(retirement_generation),
+            "retirement_ordinal": int(retirement_ordinal),
+            "retirement_reason": retirement_reason,
+            "state_before": copy.deepcopy(dict(state_before)),
+            "state_after": normalized_after,
+        }
+
+    @classmethod
+    def _validate_retirement_tombstone(
+        cls,
+        cell_id: str,
+        state: ProspectiveAuthorityState,
+        tombstone: Mapping[str, Any],
+    ) -> None:
+        """Check one adaptive retirement record against its retained state."""
+
+        required = {
+            "schema_version", "cell_id", "retirement_generation",
+            "retirement_ordinal", "retirement_reason", "state_before",
+            "state_after", "retirement_tombstone_digest",
+        }
+        if set(tombstone) != required:
+            raise ProspectiveV2IntegrityError(
+                f"retirement tombstone fields are not canonical: {cell_id}"
+            )
+        if (
+            tombstone["schema_version"] != RETIREMENT_TOMBSTONE_SCHEMA
+            or tombstone["cell_id"] != cell_id
+            or not isinstance(tombstone["retirement_reason"], str)
+            or not tombstone["retirement_reason"]
+            or not isinstance(tombstone["state_before"], Mapping)
+            or not isinstance(tombstone["state_after"], Mapping)
+        ):
+            raise ProspectiveV2IntegrityError(
+                f"retirement tombstone identity is invalid: {cell_id}"
+            )
+        if (
+            tombstone["retirement_generation"]
+            != getattr(state, "retirement_generation", None)
+            or tombstone["retirement_ordinal"]
+            != getattr(state, "retirement_ordinal", None)
+            or tombstone["retirement_reason"]
+            != getattr(state, "retirement_reason", None)
+        ):
+            raise ProspectiveV2IntegrityError(
+                f"retirement tombstone lifecycle differs from state: {cell_id}"
+            )
+        if tombstone["state_before"].get("retired", False):
+            raise ProspectiveV2IntegrityError(
+                f"retirement tombstone began from a retired state: {cell_id}"
+            )
+        expected_after = state.manifest()
+        expected_after["retirement_tombstone_digest"] = None
+        if dict(tombstone["state_after"]) != expected_after:
+            raise ProspectiveV2IntegrityError(
+                f"retirement tombstone state mismatch: {cell_id}"
+            )
+        payload = cls._retirement_tombstone_payload(
+            cell_id=cell_id,
+            state_before=tombstone["state_before"],
+            state_after=tombstone["state_after"],
+            retirement_generation=int(tombstone["retirement_generation"]),
+            retirement_ordinal=int(tombstone["retirement_ordinal"]),
+            retirement_reason=str(tombstone["retirement_reason"]),
+        )
+        expected_digest = _sha(payload)
+        if tombstone["retirement_tombstone_digest"] != expected_digest:
+            raise ProspectiveV2IntegrityError(
+                f"retirement tombstone digest mismatch: {cell_id}"
+            )
+        if getattr(state, "retirement_tombstone_digest", None) != expected_digest:
+            raise ProspectiveV2IntegrityError(
+                f"state retirement digest mismatch: {cell_id}"
+            )
+
+    def _replaceable_adaptive_leaf_ids(self) -> tuple[str, ...]:
+        """Return adaptive leaves eligible for deterministic slot recovery."""
+
+        live = self._hot_live_states()
+        protected_parents = self._retirement_protected_parent_ids()
+        replaceable: list[str] = []
+        for cell_id, state in sorted(live.items()):
+            hypothesis = state.hypothesis
+            if (
+                hypothesis.source_generation <= 0
+                or hypothesis.initialization_origin
+                is not InitializationOrigin.PROSPECTIVE
+                or cell_id in protected_parents
+            ):
+                continue
+            replaceable.append(cell_id)
+        return tuple(replaceable)
+
+    def _retirement_protected_parent_ids(self) -> frozenset[str]:
+        """Return parents whose live/request dependency is still active.
+
+        A consumed or rejected request does not pin a slot forever.  A parent
+        remains protected while its request is pending, while a reserved
+        child is awaiting materialization, or while any live descendant still
+        depends on its lineage.  Once those dependencies are gone, the
+        append-only request record remains replayable even if the parent is
+        retired and its child is later retired too.
+        """
+
+        protected: set[str] = {
+            self.deferred_requests[request_id].parent_cell_id
+            for request_id in self._pending_request_ids()
+            if request_id in self.deferred_requests
+        }
+        protected.update(
+            self.deferred_requests[request_id].parent_cell_id
+            for request_id in self._pending_child_birth_request_ids
+            if request_id in self.deferred_requests
+        )
+        live = self._hot_live_states()
+        for state in live.values():
+            parent_id = getattr(state.hypothesis, "lineage_parent_id", None)
+            visited: set[str] = set()
+            while parent_id is not None:
+                if parent_id in visited:
+                    raise ProspectiveV2IntegrityError(
+                        "cyclic live specialization lineage"
+                    )
+                visited.add(parent_id)
+                protected.add(parent_id)
+                parent = self.states.get(parent_id)
+                if parent is None:
+                    break
+                parent_id = getattr(
+                    parent.hypothesis, "lineage_parent_id", None
+                )
+        return frozenset(protected)
+
+    def _validate_retirement_batch(
+        self, cell_ids: Sequence[str]
+    ) -> tuple[str, ...]:
+        """Validate and canonicalize one authority-local retirement batch.
+
+        The check is deliberately side-effect free.  Settlement performs it
+        before entering its structural transaction so automatic reclamation
+        can be selected on the same deepcopy as explicit reclamation and
+        every later admission can still roll back as one unit.
+        """
+
+        requested = tuple(cell_ids)
+        if any(not isinstance(item, str) or not item for item in requested):
+            raise ProspectiveV2IntegrityError(
+                "adaptive retirement IDs must be non-empty strings"
+            )
+        canonical = tuple(sorted(set(requested)))
+        if canonical != requested:
+            raise ProspectiveV2IntegrityError(
+                "adaptive retirement IDs are not canonical"
+            )
+        replaceable = set(self._replaceable_adaptive_leaf_ids())
+        for cell_id in canonical:
+            state = self.states.get(cell_id)
+            if state is None:
+                raise ProspectiveV2IntegrityError(
+                    f"adaptive retirement names unknown state: {cell_id}"
+                )
+            if cell_id in self.historical_tombstones:
+                raise ProspectiveV2IntegrityError(
+                    f"immutable historical candidate cannot retire: {cell_id}"
+                )
+            if cell_id in self.retired_tombstones or getattr(
+                state, "retired", False
+            ):
+                raise ProspectiveV2IntegrityError(
+                    f"adaptive candidate is already retired: {cell_id}"
+                )
+            if cell_id not in replaceable:
+                raise ProspectiveV2IntegrityError(
+                    f"adaptive candidate is not a replaceable leaf: {cell_id}"
+                )
+        return canonical
+
+    def deterministic_retirement_candidates(
+        self,
+        required_slots: int = 1,
+        *,
+        exclude_cell_ids: Sequence[str] = (),
+    ) -> tuple[str, ...]:
+        """Choose the weakest replaceable leaves in a stable total order.
+
+        This is deliberately a read-only selector.  The caller decides when a
+        safe point is reached and passes the returned IDs to
+        ``settle_pending_structural_requests`` (or to
+        ``retire_adaptive_leaves``).  No outcome, board state, or external
+        oracle is consulted: only the candidate's already-committed local
+        evidence and immutable birth order participate in the tie break.
+        """
+
+        if (
+            isinstance(required_slots, bool)
+            or not isinstance(required_slots, int)
+            or required_slots < 0
+        ):
+            raise ValueError("required_slots must be a non-negative integer")
+        live = self._hot_live_states()
+        excluded = tuple(exclude_cell_ids)
+        if any(not isinstance(item, str) or not item for item in excluded):
+            raise ValueError("excluded retirement IDs must be non-empty strings")
+        if tuple(sorted(set(excluded))) != excluded:
+            raise ValueError("excluded retirement IDs are not canonical")
+        excluded_set = set(excluded)
+        candidates = tuple(
+            cell_id for cell_id in self._replaceable_adaptive_leaf_ids()
+            if cell_id not in excluded_set
+        )
+        def retirement_tier(cell_id: str) -> int:
+            state = live[cell_id]
+            if not state.prospectively_certified:
+                # This includes a locally revoked or never-certified leaf.
+                return 0
+            if state.hypothesis.polarity is AvailabilityState.REFUTED:
+                return 1
+            # Certified AVAILABLE shells are useful anchors and are therefore
+            # the final replaceable tier, never preferred while another tier
+            # has capacity to give.
+            return 2
+
+        ordered = sorted(
+            candidates,
+            key=lambda cell_id: (
+                retirement_tier(cell_id),
+                float(live[cell_id].success_lower_bound),
+                -int(live[cell_id].contradictions),
+                int(live[cell_id].support),
+                int(live[cell_id].hypothesis.birth_frontier),
+                cell_id,
+            ),
+        )
+        return tuple(ordered[:required_slots])
+
+    def live_successor_ids(self) -> tuple[str, ...]:
+        """Expose the bounded live adaptive population for a safe-point caller."""
+
+        return tuple(sorted(
+            cell_id for cell_id in self._successor_capacity_occupants()
+            if cell_id in self._live_authority_state_cache
+        ))
+
+    def _retire_adaptive_leaves_in_place(
+        self,
+        cell_ids: Sequence[str],
+        *,
+        reason: str = DEFAULT_RETIREMENT_REASON,
+        require_structural_open: bool = False,
+        rebuild_topology: bool = True,
+    ) -> tuple[str, ...]:
+        """Retire validated adaptive leaves, preserving exact audit records.
+
+        This method intentionally mutates only an already-copied authority.
+        Public callers and structural settlement both use an outer deepcopy,
+        so any invalid batch leaves the original authority untouched.
+        """
+
+        if not isinstance(reason, str) or not reason.strip():
+            raise ProspectiveV2IntegrityError(
+                "adaptive retirement reason must be a non-empty string"
+            )
+        if require_structural_open and self.generation_phase is not GenerationPhase.STRUCTURAL_OPEN:
+            raise ProspectiveV2IntegrityError(
+                "adaptive retirement requires STRUCTURAL_OPEN"
+            )
+        canonical = self._validate_retirement_batch(cell_ids)
+
+        retired: list[str] = []
+        for cell_id in canonical:
+            state = self.states[cell_id]
+            state_before = state.manifest()
+            self._mutation_set_attr(state, "retired", True)
+            self._mutation_set_attr(state, "prospectively_certified", False)
+            self._mutation_set_attr(
+                state, "retirement_generation", self.current_generation
+            )
+            self._mutation_set_attr(
+                state, "retirement_ordinal", self.next_expected_ordinal
+            )
+            self._mutation_set_attr(
+                state, "retirement_reason", reason.strip()
+            )
+            state_after = state.manifest()
+            payload = self._retirement_tombstone_payload(
+                cell_id=cell_id,
+                state_before=state_before,
+                state_after=state_after,
+                retirement_generation=self.current_generation,
+                retirement_ordinal=self.next_expected_ordinal,
+                retirement_reason=state.retirement_reason,
+            )
+            digest = _sha(payload)
+            self._mutation_set_attr(
+                state, "retirement_tombstone_digest", digest
+            )
+            self._mutation_add_mapping(
+                self.retired_tombstones,
+                cell_id,
+                {**payload, "retirement_tombstone_digest": digest},
+            )
+            retired.append(cell_id)
+        if retired:
+            retirement_payload = {
+                "tombstones": [
+                    copy.deepcopy(self.retired_tombstones[cell_id])
+                    for cell_id in retired
+                ],
+            }
+            self._record_boundary_structure(
+                "adaptive_retirement", retirement_payload
+            )
+            for cell_id in retired:
+                if isinstance(
+                    self._live_authority_state_cache,
+                    _LiveAuthorityStateView,
+                ):
+                    self._mutation_delete_mapping(
+                        self._live_authority_state_cache, cell_id
+                    )
+                self._mutation_discard_set(
+                    self._successor_capacity_occupant_ids, cell_id
+                )
+                candidate_id = self._boundary_promotion_by_child.get(cell_id)
+                if candidate_id is not None:
+                    self._mutation_discard_set(
+                        self._active_boundary_promotion_ids,
+                        candidate_id,
+                    )
+            if retired:
+                self._refresh_active_boundary_promotion_digest(
+                    self._active_boundary_promotion_ids
+                )
+            if rebuild_topology:
+                self._mutation_set_attr(
+                    self,
+                    "authority_topology",
+                    _executed_authority_topology_manifest(
+                        self._live_authority_state_cache
+                    ),
+                )
+            self._record_boundary_candidate(
+                "adaptive_retirement", retirement_payload
+            )
+            self._advance_boundary_commitment(
+                "adaptive_retirement",
+                {
+                    "retirement": retirement_payload,
+                    "structure_digest": self._boundary_structure_digest,
+                },
+            )
+        return tuple(retired)
+
+    def retire_adaptive_leaves(
+        self,
+        cell_ids: Sequence[str],
+        *,
+        reason: str = DEFAULT_RETIREMENT_REASON,
+    ) -> tuple[str, ...]:
+        """Atomically retire adaptive leaves at a quiescent safe point."""
+
+        if self.pending_event is not None or self.evaluation_sealed:
+            raise ProspectiveV2IntegrityError(
+                "adaptive retirement requires a quiescent authority"
+            )
+        if self.generation_phase is not GenerationPhase.PROSPECTIVE_OPEN:
+            raise ProspectiveV2IntegrityError(
+                "adaptive retirement requires PROSPECTIVE_OPEN"
+            )
+        candidate = copy.deepcopy(self)
+        prior = candidate._boundary_prior_continuation_digest()
+        result = candidate._retire_adaptive_leaves_in_place(
+            cell_ids, reason=reason
+        )
+        if result:
+            # Direct quiescent retirement is still a structural safe point.
+            # Record it as its own boundary so every tombstone has one
+            # auditable (generation, event-frontier) owner, just like batch
+            # retirement during scheduled or event-driven settlement.
+            boundary = candidate._generation_boundary(
+                phase=candidate.generation_phase,
+                prior_continuation_digest=prior,
+                queue_ids=candidate.sealed_request_ids,
+                retired_cell_ids=result,
+            )
+            candidate._append_generation_boundary(boundary)
+        candidate._verify_invariants()
+        self.__dict__.clear()
+        self.__dict__.update(candidate.__dict__)
+        return result
+
     def _accepted_real_ledger_digest(self) -> str:
+        if self.boundary_digest_schema == (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            if not self._boundary_accepted_real_digest:
+                self._boundary_accepted_real_digest = (
+                    self._boundary_seed_accepted_real_digest()
+                )
+            return self._boundary_accepted_real_digest
         return _sha([
             item.manifest() for item in sorted(
                 self.accepted_real_references.values(),
@@ -4768,20 +10828,25 @@ class NativeProspectiveAuthorityV2:
         ])
 
     def _request_queue_digest(self, request_ids: Sequence[str]) -> str:
+        if self.boundary_digest_schema == (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            return self._boundary_queue_digest(request_ids)
         return _sha([
             self.deferred_requests[item].manifest() for item in request_ids
         ])
 
     def _parent_decision_history_digest(self) -> str:
+        if self.boundary_digest_schema == (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            if not self._boundary_decision_digest:
+                self._boundary_decision_digest = (
+                    self._boundary_seed_decision_digest()
+                )
+            return self._boundary_decision_digest
         return _sha({
-            cell_id: {
-                "prospectively_certified": state.prospectively_certified,
-                "transition_rows": list(state.transition_rows),
-                "support_receipt_ids": list(state.support_receipt_ids),
-                "contradiction_receipt_ids": list(
-                    state.contradiction_receipt_ids
-                ),
-            }
+            cell_id: self._boundary_decision_row(cell_id, state)
             for cell_id, state in sorted(self.states.items())
         })
 
@@ -4791,6 +10856,8 @@ class NativeProspectiveAuthorityV2:
         phase: GenerationPhase,
         prior_continuation_digest: str,
         queue_ids: Sequence[str],
+        retired_cell_ids: Sequence[str] = (),
+        prior_digest_schema: str | None = None,
     ) -> GenerationBoundary:
         return GenerationBoundary(
             generation=self.current_generation,
@@ -4799,17 +10866,1062 @@ class NativeProspectiveAuthorityV2:
             prior_continuation_digest=prior_continuation_digest,
             accepted_real_ledger_digest=self._accepted_real_ledger_digest(),
             request_queue_digest=self._request_queue_digest(queue_ids),
-            structural_epoch_schedule_digest=_sha(
-                list(self.structural_epoch_schedule)
+            structural_epoch_schedule_digest=(
+                self._boundary_schedule_digest
+                if self.boundary_digest_schema
+                == BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+                and self._boundary_schedule_digest
+                else _sha(list(self.structural_epoch_schedule))
             ),
             candidate_manifest_digest=self._candidate_manifest_digest(),
             parent_decision_history_digest=(
                 self._parent_decision_history_digest()
             ),
             specialization_genome_seed=self.specialization_genome_seed,
+            prior_digest_schema=(
+                self.boundary_digest_schema
+                if prior_digest_schema is None else prior_digest_schema
+            ),
+            retired_cell_ids=tuple(retired_cell_ids),
         )
 
+    @staticmethod
+    def _adaptive_boundary_child_id(
+        request: BoundaryPromotionRequest,
+    ) -> str:
+        """Derive an order-independent authority child identity."""
+
+        return f"v2_adaptive_boundary_{request.request_digest}"
+
+    @staticmethod
+    def _same_boundary_promotion_request(
+        stored: BoundaryPromotionRequest,
+        incoming: BoundaryPromotionRequest,
+    ) -> bool:
+        """Permit replay of the exact request while rejecting collisions."""
+
+        if (
+            stored.candidate_id != incoming.candidate_id
+            or stored.members != incoming.members
+            or stored.fixed_polarity is not incoming.fixed_polarity
+            or stored.triggering_receipt_id
+            != incoming.triggering_receipt_id
+            or stored.supporting_receipt_ids
+            != incoming.supporting_receipt_ids
+            or stored.inspected_receipt_ids
+            != incoming.inspected_receipt_ids
+            or stored.source_generation != incoming.source_generation
+            or stored.promotion_gate_state
+            != incoming.promotion_gate_state
+            or stored.promotion_gate_digest
+            != incoming.promotion_gate_digest
+        ):
+            return False
+        return True
+
+    def _validate_boundary_promotion_request(
+        self,
+        request: BoundaryPromotionRequest,
+        *,
+        evidence_frontier: int | None = None,
+        require_current_generation: bool = True,
+        ordered_reference_ids: Sequence[str] | None = None,
+        reference_ordinals: Sequence[int] | None = None,
+    ) -> BoundaryPromotionRequest:
+        """Validate one ecology-produced request against accepted REAL data."""
+
+        if (
+            require_current_generation
+            and request.source_generation != self.current_generation
+        ):
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion source generation differs from current"
+            )
+        if request.promotion_gate_state != BOUNDARY_PROMOTION_GATE_STATE:
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion gate did not confirm"
+            )
+        if request.fixed_polarity is not AvailabilityState.AVAILABLE:
+            raise ProspectiveV2IntegrityError(
+                "negative boundary successors are not promotable"
+            )
+        compact_request = request.provenance_schema_version == (
+            PROVENANCE_COMMITMENT_V4
+        )
+        if ordered_reference_ids is None:
+            ordered_reference_ids = self._accepted_real_reference_order
+        if reference_ordinals is None:
+            reference_ordinals = self._accepted_real_reference_ordinals
+        if (
+            len(ordered_reference_ids) != len(self.accepted_real_references)
+            or len(reference_ordinals) != len(ordered_reference_ids)
+        ):
+            # Compatibility for pre-metabolism hand-built fixtures.  Normal
+            # authorities initialize the order at their first full boundary.
+            visible = tuple(sorted(
+                self.accepted_real_references.values(),
+                key=lambda item: (item.ordinal, item.receipt_id),
+            ))
+            ordered_reference_ids = tuple(
+                item.receipt_id for item in visible
+            )
+            reference_ordinals = tuple(item.ordinal for item in visible)
+        if not ordered_reference_ids:
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion requires an accepted REAL ledger"
+            )
+        trigger_reference = self.accepted_real_references.get(
+            request.triggering_receipt_id
+        )
+        if trigger_reference is None:
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion trigger is not an accepted REAL receipt"
+            )
+        if (
+            not trigger_reference.observed_outcome
+            or not set(request.members).issubset(
+                trigger_reference.ordered_signal_identities
+            )
+            or any(
+                not _specialization_identity_role_permitted(
+                    trigger_reference, member
+                )
+                for member in request.members
+            )
+        ):
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion trigger is not positive matching evidence"
+            )
+        # A cheap local sketch may survive unrelated atomic commits while it
+        # accumulates prospective support.  Its triggering evidence therefore
+        # need not have been minted in the current structural generation.  The
+        # request itself is nevertheless bound to the current generation and
+        # every intervening REAL receipt is required below, so crossing a safe
+        # point cannot hide evidence or make an old observation current again.
+        current_frontier = int(reference_ordinals[-1])
+        frontier = (
+            current_frontier
+            if evidence_frontier is None else int(evidence_frontier)
+        )
+        if compact_request:
+            if request.inspected_receipt_commitment is None:
+                raise ProspectiveV2IntegrityError(
+                    "compact boundary request lacks inspected commitment"
+                )
+            if (
+                evidence_frontier is None
+                and request.inspected_receipt_commitment.exclusive_frontier
+                != current_frontier + 1
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "boundary promotion did not inspect through the current "
+                    "accepted-REAL frontier"
+                )
+            frontier = (
+                current_frontier
+                if evidence_frontier is None else int(evidence_frontier)
+            )
+        if frontier < trigger_reference.ordinal:
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion frontier precedes its trigger"
+            )
+        interval_start = bisect_left(
+            reference_ordinals, trigger_reference.ordinal
+        )
+        interval_stop = bisect_right(reference_ordinals, frontier)
+        visible_interval = tuple(
+            self.accepted_real_references[receipt_id]
+            for receipt_id in ordered_reference_ids[
+                interval_start:interval_stop
+            ]
+        )
+        expected_inspected = tuple(sorted(
+            item.receipt_id for item in visible_interval
+        ))
+        if compact_request:
+            expected_inspected_commitment = _compact_set_commitment(
+                expected_inspected,
+                exclusive_frontier=frontier + 1,
+            )
+            if request.inspected_receipt_commitment != (
+                expected_inspected_commitment
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "boundary promotion inspected commitment is incomplete"
+                )
+            inspected_ids = set(expected_inspected)
+        elif request.inspected_receipt_ids != expected_inspected:
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion inspected reads are incomplete"
+            )
+        referenced_ids = (
+            set(expected_inspected)
+            if compact_request else set(request.inspected_receipt_ids)
+        )
+        referenced_ids.update(
+            request.supporting_receipt_commitment.witness_ids
+            if compact_request and request.supporting_receipt_commitment
+            else request.supporting_receipt_ids
+        )
+        referenced_ids.add(request.triggering_receipt_id)
+        if any(
+            receipt_id not in self.accepted_real_references
+            or self.accepted_real_references[receipt_id].ordinal > frontier
+            for receipt_id in referenced_ids
+        ):
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion names an unknown REAL receipt"
+            )
+        # Every accepted reference in this authority is produced by either the
+        # native REAL ledger or the V2 REAL receipt path.  Check both concrete
+        # ledgers here so a forged reference cannot masquerade as evidence.
+        for receipt_id in referenced_ids:
+            if receipt_id in self.consumed_receipts:
+                receipt = self.consumed_receipts[receipt_id]
+                if (
+                    receipt.frame_kind != FrameKind.REAL.name
+                    or receipt.trace.frame_kind != FrameKind.REAL.name
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        "boundary promotion names a non-REAL receipt"
+                    )
+            elif receipt_id not in self.base.receipts:
+                raise ProspectiveV2IntegrityError(
+                    "boundary promotion names an unknown REAL receipt"
+                )
+            elif self.base.receipts[receipt_id].decision_trace.frame_kind != (
+                FrameKind.REAL.name
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "boundary promotion names a non-REAL receipt"
+                )
+
+        expected = request.fixed_polarity is AvailabilityState.AVAILABLE
+        support_ids = set(
+            request.supporting_receipt_commitment.witness_ids
+            if compact_request and request.supporting_receipt_commitment
+            else request.supporting_receipt_ids
+        )
+        if not compact_request:
+            inspected_ids = set(request.inspected_receipt_ids)
+        if request.triggering_receipt_id not in support_ids and not compact_request:
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion trigger is not supporting evidence"
+            )
+        if not compact_request and not support_ids.issubset(inspected_ids):
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion support is outside inspected reads"
+            )
+        support_reference_ids = (
+            tuple(sorted(
+                reference.receipt_id for reference in visible_interval
+                if reference.receipt_id in inspected_ids
+                and set(request.members).issubset(
+                    reference.ordered_signal_identities
+                )
+                and reference.observed_outcome is expected
+            ))
+            if compact_request else request.supporting_receipt_ids
+        )
+        if compact_request:
+            expected_support_commitment = _compact_set_commitment(
+                support_reference_ids,
+                exclusive_frontier=frontier + 1,
+            )
+            if request.supporting_receipt_commitment != (
+                expected_support_commitment
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "boundary promotion support commitment is incomplete"
+                )
+            support_ids = set(support_reference_ids)
+        if len(support_reference_ids) < MIN_SUPPORT:
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion has insufficient support"
+            )
+        expected_support = tuple(sorted(
+            reference.receipt_id for reference in visible_interval
+            if (
+                reference.receipt_id in inspected_ids
+                and set(request.members).issubset(
+                    reference.ordered_signal_identities
+                )
+                and reference.observed_outcome is expected
+            )
+        ))
+        if not compact_request and request.supporting_receipt_ids != expected_support:
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion support set is incomplete"
+            )
+        for receipt_id in support_ids:
+            reference = self.accepted_real_references[receipt_id]
+            if (
+                reference.observed_outcome is not expected
+                or not set(request.members).issubset(
+                    reference.ordered_signal_identities
+                )
+                or any(
+                    not _specialization_identity_role_permitted(
+                        reference, member
+                    )
+                    for member in request.members
+                )
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "boundary promotion support is polarity- or role-inconsistent"
+                )
+        for receipt_id in inspected_ids:
+            reference = self.accepted_real_references[receipt_id]
+            if (
+                set(request.members).issubset(
+                    reference.ordered_signal_identities
+                )
+                and reference.observed_outcome is not expected
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "boundary promotion contains contradictory support"
+                )
+        if wilson_lower_bound(len(support_ids), len(support_ids), WILSON_Z) < LOWER_BOUND:
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion support fails the promotion gate"
+            )
+
+        return request
+
+    def _verify_boundary_promotion_request_history(self) -> None:
+        """Reconstruct every ordinary promotion at full-history boundaries."""
+
+        compact_frontiers = tuple(
+            self.states[self._adaptive_boundary_child_id(request)]
+            .hypothesis.birth_frontier + 1
+            for request in self.boundary_promotion_requests.values()
+            if request.provenance_schema_version
+            == PROVENANCE_COMMITMENT_V4
+            and self._adaptive_boundary_child_id(request) in self.states
+        )
+        compact_prefix_commitments = (
+            self._accepted_real_prefix_commitments(compact_frontiers)
+            if compact_frontiers else {}
+        )
+        for request in self.boundary_promotion_requests.values():
+            child_id = self._adaptive_boundary_child_id(request)
+            state = self.states.get(child_id)
+            escrow = self.adaptive_boundary_escrows.get(child_id)
+            if state is None or escrow is None:
+                raise ProspectiveV2IntegrityError(
+                    "boundary promotion history lacks its materialized child"
+                )
+            frontier = state.hypothesis.birth_frontier
+            self._validate_boundary_promotion_request(
+                request,
+                evidence_frontier=frontier,
+                require_current_generation=False,
+                ordered_reference_ids=self._accepted_real_reference_order,
+                reference_ordinals=self._accepted_real_reference_ordinals,
+            )
+            if request.provenance_schema_version == (
+                PROVENANCE_COMMITMENT_V4
+            ):
+                self._validate_compact_exclusion_commitment(
+                    escrow.discovery_exclusion_commitment,
+                    birth_frontier=frontier,
+                    label="boundary promotion escrow",
+                    prefix_commitments=compact_prefix_commitments,
+                )
+                if (
+                    state.hypothesis.discovery_exclusion_commitment
+                    != escrow.discovery_exclusion_commitment
+                    or state.hypothesis.discovery_exclusion_receipt_ids
+                    != escrow.discovery_exclusion_commitment.witness_ids
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        "boundary promotion compact exclusion is incomplete"
+                    )
+            else:
+                expected_exclusion = tuple(sorted(
+                    reference.receipt_id
+                    for reference in self.accepted_real_references.values()
+                    if reference.ordinal <= frontier
+                ))
+                if (
+                    escrow.discovery_exclusion_receipt_ids
+                    != expected_exclusion
+                    or state.hypothesis.discovery_exclusion_receipt_ids
+                    != expected_exclusion
+                    or state.hypothesis.discovery_receipt_ids
+                    != request.inspected_receipt_ids
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        "boundary promotion discovery exclusion is incomplete"
+                    )
+
+    def _prepare_boundary_promotion_requests(
+        self,
+        promotions: Sequence[BoundaryPromotionRequest],
+    ) -> tuple[BoundaryPromotionRequest, ...]:
+        """Canonicalize a batch before the structural phase mutates state."""
+
+        incoming = tuple(promotions)
+        if any(not isinstance(item, BoundaryPromotionRequest) for item in incoming):
+            raise TypeError(
+                "boundary promotions require BoundaryPromotionRequest values"
+            )
+        candidate_ids = tuple(item.candidate_id for item in incoming)
+        if len(set(candidate_ids)) != len(candidate_ids):
+            raise ProspectiveV2IntegrityError(
+                "duplicate boundary promotion candidate"
+            )
+        result: list[BoundaryPromotionRequest] = []
+        for request in incoming:
+            existing = self.boundary_promotion_requests.get(
+                request.candidate_id
+            )
+            if existing is not None:
+                if self._same_boundary_promotion_request(existing, request):
+                    continue
+                raise ProspectiveV2IntegrityError(
+                    "boundary promotion candidate identity collision"
+                )
+            canonical = self._validate_boundary_promotion_request(request)
+            pair = (canonical.members, canonical.fixed_polarity)
+            live_states = self._hot_live_states()
+            if any(
+                (
+                    state.hypothesis.members,
+                    state.hypothesis.polarity,
+                ) == pair
+                for state in live_states.values()
+            ) or any(
+                (item.members, item.fixed_polarity) == pair
+                for item in result
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "duplicate boundary promotion pattern and polarity"
+                )
+            result.append(canonical)
+        return tuple(sorted(
+            result,
+            key=lambda item: (item.request_digest, item.candidate_id),
+        ))
+
+    def _materialize_boundary_promotion_in_place(
+        self,
+        request: BoundaryPromotionRequest,
+        *,
+        rebuild_topology: bool = True,
+    ) -> str:
+        """Materialize one zero-authority ordinary boundary hypothesis."""
+
+        child_id = self._adaptive_boundary_child_id(request)
+        if child_id in self.states:
+            existing = self.boundary_promotion_requests.get(request.candidate_id)
+            if existing != request:
+                raise ProspectiveV2IntegrityError(
+                    "boundary promotion child identity collision"
+                )
+            return child_id
+        if len(self._successor_capacity_occupants()) >= (
+            DORMANT_SPECIALIZATION_CHILD_CAPACITY
+        ):
+            raise ProspectiveV2IntegrityError(
+                "successor child capacity exceeded"
+            )
+        compact_request = request.provenance_schema_version == (
+            PROVENANCE_COMMITMENT_V4
+        )
+        prefix_commitment = self._accepted_real_prefix_commitment(
+            self.accepted_real_references
+        )
+        if not prefix_commitment.count:
+            raise ProspectiveV2IntegrityError(
+                "boundary promotion requires an accepted REAL ledger"
+            )
+        consensus_reads = tuple(sorted(
+            set(request.inspected_receipt_ids)
+            - {request.triggering_receipt_id}
+        ))
+        read_ids = tuple(sorted(
+            set(consensus_reads) | {request.triggering_receipt_id}
+        ))
+        if compact_request:
+            category_commitments = {
+                "direct": _compact_set_commitment(
+                    (request.triggering_receipt_id,),
+                    exclusive_frontier=prefix_commitment.exclusive_frontier,
+                ),
+                "parent_support": _compact_set_commitment(
+                    (), exclusive_frontier=prefix_commitment.exclusive_frontier
+                ),
+                "eligibility": _compact_set_commitment(
+                    (), exclusive_frontier=prefix_commitment.exclusive_frontier
+                ),
+                "contradiction_trigger": _compact_set_commitment(
+                    (), exclusive_frontier=prefix_commitment.exclusive_frontier
+                ),
+                "consensus_reads": request.inspected_receipt_commitment,
+            }
+            if not isinstance(
+                category_commitments["consensus_reads"],
+                ProvenanceCommitment,
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "compact boundary request lacks consensus commitment"
+                )
+            read_commitments = tuple(
+                (name, commitment)
+                for name, commitment in category_commitments.items()
+            )
+            compact_categories = tuple(
+                (name, _bounded_provenance_witnesses(ids))
+                for name, ids in (
+                    ("direct", (request.triggering_receipt_id,)),
+                    ("parent_support", ()),
+                    ("eligibility", ()),
+                    ("contradiction_trigger", ()),
+                    ("consensus_reads", consensus_reads),
+                )
+            )
+            visible_ids = prefix_commitment.witness_ids
+            nomination_frontier = (
+                request.inspected_receipt_commitment.exclusive_frontier - 1
+            )
+            birth_frontier = prefix_commitment.exclusive_frontier - 1
+        else:
+            ordinals = {
+                item.receipt_id: item.ordinal
+                for item in self.accepted_real_references.values()
+            }
+            visible_ids = tuple(sorted(ordinals))
+            nomination_frontier = max(ordinals[item] for item in read_ids)
+            birth_frontier = max(ordinals[item] for item in visible_ids)
+            compact_categories = (
+                ("direct", (request.triggering_receipt_id,)),
+                ("parent_support", ()),
+                ("eligibility", ()),
+                ("contradiction_trigger", ()),
+                ("consensus_reads", consensus_reads),
+            )
+            read_commitments = ()
+        escrow = NominationEscrow(
+            operation="ordinary",
+            fixed_polarity=request.fixed_polarity,
+            categorized_reads=compact_categories,
+            transitive_ancestor_receipt_ids=(),
+            discovery_exclusion_receipt_ids=visible_ids,
+            birth_frontier=birth_frontier,
+            triggering_receipt_id=request.triggering_receipt_id,
+            graph_request_root_state=NodeState.CONFIRMED.name,
+            graph_request_terminal_state=NodeState.CONFIRMED.name,
+            considered_context_ids=(),
+            selected_context_ids=(),
+            nomination_read_frontier=nomination_frontier,
+            certification_frontier=birth_frontier,
+            escrow_schema_version=(
+                NOMINATION_ESCROW_V4 if compact_request
+                else NOMINATION_ESCROW_V2
+            ),
+            discovery_exclusion_commitment=(
+                prefix_commitment if compact_request else None
+            ),
+            nomination_read_commitments=read_commitments,
+        )
+        discovery_commitment = (
+            _compose_provenance_commitment(
+                tuple(item for _name, item in read_commitments),
+                exclusive_frontier=birth_frontier + 1,
+                query_digest=_compact_query_digest({
+                    "operation": "ordinary",
+                    "candidate_id": request.candidate_id,
+                }),
+            )
+            if compact_request else None
+        )
+        hypothesis = FrozenHypothesis(
+            cell_id=child_id,
+            members=request.members,
+            polarity=request.fixed_polarity,
+            lineage_parent_id=None,
+            specialization_depth=0,
+            discovery_receipt_ids=(
+                discovery_commitment.witness_ids
+                if compact_request else escrow.discovery_receipt_ids
+            ),
+            discovery_receipt_digest=(
+                discovery_commitment.digest
+                if compact_request else _sha(list(escrow.discovery_receipt_ids))
+            ),
+            birth_frontier=escrow.birth_frontier,
+            structural_state=StemCellState.DORMANT.name,
+            nomination_operation="ordinary",
+            triggering_receipt_id=escrow.triggering_receipt_id,
+            graph_request_root_state=escrow.graph_request_root_state,
+            graph_request_terminal_state=escrow.graph_request_terminal_state,
+            considered_context_ids=escrow.considered_context_ids,
+            selected_context_ids=escrow.selected_context_ids,
+            nomination_read_frontier=escrow.nomination_read_frontier,
+            certification_frontier=escrow.certification_frontier,
+            nomination_escrow_digest=escrow.escrow_digest,
+            provenance_kind=ProvenanceKind.EXACT_NOMINATION_READ_SET,
+            nomination_read_sets=escrow.categorized_reads,
+            transitive_ancestor_receipt_ids=(),
+            discovery_exclusion_receipt_ids=visible_ids,
+            initialization_origin=InitializationOrigin.PROSPECTIVE,
+            dormant_origin=DormantOrigin.ADAPTIVE_BOUNDARY_CHILD,
+            parent_hypothesis_digest=None,
+            source_generation=self.current_generation,
+            discovery_support_receipt_ids=(
+                _bounded_provenance_witnesses(request.supporting_receipt_ids)
+                if compact_request else request.supporting_receipt_ids
+            ),
+            provenance_schema_version=(
+                PROVENANCE_COMMITMENT_V4 if compact_request else None
+            ),
+            discovery_read_commitment=discovery_commitment,
+            discovery_exclusion_commitment=(
+                prefix_commitment if compact_request else None
+            ),
+            nomination_read_commitments=read_commitments,
+        )
+        child_state = ProspectiveAuthorityState(
+            hypothesis=hypothesis,
+            prospectively_certified=False,
+        )
+        self._mutation_add_mapping(self.states, child_id, child_state)
+        child_invariant = CellStructuralInvariant(
+            cell_id=child_id,
+            members=request.members,
+            polarity=request.fixed_polarity,
+            lineage_parent_id=None,
+            specialization_depth=0,
+            structural_state=StemCellState.DORMANT.name,
+            authority_node_ids=_cell_node_ids(child_id),
+            authority_topology_identity=_cell_topology_identity(
+                child_id,
+                hypothesis.hypothesis_digest
+                if compact_request else None,
+            ),
+            dormant_origin=DormantOrigin.ADAPTIVE_BOUNDARY_CHILD,
+            immutable_hypothesis_digest=hypothesis.hypothesis_digest,
+            parent_hypothesis_digest=None,
+        )
+        self._mutation_add_mapping(
+            self.structural_invariants, child_id, child_invariant
+        )
+        self._mutation_add_mapping(
+            self.boundary_promotion_requests,
+            request.candidate_id,
+            request,
+        )
+        self._mutation_add_mapping(
+            self.adaptive_boundary_escrows, child_id, escrow
+        )
+        if isinstance(
+            self._live_authority_state_cache, _LiveAuthorityStateView
+        ):
+            self._mutation_add_mapping(
+                self._live_authority_state_cache, child_id, child_state
+            )
+        self._mutation_add_set(
+            self._successor_capacity_occupant_ids, child_id
+        )
+        self._mutation_add_set(
+            self._reserved_member_pairs, tuple(request.members)
+        )
+        self._mutation_add_set(
+            self._active_boundary_promotion_ids, request.candidate_id
+        )
+        self._mutation_add_mapping(
+            self._boundary_promotion_by_child,
+            child_id,
+            request.candidate_id,
+        )
+        self._refresh_active_boundary_promotion_digest(
+            self._active_boundary_promotion_ids
+        )
+        if rebuild_topology:
+            self._mutation_set_attr(
+                self,
+                "authority_topology",
+                _executed_authority_topology_manifest(
+                    self._live_authority_state_cache
+                ),
+            )
+        promotion_payload = {
+            "candidate_id": request.candidate_id,
+            "child_id": child_id,
+            "request": request.manifest(),
+            "state": self.states[child_id].manifest(),
+            "escrow": escrow.manifest(),
+        }
+        self._record_boundary_structure(
+            "boundary_promotion_materialize", promotion_payload
+        )
+        self._record_boundary_candidate(
+            "boundary_promotion_materialize", promotion_payload
+        )
+        self._record_boundary_decision(
+            "boundary_promotion_materialize",
+            {
+                "cell_id": child_id,
+                "row": self._boundary_decision_row(
+                    child_id, self.states[child_id]
+                ),
+            },
+        )
+        self._advance_boundary_commitment(
+            "boundary_promotion_materialize",
+            {
+                "promotion": promotion_payload,
+                "structure_digest": self._boundary_structure_digest,
+            },
+        )
+        return child_id
+
+    def _require_scheduled_structural_mode(self) -> None:
+        if self.structural_mode is StructuralMode.EVENT_DRIVEN:
+            raise ProspectiveV2IntegrityError(
+                "operation requires scheduled structural mode"
+            )
+
+    def settle_pending_structural_requests(
+        self,
+        promotions: Sequence[BoundaryPromotionRequest] = (),
+        *,
+        retire_cell_ids: Sequence[str] = (),
+        retirement_reason: str = DEFAULT_RETIREMENT_REASON,
+    ) -> GenerationBoundary | None:
+        """Atomically settle event-driven requests at a REAL quiescent point.
+
+        The caller chooses the event frontier by deciding when this method is
+        called.  Every request emitted since the prior settlement is consumed
+        in one structural successor and every accepted child is materialized
+        before the next prospective generation opens.
+        """
+
+        # Preserve a true no-op for a quiescent authority: there is no
+        # structural transaction to copy or commit when the queue is empty.
+        if self.structural_mode is not StructuralMode.EVENT_DRIVEN:
+            raise ProspectiveV2IntegrityError(
+                "event-driven settlement requires event-driven structural mode"
+            )
+        if self.generation_phase is not GenerationPhase.PROSPECTIVE_OPEN:
+            raise ProspectiveV2IntegrityError(
+                "event-driven settlement requires PROSPECTIVE_OPEN"
+            )
+        if self.pending_event is not None:
+            raise ProspectiveV2IntegrityError(
+                "event-driven settlement requires a quiescent REAL boundary"
+            )
+        if self.evaluation_sealed:
+            raise ProspectiveV2IntegrityError(
+                "sealed evaluation cannot settle structural requests"
+            )
+        promotion_batch = tuple(promotions)
+        pending_ids = self._pending_request_ids()
+        # Validate explicit reclamation before selecting automatic candidates.
+        # The journal below provides the all-or-nothing commit; this read-only
+        # check keeps the capacity calculation honest when a caller supplied a
+        # protected/unknown ID.
+        retirement_batch = self._validate_retirement_batch(retire_cell_ids)
+        if not pending_ids and not promotion_batch and not retirement_batch:
+            return None
+
+        # Structural settlement is an atomic mutation of a bounded live
+        # projection.  A full authority deepcopy scales with every historical
+        # receipt/request and made frequent local budding increasingly
+        # expensive.  The journal records every touched scalar/map/set/list
+        # entry and restores the exact object graph on any late failure.
+        journal = _StructuralMutationJournal()
+        prior_journal = getattr(self, "_structural_mutation_journal", None)
+        self._structural_mutation_journal = journal
+        try:
+            result = self._settle_pending_structural_requests_in_place(
+                promotion_batch,
+                retire_cell_ids=retirement_batch,
+                retirement_reason=retirement_reason,
+            )
+        except Exception:
+            journal.rollback()
+            raise
+        else:
+            journal.commit()
+            return result
+        finally:
+            if prior_journal is None:
+                self.__dict__.pop("_structural_mutation_journal", None)
+            else:
+                self._structural_mutation_journal = prior_journal
+
+    def _settle_pending_structural_requests_in_place(
+        self,
+        promotions: Sequence[BoundaryPromotionRequest] = (),
+        *,
+        retire_cell_ids: Sequence[str] = (),
+        retirement_reason: str = DEFAULT_RETIREMENT_REASON,
+    ) -> GenerationBoundary | None:
+        """In-place event-driven settlement; caller owns the transaction."""
+
+        if self.structural_mode is not StructuralMode.EVENT_DRIVEN:
+            raise ProspectiveV2IntegrityError(
+                "event-driven settlement requires event-driven structural mode"
+            )
+        if self.generation_phase is not GenerationPhase.PROSPECTIVE_OPEN:
+            raise ProspectiveV2IntegrityError(
+                "event-driven settlement requires PROSPECTIVE_OPEN"
+            )
+        if self.pending_event is not None:
+            raise ProspectiveV2IntegrityError(
+                "event-driven settlement requires a quiescent REAL boundary"
+            )
+        if self.evaluation_sealed:
+            raise ProspectiveV2IntegrityError(
+                "sealed evaluation cannot settle structural requests"
+            )
+
+        promotion_batch = self._prepare_boundary_promotion_requests(
+            promotions
+        )
+        pending_ids = self._pending_request_ids()
+        # Validate explicit reclamation before selecting automatic candidates.
+        # The transaction below is still all-or-nothing; this check simply
+        # prevents an invalid explicit ID from influencing the slot forecast.
+        retirement_batch = self._validate_retirement_batch(retire_cell_ids)
+        if not pending_ids and not promotion_batch and not retirement_batch:
+            return None
+        if any(
+            self.deferred_requests[request_id].source_generation
+            != self.current_generation
+            for request_id in pending_ids
+        ):
+            raise ProspectiveV2IntegrityError(
+                "event-driven request queue spans structural generations"
+            )
+
+        # Preview every pending genome proposal before any phase transition.
+        # Promotion members participate in the duplicate reservation set, so
+        # a deferred child that would reproduce an incoming ordinary shell is
+        # rejected as a duplicate rather than consuming a live slot.
+        plans = self._plan_deferred_request_births(
+            pending_ids,
+            target_generation=self.current_generation + 1,
+            incoming_promotion_members=tuple(
+                item.members for item in promotion_batch
+            ),
+        )
+        concrete_plans = tuple(
+            plan for plan in plans
+            if plan.consumption.child_cell_id is not None
+        )
+
+        # If the complete batch would overflow the bounded successor pool,
+        # reclaim only the minimum number of weak, replaceable adaptive leaves
+        # on this same transaction.  Immutable core cells, live parents, and
+        # leaves with pending children are excluded by the authority-local
+        # selector.  Certified REFUTED leaves are preferred over certified
+        # AVAILABLE anchors; the latter are only a last-resort tier. Capacity
+        # failure occurs before a request is consumed, so the original queue
+        # remains pending and retryable when the outer transaction is
+        # discarded.
+        occupancy = self._successor_capacity_occupants()
+        occupancy_after_explicit = len(
+            occupancy.difference(retirement_batch)
+        )
+        capacity = DORMANT_SPECIALIZATION_CHILD_CAPACITY
+        forecast_occupancy = (
+            occupancy_after_explicit
+            + len(promotion_batch)
+            + len(concrete_plans)
+        )
+        slots_needed = max(
+            0,
+            forecast_occupancy - capacity,
+        )
+        automatic_retirement = self.deterministic_retirement_candidates(
+            slots_needed,
+            exclude_cell_ids=retirement_batch,
+        )
+        if len(automatic_retirement) < slots_needed:
+            raise ProspectiveV2IntegrityError(
+                "successor capacity requires "
+                f"{slots_needed} adaptive retirement slots, but only "
+                f"{len(automatic_retirement)} are replaceable"
+            )
+        retirement_batch = tuple(sorted({
+            *retirement_batch,
+            *automatic_retirement,
+        }))
+
+        # These three phase transitions mirror the scheduled contract, but
+        # deliberately share one bounded journal and defer topology rebuilding
+        # and full invariant verification until all requests have settled.  Admit
+        # ordinary promotions first: they are already concrete candidates,
+        # while deferred genome proposals are reservations.  This gives the
+        # latter the same deterministic shared-capacity view when both kinds
+        # arrive at one safe point.
+        prior = self._boundary_prior_continuation_digest()
+        self._mutation_set_attr(self, "sealed_request_ids", pending_ids)
+        self._mutation_set_attr(
+            self,
+            "sealed_request_queue_digest",
+            self._request_queue_digest(pending_ids),
+        )
+        self._mutation_set_attr(
+            self, "generation_phase", GenerationPhase.PROSPECTIVE_SEALED
+        )
+        sealed_boundary = self._generation_boundary(
+            phase=self.generation_phase,
+            prior_continuation_digest=prior,
+            queue_ids=pending_ids,
+        )
+        self._append_generation_boundary(sealed_boundary)
+
+        prior = self._boundary_prior_continuation_digest()
+        self._mutation_set_attr(
+            self, "current_generation", self.current_generation + 1
+        )
+        self._mutation_set_attr(
+            self, "generation_phase", GenerationPhase.STRUCTURAL_OPEN
+        )
+        structural_boundary = self._generation_boundary(
+            phase=self.generation_phase,
+            prior_continuation_digest=prior,
+            queue_ids=pending_ids,
+        )
+        self._append_generation_boundary(structural_boundary)
+
+        # Reclaim only validated adaptive leaves before admitting new births;
+        # this is the sole point where one transaction can both retire and
+        # reuse a bounded live successor slot.
+        self._retire_adaptive_leaves_in_place(
+            retirement_batch,
+            reason=retirement_reason,
+            require_structural_open=True,
+            rebuild_topology=False,
+        )
+        for request in promotion_batch:
+            self._materialize_boundary_promotion_in_place(
+                request,
+                rebuild_topology=False,
+            )
+        # Compact V4 children carry one shared accepted-REAL prefix
+        # commitment.  Do not materialize the lifetime reference tuple/map on
+        # the event-settlement hot path.  A legacy request still takes the old
+        # exact compatibility route, but only when such a request is actually
+        # present in this batch.
+        compact_children = all(
+            self.deferred_requests[plan.consumption.request_id]
+            .provenance_schema_version == PROVENANCE_COMMITMENT_V4
+            for plan in concrete_plans
+        )
+        visible_real_prefix_commitment = (
+            self._accepted_real_prefix_commitment(
+                self.accepted_real_references
+            )
+            if compact_children and concrete_plans
+            else None
+        )
+        if not compact_children:
+            if self._accepted_real_reference_order:
+                visible_real_references = tuple(
+                    self.accepted_real_references[receipt_id]
+                    for receipt_id in self._accepted_real_reference_order
+                )
+            else:
+                visible_real_references = tuple(sorted(
+                    self.accepted_real_references.values(),
+                    key=lambda item: (item.ordinal, item.receipt_id),
+                ))
+            visible_real_ids = tuple(sorted(self.accepted_real_references))
+            visible_real_ordinals = {
+                reference.receipt_id: reference.ordinal
+                for reference in visible_real_references
+            }
+        else:
+            visible_real_references = None
+            visible_real_ids = None
+            visible_real_ordinals = None
+        planned_by_id = {
+            plan.consumption.request_id: plan.consumption
+            for plan in plans
+        }
+        while any(
+            request_id not in self.request_consumptions
+            for request_id in self.sealed_request_ids
+        ):
+            consumption = self._consume_next_structural_request_in_place(
+                verify=False,
+                planned=planned_by_id[
+                    next(
+                        request_id for request_id in self.sealed_request_ids
+                        if request_id not in self.request_consumptions
+                    )
+                ],
+            )
+            if consumption.child_cell_id is not None:
+                self._materialize_deferred_child_in_place_with_options(
+                    consumption.request_id,
+                    verify=False,
+                    rebuild_topology=False,
+                    visible_real_references=visible_real_references,
+                    visible_real_ids=visible_real_ids,
+                    visible_real_ordinals=visible_real_ordinals,
+                    visible_real_prefix_commitment=(
+                        visible_real_prefix_commitment
+                    ),
+                )
+
+        # Rebuild once after the complete child set is known.  The final hot
+        # validator consumes this exact snapshot; full canonical reclosure is
+        # reserved for an explicit checkpoint/audit boundary.
+        compact_topology_schema = (
+            "native_v2_authority_topology.v2_digest_only"
+        )
+        if (
+            getattr(
+                self._live_authority_state_cache,
+                "topology_schema_version",
+                None,
+            ) != compact_topology_schema
+            and any(
+                state.hypothesis.provenance_schema_version
+                == PROVENANCE_COMMITMENT_V4
+                for state in self._live_authority_state_cache.values()
+            )
+        ):
+            # The topology builder keeps this marker sticky after the final
+            # compact leaf retires.  Record the first transition in the same
+            # structural journal as the birth so a late validation failure
+            # restores the exact legacy cache as well as the durable fields.
+            self._mutation_set_attr(
+                self._live_authority_state_cache,
+                "topology_schema_version",
+                compact_topology_schema,
+            )
+        topology = _executed_authority_topology_manifest(
+            self._live_authority_state_cache
+        )
+        self._mutation_set_attr(self, "authority_topology", topology)
+        prior = self._boundary_prior_continuation_digest()
+        self._mutation_set_attr(
+            self, "generation_phase", GenerationPhase.PROSPECTIVE_OPEN
+        )
+        prospective_boundary = self._generation_boundary(
+            phase=self.generation_phase,
+            prior_continuation_digest=prior,
+            queue_ids=pending_ids,
+            retired_cell_ids=retirement_batch,
+        )
+        self._append_generation_boundary(prospective_boundary)
+        self._mutation_set_attr(
+            self, "_hot_path_revision", self._hot_path_revision + 1
+        )
+        self._validate_structural_hot_path(
+            expected_authority_topology=topology
+        )
+        return prospective_boundary
+
     def seal_prospective_generation(self) -> GenerationBoundary:
+        self._require_scheduled_structural_mode()
         candidate = copy.deepcopy(self)
         result = candidate._seal_prospective_generation_in_place()
         self.__dict__.clear()
@@ -4837,7 +11949,7 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "structural transition is outside predetermined frontier"
             )
-        prior = self.continuation_digest()
+        prior = self._boundary_prior_continuation_digest()
         sealed = tuple(
             request_id for request_id in self.request_queue
             if (
@@ -4854,11 +11966,12 @@ class NativeProspectiveAuthorityV2:
             prior_continuation_digest=prior,
             queue_ids=sealed,
         )
-        self.generation_boundaries = (*self.generation_boundaries, boundary)
+        self._append_generation_boundary(boundary)
         self._verify_invariants()
         return boundary
 
     def open_structural_successor(self) -> GenerationBoundary:
+        self._require_scheduled_structural_mode()
         candidate = copy.deepcopy(self)
         result = candidate._open_structural_successor_in_place()
         self.__dict__.clear()
@@ -4875,15 +11988,50 @@ class NativeProspectiveAuthorityV2:
             self.sealed_request_ids
         ):
             raise ProspectiveV2IntegrityError("sealed request queue changed")
-        prior = self.continuation_digest()
+        target_generation = self.current_generation + 1
+        plans = self._plan_deferred_request_births(
+            self.sealed_request_ids,
+            target_generation=target_generation,
+        )
+        concrete_count = sum(
+            plan.consumption.child_cell_id is not None
+            for plan in plans
+        )
+        slots_needed = max(
+            0,
+            len(self._successor_capacity_occupants())
+            + concrete_count
+            - DORMANT_SPECIALIZATION_CHILD_CAPACITY,
+        )
+        retirement_batch = self.deterministic_retirement_candidates(
+            slots_needed
+        )
+        if len(retirement_batch) < slots_needed:
+            raise ProspectiveV2IntegrityError(
+                "successor capacity requires "
+                f"{slots_needed} adaptive retirement slots, but only "
+                f"{len(retirement_batch)} are replaceable"
+            )
+        prior = self._boundary_prior_continuation_digest()
         self.current_generation += 1
         self.generation_phase = GenerationPhase.STRUCTURAL_OPEN
+        self._retire_adaptive_leaves_in_place(
+            retirement_batch,
+            reason=DEFAULT_RETIREMENT_REASON,
+            require_structural_open=True,
+            rebuild_topology=False,
+        )
+        self.structural_request_plans = {
+            plan.consumption.request_id: plan.consumption
+            for plan in plans
+        }
         boundary = self._generation_boundary(
             phase=self.generation_phase,
             prior_continuation_digest=prior,
             queue_ids=self.sealed_request_ids,
+            retired_cell_ids=retirement_batch,
         )
-        self.generation_boundaries = (*self.generation_boundaries, boundary)
+        self._append_generation_boundary(boundary)
         self._verify_invariants()
         return boundary
 
@@ -4892,6 +12040,7 @@ class NativeProspectiveAuthorityV2:
     ) -> StructuralRequestConsumption:
         """Consume the next sealed request with the organism-frozen genome."""
 
+        self._require_scheduled_structural_mode()
         candidate = copy.deepcopy(self)
         result = candidate._consume_next_structural_request_in_place()
         self.__dict__.clear()
@@ -4900,8 +12049,12 @@ class NativeProspectiveAuthorityV2:
 
     def _consume_next_structural_request_in_place(
         self,
+        *,
+        verify: bool = True,
+        planned: StructuralRequestConsumption | None = None,
     ) -> StructuralRequestConsumption:
-        self._verify_invariants()
+        if verify:
+            self._verify_invariants()
         if self.generation_phase is not GenerationPhase.STRUCTURAL_OPEN:
             raise ProspectiveV2IntegrityError(
                 "request consumption requires STRUCTURAL_OPEN"
@@ -4917,73 +12070,98 @@ class NativeProspectiveAuthorityV2:
         request_id = unconsumed[0]
         request = self.deferred_requests[request_id]
         attempt = self.sealed_request_ids.index(request_id)
-        genome = CompetenceContextGrowthGenome(
-            self.specialization_genome_seed
-        )
-        proposal = genome.propose_specialization(_GraphSpecializationRequest(
-            context_member=f"context:{request.parent_cell_id}",
-            eligible_base_ids=request.eligible_base_ids,
-            request_ordinal=attempt,
-        ))
-        disposition = "PENDING_CHILD"
-        members: tuple[str, ...] = ()
-        child_id: str | None = None
-        if proposal is None:
-            disposition = "REJECTED_EMPTY_ELIGIBILITY"
+        if planned is None:
+            planned = self._mutation_pop_mapping(
+                getattr(self, "structural_request_plans", {}),
+                request_id, None
+            )
+        if planned is None:
+            planned = self._plan_deferred_request_births(
+                (request_id,),
+                target_generation=self.current_generation,
+            )[0].consumption
         else:
-            members = tuple(proposal.members)
-            expected_context = f"context:{request.parent_cell_id}"
-            if (
-                len(members) != 2
-                or members[0] != expected_context
-                or members[1] not in request.eligible_base_ids
-            ):
+            cached = self._mutation_pop_mapping(
+                getattr(self, "structural_request_plans", {}),
+                request_id, None
+            )
+            if cached is not None and cached != planned:
                 raise ProspectiveV2IntegrityError(
-                    "genome emitted an ineligible specialization child"
+                    "structural request plan cache differs from supplied plan"
                 )
-            reserved_members = {
-                state.hypothesis.members for state in self.states.values()
-            }
-            reserved_members.update(
-                birth.members for birth in self.deferred_child_births.values()
+        consumption = planned
+        if (
+            consumption.request_id != request_id
+            or consumption.attempt_ordinal != attempt
+            or consumption.genome_seed != self.specialization_genome_seed
+            or consumption.genome_call_count != 1
+            or consumption.disposition == "REJECTED_CHILD_CAPACITY"
+        ):
+            raise ProspectiveV2IntegrityError(
+                "structural request plan differs from sealed request"
             )
-            reserved_members.update(
-                item.selected_members
-                for item in self.request_consumptions.values()
-                if item.selected_members
+        if consumption.child_cell_id is not None:
+            expected_child_id = (
+                f"v2_deferred_specialization_"
+                f"g{self.current_generation:02d}_{attempt:04d}"
             )
-            if members in reserved_members:
-                disposition = "REJECTED_DUPLICATE_PATTERN"
-            elif len(self.deferred_child_births) >= (
+            if consumption.child_cell_id != expected_child_id:
+                raise ProspectiveV2IntegrityError(
+                    "structural request child identity differs from generation"
+                )
+            if len(self._successor_capacity_occupants()) >= (
                 DORMANT_SPECIALIZATION_CHILD_CAPACITY
             ):
-                disposition = "REJECTED_CHILD_CAPACITY"
-            else:
-                child_id = (
-                    f"v2_deferred_specialization_"
-                    f"g{self.current_generation:02d}_{attempt:04d}"
+                # A direct scheduled consumer has no batch planner around it;
+                # fail before writing a consumption so the request remains
+                # retryable.  Event-driven settlement pre-forecasts and
+                # retires any required slots before reaching this branch.
+                raise ProspectiveV2IntegrityError(
+                    "successor capacity exceeded before request admission"
                 )
-        consumption = StructuralRequestConsumption(
-            request_id=request_id,
-            attempt_ordinal=attempt,
-            genome_seed=self.specialization_genome_seed,
-            genome_call_count=1,
-            selected_members=members,
-            disposition=disposition,
-            child_cell_id=child_id,
+        self._mutation_add_mapping(
+            self.request_consumptions, request_id, consumption
         )
-        self.request_consumptions[request_id] = consumption
-        if child_id is not None:
-            self.deferred_child_births[request_id] = DeferredChildBirth(
-                request_id=request_id,
-                child_cell_id=child_id,
-                members=members,
-                genome_seed=self.specialization_genome_seed,
-                proposal_ordinal=attempt,
-                source_generation=self.current_generation,
-                disposition="PENDING_MATERIALIZATION",
+        # Structural consumption releases one bounded queue slot.  The
+        # append-only request_queue remains untouched for replay, so remove
+        # only from the runtime pending order/index.
+        pending_index = getattr(self, "_pending_request_index", None)
+        pending_order = getattr(self, "_pending_request_order", None)
+        if pending_index is not None:
+            self._mutation_discard_set(pending_index, request_id)
+        if pending_order is not None:
+            self._mutation_remove_list_item(pending_order, request_id)
+        if consumption.child_cell_id is not None:
+            self._mutation_add_mapping(
+                self.deferred_child_births,
+                request_id,
+                DeferredChildBirth(
+                    request_id=request_id,
+                    child_cell_id=consumption.child_cell_id,
+                    members=consumption.selected_members,
+                    genome_seed=self.specialization_genome_seed,
+                    proposal_ordinal=attempt,
+                    source_generation=self.current_generation,
+                    disposition="PENDING_MATERIALIZATION",
+                ),
             )
-        self._verify_invariants()
+            self._mutation_add_set(
+                self._pending_child_birth_request_ids, request_id
+            )
+            self._mutation_add_set(
+                self._successor_capacity_occupant_ids,
+                consumption.child_cell_id,
+            )
+            self._mutation_add_set(
+                self._reserved_member_pairs,
+                tuple(consumption.selected_members),
+            )
+        self._advance_boundary_commitment(
+            "structural_consume",
+            self._boundary_structural_consumption_payload(consumption),
+        )
+        if verify:
+            self._verify_invariants()
         return consumption
 
     def _matching_parent_plus_identity_receipts(
@@ -5005,10 +12183,19 @@ class NativeProspectiveAuthorityV2:
                 ),
                 hypothesis_digest=state.hypothesis.hypothesis_digest,
             )
-            for cell_id, state in self.states.items()
+            for cell_id, state in _live_authority_states(self.states).items()
         }
+        indexed_ids = self._accepted_real_by_signal_identity.get(identity)
+        candidates = (
+            tuple(
+                self.accepted_real_references[receipt_id]
+                for receipt_id in indexed_ids
+            )
+            if indexed_ids is not None
+            else visible
+        )
         return tuple(sorted(
-            item.receipt_id for item in visible
+            item.receipt_id for item in candidates
             if (
                 identity in item.ordered_signal_identities
                 and canonical_structural_pattern_matches(
@@ -5022,6 +12209,7 @@ class NativeProspectiveAuthorityV2:
     def materialize_deferred_child(
         self, request_id: str
     ) -> str:
+        self._require_scheduled_structural_mode()
         candidate = copy.deepcopy(self)
         result = candidate._materialize_deferred_child_in_place(request_id)
         self.__dict__.clear()
@@ -5029,7 +12217,22 @@ class NativeProspectiveAuthorityV2:
         return result
 
     def _materialize_deferred_child_in_place(self, request_id: str) -> str:
-        self._verify_invariants()
+        self._materialize_deferred_child_in_place_with_options(request_id)
+        return self.deferred_child_births[request_id].child_cell_id
+
+    def _materialize_deferred_child_in_place_with_options(
+        self,
+        request_id: str,
+        *,
+        verify: bool = True,
+        rebuild_topology: bool = True,
+        visible_real_references: Sequence[AcceptedRealReference] | None = None,
+        visible_real_ids: tuple[str, ...] | None = None,
+        visible_real_ordinals: Mapping[str, int] | None = None,
+        visible_real_prefix_commitment: ProvenanceCommitment | None = None,
+    ) -> str:
+        if verify:
+            self._verify_invariants()
         if self.generation_phase is not GenerationPhase.STRUCTURAL_OPEN:
             raise ProspectiveV2IntegrityError(
                 "child birth requires STRUCTURAL_OPEN"
@@ -5041,21 +12244,87 @@ class NativeProspectiveAuthorityV2:
             )
         request = self.deferred_requests[request_id]
         selected_identity = birth.members[1]
-        visible = tuple(sorted(
-            self.accepted_real_references.values(),
-            key=lambda item: (item.ordinal, item.receipt_id),
-        ))
-        if not visible:
-            raise ProspectiveV2IntegrityError("child birth has no REAL ledger")
-        visible_ids = tuple(sorted(item.receipt_id for item in visible))
-        ordinals = {item.receipt_id: item.ordinal for item in visible}
-        direct = self._matching_parent_plus_identity_receipts(
-            request.parent_cell_id, selected_identity, visible
+        compact_request = request.provenance_schema_version == (
+            PROVENANCE_COMMITMENT_V4
         )
+        if visible_real_references is None and not compact_request:
+            ordered_reference_ids = self._accepted_real_reference_order
+            if ordered_reference_ids:
+                # REAL admission appends references in ordinal order.  Reuse
+                # the maintained chronology instead of sorting the lifetime
+                # mapping anew for every child materialization.
+                visible = tuple(
+                    self.accepted_real_references[receipt_id]
+                    for receipt_id in ordered_reference_ids
+                )
+            else:
+                # Compatibility for pre-metabolism hand-built fixtures.
+                visible = tuple(sorted(
+                    self.accepted_real_references.values(),
+                    key=lambda item: (item.ordinal, item.receipt_id),
+                ))
+        elif visible_real_references is not None:
+            visible = visible_real_references
+        else:
+            # Compact V4 children use the maintained signal index for direct
+            # matching.  No lifetime reference tuple is retained or copied;
+            # full resolution is reserved for explicit reclosure.
+            visible = ()
+        if compact_request and visible_real_prefix_commitment is None:
+            visible_real_prefix_commitment = (
+                self._accepted_real_prefix_commitment(
+                    self.accepted_real_references
+                )
+            )
+        if not visible:
+            if not compact_request:
+                raise ProspectiveV2IntegrityError(
+                    "child birth has no REAL ledger"
+                )
+            if visible_real_prefix_commitment is None:
+                visible_real_prefix_commitment = (
+                    self._accepted_real_prefix_commitment(
+                        self.accepted_real_references
+                    )
+                )
+        if visible_real_ids is None:
+            visible_ids = (
+                tuple(sorted(item.receipt_id for item in visible))
+                if visible
+                else visible_real_prefix_commitment.witness_ids
+            )
+        else:
+            visible_ids = visible_real_ids
+        if visible_real_ordinals is None:
+            ordinals = (
+                {item.receipt_id: item.ordinal for item in visible}
+                if visible
+                else {}
+            )
+        else:
+            ordinals = visible_real_ordinals
         candidate_state = next(
             item for item in request.candidate_terminals
             if item.identity == selected_identity
         )
+        if compact_request:
+            # Eligibility replay has already established that these are the
+            # complete selected-identity occurrences in the bounded parent
+            # support query.  Reuse its exact commitment; resolving the full
+            # lifetime posting here made every late V4 birth history-linear.
+            direct = candidate_state.supporting_receipt_ids
+            direct_commitment = (
+                candidate_state.supporting_receipt_commitment
+            )
+            if not isinstance(direct_commitment, ProvenanceCommitment):
+                raise ProspectiveV2IntegrityError(
+                    "compact child lacks direct-match commitment"
+                )
+        else:
+            direct = self._matching_parent_plus_identity_receipts(
+                request.parent_cell_id, selected_identity, visible
+            )
+            direct_commitment = None
         categories = (
             ("direct_child_matches", direct),
             ("parent_discovery_reads", tuple(sorted(
@@ -5077,25 +12346,79 @@ class NativeProspectiveAuthorityV2:
                 request.transitive_ancestor_receipt_ids
             ))),
         )
+        if compact_request:
+            category_commitments = {
+                "direct_child_matches": direct_commitment,
+                "parent_discovery_reads": (
+                    request.parent_discovery_commitment
+                ),
+                "parent_discovery_support": (
+                    request.parent_discovery_support_commitment
+                ),
+                "parent_prospective_support": (
+                    request.parent_prospective_support_commitment
+                ),
+                "eligibility_reads": (
+                    candidate_state.inspected_receipt_commitment
+                ),
+                "contradiction_trigger": _compact_set_commitment(
+                    (request.contradiction_receipt_id,),
+                    exclusive_frontier=request.contradiction_ordinal + 1,
+                ),
+                "transitive_ancestor_reads": (
+                    request.transitive_ancestor_commitment
+                ),
+            }
+            if any(
+                not isinstance(item, ProvenanceCommitment)
+                for item in category_commitments.values()
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "compact child lacks a nomination read commitment"
+                )
+        else:
+            category_commitments = {}
         categorized_ids = {
             receipt_id for _name, ids in categories for receipt_id in ids
         }
-        if not categorized_ids.issubset(visible_ids):
+        if not compact_request and not categorized_ids.issubset(visible_ids):
             raise ProspectiveV2IntegrityError(
                 "child escrow reads beyond V_birth"
             )
-        nomination_frontier = max(
-            (ordinals[item] for item in categorized_ids), default=-1
+        nomination_frontier = (
+            max((ordinals[item] for item in categorized_ids), default=-1)
+            if ordinals else request.request_emission_ordinal
         )
-        birth_frontier = max(ordinals.values(), default=-1)
+        birth_frontier = (
+            max(ordinals.values(), default=-1)
+            if ordinals else visible_real_prefix_commitment.exclusive_frontier - 1
+        )
+        exclusion_commitment = (
+            visible_real_prefix_commitment
+            if compact_request else None
+        )
+        if compact_request:
+            compact_categories = tuple(
+                (name, _bounded_provenance_witnesses(ids))
+                for name, ids in categories
+            )
+            compact_exclusion_ids = exclusion_commitment.witness_ids
+            escrow_read_commitments = tuple(
+                (name, category_commitments[name])
+                for name, _ids in compact_categories
+            )
+        else:
+            compact_categories = categories
+            compact_exclusion_ids = visible_ids
+            escrow_read_commitments = ()
         escrow = NominationEscrow(
             operation="specialization",
             fixed_polarity=request.fixed_polarity,
-            categorized_reads=categories,
+            categorized_reads=compact_categories,
             transitive_ancestor_receipt_ids=tuple(sorted(
                 request.transitive_ancestor_receipt_ids
             )),
-            discovery_exclusion_receipt_ids=visible_ids,
+            discovery_exclusion_receipt_ids=compact_exclusion_ids,
             birth_frontier=birth_frontier,
             triggering_receipt_id=request.contradiction_receipt_id,
             graph_request_root_state=NodeState.CONFIRMED.name,
@@ -5105,18 +12428,43 @@ class NativeProspectiveAuthorityV2:
             nomination_read_frontier=nomination_frontier,
             certification_frontier=birth_frontier,
             parent_hypothesis_digest=request.parent_hypothesis_digest,
-            escrow_schema_version=NOMINATION_ESCROW_V3,
+            escrow_schema_version=(
+                NOMINATION_ESCROW_V4 if compact_request
+                else NOMINATION_ESCROW_V3
+            ),
+            discovery_exclusion_commitment=exclusion_commitment,
+            nomination_read_commitments=escrow_read_commitments,
         )
+        if compact_request:
+            discovery_commitment = _compose_provenance_commitment(
+                tuple(item for _name, item in escrow_read_commitments),
+                exclusive_frontier=birth_frontier + 1,
+                query_digest=_compact_query_digest({
+                    "operation": "specialization",
+                    "parent_hypothesis_digest": (
+                        request.parent_hypothesis_digest
+                    ),
+                }),
+            )
+        else:
+            discovery_commitment = None
         hypothesis = FrozenHypothesis(
             cell_id=birth.child_cell_id,
             members=birth.members,
             polarity=request.fixed_polarity,
             lineage_parent_id=request.parent_cell_id,
-            specialization_depth=1,
-            discovery_receipt_ids=escrow.discovery_receipt_ids,
-            discovery_receipt_digest=_sha(list(
-                escrow.discovery_receipt_ids
-            )),
+            specialization_depth=(
+                self.states[request.parent_cell_id].hypothesis
+                .specialization_depth + 1
+            ),
+            discovery_receipt_ids=(
+                discovery_commitment.witness_ids
+                if compact_request else escrow.discovery_receipt_ids
+            ),
+            discovery_receipt_digest=(
+                discovery_commitment.digest
+                if compact_request else _sha(list(escrow.discovery_receipt_ids))
+            ),
             birth_frontier=escrow.birth_frontier,
             structural_state=StemCellState.DORMANT.name,
             nomination_operation="specialization",
@@ -5141,22 +12489,37 @@ class NativeProspectiveAuthorityV2:
             parent_hypothesis_digest=request.parent_hypothesis_digest,
             source_generation=self.current_generation,
             discovery_support_receipt_ids=(),
+            provenance_schema_version=(
+                PROVENANCE_COMMITMENT_V4 if compact_request else None
+            ),
+            discovery_read_commitment=discovery_commitment,
+            discovery_exclusion_commitment=exclusion_commitment,
+            nomination_read_commitments=escrow_read_commitments,
         )
-        self.states[birth.child_cell_id] = ProspectiveAuthorityState(
+        child_state = ProspectiveAuthorityState(
             hypothesis=hypothesis,
             prospectively_certified=False,
         )
-        self.structural_invariants[birth.child_cell_id] = (
-            CellStructuralInvariant(
+        self._mutation_add_mapping(
+            self.states,
+            birth.child_cell_id,
+            child_state,
+        )
+        child_invariant = CellStructuralInvariant(
                 cell_id=birth.child_cell_id,
                 members=birth.members,
                 polarity=request.fixed_polarity,
                 lineage_parent_id=request.parent_cell_id,
-                specialization_depth=1,
+                specialization_depth=(
+                    self.states[request.parent_cell_id].hypothesis
+                    .specialization_depth + 1
+                ),
                 structural_state=StemCellState.DORMANT.name,
                 authority_node_ids=_cell_node_ids(birth.child_cell_id),
                 authority_topology_identity=_cell_topology_identity(
-                    birth.child_cell_id
+                    birth.child_cell_id,
+                    hypothesis.hypothesis_digest
+                    if compact_request else None,
                 ),
                 dormant_origin=(
                     DormantOrigin.DEFERRED_SPECIALIZATION_CHILD
@@ -5166,22 +12529,92 @@ class NativeProspectiveAuthorityV2:
                     request.parent_hypothesis_digest
                 ),
             )
+        self._mutation_add_mapping(
+            self.structural_invariants,
+            birth.child_cell_id,
+            child_invariant,
         )
-        self.deferred_child_escrows[birth.child_cell_id] = escrow
-        self.deferred_child_births[request_id] = replace(
-            birth, disposition="MATERIALIZED"
+        self._mutation_add_mapping(
+            self.deferred_child_escrows,
+            birth.child_cell_id,
+            escrow,
         )
-        self.request_consumptions[request_id] = replace(
-            self.request_consumptions[request_id],
-            disposition="MATERIALIZED",
+        self._mutation_add_mapping(
+            self.deferred_child_births,
+            request_id,
+            replace(birth, disposition="MATERIALIZED"),
         )
-        self.authority_topology = _executed_authority_topology_manifest(
-            self.states
+        self._mutation_discard_set(
+            self._pending_child_birth_request_ids, request_id
         )
-        self._verify_invariants()
+        self._mutation_add_set(
+            self._successor_capacity_occupant_ids,
+            birth.child_cell_id,
+        )
+        self._mutation_add_mapping(
+            self.request_consumptions,
+            request_id,
+            replace(
+                self.request_consumptions[request_id],
+                disposition="MATERIALIZED",
+            ),
+        )
+        if isinstance(
+            self._live_authority_state_cache, _LiveAuthorityStateView
+        ):
+            self._mutation_add_mapping(
+                self._live_authority_state_cache,
+                birth.child_cell_id,
+                child_state,
+            )
+        self._mutation_add_set(
+            self._successor_capacity_occupant_ids,
+            birth.child_cell_id,
+        )
+        if rebuild_topology:
+            self._mutation_set_attr(
+                self,
+                "authority_topology",
+                _executed_authority_topology_manifest(
+                    self._live_authority_state_cache
+                ),
+            )
+        child_payload = {
+            "request_id": request_id,
+            "birth": self.deferred_child_births[request_id].manifest(),
+            "state": self.states[birth.child_cell_id].manifest(),
+            "escrow": self.deferred_child_escrows[
+                birth.child_cell_id
+            ].manifest(),
+        }
+        self._record_boundary_structure(
+            "deferred_child_materialize", child_payload
+        )
+        self._record_boundary_candidate(
+            "deferred_child_materialize", child_payload
+        )
+        self._record_boundary_decision(
+            "deferred_child_materialize",
+            {
+                "cell_id": birth.child_cell_id,
+                "row": self._boundary_decision_row(
+                    birth.child_cell_id, self.states[birth.child_cell_id]
+                ),
+            },
+        )
+        self._advance_boundary_commitment(
+            "deferred_child_materialize",
+            {
+                "child": child_payload,
+                "structure_digest": self._boundary_structure_digest,
+            },
+        )
+        if verify:
+            self._verify_invariants()
         return birth.child_cell_id
 
     def open_prospective_successor(self) -> GenerationBoundary:
+        self._require_scheduled_structural_mode()
         candidate = copy.deepcopy(self)
         result = candidate._open_prospective_successor_in_place()
         self.__dict__.clear()
@@ -5207,14 +12640,14 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "pending child birth at prospective open"
             )
-        prior = self.continuation_digest()
+        prior = self._boundary_prior_continuation_digest()
         self.generation_phase = GenerationPhase.PROSPECTIVE_OPEN
         boundary = self._generation_boundary(
             phase=self.generation_phase,
             prior_continuation_digest=prior,
             queue_ids=self.sealed_request_ids,
         )
-        self.generation_boundaries = (*self.generation_boundaries, boundary)
+        self._append_generation_boundary(boundary)
         self._verify_invariants()
         return boundary
 
@@ -5428,6 +12861,9 @@ class NativeProspectiveAuthorityV2:
             self.base
         )
         self.discovery_prefix_physical_fingerprints = prefix_fingerprints
+        self._discovery_prefix_physical_fingerprint_set = frozenset(
+            prefix_fingerprints
+        )
         self.discovery_prefix_physical_fingerprint_digest = _sha(
             list(prefix_fingerprints)
         )
@@ -5667,6 +13103,10 @@ class NativeProspectiveAuthorityV2:
         candidate.experimental_identity = (
             candidate._build_experimental_identity()
         )
+        if candidate.boundary_digest_schema == (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            candidate._initialize_boundary_commitment()
         if not candidate.generation_boundaries:
             structural = candidate._generation_boundary(
                 phase=GenerationPhase.STRUCTURAL_OPEN,
@@ -5674,16 +13114,17 @@ class NativeProspectiveAuthorityV2:
                     candidate.base.continuation_digest_v3()
                 ),
                 queue_ids=(),
+                prior_digest_schema=BOUNDARY_DIGEST_SCHEMA_BASE_V3,
             )
-            candidate.generation_boundaries = (structural,)
+            candidate._append_generation_boundary(structural)
             prospective = candidate._generation_boundary(
                 phase=GenerationPhase.PROSPECTIVE_OPEN,
-                prior_continuation_digest=candidate.continuation_digest(),
+                prior_continuation_digest=(
+                    candidate._boundary_prior_continuation_digest()
+                ),
                 queue_ids=(),
             )
-            candidate.generation_boundaries = (
-                *candidate.generation_boundaries, prospective
-            )
+            candidate._append_generation_boundary(prospective)
         candidate._verify_invariants()
         self.__dict__.clear()
         self.__dict__.update(candidate.__dict__)
@@ -5721,15 +13162,18 @@ class NativeProspectiveAuthorityV2:
                 state.prospectively_certified = (
                     mode is V2Mode.LEGACY and cell.is_mature
                 )
-                state.certification_receipt_ids = ()
-                state.support_receipt_ids = ()
-                state.contradiction_receipt_ids = ()
+                state.certification_receipt_ids = _AppendOnlyLedger()
+                state.support_receipt_ids = _AppendOnlyLedger()
+                state.contradiction_receipt_ids = _AppendOnlyLedger()
+                state.certification_receipt_digest = _empty_hot_append_digest(
+                    "certification_receipt"
+                )
                 state.successes = 0
                 state.contradictions = 0
                 state.support = 0
                 state.success_lower_bound = 0.0
                 state.contradiction_lower_bound = 0.0
-                state.transition_rows = ()
+                state.transition_rows = _AppendOnlyLedger()
             arm.experimental_identity = arm._build_experimental_identity()
             arm._verify_invariants()
         prospective.assert_candidate_parity(legacy)
@@ -5791,6 +13235,14 @@ class NativeProspectiveAuthorityV2:
             )
 
     def _candidate_manifest_digest(self) -> str:
+        if self.boundary_digest_schema == (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            if not self._boundary_candidate_digest:
+                self._boundary_candidate_digest = (
+                    self._boundary_seed_candidate_digest()
+                )
+            return self._boundary_candidate_digest
         epoch = self.base.envelope.nomination_epoch
         if epoch is None or not epoch.nomination_closed:
             raise ProspectiveV2IntegrityError(
@@ -5802,6 +13254,7 @@ class NativeProspectiveAuthorityV2:
                 for key, value in sorted(self.states.items())
             },
             "tombstones": self.historical_tombstones,
+            "retired_tombstones": self.retired_tombstones,
             "epoch_candidate_manifest_digest": (
                 epoch.frozen_candidate_manifest_digest
             ),
@@ -5907,18 +13360,15 @@ class NativeProspectiveAuthorityV2:
     ) -> dict[str, Any]:
         if frame_session is not None:
             frame_session._require_open(self)
-        self._verify_invariants(
+        self._validate_real_hot_path(
+            virtual=True,
             frozen_base_continuation_digest=(
                 None
                 if frame_session is None
                 else frame_session.base_continuation_digest
-            )
+            ),
         )
-        before = (
-            self.continuation_digest()
-            if frame_session is None
-            else frame_session.continuation_digest(self)
-        )
+        before = self._hot_path_guard_digest()
         if frame.kind is not FrameKind.VIRTUAL:
             raise ProspectiveV2IntegrityError(
                 "virtual capability requires VIRTUAL frame"
@@ -5962,12 +13412,14 @@ class NativeProspectiveAuthorityV2:
                 ),
                 "polarity": self.states[cell_id].hypothesis.polarity.value,
                 "prospectively_certified": True,
-                "certification_receipt_ids": list(
+                # Keep read-only provenance bounded; the complete append log
+                # remains available at full-history boundaries.
+                "certification_receipt_count": len(
                     self.states[cell_id].certification_receipt_ids
                 ),
-                "certification_receipt_digest": _sha(list(
-                    self.states[cell_id].certification_receipt_ids
-                )),
+                "certification_receipt_digest": (
+                    self.states[cell_id].certification_receipt_digest
+                ),
                 "support": self.states[cell_id].support,
                 "contradictions": self.states[cell_id].contradictions,
                 "success_lower_bound": (
@@ -6008,11 +13460,7 @@ class NativeProspectiveAuthorityV2:
             },
             graph_signal_trace=trace,
         )
-        after = (
-            self.continuation_digest()
-            if frame_session is None
-            else frame_session.continuation_digest(self)
-        )
+        after = self._hot_path_guard_digest()
         if after != before:
             raise ProspectiveV2IntegrityError(
                 "VIRTUAL evaluation mutated state"
@@ -6029,11 +13477,12 @@ class NativeProspectiveAuthorityV2:
         *,
         frozen_base_v3: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
-        return {
+        manifest = {
             "schema_version": self.schema_version,
             "mode": self.mode.value,
             "specialization_mode": self.specialization_mode.value,
             "specialization_genome_seed": self.specialization_genome_seed,
+            "structural_mode": self.structural_mode.value,
             "structural_epoch_schedule": list(
                 self.structural_epoch_schedule
             ),
@@ -6053,6 +13502,9 @@ class NativeProspectiveAuthorityV2:
                 copy.deepcopy(self.authority_topology),
             "historical_tombstones": copy.deepcopy(
                 dict(sorted(self.historical_tombstones.items()))
+            ),
+            "retired_tombstones": copy.deepcopy(
+                dict(sorted(self.retired_tombstones.items()))
             ),
             "next_expected_ordinal": self.next_expected_ordinal,
             "accepted_real_references": {
@@ -6087,6 +13539,18 @@ class NativeProspectiveAuthorityV2:
                     self.deferred_child_escrows.items()
                 )
             },
+            "boundary_promotion_requests": {
+                key: value.manifest()
+                for key, value in sorted(
+                    self.boundary_promotion_requests.items()
+                )
+            },
+            "adaptive_boundary_escrows": {
+                key: value.manifest()
+                for key, value in sorted(
+                    self.adaptive_boundary_escrows.items()
+                )
+            },
             "generation_boundaries": [
                 item.manifest() for item in self.generation_boundaries
             ],
@@ -6094,6 +13558,12 @@ class NativeProspectiveAuthorityV2:
             "sealed_request_queue_digest": (
                 self.sealed_request_queue_digest
             ),
+            "structural_request_plans": {
+                key: value.manifest()
+                for key, value in sorted(
+                    getattr(self, "structural_request_plans", {}).items()
+                )
+            },
             "evaluation_sealed": self.evaluation_sealed,
             "physical_trace_projection_schema": (
                 PHYSICAL_TRACE_PROJECTION_SCHEMA
@@ -6135,6 +13605,37 @@ class NativeProspectiveAuthorityV2:
                 self.experimental_identity
             ),
         }
+        if self.boundary_digest_schema == (
+            BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
+        ):
+            manifest.update({
+                "boundary_digest_schema": self.boundary_digest_schema,
+                "boundary_commitment_origin_digest": getattr(
+                    self, "_boundary_commitment_origin_digest", ""
+                ),
+                "boundary_commitment_digest": getattr(
+                    self, "_boundary_commitment_digest", ""
+                ),
+                "boundary_commitment_count": int(getattr(
+                    self, "_boundary_commitment_count", 0
+                )),
+                "boundary_accepted_real_digest": getattr(
+                    self, "_boundary_accepted_real_digest", ""
+                ),
+                "boundary_candidate_digest": getattr(
+                    self, "_boundary_candidate_digest", ""
+                ),
+                "boundary_decision_digest": getattr(
+                    self, "_boundary_decision_digest", ""
+                ),
+                "boundary_schedule_digest": getattr(
+                    self, "_boundary_schedule_digest", ""
+                ),
+                "boundary_structure_digest": getattr(
+                    self, "_boundary_structure_digest", ""
+                ),
+            })
+        return manifest
 
     def continuation_digest(
         self,
@@ -6327,14 +13828,15 @@ class OutcomeBlindExposureScanner:
     ) -> dict[str, Any]:
         organism._verify_invariants()
         before = organism.continuation_digest()
+        live_states = _live_authority_states(organism.states)
         raw_by_id: dict[str, dict[str, Any]] = {}
         for commitment in commitments:
             cls._validate_commitment(organism, commitment)
             for cell_id in commitment.matching_cell_ids:
-                state = organism.states.get(cell_id)
+                state = live_states.get(cell_id)
                 if state is None:
                     raise ProspectiveV2IntegrityError(
-                        "exposure names unknown frozen candidate"
+                        "exposure names unknown live frozen candidate"
                     )
                 if organism.next_expected_ordinal <= state.hypothesis.birth_frontier:
                     continue
@@ -6352,7 +13854,7 @@ class OutcomeBlindExposureScanner:
         raw = sorted(
             raw_by_id.values(), key=lambda row: row["opportunity_id"]
         )
-        cells = {cell_id: [] for cell_id in organism.states}
+        cells = {cell_id: [] for cell_id in live_states}
         for row in raw:
             cells[row["cell_id"]].append(row["opportunity_id"])
         source = commitments[0] if commitments else None
@@ -6380,7 +13882,7 @@ class OutcomeBlindExposureScanner:
             "source_manifest_digest": source_manifest_digest,
             "candidate_manifest_digest": organism._candidate_manifest_digest(),
             "authority_topology_digest": _sha(organism.authority_topology),
-            "candidate_cell_ids": sorted(organism.states),
+            "candidate_cell_ids": sorted(live_states),
             "raw_opportunities": raw,
             "raw_manifest_digest": _sha(raw),
             "cells": {

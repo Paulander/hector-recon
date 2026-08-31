@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+from dataclasses import replace
 
 import chess
 import pytest
@@ -23,12 +24,24 @@ from recon_lite_chess.autogrowth.native_competence_envelope import (
     SpecializationMode,
 )
 from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import (
+    BoundaryPromotionRequest,
     HISTORY_VALIDATION_INCREMENTAL,
     HISTORY_VALIDATION_LEGACY,
     MIN_SUPPORT,
     NativeProspectiveAuthorityV2,
+    ProspectiveV2IntegrityError,
     RequestBasis,
+    StructuralMode,
     V2Mode,
+)
+from recon_lite_chess.autogrowth.native_prospective_boundary_candidate_ecology import (
+    ProspectiveBoundaryCandidateEcology,
+)
+from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
+    _v2_r0_observe_training_successor,
+)
+from recon_lite_chess.autogrowth import (
+    native_prospective_evidence_authority_v2 as authority_module,
 )
 from recon_lite_chess.autogrowth.native_single_graph_curriculum import (
     NativeReConKRKGraph,
@@ -141,6 +154,8 @@ def _accept_historical(
 
 def _mixed_authority(
     polarity: AvailabilityState,
+    *,
+    structural_mode: StructuralMode = StructuralMode.SCHEDULED,
 ) -> NativeProspectiveAuthorityV2:
     envelope_config = CompetenceEnvelopeConfig(selection_seed=81357)
     source = TraceNativeCompetenceOrganism.empty(
@@ -183,7 +198,9 @@ def _mixed_authority(
         mode=V2Mode.PROSPECTIVE,
         specialization_mode=SpecializationMode.LOCAL_CONTRAST,
         # Four historical rows make ordinal 4 next. C + S1..S5 ends at 10.
-        structural_epoch_schedule=(10,),
+        structural_epoch_schedule=(10,)
+        if structural_mode is StructuralMode.SCHEDULED else (),
+        structural_mode=structural_mode,
     )
     authority.close_nomination()
     assert authority.next_expected_ordinal == 4
@@ -239,6 +256,51 @@ def _consume(
     )
     return opened, authority.consume(
         opened[2], frame_session=frame_session
+    )
+
+
+def _ordinary_boundary_request(
+    authority: NativeProspectiveAuthorityV2,
+    receipt_ids: tuple[str, ...],
+    *,
+    candidate_id: str,
+    member_index: int = 0,
+) -> BoundaryPromotionRequest:
+    references = [
+        authority.accepted_real_references[item] for item in receipt_ids
+    ]
+    common = set(references[0].ordered_signal_identities)
+    for reference in references[1:]:
+        common.intersection_update(reference.ordered_signal_identities)
+    roles = dict(references[0].typed_signal_roles)
+    reusable = tuple(sorted(
+        item for item in common
+        if roles.get(item) in {"BASE_TERMINAL", "MATURE_COMPOSITE"}
+    ))
+    member = reusable[member_index]
+    trigger = references[0]
+    inspected = tuple(sorted(
+        item.receipt_id
+        for item in authority.accepted_real_references.values()
+        if item.ordinal >= trigger.ordinal
+    ))
+    support = tuple(sorted(
+        item.receipt_id
+        for item in authority.accepted_real_references.values()
+        if (
+            item.ordinal >= trigger.ordinal
+            and member in item.ordered_signal_identities
+            and item.observed_outcome
+        )
+    ))
+    return BoundaryPromotionRequest(
+        candidate_id=candidate_id,
+        members=(member,),
+        fixed_polarity=AvailabilityState.AVAILABLE,
+        triggering_receipt_id=trigger.receipt_id,
+        supporting_receipt_ids=support,
+        inspected_receipt_ids=inspected,
+        source_generation=authority.current_generation,
     )
 
 
@@ -329,11 +391,20 @@ def test_uncertified_mixed_evidence_request_and_child_are_prospective(
         item for item in request.candidate_terminals if item.confirmed
     )
     assert confirmed
+    expected_inspected = tuple(sorted(
+        receipt.receipt_id for receipt in receipts[:5]
+    ))
     assert all(
         item.supporting_occurrence_count == MIN_SUPPORT
         and not item.present_in_triggering_contradiction
-        and receipts[0].receipt_id in item.inspected_receipt_ids
-        and receipts[4].receipt_id in item.inspected_receipt_ids
+        and set(item.inspected_receipt_ids).issubset(expected_inspected)
+        and item.inspected_receipt_commitment is not None
+        and item.inspected_receipt_commitment.count
+        == len(expected_inspected)
+        and item.inspected_receipt_commitment.digest
+        == authority_module._sha(list(expected_inspected))
+        and item.inspected_receipt_commitment.exclusive_frontier
+        == request.request_emission_ordinal + 1
         for item in confirmed
     )
 
@@ -369,12 +440,19 @@ def test_uncertified_mixed_evidence_request_and_child_are_prospective(
     assert categories["parent_prospective_support"] == tuple(sorted(
         receipt.receipt_id for receipt in receipts[1:5]
     ))
-    assert request.request_emission_receipt_id in categories[
-        "eligibility_reads"
-    ]
-    assert set(escrow.discovery_exclusion_receipt_ids) == set(
-        restored.accepted_real_references
+    read_commitments = dict(escrow.nomination_read_commitments)
+    assert request.candidate_inspected_commitment is not None
+    assert categories["eligibility_reads"] == (
+        request.candidate_inspected_commitment.witness_ids
     )
+    assert read_commitments["eligibility_reads"] == (
+        request.candidate_inspected_commitment
+    )
+    exclusion = escrow.discovery_exclusion_commitment
+    assert exclusion is not None
+    assert escrow.discovery_exclusion_receipt_ids == exclusion.witness_ids
+    assert exclusion.count == len(restored.accepted_real_references)
+    assert exclusion.exclusive_frontier == restored.next_expected_ordinal
 
     restored = NativeProspectiveAuthorityV2.loads(restored.dumps())
     restored.open_prospective_successor()
@@ -622,7 +700,10 @@ def test_epoch_frame_session_source_audits_are_constant_per_epoch(
     monkeypatch.setattr(r0_type, "persistent_identity_audit", counted)
     session = authority.frame_session()
     calls_after_open = audit_calls
-    assert calls_after_open == 3
+    # Frame opening uses the bounded authority hot-path guard; the frozen-R0
+    # session still performs its two source identity reads, but no full
+    # authority reclosure is needed per epoch.
+    assert calls_after_open == 2
     try:
         for index, (outcome, fullmove) in enumerate((
             (False, 90),
@@ -648,4 +729,685 @@ def test_epoch_frame_session_source_audits_are_constant_per_epoch(
             assert audit_calls == calls_after_open
     finally:
         session.close()
-    assert audit_calls == 6
+    assert audit_calls == 5
+
+
+def test_event_driven_recursive_reclosure_has_no_same_event_certification():
+    authority = _mixed_authority(
+        AvailabilityState.AVAILABLE,
+        structural_mode=StructuralMode.EVENT_DRIVEN,
+    )
+    first_sequence = (
+        (False, 20, "event-driven:contradiction"),
+        (True, 21, "event-driven:support-1"),
+        (True, 22, "event-driven:support-2"),
+        (True, 23, "event-driven:support-3"),
+        (True, 24, "event-driven:support-4"),
+    )
+    emissions = [
+        authority.consume(_open_mint(
+            authority,
+            outcome=outcome,
+            fullmove=fullmove,
+            frame_id=frame_id,
+        )[2])
+        for outcome, fullmove, frame_id in first_sequence
+    ]
+    assert emissions[-1].graph_specialization_request_ids == (PARENT_ID,)
+    assert not any(
+        state.hypothesis.specialization_depth == 1
+        for state in authority.states.values()
+    )
+    boundary = authority.settle_pending_structural_requests()
+    assert boundary is not None and boundary.event_frontier == 9
+    child_id = next(
+        cell_id for cell_id, state in authority.states.items()
+        if state.hypothesis.specialization_depth == 1
+    )
+    child = authority.states[child_id]
+    assert (
+        child.support,
+        child.successes,
+        child.contradictions,
+        child.prospectively_certified,
+    ) == (0, 0, 0, False)
+
+    _opened, contradiction = _consume(
+        authority,
+        outcome=False,
+        fullmove=40,
+        frame_id="event-driven:child-contradiction",
+        fen_template=ADVERSARIAL[AvailabilityState.AVAILABLE],
+    )
+    assert contradiction.graph_specialization_request_ids == ()
+    for index, fullmove in enumerate(range(41, 45)):
+        _opened, emission = _consume(
+            authority,
+            outcome=True,
+            fullmove=fullmove,
+            frame_id=f"event-driven:child-support-{index}",
+        )
+    assert emission.graph_specialization_request_ids == (child_id,)
+    assert not any(
+        state.hypothesis.specialization_depth == 2
+        for state in authority.states.values()
+    )
+    assert (
+        authority.states[child_id].successes,
+        authority.states[child_id].contradictions,
+    ) == (4, 1)
+
+    second_boundary = authority.settle_pending_structural_requests()
+    assert second_boundary is not None
+    assert second_boundary.event_frontier == 14
+    grandchild = next(
+        state for state in authority.states.values()
+        if state.hypothesis.specialization_depth == 2
+    )
+    assert grandchild.hypothesis.specialization_depth == (
+        authority.states[child_id].hypothesis.specialization_depth + 1
+    )
+    assert (
+        grandchild.support,
+        grandchild.successes,
+        grandchild.contradictions,
+        grandchild.prospectively_certified,
+    ) == (0, 0, 0, False)
+    authority.verify_full_history_boundary("event-driven recursive reclosure")
+
+
+def test_event_driven_settlement_is_frontier_selected_and_atomic(
+    monkeypatch,
+):
+    authority = _mixed_authority(
+        AvailabilityState.AVAILABLE,
+        structural_mode=StructuralMode.EVENT_DRIVEN,
+    )
+    before = authority.continuation_digest()
+    assert authority.settle_pending_structural_requests() is None
+    assert authority.continuation_digest() == before
+
+    sequence = (
+        (False, 50, "event-atomic:contradiction"),
+        (True, 51, "event-atomic:support-1"),
+        (True, 52, "event-atomic:support-2"),
+        (True, 53, "event-atomic:support-3"),
+        (True, 54, "event-atomic:support-4"),
+    )
+    for outcome, fullmove, frame_id in sequence:
+        _consume(
+            authority,
+            outcome=outcome,
+            fullmove=fullmove,
+            frame_id=frame_id,
+        )
+    before_failure = authority.continuation_digest()
+    with monkeypatch.context() as scoped:
+        scoped.setattr(
+            authority_module,
+            "_executed_authority_topology_manifest",
+            lambda _states: (_ for _ in ()).throw(
+                RuntimeError("injected topology failure")
+            ),
+        )
+        with pytest.raises(RuntimeError, match="injected topology failure"):
+            authority.settle_pending_structural_requests()
+    assert authority.continuation_digest() == before_failure
+    assert not any(
+        state.hypothesis.specialization_depth == 1
+        for state in authority.states.values()
+    )
+
+    deepcopy_calls = 0
+    topology_calls = 0
+    verify_calls = 0
+    original_deepcopy = authority_module.copy.deepcopy
+    original_topology = authority_module._executed_authority_topology_manifest
+    original_verify = NativeProspectiveAuthorityV2._verify_invariants
+
+    def counted_deepcopy(value, memo=None):
+        nonlocal deepcopy_calls
+        if isinstance(value, NativeProspectiveAuthorityV2):
+            deepcopy_calls += 1
+        return original_deepcopy(value, memo)
+
+    def counted_topology(states):
+        nonlocal topology_calls
+        topology_calls += 1
+        return original_topology(states)
+
+    def counted_verify(self, *args, **kwargs):
+        nonlocal verify_calls
+        verify_calls += 1
+        return original_verify(self, *args, **kwargs)
+
+    monkeypatch.setattr(authority_module.copy, "deepcopy", counted_deepcopy)
+    monkeypatch.setattr(
+        authority_module,
+        "_executed_authority_topology_manifest",
+        counted_topology,
+    )
+    monkeypatch.setattr(
+        NativeProspectiveAuthorityV2, "_verify_invariants", counted_verify
+    )
+    boundary = authority.settle_pending_structural_requests()
+    assert boundary is not None and boundary.event_frontier == 9
+    assert deepcopy_calls == 0
+    assert topology_calls == 1
+    assert verify_calls == 0
+
+
+def test_event_driven_boundary_promotion_is_zero_authority_and_prospective():
+    authority = _mixed_authority(
+        AvailabilityState.AVAILABLE,
+        structural_mode=StructuralMode.EVENT_DRIVEN,
+    )
+    receipts = tuple(
+        _consume(
+            authority,
+            outcome=True,
+            fullmove=110 + index,
+            frame_id=f"ordinary-boundary:support-{index}",
+        )[0][2].receipt_id
+        for index in range(4)
+    )
+    request = _ordinary_boundary_request(
+        authority,
+        receipts,
+        candidate_id="ordinary-boundary-candidate",
+    )
+    states_before = set(authority.states)
+    boundary = authority.settle_pending_structural_requests((request,))
+    assert boundary is not None
+    child_id = next(iter(set(authority.states) - states_before))
+    child = authority.states[child_id]
+    assert child.hypothesis.nomination_operation == "ordinary"
+    assert child.hypothesis.lineage_parent_id is None
+    assert child.hypothesis.specialization_depth == 0
+    assert child.hypothesis.dormant_origin is (
+        DormantOrigin.ADAPTIVE_BOUNDARY_CHILD
+    )
+    assert child.hypothesis.source_generation == 1
+    assert (
+        child.support,
+        child.successes,
+        child.contradictions,
+        child.prospectively_certified,
+    ) == (0, 0, 0, False)
+    assert set(child.hypothesis.discovery_exclusion_receipt_ids) == set(
+        authority.accepted_real_references
+    )
+
+    # Discovery support cannot certify the child.  Only later REAL evidence
+    # can close its prospective gate.
+    for index in range(4):
+        _consume(
+            authority,
+            outcome=True,
+            fullmove=120 + index,
+            frame_id=f"ordinary-boundary:prospective-{index}",
+        )
+    assert authority.states[child_id].prospectively_certified
+    authority.verify_full_history_boundary("ordinary boundary promotion")
+    restored = NativeProspectiveAuthorityV2.loads(authority.dumps())
+    assert restored.continuation_manifest() == authority.continuation_manifest()
+
+
+def test_boundary_promotion_rejects_incomplete_reads_atomically():
+    authority = _mixed_authority(
+        AvailabilityState.AVAILABLE,
+        structural_mode=StructuralMode.EVENT_DRIVEN,
+    )
+    receipts = tuple(
+        _consume(
+            authority,
+            outcome=True,
+            fullmove=130 + index,
+            frame_id=f"ordinary-boundary-invalid:support-{index}",
+        )[0][2].receipt_id
+        for index in range(4)
+    )
+    valid = _ordinary_boundary_request(
+        authority,
+        receipts,
+        candidate_id="ordinary-boundary-invalid",
+    )
+    invalid = BoundaryPromotionRequest(
+        candidate_id=valid.candidate_id,
+        members=valid.members,
+        fixed_polarity=valid.fixed_polarity,
+        triggering_receipt_id=valid.triggering_receipt_id,
+        supporting_receipt_ids=valid.supporting_receipt_ids,
+        inspected_receipt_ids=valid.inspected_receipt_ids[:-1],
+        source_generation=valid.source_generation,
+    )
+    before = authority.continuation_digest()
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="inspected reads are incomplete",
+    ):
+        authority.settle_pending_structural_requests((invalid,))
+    assert authority.continuation_digest() == before
+    assert valid.candidate_id not in authority.boundary_promotion_requests
+
+
+def test_boundary_sketch_may_survive_unrelated_atomic_commit():
+    authority = _mixed_authority(
+        AvailabilityState.AVAILABLE,
+        structural_mode=StructuralMode.EVENT_DRIVEN,
+    )
+    receipts = tuple(
+        _consume(
+            authority,
+            outcome=True,
+            fullmove=140 + index,
+            frame_id=f"ordinary-boundary-cross-generation:{index}",
+        )[0][2].receipt_id
+        for index in range(4)
+    )
+    first = _ordinary_boundary_request(
+        authority,
+        receipts,
+        candidate_id="ordinary-boundary-first",
+        member_index=0,
+    )
+    authority.settle_pending_structural_requests((first,))
+    digest_after_first = authority.continuation_digest()
+    assert authority.settle_pending_structural_requests((first,)) is None
+    assert authority.continuation_digest() == digest_after_first
+
+    # The second sketch was born from the same earlier evidence, but commits
+    # in the new generation.  A content-blind safe point must not invalidate
+    # an otherwise complete local ledger.
+    second = _ordinary_boundary_request(
+        authority,
+        receipts,
+        candidate_id="ordinary-boundary-second",
+        member_index=1,
+    )
+    assert second.source_generation == 1
+    boundary = authority.settle_pending_structural_requests((second,))
+    assert boundary is not None
+    assert second.candidate_id in authority.boundary_promotion_requests
+    authority.verify_full_history_boundary(
+        "ordinary boundary cross-generation survival"
+    )
+
+
+def test_multiple_local_promotions_share_one_atomic_safe_point():
+    authority = _mixed_authority(
+        AvailabilityState.AVAILABLE,
+        structural_mode=StructuralMode.EVENT_DRIVEN,
+    )
+    receipts = tuple(
+        _consume(
+            authority,
+            outcome=True,
+            fullmove=150 + index,
+            frame_id=f"ordinary-boundary-batch:{index}",
+        )[0][2].receipt_id
+        for index in range(4)
+    )
+    requests = tuple(
+        _ordinary_boundary_request(
+            authority,
+            receipts,
+            candidate_id=f"ordinary-boundary-batch-{index}",
+            member_index=index,
+        )
+        for index in range(2)
+    )
+    states_before = set(authority.states)
+    boundaries_before = len(authority.generation_boundaries)
+    boundary = authority.settle_pending_structural_requests(requests)
+    assert boundary is not None
+    assert authority.current_generation == 1
+    assert len(authority.generation_boundaries) - boundaries_before == 3
+    assert len(set(authority.states) - states_before) == 2
+    assert set(authority.boundary_promotion_requests) == {
+        item.candidate_id for item in requests
+    }
+    authority.verify_full_history_boundary("ordinary boundary batch")
+
+
+def test_curriculum_path_commits_local_bud_only_at_post_real_safe_point():
+    authority = _mixed_authority(
+        AvailabilityState.AVAILABLE,
+        structural_mode=StructuralMode.EVENT_DRIVEN,
+    )
+    ecology = ProspectiveBoundaryCandidateEcology()
+    seen: set[str] = set()
+    structurals = []
+    for index in range(4):
+        available, response, duplicate, structural = (
+            _v2_r0_observe_training_successor(
+                authority,
+                _board(True, 160 + index),
+                seen_predecessor_fens=seen,
+                frame_id=f"curriculum-boundary:{index}",
+                boundary_ecology=ecology,
+            )
+        )
+        assert not duplicate
+        assert response["boundary_ecology"]["observed_outcome"] is True
+        assert available is False
+        structurals.append(structural)
+
+    committed = [item for item in structurals if item is not None]
+    assert len(committed) == 1
+    assert committed[0]["mode"] == StructuralMode.EVENT_DRIVEN.value
+    assert committed[0]["safe_point"] == "post_consumption_quiescent_real"
+    assert committed[0]["safe_point_content_blind"] is True
+    assert len(committed[0]["promotion_candidate_ids"]) == 1
+    assert len(authority.boundary_promotion_requests) == 1
+    adaptive_children = [
+        state for state in authority.states.values()
+        if state.hypothesis.dormant_origin
+        is DormantOrigin.ADAPTIVE_BOUNDARY_CHILD
+    ]
+    assert len(adaptive_children) == 1
+    assert adaptive_children[0].support == 0
+    assert not adaptive_children[0].prospectively_certified
+    assert len(ecology.observations) == 4
+    assert sum(
+        item.retirement_reason == "promoted"
+        for item in ecology.tombstones.values()
+    ) == 1
+
+
+def test_scheduled_structural_mode_remains_explicitly_backward_compatible():
+    authority = _mixed_authority(AvailabilityState.AVAILABLE)
+    assert authority.structural_mode is StructuralMode.SCHEDULED
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="event-driven settlement requires event-driven",
+    ):
+        authority.settle_pending_structural_requests()
+
+
+def test_adaptive_boundary_child_reopens_only_on_postbirth_real_evidence():
+    authority = _mixed_authority(
+        AvailabilityState.AVAILABLE,
+        structural_mode=StructuralMode.EVENT_DRIVEN,
+    )
+    discovery_receipts = tuple(
+        _consume(
+            authority,
+            outcome=True,
+            fullmove=180 + index,
+            frame_id=f"adaptive-recursive:discovery:{index}",
+        )[0][2].receipt_id
+        for index in range(4)
+    )
+    request = _ordinary_boundary_request(
+        authority,
+        discovery_receipts,
+        candidate_id="adaptive-recursive-boundary",
+    )
+    authority.settle_pending_structural_requests((request,))
+    child_id = next(
+        cell_id for cell_id, state in authority.states.items()
+        if state.hypothesis.dormant_origin
+        is DormantOrigin.ADAPTIVE_BOUNDARY_CHILD
+    )
+    child = authority.states[child_id]
+    assert child.support == 0
+    assert child.hypothesis.discovery_support_receipt_ids
+    assert set(child.hypothesis.discovery_exclusion_receipt_ids) == set(
+        authority.accepted_real_references
+    )
+
+    contradiction_opened, contradiction_emission = _consume(
+        authority,
+        outcome=False,
+        fullmove=190,
+        frame_id="adaptive-recursive:postbirth-contradiction",
+        fen_template=ADVERSARIAL[AvailabilityState.AVAILABLE],
+    )
+    selected_identity = child.hypothesis.members[0]
+    assert selected_identity in contradiction_opened[1].ordered_signal_identities
+    assert contradiction_emission.graph_specialization_request_ids == (
+        PARENT_ID,
+    )
+
+    postbirth_support_receipts = []
+    for index, fullmove in enumerate(range(191, 195)):
+        opened, emission = _consume(
+            authority,
+            outcome=True,
+            fullmove=fullmove,
+            frame_id=f"adaptive-recursive:postbirth-support:{index}",
+        )
+        postbirth_support_receipts.append(opened[2])
+        if index < 3:
+            # Four discovery supports do not count toward the child's
+            # prospective trigger; three post-birth supports are still short.
+            assert emission.graph_specialization_request_ids == ()
+
+    assert emission.graph_specialization_request_ids == (child_id,)
+    request_id = emission.request_queue_appended_ids[0]
+    recursive_request = authority.deferred_requests[request_id]
+    assert recursive_request.parent_cell_id == child_id
+    assert recursive_request.request_basis is RequestBasis.UNCERTIFIED_MIXED_EVIDENCE
+    assert recursive_request.request_emission_receipt_id == (
+        postbirth_support_receipts[-1].receipt_id
+    )
+    assert recursive_request.contradiction_receipt_id == contradiction_opened[2].receipt_id
+    assert recursive_request.parent_prospective_support_receipt_ids == tuple(
+        sorted(item.receipt_id for item in postbirth_support_receipts)
+    )
+    assert not set(recursive_request.parent_prospective_support_receipt_ids).intersection(
+        child.hypothesis.discovery_exclusion_receipt_ids
+    )
+    authority.verify_full_history_boundary(
+        "adaptive child recursive postbirth evidence"
+    )
+
+
+def test_shared_successor_capacity_fails_before_mutation_when_all_parents_live(
+    monkeypatch,
+):
+    monkeypatch.setattr(
+        authority_module,
+        "DORMANT_SPECIALIZATION_CHILD_CAPACITY",
+        2,
+    )
+    authority = _mixed_authority(
+        AvailabilityState.AVAILABLE,
+        structural_mode=StructuralMode.EVENT_DRIVEN,
+    )
+    first_receipts = tuple(
+        _consume(
+            authority,
+            outcome=True,
+            fullmove=200 + index,
+            frame_id=f"capacity:first-promotion:{index}",
+        )[0][2].receipt_id
+        for index in range(4)
+    )
+    first_promotion = _ordinary_boundary_request(
+        authority,
+        first_receipts,
+        candidate_id="capacity-first-promotion",
+    )
+    authority.settle_pending_structural_requests((first_promotion,))
+    assert len(authority._successor_capacity_occupants()) == 1
+
+    _opened, revocation = _consume(
+        authority,
+        outcome=False,
+        fullmove=204,
+        frame_id="capacity:deferred-revocation",
+    )
+    deferred_id = revocation.request_queue_appended_ids[0]
+    second_receipts = tuple(
+        _consume(
+            authority,
+            outcome=True,
+            fullmove=205 + index,
+            frame_id=f"capacity:second-promotion:{index}",
+        )[0][2].receipt_id
+        for index in range(4)
+    )
+    second_promotion = _ordinary_boundary_request(
+        authority,
+        second_receipts,
+        candidate_id="capacity-second-promotion",
+        member_index=1,
+    )
+
+    # Two deferred requests are pending: the first belongs to the core and
+    # the second belongs to the existing adaptive child.  Both parents are
+    # protected, so there is no legal leaf to retire for the incoming
+    # promotion plus both concrete deferred proposals.  Capacity failure is
+    # raised before any request, promotion, or retirement mutates the
+    # authority; the queue remains retryable.
+    before = authority.continuation_manifest()
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="successor capacity requires",
+    ):
+        authority.settle_pending_structural_requests((second_promotion,))
+    assert authority.continuation_manifest() == before
+    assert deferred_id in authority._pending_request_ids()
+    assert "capacity-second-promotion" not in authority.boundary_promotion_requests
+    assert not authority.retired_tombstones
+    assert len(authority._successor_capacity_occupants()) == 1
+    authority.verify_full_history_boundary("shared successor capacity")
+
+
+def test_deferred_reservation_and_materialization_share_one_capacity_slot(
+    monkeypatch,
+):
+    monkeypatch.setattr(
+        authority_module,
+        "DORMANT_SPECIALIZATION_CHILD_CAPACITY",
+        1,
+    )
+    authority = _mixed_authority(
+        AvailabilityState.AVAILABLE,
+        structural_mode=StructuralMode.EVENT_DRIVEN,
+    )
+    sequence = (
+        (False, 220, "deferred-slot:contradiction"),
+        (True, 221, "deferred-slot:support-1"),
+        (True, 222, "deferred-slot:support-2"),
+        (True, 223, "deferred-slot:support-3"),
+        (True, 224, "deferred-slot:support-4"),
+    )
+    emissions = [
+        authority.consume(_open_mint(
+            authority,
+            outcome=outcome,
+            fullmove=fullmove,
+            frame_id=frame_id,
+        )[2])
+        for outcome, fullmove, frame_id in sequence
+    ]
+    request_id = emissions[-1].request_queue_appended_ids[0]
+    boundary = authority.settle_pending_structural_requests()
+    assert boundary is not None
+    consumption = authority.request_consumptions[request_id]
+    assert consumption.disposition == "MATERIALIZED"
+    assert len(authority.deferred_child_births) == 1
+    assert len(authority._successor_capacity_occupants()) == 1
+    assert sum(
+        state.hypothesis.source_generation > 0
+        for state in authority.states.values()
+    ) == 1
+    authority.verify_full_history_boundary(
+        "deferred reservation materialization shared slot"
+    )
+
+
+def _authority_with_one_pending_compact_request(
+) -> tuple[NativeProspectiveAuthorityV2, str]:
+    authority = _mixed_authority(
+        AvailabilityState.AVAILABLE,
+        structural_mode=StructuralMode.EVENT_DRIVEN,
+    )
+    sequence = (
+        (False, 800, "commitment:contradiction"),
+        (True, 801, "commitment:support-1"),
+        (True, 802, "commitment:support-2"),
+        (True, 803, "commitment:support-3"),
+        (True, 804, "commitment:support-4"),
+    )
+    emissions = tuple(
+        _consume(
+            authority,
+            outcome=outcome,
+            fullmove=fullmove,
+            frame_id=frame_id,
+        )[1]
+        for outcome, fullmove, frame_id in sequence
+    )
+    return authority, emissions[-1].request_queue_appended_ids[0]
+
+
+def _replace_pending_request(
+    authority: NativeProspectiveAuthorityV2,
+    old_request_id: str,
+    forged,
+) -> str:
+    draft = replace(
+        forged,
+        request_id="UNBOUND_V7_SPECIALIZATION_REQUEST",
+    )
+    new_request_id = authority_module._sha({
+        "kind": "V2_GRAPH_SPECIALIZATION_REQUEST_V7",
+        "request": draft.identity_manifest(),
+    })
+    forged = replace(draft, request_id=new_request_id)
+    authority.deferred_requests = {new_request_id: forged}
+    authority.request_queue = type(authority.request_queue)((new_request_id,))
+    authority._pending_request_order = [new_request_id]
+    authority._pending_request_index = {new_request_id}
+    emission_id = forged.request_emission_receipt_id
+    emission = authority.emissions[emission_id]
+    authority.emissions[emission_id] = replace(
+        emission,
+        request_queue_appended_ids=(new_request_id,),
+        candidate_terminal_states=((
+            forged.parent_cell_id,
+            forged.candidate_terminals,
+        ),),
+    )
+    return new_request_id
+
+
+def test_compact_request_parent_query_is_recomputed_not_format_checked() -> None:
+    authority, request_id = _authority_with_one_pending_compact_request()
+    request = authority.deferred_requests[request_id]
+    forged = replace(request, parent_query_commitment="0" * 64)
+    _replace_pending_request(authority, request_id, forged)
+
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="parent query commitment mismatch",
+    ):
+        authority._verify_deferred_specialization_requests(
+            reconstruct_evidence=False
+        )
+
+
+def test_compact_candidate_inspected_commitment_is_reconstructed() -> None:
+    authority, request_id = _authority_with_one_pending_compact_request()
+    request = authority.deferred_requests[request_id]
+    assert request.candidate_inspected_commitment is not None
+    forged = replace(
+        request,
+        candidate_inspected_commitment=replace(
+            request.candidate_inspected_commitment,
+            digest="0" * 64,
+        ),
+    )
+    _replace_pending_request(authority, request_id, forged)
+
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="inspected commitment mismatch",
+    ):
+        authority._verify_deferred_specialization_requests(
+            reconstruct_evidence=True
+        )

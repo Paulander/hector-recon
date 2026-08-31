@@ -21,6 +21,12 @@ boundaries and artifact identities.
 | Epoch-scoped frozen-R0 execution | Commit `60e3c9b8`; mixed REAL/VIRTUAL parity canary; focused authority, history, handover and curriculum suites | Exact one-shot/session parity; one isolated R0 runtime clone per epoch session instead of per frame; frozen-source audits remain constant within a session; `57 passed`. |
 | Full-work development launch | Commit `60e3c9b8`; seed `2026082801`; one process/core; fixed viewed 48/16/16 pools; unchanged learner; `21600 s` / `8192 MiB` safe-epoch-boundary ceilings | Launched 09:58 CEST; R0 passed at epoch 72 with validation/regression `1.0/1.0` at 10:22; the Codex-managed execution was reaped at 12:02 after about `2 h 04 m`, exactly 90 minutes after its owning task ended. No handled-exit artifact exists. R1 snapshots/progress are written only every 20 epochs, so the absent R1 artifact does not establish that zero R1 epochs completed. |
 | Current V7 realistic runtime profile | HEAD `2b517ded`, behavior `60e3c9b8`; already-viewed R0 with 4,535 nodes/210,612 edges/842 triplets; one core; exact viewed REAL sequence | First 48 REAL events took `426.572 s`; 64 took `574.615 s` with stable per-event cost and `94.66%` in frame inference. The event-64 frontier produced and materialized 62 children in `561.914 s`; all checks and exact continuation parity passed. The path is costly but finite and cannot explain the epoch-1 artifact loss. |
+| Adaptive-boundary preflights | Base `2f1b68c9`; local uncommitted hybrid implementation; development-only data | Preserved one immediate configuration rejection, one seed whose R0 gate failed, and one initialization-identity failure. None entered usable R1 learning. |
+| Adaptive-boundary v6 canary | Seed `2026082801`; random 8/4/4 R1 pools; one process/core; hash-ranked local candidates; stopped after exact epoch 4 | R0 `16/16`; R1 heldout `0/4`, retention `15/16`; 42 buds, 37 successors, depth 2, but zero AVAILABLE, handoffs or value. Recursion was live; function was absent. |
+| Adaptive-boundary v7 red-team stop | Same canary; contrastive candidate work in progress | Stopped before R1 after review found adaptive children could not themselves request refinement. No scientific or R1 result. |
+| Adaptive-boundary v8 residual-beam canary | Seed `2026082801`; random 8/4/4 R1 pools; one process/core; residual-guided beam; repaired recursive lifecycle; exact epoch-4 checkpoint | R0 `16/16`; R1 heldout `0/4`, retention `15/16`; 40 buds, 38 successors and depth 2. All 9 positive buds died; 20 negative buds promoted; zero AVAILABLE, handoffs or value. Stopped by predeclared no-functional-signal rule. |
+| Adaptive-boundary v9 multi-seed discriminator | Base `2f1b68c9`; local hybrid implementation; seeds `2026083101/02/03` in parallel plus viewed reference seed `2026082801`; one process/seed and numerical threads fixed to one; random 8/4/4 R1; exact epoch 4 | `3101` failed R0 validation (`13/16`) and never entered R1. The other three completed the primary arm at `0/16` exhaustive mate-in-2 and zero handoff/value. `3103` produced 5 surprise mates, 87 buds, 2 positive promotions and 23 live successors; `2801` produced 3 surprise mates and recursive refinement through generation 4 with 18 live successors; neither produced certified AVAILABLE authority. Durable epoch snapshots were preserved and the processes were stopped before control arms. |
+| Adaptive-boundary V14 exact preflight | Branch `codex/adaptive-boundary-ecology`; positive-shell ecology, local atomic metabolism, protected core-first routing and exact worst-reply credit | Focused `128/128`, adjacent `114/114`, final bounded-transaction `12/12`, and independent review `55/55` passed. Three fresh exact epoch-4 seeds remain the next scientific discriminator. |
 
 ## Purpose and validity scope
 
@@ -32,9 +38,10 @@ inference. The constructed benchmark uses one persistent black knight to stay
 materially disjoint from the protected pure-KRK corpora; its two D4 geometries
 are not representative workload samples.
 
-Current branch: `codex/v2-intrinsic-r0-r1-development`, forked from
-`97cce727442da25c4a5c443897550ccc9c6758b4`. Use `git rev-parse HEAD` for the
-current implementation commit.
+Current branch: `codex/adaptive-boundary-ecology`, based on
+`2f1b68c992eb6868b468148004d8e5a4746c88ab`. The final adaptive implementation
+is committed before the V14 experiments; use the exact implementation commit
+recorded in the V14 entry below as their source identity.
 
 `reports/autogrowth/development/` is local and untracked at this snapshot.
 
@@ -443,3 +450,208 @@ current implementation commit.
   the wrong execution owner. Residual formal inference and structural-copy
   costs remain worthwhile optimization targets, but neither supplies evidence
   of nontermination or of a ReCoN exception in this launch.
+
+## Adaptive boundary ecology — local hybrid branch
+
+- Binding: audited base `2f1b68c992eb6868b468148004d8e5a4746c88ab`;
+  branch `codex/adaptive-boundary-ecology`. This section records the earlier
+  uncommitted development phase; the final implementation identity is recorded
+  in V14 below. The hybrid lets local prediction errors nominate cheap
+  micropattern buds, but commits the resulting graph mutations atomically at
+  deterministic content-blind epoch safe points. Discovery receipts are
+  excluded from certification, children start with zero authority, and
+  contradicted descendants can recursively request narrower descendants.
+- Exact software gate: the artifact-independent competence, authority,
+  incremental-history, all-reply, ecology, curriculum, action-order and runner
+  suites passed `132 tests in 198.08 s`; the focused lifecycle/beam subset
+  passed `51 tests in 126.20 s`. Historical tests whose protected artifacts are
+  absent were not reconstructed or counted.
+- Preserved preflights: seed `2026083101` first rejected an invalid balanced
+  8/4/4 split in `2.42 s`, then completed only R0 in `579.33 s` and failed its
+  `1.0` gate (`13/16` validation, `12/16` regression). Seed `2026082801` later
+  stopped in `1396.97 s` on an initialization-identity invariant before a
+  usable R1 boundary; the invariant defect was repaired and exactly tested.
+- V6: seed `2026082801`, one process with numerical-library threads fixed to
+  one, random 8/4/4 R1 pools, eight-epoch cap, checkpoint every epoch. At exact
+  epoch 4 (`2987.13 s` R1 duration): 32 episodes, 30 unique REAL observations,
+  3 mating outcomes, 42 buds (28 DEAD, 10 DORMANT, 4 ACTIVE), 37 successors,
+  recursive specialization depth 2, `0/4` heldout, R0 retention `15/16`, and
+  zero AVAILABLE responses, handoffs or successor value. This used the
+  superseded hash-ranked candidate allocator.
+- V7: the contrastive candidate run was deliberately interrupted before R1
+  when review showed adaptive-origin children were omitted from the recursive
+  request basis. Its empty log/checkpoint state is preserved.
+- V8: same seed, pools and process limits, now using the repaired recursive
+  lifecycle and staged residual-guided beam. At exact epoch 4 (`2984.94 s` R1
+  duration): 32 episodes, 30 unique REAL observations, 3 mating outcomes, 40
+  buds (17 DEAD, 21 DORMANT, 2 ACTIVE), 20 local promotions and 18 recursive
+  materializations. The authority held 38 new successors across structural
+  generations 1-4, reached specialization depth 2, and certified 23; every new
+  successor was REFUTED. All 9 positive buds died on contradiction; the 20
+  promotions were negative. Heldout was `0/4`, R0 retention `15/16`, and
+  AVAILABLE/handoff/successor value were all zero. The process was interrupted
+  during epoch 5 only after the epoch-4 snapshot was durable; exit `130` is the
+  intentional stop.
+- Decision: **NO-GO for a longer or multi-seed curriculum run.** The old
+  one-frontier structural lockout is removed, but the present ecology spends
+  finite successor capacity on abundant negative vetoes while rare positive
+  candidates die before post-birth certification. Before another canary,
+  implement deterministic local retirement/replacement with a bounded
+  exploration reserve, separate validation-based selection from untouched
+  final regression, and require exact R0 behavioral retention plus a certified
+  positive handoff/value signal.
+
+### V9 positive-shell discrimination before the final repair
+
+- Conditions: development-only random `8/4/4` R1 canaries, four epochs,
+  validation and snapshots every epoch, one process/seed and one numerical
+  thread. Every directory below is independent and preserved; completed
+  primary arms were intentionally interrupted before the redundant control.
+- Seed `2026083101` never entered R1: R0 stopped at epoch 96 with `13/16`
+  validation and `12/16` regression, so its exact `1.0` gate correctly blocked.
+- Seed `2026083102` passed R0 at epoch 24, completed 32 R1 episodes, retained
+  `15/16` R0 validation cases and converted `0/4` mate-in-2 validation and
+  `0/4` regression cases. It produced no surprise-success bud, AVAILABLE
+  handoff, or successor value.
+- Seed `2026083103` passed R0 at epoch 16 and retained `16/16`; five surprise
+  mating outcomes produced 87 lifetime buds, 28 live candidates, two positive
+  promotions, and 23 live authority successors. None certified AVAILABLE;
+  handoff/value and both `4`-case mate-in-2 evaluations remained zero.
+- Reference seed `2026082801` passed R0 at epoch 72 and retained `15/16`;
+  three surprise successes produced 56 buds and recursive authority growth
+  through generation 4, but every one of 16 certified successors was
+  non-AVAILABLE. Both mate-in-2 evaluations and handoff/value remained zero.
+- Interpretation: these runs were made before regression-withholding,
+  positive-only promotion, renewable slot reuse, and exact worst-reply TD
+  credit were all simultaneously present. They are preserved as mechanism
+  diagnostics, not evidence for the corrected branch.
+
+### V10 local ecology, metabolism, and scientific-gate repair
+
+- Local positive ecology now births only from surprise REAL mate success,
+  treats failures as contrast, refines contradicted coarse shells into
+  abstaining residual children, forbids negative boundary promotion, and
+  keeps a bounded staged beam with deterministic exploration.
+- Authority settlement is event-driven and atomic. Pending requests remain
+  retryable on capacity failure; weak adaptive leaves retire by a deterministic
+  tier order; core and live/pending parents are protected; retired slots are
+  reused without deleting evidence; unique tombstones and exact replay remain
+  mandatory.
+- R0/R1 stopping and maturation read validation only. Regression is queried
+  once for terminal reporting. All-reply handoff is explicitly grounded and
+  sends the exact minimum reply value into TD credit; UNKNOWN/partial envelopes
+  send no value. The development runner no longer equates completion with a
+  scientific pass.
+- Pre-experiment verification: `184 passed` across focused credit, all-reply,
+  ecology, lineage, curriculum, runner, capacity, rollback and replay suites;
+  `34` further adjacent settlement/handover tests passed. Historical
+  artifact-backed tests remain
+  unavailable in this clone, and the deliberately changed authority source no
+  longer matches its retired protected hash. Targeted `compileall` and
+  `git diff --check` pass.
+
+### V11 three-seed post-repair epoch-4 gate
+
+- Conditions: seeds `2026083104`, `2026083105`, and `2026083106`; fresh
+  independent directories; balanced-location `48/16/16` R0; random `8/4/4`
+  R1; four primary epochs; one process and one numerical thread per seed;
+  `7200 s`/`8192 MiB` per-process ceilings. The three seeds ran concurrently.
+- `2026083106` stopped honestly at the R0 gate after `561.20 s`: epoch 96,
+  validation `13/16`, final report-only regression `15/16`, and no R1 work.
+- `2026083105` had passed the validation-only R0 gate but failed closed during
+  same-run authority construction after `304.78 s`: one frozen R0 action did
+  not match the harness's predeclared discovery-row role. No R1 evidence was
+  consumed. This exposed a label-like harness assertion, not a learner defect.
+- `2026083104` passed R0 at epoch 24 (`16/16` validation) and completed the
+  primary epoch-4 snapshot. Its 32 R1 episodes took `2727.98 s`: 30 unique
+  REAL observations, four surprise mating outcomes, 19 local buds, nine
+  refinements, 16 live ecology candidates, 88 recursively consumed requests,
+  66 live successors and authority generation 4. It had zero boundary
+  promotions, zero certified adaptive nodes, zero AVAILABLE all-reply
+  envelopes, zero handoffs, and zero successor value. Mate-in-2 validation and
+  regression were both `0/4`; R0 retention was `15/16` on both. The redundant
+  control was interrupted immediately after primary reporting; all four
+  history snapshots and the latest snapshot are preserved.
+- Interpretation: local budding and recursive growth are now reachable, so
+  this is not the prior structural lockout. Four epochs did not provide enough
+  repeated local support for a positive promotion/certification, and the
+  prespecified functional gate was not met. Do not extend this exact source;
+  first remove the discovery role assertion so actual environmental outcomes
+  alone determine receipt polarity, then repeat independent canaries.
+
+### V12 neutral discovery and bounded event paths
+
+- Discovery no longer trusts pool roles. A content-ranked training-only tape is
+  executed by the frozen native R0, and signed REAL outcomes determine polarity.
+  No move answer, mate-distance label, held-out outcome, or external chess
+  engine enters learning.
+- REAL/VIRTUAL observation now uses maintained live/request indexes, rolling
+  commitments, and reversible local mutation journals instead of copying or
+  canonically rescanning the complete authority on every event. Exact replay
+  remains mandatory at explicit checkpoint/load boundaries.
+- Regression remains a one-time terminal report split; validation alone may
+  stop, mature, or select. Missing grounding and malformed gate fields fail
+  closed. Development reports distinguish learner-oracle freedom from
+  exhaustive harness-only evaluation.
+
+### V13 pre-core-route three-seed mechanism gate
+
+- Conditions: seeds `2026083109`, `2026083110`, and `2026083111`; fresh
+  independent directories; random `8/4/4` R1 canary; four-epoch cap; one
+  process and one numerical thread per seed. All three entered R1 after exact
+  `16/16` initial R0 validation. They were deliberately stopped with exit
+  `130` after durable snapshots when execution-level core interference was
+  identified; none was resumed after source changes.
+- Seed `2026083109`: epoch 3, 24 episodes, `1962.23 s`; three surprise
+  successes, 53 lifetime buds, 44 refinements, no promotions, AVAILABLE
+  envelopes, handoffs, successor value, or validation conversion; R0 retention
+  measured `16/16`.
+- Seed `2026083110`: epoch 3, 24 episodes, `1853.13 s`; six surprise successes,
+  38 buds, 23 refinements, six promotions, three AVAILABLE all-reply envelopes,
+  two handoffs, and successor-value sum `1.2454048740`; mate-in-2 validation
+  remained `0/4`, and shared-grown-graph R0 retention was `15/16`.
+- Seed `2026083111`: epoch 4, 32 episodes, `1529.84 s`; one surprise success,
+  three live buds, no promotion/handoff/value, `0/4` validation, and `15/16`
+  shared-grown-graph R0 retention. Its no-bootstrap control completed epoch 1
+  with eight episodes and no births or handoffs.
+- Diagnosis: the immutable authority-owned R0 still solved `16/16`; the grown
+  graph restricted to old triplet IDs solved `15/16` because new shared
+  topology changed execution. The repair therefore routes through the actual
+  frozen local core first, delegates to grounded V2 only on core abstention,
+  then explores with the grown graph. These V13 artifacts are useful
+  mechanism evidence but are not a scientific go decision.
+
+### V14 final causal, replay, and boundedness preflight
+
+- Positive-shell settlement now permits birth only from surprise-success REAL
+  evidence. Failures provide local contrast; a contradicted coarse positive
+  shell abstains and may produce one bounded residual refinement instead of
+  installing a global negative veto. Only positive descendants can become
+  AVAILABLE.
+- Local decisions are committed at content-blind safe points. Weak adaptive
+  leaves retire by deterministic lineage-local order, their slots are reused,
+  the frozen mate-in-1 core retains routing precedence, and tombstones plus
+  exact replay preserve every lifetime decision without keeping every retired
+  leaf computationally active.
+- Birth and certification evidence are separated by exact ordinals. Compact V4
+  causal contracts are rederived from immutable requests and candidates;
+  coherent future-frontier tampering, discovery reuse, and mutation rollback
+  fail closed. The REAL hot path uses maintained indexes and one-pass local
+  journals rather than growing-history scans; full reclosure remains confined
+  to explicit checkpoint/load trust boundaries.
+- R1 evaluation executes each selected first move against every legal reply and
+  reads only those outcomes. The learner receives neither correct-move labels
+  nor mate distance; only a fully grounded minimum-reply envelope may hand a
+  successor value to exact worst-reply TD credit. Validation alone controls
+  stopping/selection; regression is one terminal report.
+- Exact-tree verification before fresh experiments: the focused source suite
+  passed `128/128`; the adjacent source suite passed `114/114`; a changed-file
+  subset passed `34/34`; targeted adversarial/replay batches passed `7/7`,
+  `3/3`, and `1/1`; and the tiny real-native/resume selection suite passed
+  `7/7`. After the final two-line deepcopy index restoration correction, the
+  bounded REAL transaction suite passed `12/12` and an independent reviewer
+  passed `55/55`. Targeted `compileall` and `git diff --check` are clean.
+- Residual observation item, not a mechanism-gate blocker: explicit snapshots
+  deliberately perform a full history reclosure. Longer gates must record
+  whether serialization duration grows materially, but this work does not add
+  a monitoring framework or weaken the checkpoint trust boundary.

@@ -1,0 +1,437 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+import hashlib
+import inspect
+import json
+from pathlib import Path
+from types import SimpleNamespace
+
+import chess
+import pytest
+
+from recon_lite_chess.autogrowth import (
+    native_adaptive_boundary_development as adaptive,
+    native_intrinsic_v2_development as intrinsic,
+)
+from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import (
+    StructuralMode,
+)
+from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
+    R1_ACTION_ORDER_STABLE_HASH_PERMUTATION,
+)
+
+
+def test_discovery_receipts_accept_role_mismatch_and_use_observed_outcome() -> None:
+    """Discovery learning follows the real successor, not pool membership."""
+
+    class _R0:
+        @staticmethod
+        def emit_action_with_trace(frame):
+            board = frame.values["board"]
+            for move in board.legal_moves:
+                successor = board.copy(stack=False)
+                successor.push(move)
+                if not successor.is_checkmate():
+                    return SimpleNamespace(move_uci=move.uci()), object()
+            raise AssertionError("test board unexpectedly has only mating moves")
+
+    class _Terminal:
+        @staticmethod
+        def mint(_trace, predecessor, successor):
+            return SimpleNamespace(
+                predecessor_fen=predecessor.fen(),
+                observed_terminal_result=successor.is_checkmate(),
+            )
+
+    source = SimpleNamespace(r0=_R0(), completion_terminal=lambda: _Terminal())
+    # This is a positive-pool mate-in-one row, but the frozen test network
+    # deliberately emits a non-mating legal successor for it.
+    positive_pool_fen = "k7/8/1K6/8/8/8/8/7R w - - 0 1"
+
+    receipts = intrinsic._mint_discovery_receipts(source, (positive_pool_fen,))
+
+    assert len(receipts) == 1
+    assert receipts[0].predecessor_fen == positive_pool_fen
+    assert receipts[0].observed_terminal_result is False
+    assert tuple(inspect.signature(
+        intrinsic._mint_discovery_receipts
+    ).parameters) == ("source", "fens")
+
+
+def test_neutral_discovery_tape_is_partition_invariant() -> None:
+    """The same training multiset yields one content-defined 32-row tape."""
+
+    source_fens = tuple(f"source-fen-{index:02d}" for index in range(40))
+    r0_partition_a = source_fens[:24]
+    decoy_partition_a = source_fens[24:]
+    r0_partition_b = source_fens[8:32]
+    decoy_partition_b = source_fens[:8] + source_fens[32:]
+
+    tape_a = intrinsic._neutral_discovery_tape(
+        r0_partition_a + decoy_partition_a
+    )
+    tape_b = intrinsic._neutral_discovery_tape(
+        tuple(reversed(r0_partition_b + decoy_partition_b))
+    )
+
+    assert len(tape_a) == len(tape_b) == 32
+    assert tape_a == tape_b
+    assert len(set(tape_a)) == 32
+    assert set(tape_a).issubset(set(source_fens))
+
+
+def test_neutral_tape_order_is_the_receipt_sequence() -> None:
+    """Content order, rather than a source role, determines receipt ordinals."""
+
+    class _R0:
+        @staticmethod
+        def emit_action_with_trace(frame):
+            board = frame.values["board"]
+            for move in board.legal_moves:
+                successor = board.copy(stack=False)
+                successor.push(move)
+                if not successor.is_checkmate():
+                    return SimpleNamespace(move_uci=move.uci()), object()
+            raise AssertionError("test board unexpectedly has only mating moves")
+
+    class _Terminal:
+        def __init__(self) -> None:
+            self.event_ordinals: list[int] = []
+
+        def mint(self, _trace, predecessor, successor):
+            ordinal = len(self.event_ordinals)
+            self.event_ordinals.append(ordinal)
+            return SimpleNamespace(
+                event_id=f"event:{ordinal:02d}",
+                predecessor_fen=predecessor.fen(),
+                observed_terminal_result=successor.is_checkmate(),
+            )
+
+    source_fens = tuple(
+        f"k7/8/1K6/8/8/8/8/7R w - - 0 {index}"
+        for index in range(1, 41)
+    )
+    tape = intrinsic._neutral_discovery_tape(source_fens)
+    terminal = _Terminal()
+    source = SimpleNamespace(
+        r0=_R0(), completion_terminal=lambda: terminal
+    )
+
+    receipts = intrinsic._mint_discovery_receipts(source, tape)
+
+    assert len(receipts) == 32
+    assert tuple(receipt.event_id for receipt in receipts) == tuple(
+        f"event:{index:02d}" for index in range(32)
+    )
+    assert tuple(receipt.predecessor_fen for receipt in receipts) == tuple(
+        chess.Board(fen).fen() for fen in tape
+    )
+
+
+def test_profiles_preserve_frozen_r0_and_only_change_r1_work(tmp_path: Path) -> None:
+    canary = adaptive.development_config(
+        "canary", output_dir=tmp_path / "canary", seed=17,
+        max_wall_seconds=11.0, max_peak_rss_mib=22.0,
+    )
+    gate = adaptive.development_config(
+        "gate", output_dir=tmp_path / "gate", seed=17,
+        max_wall_seconds=11.0, max_peak_rss_mib=22.0,
+    )
+    frozen = intrinsic.development_config(
+        output_dir=tmp_path / "reference",
+        max_wall_seconds=11.0,
+        max_peak_rss_mib=22.0,
+    )
+
+    assert canary.r1_reply_policy == gate.r1_reply_policy == (
+        "prospective_counterexample"
+    )
+    assert canary.r1_action_order == gate.r1_action_order == (
+        R1_ACTION_ORDER_STABLE_HASH_PERMUTATION
+    )
+    assert canary.r0_boundary_ecology_enabled is True
+    assert gate.r0_boundary_ecology_enabled is True
+    assert canary.seed == gate.seed == 17
+    assert canary.development_fen_fullmove_base == (
+        adaptive.DEVELOPMENT_FEN_FULLMOVE_BASE
+    )
+    assert canary.development_fen_fullmove_base != (
+        intrinsic.DEVELOPMENT_FEN_FULLMOVE_BASE
+    )
+    assert canary.output_path.endswith("canary/result.json")
+    assert gate.output_path.endswith("gate/result.json")
+    assert canary.progress_path != gate.progress_path
+    assert {
+        field: getattr(canary, field)
+        for field in adaptive._PROFILE_WORK["canary"]
+    } == adaptive._PROFILE_WORK["canary"]
+    assert {
+        field: getattr(gate, field)
+        for field in adaptive._PROFILE_WORK["gate"]
+    } == adaptive._PROFILE_WORK["gate"]
+    assert canary.development_wall_ceiling_seconds == 11.0
+    assert canary.development_peak_rss_ceiling_mib == 22.0
+
+    r0_fields = (
+        "r0_train_count", "r0_validation_count", "r0_regression_count",
+        "r0_gate_train_decoy_count", "r0_gate_validation_decoy_count",
+        "r0_gate_regression_decoy_count", "r0_pool_mode", "r0_epochs",
+        "r0_replay_per_r1_epoch", "r0_validation_interval",
+        "r0_availability_mode", "freeze_r0_parameters_for_r1",
+        "eta_m3", "eta_fast", "eta_slow", "real_move_cost",
+    )
+    for field in r0_fields:
+        assert getattr(canary, field) == getattr(frozen, field)
+        assert getattr(gate, field) == getattr(frozen, field)
+
+    assert canary.r1_validation_interval == 1
+    assert canary.r1_snapshot_interval == 1
+    assert canary.r1_pool_mode == "random"
+    assert gate.r1_pool_mode == "balanced_setup"
+    assert gate.r1_validation_interval <= 4
+    assert gate.r1_snapshot_interval <= 4
+    assert gate.r1_train_count > canary.r1_train_count
+    assert gate.r1_epochs > canary.r1_epochs
+    with pytest.raises(ValueError, match="profile must be one of canary, gate"):
+        adaptive.development_config("scientific")
+
+
+class _FakeAuthority:
+    def __init__(self) -> None:
+        self.structural_mode = StructuralMode.SCHEDULED
+        self.structural_epoch_schedule = (64,)
+        self.boundaries: list[str] = []
+
+    def verify_full_history_boundary(self, boundary: str) -> None:
+        self.boundaries.append(boundary)
+
+    def continuation_manifest(self) -> dict[str, object]:
+        return {
+            "structural_mode": self.structural_mode.value,
+            "structural_epoch_schedule": list(self.structural_epoch_schedule),
+        }
+
+    def dumps(self) -> bytes:
+        return b"fake-authority"
+
+    @classmethod
+    def loads(cls, _payload: bytes) -> "_FakeAuthority":
+        restored = cls()
+        restored.structural_mode = StructuralMode.EVENT_DRIVEN
+        restored.structural_epoch_schedule = ()
+        return restored
+
+
+def test_factory_preserves_authority_constructed_in_event_mode(monkeypatch) -> None:
+    authority = _FakeAuthority()
+    authority.structural_mode = StructuralMode.EVENT_DRIVEN
+    authority.structural_epoch_schedule = ()
+    audit = {
+        "structural_schedule": {
+            "absolute_event_frontiers": [],
+            "prospective_events_before_structure": None,
+        },
+        "candidate_count": 1,
+    }
+    calls: list[tuple[object, ...]] = []
+
+    def base_factory(*args):
+        calls.append(args)
+        return authority, audit
+
+    monkeypatch.setattr(
+        adaptive._intrinsic,
+        "build_same_run_v2_r0_authority",
+        base_factory,
+    )
+    observed, corrected = adaptive.build_same_run_v2_r0_authority(
+        object(), object(), object(), object()
+    )
+
+    assert observed is authority
+    assert len(calls) == 1
+    assert authority.structural_mode is StructuralMode.EVENT_DRIVEN
+    assert authority.structural_epoch_schedule == ()
+    assert authority.boundaries == [
+        "native-adaptive-boundary-development",
+    ]
+    assert corrected["structural_mode"] == "event_driven"
+    assert corrected["structural_epoch_schedule"] == []
+    schedule = corrected["structural_schedule"]
+    assert schedule["absolute_event_frontiers"] == []
+    assert schedule["scheduled_frontiers"] == []
+    assert schedule["no_scheduled_frontiers"] is True
+    assert schedule["prospective_events_before_structure"] is None
+
+
+def test_factory_rejects_post_construction_mode_rewrite(monkeypatch) -> None:
+    authority = _FakeAuthority()
+    monkeypatch.setattr(
+        adaptive._intrinsic,
+        "build_same_run_v2_r0_authority",
+        lambda *_args: (authority, {}),
+    )
+    with pytest.raises(RuntimeError, match="not constructed in event-driven"):
+        adaptive.build_same_run_v2_r0_authority(
+            object(), object(), object(), object()
+        )
+    assert authority.structural_mode is StructuralMode.SCHEDULED
+    assert authority.structural_epoch_schedule == (64,)
+
+
+@dataclass
+class _FakeResult:
+    r0_pass: bool = True
+
+    def to_dict(self) -> dict[str, object]:
+        return {"synthetic": True, "r0": {"pass": self.r0_pass}}
+
+
+@dataclass
+class _FakeGateResult:
+    r0_pass: bool = True
+    r1_executed: bool = False
+    r1_pass: bool = False
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "synthetic": True,
+            "r0": {"pass": self.r0_pass},
+            "decision": {
+                "r0_pass": self.r0_pass,
+                "r1_executed": self.r1_executed,
+                "r1_pass": self.r1_pass,
+            },
+        }
+
+
+class _PayloadResult:
+    def __init__(self) -> None:
+        self.payload: dict[str, object] = {}
+
+
+def test_run_marks_result_payload_without_running_curriculum(
+    tmp_path: Path, monkeypatch
+) -> None:
+    result = _PayloadResult()
+    monkeypatch.setattr(
+        adaptive, "run_native_intrinsic_curriculum", lambda **_kwargs: result
+    )
+    cfg = adaptive.development_config(output_dir=tmp_path, seed=29)
+    observed = adaptive.run_development(cfg)
+    assert observed is result
+    assert result.payload["label"] == adaptive.DEVELOPMENT_LABEL
+    assert result.payload["scientific_use_permitted"] is False
+    protocol = result.payload["development_protocol"]
+    assert protocol["profile"] == "canary"
+    assert protocol["r1_reply_policy"] == "prospective_counterexample"
+    assert protocol["no_learner_oracle"] is True
+    assert protocol["harness_exhaustive_evaluation_used"] is True
+    assert protocol["harness_evaluation_influences_learning"] is False
+
+
+def test_cli_writes_independent_schema_and_source_identity(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setattr(adaptive, "run_development", lambda _cfg: _FakeResult())
+    assert adaptive.main([
+        "--profile", "canary", "--output-dir", str(tmp_path), "--seed", "23",
+        "--max-wall-seconds", "3", "--max-peak-rss-mib", "4",
+    ]) == 0
+
+    result = json.loads((tmp_path / "result.json").read_text())
+    attempt = json.loads((tmp_path / "attempt.json").read_text())
+    assert result == {"synthetic": True, "r0": {"pass": True}}
+    assert attempt["schema_version"] == adaptive.SCHEMA_VERSION
+    assert attempt["label"] == adaptive.DEVELOPMENT_LABEL
+    assert attempt["scientific_use_permitted"] is False
+    assert attempt["protected_outcomes_accessed"] is False
+    assert attempt["learner_oracle_used"] is False
+    assert attempt["harness_exhaustive_evaluation_used"] is True
+    assert attempt["learner_parameter_tuning_performed"] is False
+    assert attempt["profile"] == "canary"
+    assert attempt["config"]["seed"] == 23
+    assert attempt["config"]["output_path"] == str(tmp_path / "result.json")
+    identity = attempt["source_identity"]
+    assert identity["development_runner_module"] == adaptive.__name__
+    assert identity["development_runner_sha256"] == hashlib.sha256(
+        Path(adaptive.__file__).read_bytes()
+    ).hexdigest()
+    assert attempt["status"] == "COMPLETED_R0_ONLY_NO_R1_GATE"
+    assert attempt["r0_pass"] is True
+    assert attempt["r1_executed"] is False
+    assert attempt["r1_pass"] is False
+    assert attempt["work_completed"] is True
+    assert attempt["scientific_gate_passed"] is False
+
+
+@pytest.mark.parametrize(
+    ("result", "expected_status", "expected_gate"),
+    [
+        (
+            _FakeGateResult(r0_pass=True, r1_executed=True, r1_pass=False),
+            "COMPLETED_R1_GATE_FAILED",
+            False,
+        ),
+        (
+            _FakeGateResult(r0_pass=True, r1_executed=True, r1_pass=True),
+            "SCIENTIFIC_GATE_PASSED",
+            True,
+        ),
+    ],
+)
+def test_cli_distinguishes_r1_gate_failure_from_success(
+    tmp_path: Path, monkeypatch, result, expected_status: str, expected_gate: bool
+) -> None:
+    monkeypatch.setattr(adaptive, "run_development", lambda _cfg: result)
+    assert adaptive.main(["--output-dir", str(tmp_path)]) == 0
+    attempt = json.loads((tmp_path / "attempt.json").read_text())
+    assert attempt["status"] == expected_status
+    assert attempt["r0_pass"] is True
+    assert attempt["r1_executed"] is True
+    assert attempt["r1_pass"] is expected_gate
+    assert attempt["work_completed"] is True
+    assert attempt["scientific_gate_passed"] is expected_gate
+    if not expected_gate:
+        assert "PASSED" not in attempt["status"]
+
+
+def test_ceiling_keeps_attempt_contract_and_returns_exit_two(
+    tmp_path: Path, monkeypatch
+) -> None:
+    snapshot = tmp_path / "snapshots" / "epoch.pkl"
+
+    def stopped(_cfg):
+        raise adaptive.R1DevelopmentCeilingReached(
+            epoch=1, snapshot_path=snapshot, reason="test ceiling"
+        )
+
+    monkeypatch.setattr(adaptive, "run_development", stopped)
+    assert adaptive.main(["--output-dir", str(tmp_path)]) == 2
+    attempt = json.loads((tmp_path / "attempt.json").read_text())
+    assert attempt["status"] == "CEILING_REACHED_AT_EXACT_EPOCH_SNAPSHOT"
+    assert attempt["snapshot_path"] == str(snapshot)
+    assert attempt["r0_pass"] is None
+    assert attempt["r1_executed"] is None
+    assert attempt["r1_pass"] is None
+    assert attempt["work_completed"] is False
+    assert attempt["scientific_gate_passed"] is False
+
+
+def test_cli_reports_r0_gate_block_without_claiming_mechanism_pass(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setattr(
+        adaptive,
+        "run_development",
+        lambda _cfg: _FakeResult(r0_pass=False),
+    )
+    assert adaptive.main(["--output-dir", str(tmp_path)]) == 3
+    attempt = json.loads((tmp_path / "attempt.json").read_text())
+    assert attempt["status"] == "BLOCKED_AT_R0_MASTERY_GATE"
+    assert attempt["r0_pass"] is False
+    assert attempt["r1_executed"] is False
+    assert attempt["r1_pass"] is False
+    assert attempt["work_completed"] is True
+    assert attempt["scientific_gate_passed"] is False

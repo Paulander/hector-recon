@@ -5,6 +5,7 @@ import json
 import pytest
 
 from recon_lite_hector.learning import (
+    CompetenceSignal,
     CompetenceGateConfig,
     CompetenceGateExample,
     IntrinsicCreditConfig,
@@ -325,6 +326,8 @@ def test_transition_can_subtract_exact_external_graph_prediction() -> None:
 def test_transition_rejects_nonfinite_prediction_override() -> None:
     engine = IntrinsicCreditEngine(_config())
     engine.register("chosen_branch")
+    engine.states["chosen_branch"].eligibility = 0.75
+    before = engine.snapshot()
 
     with pytest.raises(ValueError, match="prediction_override must be finite"):
         engine.transition(
@@ -332,3 +335,113 @@ def test_transition_rejects_nonfinite_prediction_override() -> None:
             terminal_value=0.0,
             prediction_override=float("nan"),
         )
+    assert engine.snapshot() == before
+
+
+@pytest.mark.parametrize(
+    ("kwargs", "message"),
+    (
+        ({"terminal_value": float("nan")}, "terminal_value must be finite"),
+        (
+            {"responsibilities": (Responsibility("missing"),)},
+            "unregistered competence",
+        ),
+        (
+            {"responsibilities": (Responsibility("chosen_branch", weight=float("inf")),)},
+            "responsibility weights must be finite",
+        ),
+    ),
+)
+def test_transition_late_input_validation_is_atomic(
+    kwargs: dict[str, object],
+    message: str,
+) -> None:
+    engine = IntrinsicCreditEngine(_config())
+    engine.register("chosen_branch")
+    engine.states["chosen_branch"].eligibility = 0.75
+    before = engine.snapshot()
+
+    with pytest.raises((KeyError, ValueError), match=message):
+        engine.transition("chosen_branch", **kwargs)
+    assert engine.snapshot() == before
+
+
+def test_transition_uses_exact_grounded_composed_successor_signal() -> None:
+    engine = IntrinsicCreditEngine(_config())
+    engine.register("mate1", mature=True)
+    engine.register("mate2_candidate")
+    _train_terminal(engine, "mate1", "mate")
+    engine.record_paired_intervention(
+        "mate1", enabled_return=1.0, disabled_return=0.0
+    )
+    engine.consolidate(("mate1",))
+    learned_child_value = engine.states["mate1"].slow_value
+    assert learned_child_value != pytest.approx(0.31)
+
+    engine.begin_episode()
+    event = engine.transition(
+        "mate2_candidate",
+        explicit_successor_signal=CompetenceSignal(
+            value=0.31,
+            confidence=0.72,
+            provider_ids=("mate1",),
+            grounding_level=1,
+            grounding_ancestors=("mate1",),
+        ),
+    )
+
+    assert event.successor_value == pytest.approx(0.31)
+    assert event.successor_value != pytest.approx(learned_child_value)
+    assert event.provider_ids == ("mate1",)
+    assert event.td_error == pytest.approx(-0.01 + 0.97 * 0.31)
+    state = engine.states["mate2_candidate"]
+    assert state.handoff_evidence == 1
+    assert state.grounding_level == 1
+    assert state.grounding_ancestors == {"mate1"}
+
+
+def test_explicit_successor_signal_fails_closed_before_credit_mutation() -> None:
+    engine = IntrinsicCreditEngine(_config())
+    engine.register("mate1", mature=True)
+    engine.register("recipient")
+    _train_terminal(engine, "mate1", "mate")
+    engine.record_paired_intervention(
+        "mate1", enabled_return=1.0, disabled_return=0.0
+    )
+    engine.consolidate(("mate1",))
+    valid = CompetenceSignal(
+        value=0.4,
+        confidence=0.8,
+        provider_ids=("mate1",),
+        grounding_level=1,
+        grounding_ancestors=("mate1",),
+    )
+    before = engine.snapshot()
+
+    invalid_calls = (
+        {"explicit_successor_signal": valid, "successor_ids": ("mate1",)},
+        {"explicit_successor_signal": valid, "terminal_kind": "mate"},
+        {"explicit_successor_signal": valid, "real_step": False},
+        {
+            "explicit_successor_signal": CompetenceSignal(
+                value=float("nan"),
+                confidence=0.8,
+                provider_ids=("mate1",),
+                grounding_level=1,
+                grounding_ancestors=("mate1",),
+            )
+        },
+        {
+            "explicit_successor_signal": CompetenceSignal(
+                value=0.4,
+                confidence=0.8,
+                provider_ids=("recipient",),
+                grounding_level=1,
+                grounding_ancestors=("recipient",),
+            )
+        },
+    )
+    for kwargs in invalid_calls:
+        with pytest.raises(ValueError):
+            engine.transition("recipient", **kwargs)
+        assert engine.snapshot() == before
