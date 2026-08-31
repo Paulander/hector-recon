@@ -5698,6 +5698,10 @@ def _adaptive_positive_lineage_audit(
         return tuple(sorted(items))
 
     known_receipt_ids = set(references)
+    ordered_references = tuple(sorted(
+        references.values(),
+        key=lambda item: (int(item.ordinal), str(item.receipt_id)),
+    ))
 
     ecology_receipt_ids = set(observations)
 
@@ -5813,10 +5817,6 @@ def _adaptive_positive_lineage_audit(
             f"{candidate_id}.authority_inspected",
             require_ecology_observation=True,
         )
-        if request.triggering_receipt_id not in authority_inspected:
-            raise RuntimeError(
-                f"adaptive lineage promotion {candidate_id} omits its trigger from inspected evidence"
-            )
         trigger_observation = observations.get(request.triggering_receipt_id)
         if (
             trigger_observation is None
@@ -5829,6 +5829,63 @@ def _adaptive_positive_lineage_audit(
         if candidate.birth_ordinal != trigger_observation.ordinal:
             raise RuntimeError(
                 f"adaptive lineage promotion {candidate_id} birth ordinal differs from trigger"
+            )
+        compact_promotion = request.provenance_schema_version == (
+            PROVENANCE_COMMITMENT_V4
+        )
+        if compact_promotion:
+            inspected_commitment = request.inspected_receipt_commitment
+            supporting_commitment = request.supporting_receipt_commitment
+            if inspected_commitment is None or supporting_commitment is None:
+                raise RuntimeError(
+                    f"adaptive lineage promotion {candidate_id} lacks compact evidence commitments"
+                )
+            trigger_reference = references[request.triggering_receipt_id]
+            frontier = int(inspected_commitment.exclusive_frontier)
+            committed_interval = tuple(
+                reference
+                for reference in ordered_references
+                if int(trigger_reference.ordinal)
+                <= int(reference.ordinal)
+                < frontier
+            )
+            committed_inspected_ids = tuple(
+                str(reference.receipt_id)
+                for reference in committed_interval
+            )
+            if (
+                request.triggering_receipt_id not in committed_inspected_ids
+                or _compact_set_commitment(
+                    committed_inspected_ids,
+                    exclusive_frontier=frontier,
+                )
+                != inspected_commitment
+            ):
+                raise RuntimeError(
+                    f"adaptive lineage promotion {candidate_id} has an incomplete inspected commitment"
+                )
+            committed_support_ids = tuple(
+                str(reference.receipt_id)
+                for reference in committed_interval
+                if reference.observed_outcome is True
+                and set(request.members).issubset(
+                    reference.ordered_signal_identities
+                )
+            )
+            if (
+                request.triggering_receipt_id not in committed_support_ids
+                or _compact_set_commitment(
+                    committed_support_ids,
+                    exclusive_frontier=frontier,
+                )
+                != supporting_commitment
+            ):
+                raise RuntimeError(
+                    f"adaptive lineage promotion {candidate_id} has an incomplete supporting commitment"
+                )
+        elif request.triggering_receipt_id not in authority_inspected:
+            raise RuntimeError(
+                f"adaptive lineage promotion {candidate_id} omits its trigger from inspected evidence"
             )
 
         # The identity formula is part of the authority contract.  Deriving
@@ -5979,6 +6036,16 @@ def _adaptive_positive_lineage_audit(
             "ecology_inspected_receipt_ids": list(ecology_inspected),
             "authority_supporting_receipt_ids": list(authority_supporting),
             "authority_inspected_receipt_ids": list(authority_inspected),
+            "authority_supporting_receipt_commitment": (
+                None
+                if request.supporting_receipt_commitment is None
+                else request.supporting_receipt_commitment.manifest()
+            ),
+            "authority_inspected_receipt_commitment": (
+                None
+                if request.inspected_receipt_commitment is None
+                else request.inspected_receipt_commitment.manifest()
+            ),
             "root_child_id": root_child_id,
             "root_child_generation": int(root_hypothesis.source_generation),
             "promotion_request_digest": request.request_digest,

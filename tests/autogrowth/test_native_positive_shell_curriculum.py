@@ -181,6 +181,103 @@ def test_only_a_supported_positive_shell_can_request_authority_promotion() -> No
     assert event["promotion_candidate_id"] == request.candidate_id
 
 
+def test_positive_promotion_commitment_covers_late_lexical_trigger() -> None:
+    """V4 may bound witnesses while retaining the trigger in its commitment."""
+
+    class _LateTriggerAuthority(_BoundaryAuthority):
+        def add(
+            self,
+            ordinal: int,
+            *,
+            signals: tuple[str, ...],
+            observed: bool,
+        ) -> str:
+            # The bounded witness list is lexically selected.  Put the
+            # positive birth trigger after four later supports so this test
+            # exercises the exact V14 post-epoch-4 failure mode.
+            receipt_id = (
+                "z-trigger" if ordinal == 0 else f"a-support-{ordinal:02d}"
+            )
+            ordered = tuple(sorted(signals))
+            self.accepted_real_references[receipt_id] = SimpleNamespace(
+                ordinal=ordinal,
+                receipt_id=receipt_id,
+                stable_physical_interaction_id=f"physical-{ordinal}",
+                ordered_signal_identities=ordered,
+                typed_signal_roles=tuple(
+                    (signal_id, "BASE_TERMINAL") for signal_id in ordered
+                ),
+                observed_outcome=observed,
+            )
+            return receipt_id
+
+    authority = _LateTriggerAuthority()
+    ecology = ProspectiveBoundaryCandidateEcology()
+    promotions = ()
+    for ordinal in range(5):
+        receipt_id = authority.add(
+            ordinal,
+            signals=("late-trigger-pattern",),
+            observed=True,
+        )
+        promotions, _event = _boundary_ecology_step(
+            authority,
+            ecology,
+            receipt_id=receipt_id,
+            pre_outcome_state=AvailabilityState.UNKNOWN,
+        )
+
+    assert len(promotions) == 1
+    request = promotions[0]
+    assert request.triggering_receipt_id not in request.inspected_receipt_ids
+    expected_commitment = _compact_set_commitment(
+        tuple(authority.accepted_real_references),
+        exclusive_frontier=5,
+    )
+    assert request.inspected_receipt_commitment == expected_commitment
+    assert expected_commitment.count == 5
+
+    # Supply only the tiny committed root shape consumed by the report-only
+    # lineage audit.  The authority's real transaction is intentionally out
+    # of scope here; this fixture isolates the V4 witness/commitment contract.
+    ecology.mark_promoted(request.candidate_id)
+    root_child_id = f"v2_adaptive_boundary_{request.request_digest}"
+    authority.boundary_promotion_requests = {
+        request.candidate_id: request,
+    }
+    authority.states = {
+        root_child_id: SimpleNamespace(
+            hypothesis=SimpleNamespace(
+                members=request.members,
+                polarity=AvailabilityState.AVAILABLE,
+                source_generation=request.source_generation + 1,
+                lineage_parent_id=None,
+                specialization_depth=0,
+                triggering_receipt_id=request.triggering_receipt_id,
+                discovery_exclusion_receipt_ids=(),
+                birth_frontier=5,
+            ),
+            prospectively_certified=False,
+            certification_receipt_ids=(),
+            support_receipt_ids=(),
+            contradiction_receipt_ids=(),
+            support=0,
+            contradictions=0,
+            retired=False,
+        ),
+    }
+
+    audit = _adaptive_positive_lineage_audit(authority, ecology)
+    assert audit["lineage_count"] == 1
+    row = audit["rows"][0]
+    assert row["authority_inspected_receipt_ids"] == list(
+        request.inspected_receipt_ids
+    )
+    assert row["authority_inspected_receipt_commitment"] == (
+        expected_commitment.manifest()
+    )
+
+
 def test_promotion_dedup_reads_only_bounded_live_authority_state() -> None:
     authority = _GuardedBoundaryAuthority()
     ecology = ProspectiveBoundaryCandidateEcology()
