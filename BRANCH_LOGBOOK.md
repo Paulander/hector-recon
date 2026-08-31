@@ -706,5 +706,8 @@ recorded in the V14 entry below as their source identity.
   active ecology, retirement pressure, compact replay-safe commitments and
   positive authority promotion. It does not yet demonstrate the indispensable
   next link: a promoted root acquiring post-birth evidence and becoming
-  AVAILABLE. Repeating this source longer would not satisfy the predeclared
-  functional gate; no further seed was launched.
+  AVAILABLE. Seed `0103`'s five roots were materialized at its final epoch-4
+  frontier, so zero certification is not evidence that they can never certify;
+  the canary simply supplied no later REAL window. Even so, the predeclared
+  staged rule required handoff and successor-value evidence before authorizing
+  a longer run. That gate was not met, so no further seed was launched.
