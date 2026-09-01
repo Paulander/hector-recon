@@ -953,3 +953,50 @@ recorded in the V14 entry below as their source identity.
   passed `137/137` in `274.99 s`; targeted strict/no-gate tests passed `5/5`,
   adaptive runner tests passed `21/21`, compilation and `git diff --check` were
   clean. No fresh V19 chess canary had been run when this entry was written.
+
+### V19 fresh local-R0 canary outcome
+
+- Fresh development canary: seed `2026090107`, exact source
+  `f68775e634a0d46451ff1e4cb1dc9273f232ee41`, `canary` profile, one numerical
+  thread, independent directory
+  `native_empty_shell_v19_seed_2026090107_f68775e6_canary`, declared `7200 s`
+  wall and `8192 MiB` RSS ceilings. It completed in exactly
+  `5166.944224582985 s` with status `BLOCKED_AT_R0_MASTERY_GATE`; tracked source
+  identity was clean and no protected outcome, learner oracle, teacher move or
+  parameter tuning was used.
+- R0 executed the full fixed 96-epoch/4,608-episode budget. Every action came
+  from `local_recon_optimism`; native-local/scheduled action counts were
+  `4608/0`, and formal confirmation failures were zero. Training interactions
+  observed 2,363 mates, 2,185 nonterminal outcomes and 60 terminal failures.
+  The final exploitation policy scored `47/48` on the experienced training
+  world, `15/16` on validation and `16/16` on the terminal report-only
+  regression split.
+- Validation was already `15/16` after epoch 1 and remained exactly `15/16`
+  at every checkpoint through epoch 96. The one reported validation miss was
+  a legal nonmating choice (`a3h3`) from
+  `7k/8/6K1/8/8/R7/8/8 w - - 0 1700058`; there were no illegal moves, null
+  selections, rook losses or stalemates in final evaluation.
+- Exploration did not monotonically improve: observed training mates fell
+  from `45/48` in epoch 1 to `6/48` in epoch 96 as newly materialized optimistic
+  branches continued entering competition. Nevertheless, the final
+  exploration-free policy was `47/48`. The global R0 competence state had
+  2,423 terminal-grounding events and confidence `0.9987633965375103`, but
+  remained externally immature with fast value `-0.38018147486056814` and
+  could not emit. This aggregate mixes exploratory failures with the frozen
+  exploitation policy and is not a defensible local competence authority.
+- The graph reached 1,899 nodes, 78,862 edges and 315 triplets. Local selection
+  consumed 8,209,864 formal ticks and 39,292,198 active-node ticks; shared-atom
+  retrieval considered 1,443,885 candidate pairs before the cap and 315,648
+  after it. R0 training alone took `4972.885955 s`. Static hot-path review
+  identified repeated 80-tick generalized branches whose before-role cannot
+  confirm, plus repeated per-decision key/utility computation.
+- Because the host required exact `48/48` training-policy mastery before
+  maturation/freeze/authority construction, the strong but locally incomplete
+  core was discarded wholesale. R1 did not execute and the evidence-empty V2
+  shell was never constructed, so this run says nothing about outward budding
+  or mate-in-2 learning.
+- Decision: **NO-GO for parallel R1 seeds at this commit.** Preserve the
+  artifact. Replace aggregate R0 mastery with branch-local, REAL-outcome
+  grounding and fail-closed local abstention; keep evaluation report-only,
+  enforce resource ceilings during R0, and optimize local arbitration only
+  under exact decision/state/replay parity.
