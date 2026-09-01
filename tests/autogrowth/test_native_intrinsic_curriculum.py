@@ -16,7 +16,7 @@ from types import SimpleNamespace
 import chess
 import pytest
 
-from recon_lite import LinkType
+from recon_lite import FrameContext, FrameKind, LinkType
 from recon_lite_chess.autogrowth import (
     native_intrinsic_curriculum as curriculum_module,
 )
@@ -28,6 +28,26 @@ from recon_lite_hector.learning import (
     OutcomeCalibratedPrototypeGate,
     Responsibility,
 )
+from recon_lite_hector.nodes import StemCellState, StemCellTerminal
+from recon_lite_chess.autogrowth.native_authority_handover import (
+    FrozenCompetenceProvenance,
+    NativeR0Organism,
+)
+from recon_lite_chess.autogrowth.native_competence_envelope import (
+    AvailabilityState,
+    CompetenceContextCell,
+    CompetenceEnvelopeConfig,
+    SpecializationMode,
+)
+from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import (
+    NativeProspectiveAuthorityV2,
+    StructuralMode,
+    V2Mode,
+)
+from recon_lite_chess.autogrowth.native_trace_competence_authority import (
+    TraceNativeCompetenceOrganism,
+    TraceNativeLearningConfig,
+)
 from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     NativeIntrinsicCurriculumConfig,
     R1MechanisticArm,
@@ -37,6 +57,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     R1_BALANCED_STRATA,
     R1_RETIRED_DEVELOPMENT_FENS,
     R1CheckpointInterrupt,
+    R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
     V2_PROSPECTIVE_AVAILABILITY,
     _Pools,
     _apply_child_value_control,
@@ -1718,6 +1739,360 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
         Path(path).exists()
         for path in resumed["training"]["history_snapshot_paths"]
     )
+
+
+_REAL_ECOLOGY_R1_FEN = (
+    "8/3R4/8/8/8/2K5/8/k7 w - - 0 1"
+)
+_REAL_ECOLOGY_NEGATIVE_FEN = (
+    "k7/8/1K6/8/8/8/8/7R w - - 0 1"
+)
+
+
+class _AlwaysAbstainCoreGate:
+    """Synthetic local gate that leaves the V2 descendant in jurisdiction."""
+
+    mature = True
+
+    def confirms(self, _features) -> bool:
+        return False
+
+    def to_dict(self) -> dict[str, object]:
+        return {"kind": "always_abstain_core_gate"}
+
+
+def _real_ecology_authority() -> tuple[
+    NativeProspectiveAuthorityV2, frozenset[str]
+]:
+    """Build a tiny actual V2 authority from code-defined chess positions."""
+
+    r1_board = chess.Board(_REAL_ECOLOGY_R1_FEN)
+    target_rows: list[tuple[chess.Board, chess.Move]] = []
+    # Deterministically script enough test-only actions into this synthetic
+    # source graph for every selected REAL challenge to have a native graph
+    # actuation.  ``_mate_moves`` is used only to construct this code-defined
+    # integration fixture; it is not learner input or experimental evidence.
+    for white_move in sorted(r1_board.legal_moves, key=lambda item: item.uci())[:2]:
+        after_first = r1_board.copy(stack=False)
+        after_first.push(white_move)
+        for black_move in sorted(after_first.legal_moves, key=lambda item: item.uci()):
+            successor = after_first.copy(stack=False)
+            successor.push(black_move)
+            mating_moves = tuple(_mate_moves(successor))
+            action = (
+                mating_moves[0]
+                if mating_moves
+                else min(successor.legal_moves, key=lambda item: item.uci())
+            )
+            target_rows.append((successor, action))
+
+    negative_board = chess.Board(_REAL_ECOLOGY_NEGATIVE_FEN)
+    negative_action = next(
+        move
+        for move in negative_board.legal_moves
+        if _execute_white_and_observe(negative_board, move) != "mate"
+    )
+    graph = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            max_ticks=80,
+            indexed_scheduler=True,
+            key_mode="canonical",
+            shared_feature_atoms=True,
+            shared_projection_atoms=True,
+            include_grouped_cache_terminals=False,
+            score_action_pattern_atoms=True,
+            terminal_score_normalization="sqrt",
+        )
+    )
+    for board, action in (*target_rows, (negative_board, negative_action)):
+        for _ in range(5):
+            graph.apply_intrinsic_td(
+                board,
+                action,
+                td_error=1.0,
+                stage_diagnostic="real_v2_ecology_parity",
+            )
+    graph.mature_existing_graph()
+    graph.freeze_existing_parameters(reason="real_v2_ecology_parity")
+
+    credit = IntrinsicCreditEngine(
+        IntrinsicCreditConfig(min_grounding_evidence=3)
+    )
+    credit.register(R0_COMPETENCE_ID, mature=True)
+    state = credit.states[R0_COMPETENCE_ID]
+    state.fast_value = state.slow_value = 0.8
+    state.terminal_evidence = 3
+    state.causal_confirmations = 1
+    state.grounding_level = 0
+    source_r0 = NativeR0Organism(
+        graph=graph,
+        credit=credit,
+        provenance=FrozenCompetenceProvenance.from_credit(
+            credit, R0_COMPETENCE_ID
+        ),
+        frozen_triplet_ids=frozenset(graph.triplet_ids),
+        source_manifest={"kind": "real_v2_ecology_parity"},
+    )
+    source = TraceNativeCompetenceOrganism.empty(
+        source_r0,
+        envelope_config=CompetenceEnvelopeConfig(selection_seed=123),
+        learning_config=TraceNativeLearningConfig(
+            lifecycle_connected=True,
+            specialization_mode=SpecializationMode.LOCAL_CONTRAST,
+            genome_seed=123,
+        ),
+    )
+
+    # A mature REFUTED parent gives the real authority a native negative
+    # boundary hypothesis.  It is deliberately not prospectively certified:
+    # the parity run must birth ecology candidates from later observed success,
+    # never from discovery or a preloaded certification.
+    frame = FrameContext(
+        "real-v2-ecology:discovery",
+        FrameKind.REAL,
+        values={"board": negative_board},
+    )
+    actuation, trace = source.r0.emit_action_with_trace(frame)
+    assert actuation is not None and trace is not None
+    negative_successor = negative_board.copy(stack=False)
+    negative_successor.push(chess.Move.from_uci(actuation.move_uci))
+    assert not negative_successor.is_checkmate()
+    receipt = source.completion_terminal().mint(
+        trace, negative_board, negative_successor
+    )
+    record, inserted = source._accept_receipt(receipt)
+    assert inserted
+    assert source.envelope.add_unique_evidence(record)
+
+    stem = StemCellTerminal("real_v2_ecology_refuted_parent")
+    stem.state = StemCellState.MATURE
+    stem.trial_node_id = stem.cell_id
+    stem.trial_parent_id = "competence_available_root"
+    parent = CompetenceContextCell(
+        cell_id=stem.cell_id,
+        members=("internal:policy_response",),
+        born_round=0,
+        born_request_ordinal=0,
+        stem_cell=stem,
+        polarity=AvailabilityState.REFUTED,
+        evidence_keys=(receipt.event_id,),
+        failures=1,
+        support=1,
+        prune_reason="real_v2_ecology_parity_negative_seed",
+    )
+    source.envelope.cells = {parent.cell_id: parent}
+    source.envelope._member_specs = {parent.members}
+    source.envelope.rebuild_graph()
+    authority = NativeProspectiveAuthorityV2.from_organism(
+        source,
+        mode=V2Mode.PROSPECTIVE,
+        specialization_mode=SpecializationMode.LOCAL_CONTRAST,
+        structural_mode=StructuralMode.EVENT_DRIVEN,
+        structural_epoch_schedule=(),
+    )
+    authority.close_nomination()
+    return authority, frozenset(graph.triplet_ids)
+
+
+def _real_ecology_pools() -> _Pools:
+    return _Pools(
+        r0_train=(_REAL_ECOLOGY_R1_FEN,),
+        r0_validation=(_REAL_ECOLOGY_R1_FEN,),
+        r0_regression=(_REAL_ECOLOGY_R1_FEN,),
+        gate_train_decoys=(),
+        gate_validation_decoys=(),
+        gate_regression_decoys=(),
+        r1_train=(_REAL_ECOLOGY_R1_FEN,),
+        r1_validation=(_REAL_ECOLOGY_R1_FEN,),
+        r1_regression=(_REAL_ECOLOGY_R1_FEN,),
+        r0_train_strata=("synthetic",),
+        r0_validation_strata=("synthetic",),
+        r0_regression_strata=("synthetic",),
+        r0_excluded_fens=(),
+        r0_pool_mode="test",
+        r1_train_strata=("synthetic",),
+        r1_validation_strata=("synthetic",),
+        r1_regression_strata=("synthetic",),
+        r1_pool_mode="test",
+    )
+
+
+def _real_ecology_config(
+    tmp_path: Path, *, resume: bool
+) -> NativeIntrinsicCurriculumConfig:
+    return NativeIntrinsicCurriculumConfig(
+        progress_path=str(tmp_path / "progress.json"),
+        r1_snapshot_dir=str(tmp_path / "snapshots"),
+        resume_r1_snapshots=resume,
+        r0_replay_per_r1_epoch=0,
+        r1_validation_interval=1,
+        r1_snapshot_interval=1,
+        r0_mastery_threshold=0.0,
+        r1_mastery_threshold=2.0,
+        max_samples=0,
+        r0_availability_mode=V2_PROSPECTIVE_AVAILABILITY,
+        r1_reply_policy=R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
+        r0_boundary_ecology_enabled=True,
+    )
+
+
+def _real_ecology_run(
+    *,
+    authority: NativeProspectiveAuthorityV2,
+    child_triplet_ids: frozenset[str],
+    pools: _Pools,
+    config: NativeIntrinsicCurriculumConfig,
+    gate: _AlwaysAbstainCoreGate,
+    stop_after_epoch: int | None = None,
+) -> dict[str, object]:
+    arm = R1MechanisticArm(
+        name="test_v2_ecology",
+        bootstrap_enabled=True,
+        availability_mode=V2_PROSPECTIVE_AVAILABILITY,
+        mature_child_priority=False,
+    )
+    credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
+    credit.register(R0_COMPETENCE_ID, mature=True)
+    return _run_r1_arm(
+        arm.name,
+        _graph(),
+        credit,
+        gate,
+        pools,
+        r0_replay_memory=(),
+        r0_child_triplet_ids=child_triplet_ids,
+        max_epochs=2,
+        config=config,
+        arm_spec=arm,
+        r0_child_authority=authority,
+        r0_core_graph=authority.base.r0.graph,
+        r0_core_gate=gate,
+        r0_core_triplet_ids=child_triplet_ids,
+        stop_after_epoch=stop_after_epoch,
+    )
+
+
+def test_real_v2_boundary_ecology_snapshot_resume_matches_uninterrupted(
+    tmp_path,
+) -> None:
+    """Exercise the actual event-driven V2/ecology state across a resume."""
+
+    authority, child_triplet_ids = _real_ecology_authority()
+    pools = _real_ecology_pools()
+    gate = _AlwaysAbstainCoreGate()
+    uninterrupted = _real_ecology_run(
+        authority=authority,
+        child_triplet_ids=child_triplet_ids,
+        pools=pools,
+        config=_real_ecology_config(tmp_path / "uninterrupted", resume=False),
+        gate=gate,
+    )
+    with pytest.raises(R1CheckpointInterrupt) as interrupted:
+        _real_ecology_run(
+            authority=authority,
+            child_triplet_ids=child_triplet_ids,
+            pools=pools,
+            config=_real_ecology_config(tmp_path / "resumed", resume=True),
+            gate=gate,
+            stop_after_epoch=1,
+        )
+    snapshot_path = interrupted.value.snapshot_path
+    assert interrupted.value.epoch == 1
+    assert snapshot_path.exists()
+    with snapshot_path.open("rb") as handle:
+        snapshot = pickle.load(handle)
+    assert isinstance(snapshot["r0_child_authority_payload"], bytes)
+    assert isinstance(snapshot["boundary_ecology_manifest"], dict)
+    assert snapshot["boundary_ecology_manifest"]["observations"]
+
+    resumed = _real_ecology_run(
+        authority=authority,
+        child_triplet_ids=child_triplet_ids,
+        pools=pools,
+        config=_real_ecology_config(tmp_path / "resumed", resume=True),
+        gate=gate,
+    )
+    ignored_training_keys = {
+        "duration_seconds",
+        "resumed_from_snapshot",
+        "snapshot_path",
+        "snapshot_write_count",
+        "history_snapshot_paths",
+    }
+    assert {
+        key: value
+        for key, value in resumed["training"].items()
+        if key not in ignored_training_keys
+    } == {
+        key: value
+        for key, value in uninterrupted["training"].items()
+        if key not in ignored_training_keys
+    }
+    assert resumed["validation"] == uninterrupted["validation"]
+    assert resumed["regression"] == uninterrupted["regression"]
+    assert resumed["r0_retention"] == uninterrupted["r0_retention"]
+    # The semantic V2 audit is exact.  Pickle byte length/hash are deliberately
+    # representation-level diagnostics: a load/rebuild can change object
+    # memoization without changing the signed continuation manifest.
+    serialized_diagnostic_keys = {"serialized_bytes", "serialized_sha256"}
+    assert {
+        key: value
+        for key, value in resumed["v2_child_authority"].items()
+        if key not in serialized_diagnostic_keys
+    } == {
+        key: value
+        for key, value in uninterrupted["v2_child_authority"].items()
+        if key not in serialized_diagnostic_keys
+    }
+    uninterrupted_snapshot = pickle.loads(
+        Path(uninterrupted["training"]["snapshot_path"]).read_bytes()
+    )
+    resumed_snapshot = pickle.loads(
+        Path(resumed["training"]["snapshot_path"]).read_bytes()
+    )
+    assert (
+        resumed_snapshot["graph"].learned_state_audit()
+        == uninterrupted_snapshot["graph"].learned_state_audit()
+    )
+    assert (
+        resumed_snapshot["graph"].canonical_semantic_manifest()
+        == uninterrupted_snapshot["graph"].canonical_semantic_manifest()
+    )
+    assert (
+        resumed_snapshot["credit"].snapshot()
+        == uninterrupted_snapshot["credit"].snapshot()
+    )
+    assert (
+        resumed_snapshot["v2_seen_predecessor_fens"]
+        == uninterrupted_snapshot["v2_seen_predecessor_fens"]
+    )
+    uninterrupted_authority = NativeProspectiveAuthorityV2.loads(
+        uninterrupted_snapshot["r0_child_authority_payload"]
+    )
+    resumed_authority = NativeProspectiveAuthorityV2.loads(
+        resumed_snapshot["r0_child_authority_payload"]
+    )
+    assert (
+        resumed_authority.continuation_manifest()
+        == uninterrupted_authority.continuation_manifest()
+    )
+    assert (
+        resumed_snapshot["boundary_ecology_manifest"]
+        == uninterrupted_snapshot["boundary_ecology_manifest"]
+    )
+    assert resumed["training"]["boundary_ecology"] == uninterrupted[
+        "training"
+    ]["boundary_ecology"]
+    assert resumed["training"]["boundary_ecology"]["observation_count"] > 0
+    assert resumed["training"]["boundary_ecology"]["lifetime_birth_count"] > 0
+    assert resumed["training"]["all_reply_envelope_count"] > 0
+    assert resumed["training"]["all_reply_counterexample_mate_count"] > 0
+    assert resumed["training"]["v2_real_observation_count"] > 0
+    assert resumed["v2_child_authority"]["serialization_roundtrip_exact"] is True
+    assert resumed["v2_child_authority"]["full_history_boundary_exact"] is True
+    assert resumed["v2_child_authority"]["certification_discovery_leak_count"] == 0
+    assert resumed["training"]["resumed_from_snapshot"] is True
 
 
 def test_mastered_snapshot_resume_is_report_only_and_does_not_retrain(

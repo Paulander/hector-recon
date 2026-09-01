@@ -27,7 +27,7 @@ boundaries and artifact identities.
 | Adaptive-boundary v8 residual-beam canary | Seed `2026082801`; random 8/4/4 R1 pools; one process/core; residual-guided beam; repaired recursive lifecycle; exact epoch-4 checkpoint | R0 `16/16`; R1 heldout `0/4`, retention `15/16`; 40 buds, 38 successors and depth 2. All 9 positive buds died; 20 negative buds promoted; zero AVAILABLE, handoffs or value. Stopped by predeclared no-functional-signal rule. |
 | Adaptive-boundary v9 multi-seed discriminator | Base `2f1b68c9`; local hybrid implementation; seeds `2026083101/02/03` in parallel plus viewed reference seed `2026082801`; one process/seed and numerical threads fixed to one; random 8/4/4 R1; exact epoch 4 | `3101` failed R0 validation (`13/16`) and never entered R1. The other three completed the primary arm at `0/16` exhaustive mate-in-2 and zero handoff/value. `3103` produced 5 surprise mates, 87 buds, 2 positive promotions and 23 live successors; `2801` produced 3 surprise mates and recursive refinement through generation 4 with 18 live successors; neither produced certified AVAILABLE authority. Durable epoch snapshots were preserved and the processes were stopped before control arms. |
 | Adaptive-boundary V14 mechanism gate | Implementation `55e940a9`; report repair `4cf1711b`; five fresh seeds, of which three passed R0 and two reached durable R1 snapshots | Bounded local turnover and positive promotion worked, but no post-birth certification, AVAILABLE envelope, handoff, successor value, or mate-in-2 conversion appeared. **NO-GO** for a longer run. |
-| Adaptive-boundary V15 follow-through protocol | Profile implementation `4a87eaa0`; seeds `2026090103/0104`; fresh eight-epoch runs | Predeclared four-epoch post-promotion opportunity window; no learner or pool change. Pending execution at this logbook boundary. |
+| Adaptive-boundary V15 mechanism follow-through | Commit `58fbd0d8`; fresh independent seeds `2026090103/0104`; one process and one numerical thread; random `8/4/4` R1; exact eight-epoch runs | `0103`: wall `4932.0426137079485 s`, R1 full/control `1920.303802/1939.51825 s`; R0 `16/16` validation and `16/16` report regression. `0104`: wall `4845.015892208088 s`, R1 full/control `1885.137376/1912.423199 s`; R0 `16/16` validation and `12/16` report regression. Only `0104` full intrinsic reached the mechanism chain; both seeds/arms were `0/4` mate-in-2. **NO-GO**. |
 
 ## Purpose and validity scope
 
@@ -707,18 +707,33 @@ recorded in the V14 entry below as their source identity.
   active ecology, retirement pressure, compact replay-safe commitments and
   positive authority promotion. It does not yet demonstrate the indispensable
   next link: a promoted root acquiring post-birth evidence and becoming
-  AVAILABLE. Seed `0103`'s five roots were materialized at its final epoch-4
-  frontier, so zero certification is not evidence that they can never certify;
-  the canary simply supplied no later REAL window. Even so, the predeclared
-  staged rule required handoff and successor-value evidence before authorizing
-  a longer run. That gate was not met, so no further seed was launched.
+  AVAILABLE. Seed `0103` had four roots with authority `birth_frontier=55`
+  and event frontier `56`; seven later REAL receipts (ordinals `56..62`) did
+  not structurally match them. Its fifth root had `birth_frontier=62` and event
+  frontier `63`, leaving no later window. Seed `0104`'s three roots likewise
+  had no post-birth window. Thus zero certification is not evidence that the
+  roots can never certify; the canaries simply supplied no matching later
+  REAL evidence. Even so, the predeclared staged rule required handoff and
+  successor-value evidence before authorizing a longer run. That gate was not
+  met, so no further seed was launched.
 
 ### V15 predeclared post-promotion follow-through
 
 - Purpose: distinguish a real downstream lockout from the V14 horizon effect.
-  V14 roots were materialized at or near the final epoch-4 frontier and had no
-  later REAL certification window. This is a mechanism follow-through, not a
-  mate-in-2 performance estimate or a new seed search.
+  In seed `0103`, four roots had authority `birth_frontier=55` and event
+  frontier `56`, followed by seven nonmatching REAL receipts at ordinals
+  `56..62`; the fifth root had authority `birth_frontier=62` and event
+  frontier `63`, with no later window. Seed `0104`'s three roots had no
+  post-birth window. This is a mechanism follow-through, not a mate-in-2
+  performance estimate or a new seed search.
+- Post-launch implementation/provenance clarification (no protocol, gate or
+  configuration change): literal reuse of `online_composition.py` and
+  `episodic_composition.py` was audited and rejected. Their periodic numeric
+  pair/global-credit semantics do not preserve V2's positive-only,
+  receipt-grounded, event-driven evidence boundary. The implementation instead
+  reuses the native `StemCellState`, native graph and native authority
+  primitives, while keeping local budding, certification and mutation
+  semantics in the V2 ecology/authority path.
 - Profile implementation: `4a87eaa0ebd59d85d328c495dfedd4196899783d`.
   The development-only `follow-through` profile differs from `canary` only in
   `r1_epochs = 8` instead of `4`. Random `8/4/4` R1 pools, per-epoch validation
@@ -738,3 +753,76 @@ recorded in the V14 entry below as their source identity.
   AVAILABLE/handoff and successor-value evidence; at least one actual `4`-case
   mate-in-2 conversion is also required. Otherwise preserve the snapshots and
   stop at the fixed epoch-8 boundary.
+
+### V15 completed outcome
+
+- Provenance and execution: implementation commit
+  `58fbd0d8f0f6e8101d8e340570abb8026eb4b201`; fresh independent output
+  directories for seeds `2026090103` and `2026090104`; one process per seed
+  with one numerical thread; random `8/4/4` R1 pools; exact eight-epoch runs;
+  no learner or pool change; `7200 s`/`8192 MiB` safe-boundary ceilings.
+  Attempt wall times were `4932.0426137079485 s` and `4845.015892208088 s`;
+  R1 full-intrinsic/control times were respectively
+  `1920.303802/1939.51825 s` and `1885.137376/1912.423199 s`.
+- R0 gate and retention: R0 training took `9.412854/9.320284 s` for
+  `0103/0104`. Initial R0 validation/regression were `16/16, 16/16` for
+  `0103` and `16/16, 12/16` for `0104`; validation-only R0 entry passed in
+  both, while the report-level final R0 pass was true/false. Final
+  full-intrinsic and no-bootstrap retention was identical within each seed:
+  `0103` validation/regression `15/16, 16/16`; `0104` `16/16, 12/16`.
+- Seed `0103` completed 64 R1 episodes with 63 REAL observations and seven
+  structural transitions. Full/control ecology slot turnover was
+  lifetime births/active/tombstones/promotions/refinements
+  `106/103`, `28/27`, `78/76`, `8/10`, `84/81`. Total authority
+  candidates/live successors/materialized children were `161/163`,
+  `87/89`, `79/79`; the adaptive-positive subset was
+  lineages/certification receipts/certified roots `8/10`, `5/5`, `0/0`.
+  Authority retirement was `0` candidates and `0` retirement tombstones in
+  both arms; the ecology tombstones above are slot turnover, not authority
+  retirement. Both arms had zero AVAILABLE all-reply envelopes, zero handoffs
+  and successor value `0.0`; exhaustive validation/regression conversion was
+  `0/4` and `0/4` (reply mate rate `0.0`).
+- Seed `0104` completed 64 R1 episodes with 63 REAL observations and eight
+  structural transitions. Full/control ecology slot turnover was
+  lifetime births/active/tombstones/promotions/refinements
+  `69/67`, `14/10`, `55/57`, `15/17`, `44/41`. Total authority
+  candidates/live successors/materialized children were `188/190`,
+  `105/107`, `90/90`; the adaptive-positive subset was
+  lineages/certification receipts/certified roots `15/17`, `41/39`, `3/2`.
+  Authority retirement was again `0` candidates and `0` retirement tombstones
+  in both arms. Full intrinsic reached two AVAILABLE all-reply envelopes,
+  two child handoffs, and exact worst-reply successor-value sum
+  `1.2454048740321941`; its no-bootstrap control also had two AVAILABLE
+  envelopes but zero handoffs and zero successor value. Exhaustive
+  validation/regression conversion was `0/4` and `0/4` in both arms (reply
+  mate rate `0.0`).
+- Final graph size from an initial `1` node/`0` edges/`0` triplets was
+  `902/27778/111` (nodes/edges/triplets) for `0103` and
+  `891/27262/109` for `0104`, identical between the two arms within each
+  seed. All adaptive certification records were post-birth and discovery
+  disjoint; certification-discovery leaks were `0`, serialized authority
+  round-trips were exact, replay cached-outcome mismatches and formal replay
+  failures were `0`, and duplicate-VIRTUAL counts were `0`.
+- The no-bootstrap controls did not produce a positive causal contrast:
+  `development_directional_effect_vs_no_bootstrap=false` and
+  `r1_causal_positive_vs_no_bootstrap=false` in both reports. The artifacts'
+  focused probe supports only eight-position in-memory deepcopy choice
+  equality; it explicitly records serialized snapshot resume as unimplemented,
+  so no actual resume-parity claim is made here.
+- Post-run production-path verification closes two previously synthetic-only
+  gaps without changing learner semantics: an actual event-driven V2 authority
+  plus actual boundary ecology now matches uninterrupted execution after an
+  epoch snapshot/resume, and a multi-reply policy test proves exhaustive
+  virtual enumeration, one minimum-selected REAL challenge and the exact
+  minimum-value TD equation. Full relevant suites passed `46/46`, `20/20` and
+  `22/22`; targeted `compileall` and `git diff --check` were clean. This test
+  evidence does not retroactively turn either fresh V15 run into a resumed run.
+- Decision: the mechanism chain (post-birth certification → certified root →
+  AVAILABLE envelope → handoff → nonzero successor value) was achieved only
+  by seed `0104`'s full-intrinsic arm and was not replicated. Both seeds/arms
+  remained at `0/4` exhaustive mate-in-2 conversion, and the R0 gate
+  requirement fails (`0103` final validation retention `15/16`; `0104`
+  report regression `12/16`). These are viewed development mechanism
+  evidence, not independent efficacy. The runner's narrower
+  `scientific_gate_passed` curriculum-status field was false for both runs.
+  **Strict NO-GO for a balanced/full run.**

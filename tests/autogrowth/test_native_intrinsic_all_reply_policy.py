@@ -27,6 +27,11 @@ from recon_lite_chess.autogrowth.native_all_reply_envelope import (
     ReplyAuthority,
     evaluate_all_reply_envelope,
 )
+from recon_lite_hector.learning import (
+    IntrinsicCreditConfig,
+    IntrinsicCreditEngine,
+    Responsibility,
+)
 
 
 class _Authority:
@@ -141,6 +146,73 @@ class _Authority:
 
     def continuation_digest(self) -> str:
         return str(self.next_expected_ordinal)
+
+
+class _PerSuccessorAuthority(_Authority):
+    """Test-only V2-shaped authority with scripted values per successor FEN.
+
+    The mapping isolates envelope selection and credit plumbing.  Its formal
+    AVAILABLE rows are not claims about chess competence and never enter a
+    learner or development experiment.
+    """
+
+    def __init__(self, classification_by_successor_fen: dict[str, float]):
+        super().__init__(state="AVAILABLE")
+        self.classification_by_successor_fen = dict(
+            classification_by_successor_fen
+        )
+
+    def _classification_for_board(self, board: chess.Board) -> SimpleNamespace:
+        value = self.classification_by_successor_fen[board.fen()]
+        return SimpleNamespace(
+            state=AvailabilityState.AVAILABLE.value,
+            to_manifest=lambda: {
+                "state": AvailabilityState.AVAILABLE.value,
+                "probability": value,
+                "uncertainty": 1.0 - value,
+                "available_cell_ids": [],
+                "refuted_cell_ids": [],
+                "formal_available": True,
+                "formal_refuted": False,
+                "policy_response": True,
+            },
+        )
+
+    def open_virtual(self, frame, **_kwargs):
+        move = self._move(frame.values["board"])
+        return {
+            "query": SimpleNamespace(
+                actuation=SimpleNamespace(
+                    move_uci=move.uci(), option_identity="test-r0"
+                ),
+                response=SimpleNamespace(
+                    available=True,
+                    grounded=True,
+                    grounding_source="test_grounded_real_history",
+                ),
+                availability_provenance={
+                    "authority": "NativeProspectiveAuthorityV2_graph_emission",
+                    "certification_evidence_added": 0,
+                },
+            ),
+            "classification": self._classification_for_board(
+                frame.values["board"]
+            ),
+        }
+
+    def open_real_event(self, frame, **_kwargs):
+        board = frame.values["board"]
+        move = self._move(board)
+        pending = SimpleNamespace(
+            pending_token=f"pending:{self.next_expected_ordinal}",
+            pre_outcome_classification=self._classification_for_board(board),
+        )
+        self.pending_event = pending
+        return pending, SimpleNamespace(
+            actuation=SimpleNamespace(
+                move_uci=move.uci(), option_identity="test-r0"
+            )
+        )
 
 
 class _CoreGraph:
@@ -580,3 +652,130 @@ def test_numeric_handoff_uses_exact_minimum_and_never_partial_unknown() -> None:
         actual_mate=True,
         clean_preoutcome_evidence=True,
     ) is None
+
+
+def test_all_reply_minimum_value_reaches_real_td_credit() -> None:
+    # A code-defined synthetic position with five legal black replies.  The
+    # lowest positive authority value is assigned to d7e8; that successor has
+    # the local Qe7 mate selected by the test authority, so the policy can
+    # exercise the complete virtual-probe -> one REAL event -> TD path.  The
+    # extra white rook keeps the chess curriculum's native non-rook-loss
+    # terminal convention intact.  The per-reply AVAILABLE values below are a
+    # deliberately scripted plumbing fixture, not learned chess assertions.
+    fen = "8/3k4/8/6K1/8/Q7/R7/8 w - - 0 1"
+    board = chess.Board(fen)
+    first = chess.Move.from_uci("g5f6")
+    after_first = board.copy(stack=False)
+    after_first.push(first)
+    reply_values = {
+        "d7c6": 0.72,
+        "d7c7": 0.64,
+        "d7c8": 0.83,
+        "d7d8": 0.91,
+        "d7e8": 0.31,
+    }
+    classification_by_successor_fen = {}
+    for reply in sorted(after_first.legal_moves, key=lambda item: item.uci()):
+        successor = after_first.copy(stack=False)
+        successor.push(reply)
+        classification_by_successor_fen[successor.fen()] = reply_values[reply.uci()]
+    authority = _PerSuccessorAuthority(classification_by_successor_fen)
+    counters = {
+        **_r1_reply_counter_defaults(),
+        "availability_queries": 0,
+        "availability_positives": 0,
+        "virtual_frame_queries": 0,
+        "v2_duplicate_virtual_queries": 0,
+        "v2_real_observations": 0,
+        "v2_structural_transitions": 0,
+        "child_handoffs": 0,
+    }
+    exposures = {}
+    terminal_kind, successor_ids, audit = _episode(
+        authority,
+        fen,
+        first,
+        after_first,
+        counters,
+        exposures,
+    )
+
+    manifest = audit["manifest"]
+    contexts = manifest["reply_context"]
+    legal_replies = {
+        reply.uci() for reply in sorted(after_first.legal_moves, key=lambda item: item.uci())
+    }
+    assert terminal_kind is None
+    assert successor_ids == (R0_COMPETENCE_ID,)
+    assert len(manifest["reply_ids"]) == len(legal_replies)
+    assert {row["black_move"] for row in contexts} == legal_replies
+    assert {row["reply_id"] for row in contexts} == set(manifest["reply_ids"])
+
+    values_by_move = {
+        row["black_move"]: row["authority_row"]["value"] for row in contexts
+    }
+    assert len(values_by_move) == len(legal_replies)
+    assert all(value > 0.0 for value in values_by_move.values())
+    assert len(set(values_by_move.values())) == len(values_by_move)
+    assert values_by_move["d7e8"] == pytest.approx(0.31)
+    reply_rows = manifest["envelope"]["reply_rows"]
+    selected_row = min(reply_rows, key=lambda row: row["value"])
+    assert manifest["selected_reply_id"] == selected_row["reply_id"]
+    assert manifest["selected_black_move"] == min(
+        values_by_move, key=values_by_move.__getitem__
+    )
+    assert manifest["selected_black_move"] == "d7e8"
+
+    assert manifest["real_event"] is True
+    assert manifest["duplicate_virtual_query"] is False
+    assert manifest["actual_r0_action_mated"] is True
+    assert manifest["positive_handoff"] is True
+    assert manifest["envelope"]["state"] == AvailabilityState.AVAILABLE.value
+    assert manifest["envelope"]["positive_gate"] is True
+    assert manifest["envelope"]["value"] == pytest.approx(
+        min(values_by_move.values())
+    )
+    assert manifest["successor_signal"]["aggregation"] == (
+        "minimum_over_all_grounded_available_replies"
+    )
+    assert audit["successor_signal"].value == pytest.approx(
+        min(values_by_move.values())
+    )
+    assert audit["successor_signal"].provider_ids == (R0_COMPETENCE_ID,)
+    assert audit["successor_signal"].grounding_ancestors == (
+        R0_COMPETENCE_ID,
+    )
+    assert exposures == {audit["selected_exposure_key"]: 1}
+    assert len(authority.consumed_receipts) == 1
+    assert len(authority.accepted_real_references) == 1
+    assert counters["reply_counterexample_real_event_count"] == 1
+    assert counters["reply_counterexample_duplicate_virtual_count"] == 0
+
+    credit = IntrinsicCreditEngine(
+        IntrinsicCreditConfig(min_grounding_evidence=3)
+    )
+    provider = credit.register(R0_COMPETENCE_ID, mature=True)
+    provider.fast_value = 0.8
+    provider.slow_value = 0.8
+    provider.grounding_level = 0
+    provider.terminal_evidence = 3
+    provider.causal_confirmations = 1
+    credit.register("r1:test")
+    credit.begin_episode()
+    event = credit.transition(
+        "r1:test",
+        responsibilities=(Responsibility("r1:test"),),
+        explicit_successor_signal=audit["successor_signal"],
+    )
+    assert event.successor_value == pytest.approx(
+        manifest["envelope"]["value"]
+    )
+    assert event.provider_ids == (R0_COMPETENCE_ID,)
+    assert event.terminal_kind is None
+    assert event.real_step is True
+    assert "r1:test" in event.updated_values
+    assert event.td_error == pytest.approx(
+        event.immediate_reward
+        + credit.config.gamma * event.successor_value
+        - event.predicted_value
+    )

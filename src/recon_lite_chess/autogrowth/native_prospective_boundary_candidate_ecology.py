@@ -1326,8 +1326,9 @@ class ProspectiveBoundaryCandidateEcology:
                 support + contradiction,
                 self.config.wilson_z,
             )
-            # First-contradiction death makes reliability more important than
-            # raw support: a pure 2/2 residual must beat a broad 3/7 sketch.
+            # A first contradiction triggers local abstention/refinement, not
+            # death; later exhaustion or bounded capacity may retire the
+            # lineage. Reliability still outranks raw support in this score.
             return (
                 -lower,
                 -support,
