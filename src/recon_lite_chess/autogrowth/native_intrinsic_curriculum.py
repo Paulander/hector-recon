@@ -602,6 +602,7 @@ def run_native_intrinsic_curriculum(
         pools.r0_validation,
         pools.r0_regression,
         config=cfg,
+        run_started=run_started,
     )
     # Legacy mode lets validation select an epoch, fit a gate, consolidate the
     # R0 graph, and open the next curriculum rung. Strict adaptive mode keeps
@@ -1888,9 +1889,11 @@ def _train_r0(
     _regression_fens: Sequence[str],
     *,
     config: NativeIntrinsicCurriculumConfig,
+    run_started: float | None = None,
 ) -> dict[str, Any]:
     episodes = mates = nonterminal = failures = 0
     started = perf_counter()
+    ceiling_started = started if run_started is None else float(run_started)
     formal_confirmation_failures = 0
     local_action_count = 0
     scheduled_action_count = 0
@@ -1953,36 +1956,58 @@ def _train_r0(
             or epoch == config.r0_epochs - 1
             or (epoch + 1) % max(1, config.r0_validation_interval) == 0
         )
+        stop_after_validation = False
         if not should_validate:
-            continue
-        metrics = _evaluate_r0(
-            graph,
-            validation_fens,
-            max_samples=0,
-            action_selection_mode=config.r0_action_selection_mode,
-        )
-        checkpoint = {
-            "epoch": epoch + 1,
-            "validation_accuracy": metrics["accuracy"],
-            "validation_action_selection_mode": metrics[
-                "action_selection_mode"
-            ],
-            "triplet_count": len(graph.triplet_ids),
-            "m3_update_count": graph.m3_update_count,
-        }
-        checkpoint["validation_mastery"] = bool(
-            metrics["accuracy"] >= config.r0_mastery_threshold
-        )
-        if (
-            checkpoint["validation_mastery"]
-            and config.validation_controls_stage_transitions
-        ):
-            # Validation selects the stopping epoch.  The regression split is
-            # evaluated once, after training, and cannot influence selection.
-            stopped_epoch = epoch + 1
+            metrics = None
+        else:
+            metrics = _evaluate_r0(
+                graph,
+                validation_fens,
+                max_samples=0,
+                action_selection_mode=config.r0_action_selection_mode,
+            )
+            checkpoint = {
+                "epoch": epoch + 1,
+                "validation_accuracy": metrics["accuracy"],
+                "validation_action_selection_mode": metrics[
+                    "action_selection_mode"
+                ],
+                "triplet_count": len(graph.triplet_ids),
+                "m3_update_count": graph.m3_update_count,
+            }
+            checkpoint["validation_mastery"] = bool(
+                metrics["accuracy"] >= config.r0_mastery_threshold
+            )
+            if (
+                checkpoint["validation_mastery"]
+                and config.validation_controls_stage_transitions
+            ):
+                # Validation selects the stopping epoch.  The regression split is
+                # evaluated once, after training, and cannot influence selection.
+                stopped_epoch = epoch + 1
+                stop_after_validation = True
             checkpoints.append(checkpoint)
+
+        # Development ceilings are deliberately sampled only after all action
+        # and TD work for this R0 epoch (and any requested validation) has
+        # completed.  There is no R0 snapshot/resume protocol, so callers must
+        # treat this exception as an interrupted, non-resumable attempt.
+        ceiling_reason = None
+        if (
+            config.development_wall_ceiling_seconds is not None
+            or config.development_peak_rss_ceiling_mib is not None
+        ):
+            ceiling_reason = _development_ceiling_reason(
+                config,
+                run_started=ceiling_started,
+            )
+        if ceiling_reason is not None:
+            raise R0DevelopmentCeilingReached(
+                epoch=epoch + 1,
+                reason=ceiling_reason,
+            )
+        if stop_after_validation:
             break
-        checkpoints.append(checkpoint)
     return {
         "episodes": episodes,
         "observed_mate_count": mates,
@@ -2002,6 +2027,23 @@ def _train_r0(
         "graph_after_training": graph.learned_state_audit(),
         "duration_seconds": round(perf_counter() - started, 6),
     }
+
+
+class R0DevelopmentCeilingReached(RuntimeError):
+    """Raised after a complete R0 epoch when a development ceiling binds.
+
+    R0 has no checkpoint/resume protocol.  Keeping this distinct from the R1
+    snapshot exception prevents a caller from accidentally presenting an R0
+    boundary stop as resumable work.
+    """
+
+    def __init__(self, *, epoch: int, reason: str) -> None:
+        super().__init__(
+            f"R0 development ceiling reached after epoch {epoch}; "
+            f"reason={reason}"
+        )
+        self.epoch = int(epoch)
+        self.reason = str(reason)
 
 
 class R1CheckpointInterrupt(RuntimeError):

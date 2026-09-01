@@ -56,6 +56,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     R1MechanisticArm,
     R0_BALANCED_STRATA,
     R0_COMPETENCE_ID,
+    R0DevelopmentCeilingReached,
     GATE_FEATURE_NAMES,
     R1_BALANCED_STRATA,
     R1_RETIRED_DEVELOPMENT_FENS,
@@ -391,6 +392,39 @@ def test_strict_r0_uses_local_choice_and_validation_cannot_stop_budget() -> None
     assert disabled["effective_action_selection_mode"] == (
         "native_local_all_sources_masked_abstention"
     )
+
+
+def test_r0_development_ceiling_interrupts_only_after_complete_epoch() -> None:
+    graph = _graph()
+    credit = IntrinsicCreditEngine(
+        IntrinsicCreditConfig(min_grounding_evidence=1)
+    )
+    credit.register(R0_COMPETENCE_ID)
+    config = NativeIntrinsicCurriculumConfig(
+        r0_epochs=3,
+        r0_validation_interval=99,
+        r0_action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+        validation_controls_stage_transitions=False,
+        development_wall_ceiling_seconds=0.0,
+        max_samples=0,
+    )
+
+    with pytest.raises(R0DevelopmentCeilingReached) as interrupted:
+        _train_r0(
+            graph,
+            credit,
+            (MATE_ONE_FEN, MATE_ONE_FEN),
+            (MATE_ONE_FEN,),
+            (),
+            config=config,
+        )
+
+    assert interrupted.value.epoch == 1
+    assert "wall_seconds" in interrupted.value.reason
+    # Both positions in the first epoch completed their observed transition;
+    # no mid-epoch ceiling check may discard the second action/TD update.
+    assert graph.graph.nodes["tg26o_root"].meta["request_exposures"] == 2
+    assert graph.m3_update_count > 0
 
 
 def test_r0_gate_selection_ignores_regression_until_final_report(monkeypatch) -> None:

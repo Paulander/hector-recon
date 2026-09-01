@@ -1,3 +1,4 @@
+import copy
 import chess
 import pytest
 
@@ -6,6 +7,7 @@ from recon_lite_chess.autogrowth import (
     NativeLocalTrainingDecision,
     NativeReConKRKGraph,
     NativeSingleGraphConfig,
+    native_single_graph_curriculum as graph_module,
 )
 from recon_lite_chess.autogrowth.foundation_curriculum import _mate_moves, _move_reward
 from recon_lite_chess.autogrowth.native_single_graph_curriculum import (
@@ -530,6 +532,108 @@ def test_local_full_audit_keeps_exact_and_generalized_source_and_generalized_can
         generalized_id,
     }
     assert max(candidates)[2] == generalized_id
+
+
+def test_local_selector_cache_preserves_decision_and_semantic_manifest(
+    monkeypatch,
+) -> None:
+    config = NativeSingleGraphConfig(
+        include_symmetries=False,
+        key_mode="canonical",
+        max_ticks=24,
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    baseline = NativeReConKRKGraph(config=config)
+    optimized = NativeReConKRKGraph(config=config)
+
+    # Exercise an uncached reference path by making the cache's key accessor
+    # recompute on every request.  The selector's externally visible decision
+    # and persistent graph state must remain byte-for-byte equivalent.
+    original_triplet_keys = graph_module._triplet_keys
+    baseline_key_calls = 0
+
+    def baseline_triplet_keys(position, move, *, key_mode):
+        nonlocal baseline_key_calls
+        baseline_key_calls += 1
+        return original_triplet_keys(position, move, key_mode=key_mode)
+
+    monkeypatch.setattr(graph_module, "_triplet_keys", baseline_triplet_keys)
+    monkeypatch.setattr(
+        graph_module._LocalDecisionCache,
+        "keys",
+        lambda _cache, position, move, *, key_mode: baseline_triplet_keys(
+            position,
+            move,
+            key_mode=key_mode,
+        ),
+    )
+    baseline_decision = baseline.choose_local_training_action(board, "cache")
+    monkeypatch.undo()
+
+    optimized_key_calls = 0
+
+    def optimized_triplet_keys(position, move, *, key_mode):
+        nonlocal optimized_key_calls
+        optimized_key_calls += 1
+        return original_triplet_keys(position, move, key_mode=key_mode)
+
+    monkeypatch.setattr(graph_module, "_triplet_keys", optimized_triplet_keys)
+    optimized_decision = optimized.choose_local_training_action(board, "cache")
+
+    assert optimized_decision.to_manifest() == baseline_decision.to_manifest()
+    assert optimized.canonical_semantic_manifest() == baseline.canonical_semantic_manifest()
+    assert optimized_key_calls < baseline_key_calls
+    assert not hasattr(optimized, "_local_decision_cache")
+
+
+def test_generalized_dead_before_branch_skips_formal_ticks_with_parity(
+    monkeypatch,
+) -> None:
+    config = NativeSingleGraphConfig(
+        include_symmetries=False,
+        key_mode="canonical",
+        prototype_distance_threshold=0,
+        max_prototype_candidates_per_move=1,
+        max_ticks=8,
+        tick_feature_terminals=False,
+    )
+    source_board = chess.Board(MATE_ONE_FEN)
+    query_board = chess.Board("1k6/8/8/2K5/8/8/8/7R w - - 0 1")
+    move = chess.Move.from_uci("h1h2")
+    assert move in source_board.legal_moves
+    assert move in query_board.legal_moves
+
+    seed = NativeReConKRKGraph(config=config)
+    source_id = seed.ensure_triplet(source_board, move, stage="dead_branch")
+
+    def force_source(_keys):
+        return ((source_id, 0),)
+
+    baseline = copy.deepcopy(seed)
+    optimized = copy.deepcopy(seed)
+    monkeypatch.setattr(baseline, "_nearest_triplets_for_keys", force_source)
+    monkeypatch.setattr(optimized, "_nearest_triplets_for_keys", force_source)
+    monkeypatch.setattr(
+        baseline,
+        "_before_role_can_confirm",
+        lambda *_args, **_kwargs: True,
+    )
+    legal = {move.uci(): move}
+
+    baseline_candidates = baseline._full_audit_candidates(query_board, legal)
+    optimized_candidates = optimized._full_audit_candidates(query_board, legal)
+
+    assert baseline_candidates == optimized_candidates == []
+    assert baseline.scheduler_stats["formal_ticks_run"] > 0
+    assert optimized.scheduler_stats["formal_ticks_run"] == 0
+    assert optimized._before_role_can_confirm(
+        query_board,
+        source_id,
+        move.uci(),
+    ) is False
+    # Runtime settling is diagnostic only; semantic graph state must be
+    # unchanged by rejecting the impossible serial branch.
+    assert optimized.canonical_semantic_manifest() == seed.canonical_semantic_manifest()
 
 
 def test_shared_global_cap_preserves_fair_incumbents_and_is_deterministic() -> None:

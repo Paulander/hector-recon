@@ -726,6 +726,33 @@ def test_ceiling_keeps_attempt_contract_and_returns_exit_two(
     assert attempt["scientific_gate_passed"] is False
 
 
+def test_r0_ceiling_is_non_resumable_and_keeps_gates_unknown(
+    tmp_path: Path, monkeypatch
+) -> None:
+    def stopped(_cfg):
+        raise adaptive.R0DevelopmentCeilingReached(
+            epoch=1,
+            reason="wall_seconds=0.001>=0.000",
+        )
+
+    monkeypatch.setattr(adaptive, "run_development", stopped)
+    assert adaptive.main(["--output-dir", str(tmp_path)]) == 2
+    attempt = json.loads((tmp_path / "attempt.json").read_text())
+    assert attempt["status"] == (
+        "R0_CEILING_REACHED_AT_COMPLETE_EPOCH_NON_RESUMABLE"
+    )
+    assert attempt["epoch"] == 1
+    assert attempt["reason"] == "wall_seconds=0.001>=0.000"
+    assert attempt["resumable"] is False
+    assert "snapshot_path" not in attempt
+    assert attempt["r0_pass"] is None
+    assert attempt["r1_executed"] is None
+    assert attempt["r1_pass"] is None
+    assert attempt["work_completed"] is False
+    assert attempt["curriculum_gate_passed"] is False
+    assert attempt["scientific_gate_passed"] is False
+
+
 def test_cli_reports_r0_gate_block_without_claiming_mechanism_pass(
     tmp_path: Path, monkeypatch
 ) -> None:

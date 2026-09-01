@@ -21,6 +21,7 @@ from .native_intrinsic_curriculum import (
     NativeIntrinsicCurriculumConfig,
     NativeIntrinsicCurriculumResult,
     R0_ACTION_SELECTION_LOCAL_RECON,
+    R0DevelopmentCeilingReached,
     R1DevelopmentCeilingReached,
     R1_ACTION_SELECTION_LOCAL_RECON,
     R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
@@ -653,6 +654,25 @@ def main(argv: Sequence[str] | None = None) -> int:
         output = Path(cfg.output_path)
         result_payload = result.to_dict()
         _atomic_write_json(output, result_payload)
+    except R0DevelopmentCeilingReached as exc:
+        _atomic_write_json(
+            attempt_path,
+            {
+                "schema_version": SCHEMA_VERSION,
+                **_artifact_flags(),
+                "status": "R0_CEILING_REACHED_AT_COMPLETE_EPOCH_NON_RESUMABLE",
+                **_unknown_gate_fields(work_completed=False),
+                "profile": args.profile,
+                "epoch": exc.epoch,
+                "reason": exc.reason,
+                "resumable": False,
+                "wall_seconds": perf_counter() - started,
+                "source_identity": _development_source_identity(),
+                "config": asdict(cfg),
+            },
+        )
+        print(json.dumps({"status": "R0_CEILING_REACHED", "attempt": str(attempt_path)}))
+        return 2
     except R1DevelopmentCeilingReached as exc:
         _atomic_write_json(
             attempt_path,

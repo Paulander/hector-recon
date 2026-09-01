@@ -38,6 +38,7 @@ from .native_intrinsic_curriculum import (
     NativeIntrinsicCurriculumConfig,
     NativeIntrinsicCurriculumResult,
     R0_COMPETENCE_ID,
+    R0DevelopmentCeilingReached,
     R1DevelopmentCeilingReached,
     V2_PROSPECTIVE_AVAILABILITY,
     _Pools,
@@ -956,6 +957,30 @@ def main(argv: Sequence[str] | None = None) -> int:
         result = run_development(cfg)
         output = Path(cfg.output_path)
         _atomic_write_json(output, result.to_dict())
+    except R0DevelopmentCeilingReached as exc:
+        _atomic_write_json(attempt_path, {
+            "schema_version": SCHEMA_VERSION,
+            "label": DEVELOPMENT_LABEL,
+            "scientific_use_permitted": False,
+            "status": "R0_CEILING_REACHED_AT_COMPLETE_EPOCH_NON_RESUMABLE",
+            "r0_pass": None,
+            "r1_executed": None,
+            "r1_pass": None,
+            "work_completed": False,
+            "curriculum_gate_passed": False,
+            "mechanism_checks": {},
+            "per_run_mechanism_gate_passed": False,
+            "scientific_gate_passed": False,
+            "multi_seed_scientific_adjudication_required": True,
+            "resumable": False,
+            "epoch": exc.epoch,
+            "reason": exc.reason,
+            "wall_seconds": perf_counter() - started,
+            "source_identity": _development_source_identity(),
+            "config": asdict(cfg),
+        })
+        print(json.dumps({"status": "R0_CEILING_REACHED", "attempt": str(attempt_path)}))
+        return 2
     except R1DevelopmentCeilingReached as exc:
         _atomic_write_json(attempt_path, {
             "schema_version": SCHEMA_VERSION,

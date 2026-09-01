@@ -9,7 +9,7 @@ curriculum scheduling and reward labels.
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from itertools import combinations
 import copy
 import hashlib
@@ -97,6 +97,44 @@ class NativeSingleGraphConfig:
             mate2_threshold=config.mate2_threshold,
             max_samples=config.max_samples,
         )
+
+
+_TripletKeyTuple = tuple[
+    tuple[str, ...],
+    tuple[str, ...],
+    tuple[str, ...],
+]
+
+
+@dataclass
+class _LocalDecisionCache:
+    """Ephemeral read-only selector cache for one local decision.
+
+    This object is deliberately not attached to ``NativeReConKRKGraph``.  It
+    therefore cannot enter graph snapshots, manifests, or replay state.  A
+    FEN/action/key-mode tuple is the same identity used by the runtime
+    predicate cache; local utility is likewise a pure read of persistent
+    weights at the decision boundary.
+    """
+
+    triplet_keys: dict[tuple[str, str, str], _TripletKeyTuple] = field(
+        default_factory=dict
+    )
+    local_utility: dict[str, float] = field(default_factory=dict)
+
+    def keys(
+        self,
+        board: chess.Board,
+        move: chess.Move,
+        *,
+        key_mode: str,
+    ) -> _TripletKeyTuple:
+        cache_key = (board.fen(), move.uci(), str(key_mode))
+        cached = self.triplet_keys.get(cache_key)
+        if cached is None:
+            cached = _triplet_keys(board, move, key_mode=key_mode)
+            self.triplet_keys[cache_key] = cached
+        return cached
 
 
 @dataclass(frozen=True)
@@ -707,7 +745,12 @@ class NativeReConKRKGraph:
         if not legal:
             raise ValueError("training position has no legal action")
 
-        full_candidates = self._full_audit_candidates(board, legal)
+        decision_cache = _LocalDecisionCache()
+        full_candidates = self._full_audit_candidates(
+            board,
+            legal,
+            _decision_cache=decision_cache,
+        )
 
         # A generalized/prototype source can offer more than one native
         # candidate for a move.  Keep the strongest source deterministically,
@@ -729,7 +772,11 @@ class NativeReConKRKGraph:
             # grouping and post-emission parity checks.  It contains no FEN,
             # epoch, position hash, or external action/oracle label.
             pattern_id = _triplet_id(
-                *_triplet_keys(board, move, key_mode=self.config.key_mode)
+                *decision_cache.keys(
+                    board,
+                    move,
+                    key_mode=self.config.key_mode,
+                )
             )
             moves_by_pattern.setdefault(pattern_id, []).append(move_uci)
 
@@ -835,7 +882,7 @@ class NativeReConKRKGraph:
             )
 
         emitted_pattern_id = _triplet_id(
-            *_triplet_keys(
+            *decision_cache.keys(
                 board,
                 legal[selected_move_uci],
                 key_mode=self.config.key_mode,
@@ -949,7 +996,12 @@ class NativeReConKRKGraph:
         except (TypeError, ValueError):
             return 0
 
-    def _triplet_local_utility(self, triplet_id: str) -> float:
+    def _triplet_local_utility(
+        self,
+        triplet_id: str,
+        *,
+        _decision_cache: _LocalDecisionCache | None = None,
+    ) -> float:
         """Return the learned feature utility available before a runtime tick.
 
         Retrieval happens before candidate terminals have been evaluated for
@@ -961,6 +1013,11 @@ class NativeReConKRKGraph:
         adding the native root edge credit that represents an exact action's
         local history.
         """
+
+        if _decision_cache is not None:
+            cached = _decision_cache.local_utility.get(str(triplet_id))
+            if cached is not None:
+                return cached
 
         local_values: list[float] = []
         triplet_node = self.graph.nodes.get(_TripletNodeIds(triplet_id).triplet)
@@ -1000,10 +1057,13 @@ class NativeReConKRKGraph:
                 "terminal_score_normalization must be mean, sqrt, or sum"
             )
 
-        return math.fsum((
+        utility = math.fsum((
             self.config.terminal_score_scale * local_score,
             self.config.triplet_credit_scale * self._triplet_root_weight(triplet_id),
         ))
+        if _decision_cache is not None:
+            _decision_cache.local_utility[str(triplet_id)] = utility
+        return utility
 
     def _retrieval_candidate_pairs_for_legal(
         self,
@@ -1011,6 +1071,7 @@ class NativeReConKRKGraph:
         legal: Mapping[str, chess.Move],
         *,
         masked_triplets: set[str] | None = None,
+        _decision_cache: _LocalDecisionCache | None = None,
     ) -> list[tuple[str, str, int]]:
         """Build deterministic bounded source pairs for each legal action.
 
@@ -1025,7 +1086,15 @@ class NativeReConKRKGraph:
         per_move: dict[str, list[tuple[str, str, int]]] = {}
         per_move_limit = max(0, int(self.config.max_prototype_candidates_per_move))
         for move_uci, move in sorted(legal.items()):
-            keys = _triplet_keys(board, move, key_mode=self.config.key_mode)
+            keys = (
+                _decision_cache.keys(
+                    board,
+                    move,
+                    key_mode=self.config.key_mode,
+                )
+                if _decision_cache is not None
+                else _triplet_keys(board, move, key_mode=self.config.key_mode)
+            )
             exact_id = _triplet_id(*keys)
             rows: dict[str, tuple[int, bool]] = {}
 
@@ -1058,7 +1127,10 @@ class NativeReConKRKGraph:
                 add_candidate(exact_id, -1, exact=True)
 
             if self.config.shared_feature_atoms:
-                generalized = self._triplets_from_active_shared_atoms(keys)
+                generalized = self._triplets_from_active_shared_atoms(
+                    keys,
+                    _decision_cache=_decision_cache,
+                )
             elif self.config.key_mode != "exact":
                 generalized = tuple(
                     candidate_id
@@ -1085,7 +1157,10 @@ class NativeReConKRKGraph:
             incumbent = min(
                 rows,
                 key=lambda candidate_id: (
-                    -self._triplet_local_utility(candidate_id),
+                    -self._triplet_local_utility(
+                        candidate_id,
+                        _decision_cache=_decision_cache,
+                    ),
                     rows[candidate_id][0],
                     0 if rows[candidate_id][1] else 1,
                     candidate_id,
@@ -1105,7 +1180,10 @@ class NativeReConKRKGraph:
                 ),
                 key=lambda candidate_id: (
                     rows[candidate_id][0],
-                    -self._triplet_local_utility(candidate_id),
+                    -self._triplet_local_utility(
+                        candidate_id,
+                        _decision_cache=_decision_cache,
+                    ),
                     candidate_id,
                 ),
             )
@@ -1125,6 +1203,8 @@ class NativeReConKRKGraph:
     def _cap_shared_candidate_pairs(
         self,
         candidate_pairs: Iterable[tuple[str, str, int]],
+        *,
+        _decision_cache: _LocalDecisionCache | None = None,
     ) -> list[tuple[str, str, int]]:
         """Apply the global shared-source cap with incumbent-first fairness."""
 
@@ -1151,7 +1231,10 @@ class NativeReConKRKGraph:
         for move_uci in by_move:
             by_move[move_uci].sort(
                 key=lambda row: (
-                    -self._triplet_local_utility(row[0]),
+                    -self._triplet_local_utility(
+                        row[0],
+                        _decision_cache=_decision_cache,
+                    ),
                     row[2],
                     row[0],
                     row[1],
@@ -1163,7 +1246,10 @@ class NativeReConKRKGraph:
         exacts = [row for row in rows if row[2] < 0]
         exacts.sort(
             key=lambda row: (
-                -self._triplet_local_utility(row[0]),
+                -self._triplet_local_utility(
+                    row[0],
+                    _decision_cache=_decision_cache,
+                ),
                 row[1],
                 row[0],
             )
@@ -1181,7 +1267,10 @@ class NativeReConKRKGraph:
         incumbents = [by_move[move_uci][0] for move_uci in sorted(by_move)]
         incumbents.sort(
             key=lambda row: (
-                -self._triplet_local_utility(row[0]),
+                -self._triplet_local_utility(
+                    row[0],
+                    _decision_cache=_decision_cache,
+                ),
                 row[2],
                 row[1],
                 row[0],
@@ -1209,7 +1298,10 @@ class NativeReConKRKGraph:
         challengers.sort(
             key=lambda row: (
                 row[2],
-                -self._triplet_local_utility(row[0]),
+                -self._triplet_local_utility(
+                    row[0],
+                    _decision_cache=_decision_cache,
+                ),
                 row[0],
                 row[1],
             )
@@ -1223,6 +1315,7 @@ class NativeReConKRKGraph:
         legal: Mapping[str, chess.Move] | None = None,
         *,
         masked_triplets: set[str] | None = None,
+        _decision_cache: _LocalDecisionCache | None = None,
     ) -> list[tuple[float, str, str]]:
         """Return bounded confirmed ``(score, move, source)`` candidates.
 
@@ -1243,15 +1336,20 @@ class NativeReConKRKGraph:
         if not legal_map:
             return []
 
+        decision_cache = _decision_cache or _LocalDecisionCache()
         candidate_pairs = self._retrieval_candidate_pairs_for_legal(
             board,
             legal_map,
             masked_triplets=masked_triplets,
+            _decision_cache=decision_cache,
         )
 
         if self.config.shared_feature_atoms and len(candidate_pairs) > self.config.max_shared_atom_candidates_per_choice:
             self.scheduler_stats["shared_atom_candidate_pairs_before_cap"] += len(candidate_pairs)
-            candidate_pairs = self._cap_shared_candidate_pairs(candidate_pairs)
+            candidate_pairs = self._cap_shared_candidate_pairs(
+                candidate_pairs,
+                _decision_cache=decision_cache,
+            )
             self.scheduler_stats["shared_atom_candidate_pairs_after_cap"] += len(candidate_pairs)
 
         self.scheduler_stats["choose_calls"] += 1
@@ -1268,10 +1366,7 @@ class NativeReConKRKGraph:
             return []
 
         candidates: list[tuple[float, str, str]] = []
-        triplet_key_cache: dict[
-            tuple[str, str, str],
-            tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]],
-        ] = {}
+        triplet_key_cache = decision_cache.triplet_keys
         for triplet_id, move_uci, _retrieval_rank in candidate_pairs:
             active_nodes = (
                 self._active_nodes_for_triplets({triplet_id})
@@ -1286,6 +1381,13 @@ class NativeReConKRKGraph:
                     0, len(self.graph.nodes) - len(active_nodes)
                 )
                 self._reset_runtime_states(active_nodes)
+            if not self._before_role_can_confirm(
+                board,
+                triplet_id,
+                move_uci,
+                _decision_cache=decision_cache,
+            ):
+                continue
             env: dict[str, Any] = {
                 "board": board,
                 "candidate_move_by_triplet": {triplet_id: move_uci},
@@ -1319,6 +1421,122 @@ class NativeReConKRKGraph:
             )
         return candidates
 
+    def _before_role_can_confirm(
+        self,
+        board: chess.Board,
+        triplet_id: str,
+        move_uci: str,
+        *,
+        _decision_cache: _LocalDecisionCache | None = None,
+    ) -> bool:
+        """Prove that a native generalized ``k=1`` before quorum is dead.
+
+        Unknown policies, topology, metadata, and predicates stay on the
+        formal path.  This helper only reads graph state and never settles or
+        mutates a node.
+        """
+
+        ids = _TripletNodeIds(str(triplet_id))
+        before_script = self.graph.nodes.get(ids.before_script)
+        if (
+            before_script is None
+            or before_script.ntype is not NodeType.SCRIPT
+            or self.config.key_mode == "exact"
+        ):
+            return True
+        if (
+            self.graph.get_edge(
+                ids.before_script,
+                ids.action_script,
+                LinkType.POR,
+            )
+            is None
+            or self.graph.get_edge(
+                ids.action_script,
+                ids.before_script,
+                LinkType.RET,
+            )
+            is None
+        ):
+            # A malformed or historical unpaired sequence is outside the
+            # proof's closed topology.  Leave it to the formal engine.
+            return True
+        policy = str(before_script.meta.get("confirm_policy", "")).lower()
+        if policy not in {"k_of_n", "quorum", "or"}:
+            return True
+        try:
+            threshold = int(before_script.meta.get(
+                "confirm_k", before_script.meta.get("quorum_k", 1)
+            ))
+        except (TypeError, ValueError):
+            return True
+        if threshold != 1:
+            return True
+        try:
+            move = chess.Move.from_uci(str(move_uci))
+        except ValueError:
+            return True
+        if move not in board.legal_moves:
+            return False
+
+        cache = _decision_cache or _LocalDecisionCache()
+        actual_before = frozenset(cache.keys(
+            board,
+            move,
+            key_mode=self.config.key_mode,
+        )[0])
+        children = tuple(self.graph.children(ids.before_script))
+        if not children:
+            return False
+        for child_id in children:
+            child = self.graph.nodes.get(child_id)
+            if (
+                child is None
+                or child.ntype is not NodeType.TERMINAL
+                or child.predicate is None
+            ):
+                return True
+            role = str(child.meta.get("role", ""))
+            # Indexed scheduling omits private feature terminals when feature
+            # ticking is disabled; they cannot witness this formal quorum.
+            if (
+                self.config.indexed_scheduler
+                and not self.config.tick_feature_terminals
+                and not child.meta.get("shared_feature_atom")
+                and role in {"before_feature", "delta_feature", "after_feature", "projection_feature"}
+            ):
+                continue
+            if child.meta.get("grouped_cache_terminal"):
+                if role != "before" or "pattern_keys" not in child.meta:
+                    return True
+                try:
+                    expected = frozenset(str(key) for key in child.meta["pattern_keys"])
+                except (TypeError, ValueError):
+                    return True
+                if _prototype_match(
+                    expected,
+                    actual_before,
+                    key_mode=self.config.key_mode,
+                    distance_threshold=self.config.prototype_distance_threshold,
+                ):
+                    return True
+                continue
+            if role != "before_feature":
+                return True
+            expected_key = child.meta.get("terminal_key")
+            if not isinstance(expected_key, str):
+                return True
+            # Generalized private predicates accept any legal move; shared
+            # predicates and exact predicates have a closed key membership.
+            if child.meta.get("shared_feature_atom"):
+                if expected_key in actual_before:
+                    return True
+            elif self.config.key_mode != "exact":
+                return True
+            elif expected_key in actual_before:
+                return True
+        return False
+
     def confirm_candidate(self, board: chess.Board, *, triplet_id: str, move_uci: str) -> dict[str, Any]:
         legal = {move.uci(): move for move in board.legal_moves}
         if move_uci not in legal or triplet_id not in self.triplet_ids:
@@ -1328,12 +1546,30 @@ class NativeReConKRKGraph:
                 "confirmed_candidate_count": 0,
                 "confirmed_candidates": [],
             }
+        decision_cache = _LocalDecisionCache()
         active_nodes = self._active_nodes_for_triplets({triplet_id})
         self._reset_runtime_states(active_nodes)
+        if not self._before_role_can_confirm(
+            board,
+            triplet_id,
+            move_uci,
+            _decision_cache=decision_cache,
+        ):
+            return {
+                "selected_move": None,
+                "selected_triplet": None,
+                "selected_score_raw": None,
+                "selected_score": None,
+                "candidate_triplet_count": 1,
+                "confirmed_candidate_count": 0,
+                "confirmed_candidates": [],
+                "formal_ticks_run": 0,
+            }
         env: dict[str, Any] = {
             "board": board,
             "candidate_move_by_triplet": {triplet_id: move_uci},
             "shared_atom_move_uci": move_uci,
+            "__triplet_keys_cache": decision_cache.triplet_keys,
         }
         engine = FormalReConEngine(self.graph, validate_pairs=False, record_trace=False)
         engine.request(ROOT_ID)
@@ -1372,9 +1608,19 @@ class NativeReConKRKGraph:
                 "confirmed_candidate_count": 0,
                 "confirmed_candidates": [],
             }
+        decision_cache = _LocalDecisionCache()
         if self.config.shared_feature_atoms:
-            return self._audit_choice_shared_atoms(board, legal, masked_triplets=masked_triplets)
-        candidate_moves = self._candidate_triplets_for_board(board, legal)
+            return self._audit_choice_shared_atoms(
+                board,
+                legal,
+                masked_triplets=masked_triplets,
+                _decision_cache=decision_cache,
+            )
+        candidate_moves = self._candidate_triplets_for_board(
+            board,
+            legal,
+            _decision_cache=decision_cache,
+        )
         if masked_triplets:
             candidate_moves = {triplet_id: move for triplet_id, move in candidate_moves.items() if triplet_id not in masked_triplets}
         candidate_triplets = set(candidate_moves)
@@ -1397,7 +1643,11 @@ class NativeReConKRKGraph:
         else:
             active_nodes = None
             self._reset_runtime_states()
-        env: dict[str, Any] = {"board": board, "candidate_move_by_triplet": candidate_moves}
+        env: dict[str, Any] = {
+            "board": board,
+            "candidate_move_by_triplet": candidate_moves,
+            "__triplet_keys_cache": decision_cache.triplet_keys,
+        }
         engine = FormalReConEngine(self.graph, validate_pairs=False, record_trace=False)
         engine.request(ROOT_ID)
         engine.run(
@@ -1444,15 +1694,21 @@ class NativeReConKRKGraph:
         legal: Mapping[str, chess.Move],
         *,
         masked_triplets: set[str] | None = None,
+        _decision_cache: _LocalDecisionCache | None = None,
     ) -> dict[str, Any]:
+        decision_cache = _decision_cache or _LocalDecisionCache()
         candidate_pairs = self._retrieval_candidate_pairs_for_legal(
             board,
             legal,
             masked_triplets=masked_triplets,
+            _decision_cache=decision_cache,
         )
         if len(candidate_pairs) > self.config.max_shared_atom_candidates_per_choice:
             self.scheduler_stats["shared_atom_candidate_pairs_before_cap"] += len(candidate_pairs)
-            candidate_pairs = self._cap_shared_candidate_pairs(candidate_pairs)
+            candidate_pairs = self._cap_shared_candidate_pairs(
+                candidate_pairs,
+                _decision_cache=decision_cache,
+            )
             self.scheduler_stats["shared_atom_candidate_pairs_after_cap"] += len(candidate_pairs)
         unique_triplets = {triplet_id for triplet_id, _move, _rank in candidate_pairs}
         self.scheduler_stats["choose_calls"] += 1
@@ -1467,12 +1723,19 @@ class NativeReConKRKGraph:
                 "confirmed_candidates": [],
             }
         candidates: list[tuple[float, str, str]] = []
-        triplet_key_cache: dict[tuple[str, str, str], tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]] = {}
+        triplet_key_cache = decision_cache.triplet_keys
         for triplet_id, move_uci, _retrieval_rank in candidate_pairs:
             active_nodes = self._active_nodes_for_triplets({triplet_id})
             self.scheduler_stats["active_nodes_ticked"] += len(active_nodes)
             self.scheduler_stats["full_graph_node_resets_avoided"] += max(0, len(self.graph.nodes) - len(active_nodes))
             self._reset_runtime_states(active_nodes)
+            if not self._before_role_can_confirm(
+                board,
+                triplet_id,
+                move_uci,
+                _decision_cache=decision_cache,
+            ):
+                continue
             env: dict[str, Any] = {
                 "board": board,
                 "candidate_move_by_triplet": {triplet_id: move_uci},
@@ -2508,15 +2771,32 @@ class NativeReConKRKGraph:
             node.state = NodeState.INACTIVE
             node.tick_entered = -1
 
-    def _candidate_triplets_for_board(self, board: chess.Board, legal: Mapping[str, chess.Move]) -> dict[str, str]:
+    def _candidate_triplets_for_board(
+        self,
+        board: chess.Board,
+        legal: Mapping[str, chess.Move],
+        *,
+        _decision_cache: _LocalDecisionCache | None = None,
+    ) -> dict[str, str]:
         triplets: dict[str, str] = {}
         for move in legal.values():
-            keys = _triplet_keys(board, move, key_mode=self.config.key_mode)
+            keys = (
+                _decision_cache.keys(
+                    board,
+                    move,
+                    key_mode=self.config.key_mode,
+                )
+                if _decision_cache is not None
+                else _triplet_keys(board, move, key_mode=self.config.key_mode)
+            )
             triplet_id = _triplet_id(*keys)
             if triplet_id in self.triplet_ids:
                 triplets[triplet_id] = move.uci()
             if self.config.shared_feature_atoms:
-                for candidate_id in self._triplets_from_active_shared_atoms(keys):
+                for candidate_id in self._triplets_from_active_shared_atoms(
+                    keys,
+                    _decision_cache=_decision_cache,
+                ):
                     triplets.setdefault(candidate_id, move.uci())
             elif self.config.key_mode != "exact":
                 for candidate_id, _distance in self._nearest_triplets_for_keys(keys):
@@ -2526,7 +2806,10 @@ class NativeReConKRKGraph:
     def _triplets_from_active_shared_atoms(
         self,
         keys: tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]],
+        *,
+        _decision_cache: _LocalDecisionCache | None = None,
     ) -> tuple[str, ...]:
+        decision_cache = _decision_cache or _LocalDecisionCache()
         active_atoms = self._shared_atom_ids_for_keys(keys)
         overlap: dict[str, int] = {}
         for atom_id in active_atoms:
@@ -2543,7 +2826,10 @@ class NativeReConKRKGraph:
         ranked.sort(
             key=lambda row: (
                 -row[1],
-                -self._triplet_local_utility(row[0]),
+                -self._triplet_local_utility(
+                    row[0],
+                    _decision_cache=decision_cache,
+                ),
                 row[0],
             )
         )
@@ -2557,7 +2843,10 @@ class NativeReConKRKGraph:
         incumbent = min(
             ranked,
             key=lambda row: (
-                -self._triplet_local_utility(row[0]),
+                -self._triplet_local_utility(
+                    row[0],
+                    _decision_cache=decision_cache,
+                ),
                 -row[1],
                 row[0],
             ),
