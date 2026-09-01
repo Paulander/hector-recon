@@ -49,7 +49,8 @@ DEFAULT_OUTPUT_DIR = Path(
     "native_adaptive_boundary_seed_2026082801"
 )
 
-PROFILES = ("canary", "gate")
+FOLLOW_THROUGH_PROFILE = "follow-through"
+PROFILES = ("canary", FOLLOW_THROUGH_PROFILE, "gate")
 
 # Keep the wrapped runner seams visible for focused tests and future ecology
 # wiring without copying its implementation into this module.
@@ -71,6 +72,17 @@ _PROFILE_WORK: dict[str, dict[str, int | str]] = {
         "r1_validation_interval": 1,
         "r1_snapshot_interval": 1,
     },
+    FOLLOW_THROUGH_PROFILE: {
+        "r1_pool_mode": "random",
+        "r1_train_count": 8,
+        "r1_validation_count": 4,
+        "r1_regression_count": 4,
+        # Continue only through the fixed epoch-8 boundary.  This is the
+        # bounded follow-through window after the epoch-4 canary.
+        "r1_epochs": 8,
+        "r1_validation_interval": 1,
+        "r1_snapshot_interval": 1,
+    },
     "gate": {
         "r1_pool_mode": "balanced_setup",
         "r1_train_count": 16,
@@ -84,7 +96,7 @@ _PROFILE_WORK: dict[str, dict[str, int | str]] = {
 
 
 def _normalize_profile(profile: str) -> str:
-    normalized = str(profile).strip().lower()
+    normalized = str(profile).strip().lower().replace("_", "-")
     if normalized not in PROFILES:
         raise ValueError(
             f"profile must be one of {', '.join(PROFILES)}"
@@ -297,7 +309,7 @@ def development_config(
     max_wall_seconds: float = DEFAULT_MAX_WALL_SECONDS,
     max_peak_rss_mib: float = DEFAULT_MAX_PEAK_RSS_MIB,
 ) -> NativeIntrinsicCurriculumConfig:
-    """Return one of two bounded work plans with frozen learner settings."""
+    """Return a bounded work plan with frozen learner settings."""
 
     normalized = _normalize_profile(profile)
     base = _intrinsic.development_config(
@@ -331,7 +343,12 @@ def run_development(
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--profile", choices=PROFILES, default="canary")
+    parser.add_argument(
+        "--profile",
+        choices=PROFILES,
+        default="canary",
+        type=_normalize_profile,
+    )
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument(

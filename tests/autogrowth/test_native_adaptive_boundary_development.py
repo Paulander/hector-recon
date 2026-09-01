@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 import hashlib
 import inspect
 import json
@@ -193,8 +193,46 @@ def test_profiles_preserve_frozen_r0_and_only_change_r1_work(tmp_path: Path) -> 
     assert gate.r1_snapshot_interval <= 4
     assert gate.r1_train_count > canary.r1_train_count
     assert gate.r1_epochs > canary.r1_epochs
-    with pytest.raises(ValueError, match="profile must be one of canary, gate"):
+    with pytest.raises(
+        ValueError,
+        match="profile must be one of canary, follow-through, gate",
+    ):
         adaptive.development_config("scientific")
+
+
+def test_follow_through_is_an_eight_epoch_canary_extension(tmp_path: Path) -> None:
+    canary = adaptive.development_config(
+        "canary", output_dir=tmp_path, seed=17,
+        max_wall_seconds=11.0, max_peak_rss_mib=22.0,
+    )
+    follow_through = adaptive.development_config(
+        " FOLLOW_THROUGH ", output_dir=tmp_path, seed=17,
+        max_wall_seconds=11.0, max_peak_rss_mib=22.0,
+    )
+
+    canary_payload = asdict(canary)
+    follow_payload = asdict(follow_through)
+    changed = {
+        field
+        for field in canary_payload
+        if canary_payload[field] != follow_payload[field]
+    }
+    assert changed == {"r1_epochs"}
+    assert follow_through.r1_pool_mode == "random"
+    assert (
+        follow_through.r1_train_count,
+        follow_through.r1_validation_count,
+        follow_through.r1_regression_count,
+    ) == (8, 4, 4)
+    assert follow_through.r1_epochs == 8
+    assert follow_through.r1_validation_interval == 1
+    assert follow_through.r1_snapshot_interval == 1
+    assert adaptive._normalize_profile("follow_through") == (
+        adaptive.FOLLOW_THROUGH_PROFILE
+    )
+    assert adaptive._profile_for_config(follow_through) == (
+        adaptive.FOLLOW_THROUGH_PROFILE
+    )
 
 
 class _FakeAuthority:
@@ -363,6 +401,37 @@ def test_cli_writes_independent_schema_and_source_identity(
     assert attempt["r1_executed"] is False
     assert attempt["r1_pass"] is False
     assert attempt["work_completed"] is True
+    assert attempt["scientific_gate_passed"] is False
+
+
+def test_cli_normalizes_follow_through_and_reports_failed_scientific_gate(
+    tmp_path: Path, monkeypatch
+) -> None:
+    result = _FakeGateResult(r0_pass=True, r1_executed=True, r1_pass=False)
+    observed_configs = []
+
+    def fake_run(config):
+        observed_configs.append(config)
+        return result
+
+    monkeypatch.setattr(adaptive, "run_development", fake_run)
+    assert adaptive.main([
+        "--profile", " FOLLOW_THROUGH ", "--output-dir", str(tmp_path),
+    ]) == 0
+
+    attempt = json.loads((tmp_path / "attempt.json").read_text())
+    assert len(observed_configs) == 1
+    assert attempt["profile"] == adaptive.FOLLOW_THROUGH_PROFILE
+    assert attempt["config"]["r1_pool_mode"] == "random"
+    assert attempt["config"]["r1_train_count"] == 8
+    assert attempt["config"]["r1_validation_count"] == 4
+    assert attempt["config"]["r1_regression_count"] == 4
+    assert attempt["config"]["r1_epochs"] == 8
+    assert attempt["config"]["r1_validation_interval"] == 1
+    assert attempt["config"]["r1_snapshot_interval"] == 1
+    assert attempt["status"] == "COMPLETED_R1_GATE_FAILED"
+    assert attempt["r1_executed"] is True
+    assert attempt["r1_pass"] is False
     assert attempt["scientific_gate_passed"] is False
 
 
