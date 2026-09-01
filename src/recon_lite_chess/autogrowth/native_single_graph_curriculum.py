@@ -707,10 +707,6 @@ class NativeReConKRKGraph:
         if not legal:
             raise ValueError("training position has no legal action")
 
-        # The root request count is the graph-owned total used by the bounded
-        # exploration bonus.  It is read-only here; only a later
-        # outcome-grounded ``apply_intrinsic_td`` records the exposure.
-        total_exposures = self._root_request_exposures()
         full_candidates = self._full_audit_candidates(board, legal)
 
         # A generalized/prototype source can offer more than one native
@@ -756,19 +752,6 @@ class NativeReConKRKGraph:
                 pattern_id,
             )
             normalized_value = raw_value / (1.0 + abs(raw_value))
-            exploration_bonus = (
-                math.sqrt(
-                    max(
-                        0.0,
-                        2.0
-                        * math.log1p(max(0, total_exposures))
-                        / (1.0 + pattern_exposure),
-                    )
-                )
-                if exploration_enabled
-                else 0.0
-            )
-            activation = normalized_value + exploration_bonus
             alias_index = pattern_exposure % max(1, len(member_moves))
             pattern_rows.append({
                 "pattern_id": pattern_id,
@@ -778,13 +761,44 @@ class NativeReConKRKGraph:
                 "alias_group_size": len(member_moves),
                 "raw_value": raw_value,
                 "normalized_value": normalized_value,
-                "exploration_bonus": exploration_bonus,
-                "activation": activation,
                 "pattern_exposure": pattern_exposure,
                 "source": source_triplet_id,
                 "source_move_uci": source_move_uci,
                 "source_score_raw": None if best_member is None else raw_value,
             })
+
+        # Exploration is local to the alternatives active in this choice.
+        # A global graph-root counter made novelty pressure grow because of
+        # unrelated positions and could prevent a credited pattern from ever
+        # being revisited.  This is the ordinary UCB local-population term:
+        # each option reads only its own exposure and the summed exposures of
+        # its present competitors.  The harness supplies no action ordering.
+        total_exposures = sum(
+            int(row["pattern_exposure"]) for row in pattern_rows
+        )
+        for row in pattern_rows:
+            pattern_exposure = int(row["pattern_exposure"])
+            if not exploration_enabled:
+                exploration_bonus = 0.0
+            elif pattern_exposure == 0:
+                # A never-tried local alternative has maximal bounded novelty.
+                # This also gives the formal choice graph a positive signal at
+                # a genuinely empty start without consulting a global clock.
+                exploration_bonus = 1.0
+            else:
+                exploration_bonus = min(
+                    1.0,
+                    math.sqrt(
+                        max(
+                            0.0,
+                            2.0
+                            * math.log1p(max(0, total_exposures))
+                            / (1.0 + pattern_exposure),
+                        )
+                    ),
+                )
+            row["exploration_bonus"] = exploration_bonus
+            row["activation"] = float(row["normalized_value"]) + exploration_bonus
 
         if not exploration_enabled:
             pattern_rows = [
@@ -935,6 +949,274 @@ class NativeReConKRKGraph:
         except (TypeError, ValueError):
             return 0
 
+    def _triplet_local_utility(self, triplet_id: str) -> float:
+        """Return the learned feature utility available before a runtime tick.
+
+        Retrieval happens before candidate terminals have been evaluated for
+        the current board, so ``_confirmed_terminal_score`` cannot be used as
+        a retrieval signal: it intentionally only scores terminals that are
+        active in the current frame.  The persistent local weights are the
+        outcome-blind signal available at this boundary.  Keep the same
+        terminal roles and normalization family as runtime scoring, while
+        adding the native root edge credit that represents an exact action's
+        local history.
+        """
+
+        local_values: list[float] = []
+        triplet_node = self.graph.nodes.get(_TripletNodeIds(triplet_id).triplet)
+        if triplet_node is not None and triplet_node.nid not in self.pruned_terminal_ids:
+            triplet_value = float(triplet_node.meta.get("local_weight", 0.0))
+            if math.isfinite(triplet_value):
+                local_values.append(triplet_value)
+        for node_id in sorted(self.triplet_nodes.get(triplet_id, set())):
+            node = self.graph.nodes[node_id]
+            if node.nid in self.pruned_terminal_ids:
+                continue
+            if node.ntype != NodeType.TERMINAL and node.meta.get("role") != "composition_feature":
+                continue
+            if node.meta.get("role") not in {
+                "before_feature",
+                "delta_feature",
+                "after_feature",
+                "projection_feature",
+                "composition_feature",
+            }:
+                continue
+            value = float(node.meta.get("local_weight", 0.0))
+            if math.isfinite(value):
+                local_values.append(value)
+
+        normalization = str(self.config.terminal_score_normalization).lower()
+        if not local_values:
+            local_score = 0.0
+        elif normalization == "mean":
+            local_score = math.fsum(local_values) / len(local_values)
+        elif normalization == "sqrt":
+            local_score = math.fsum(local_values) / math.sqrt(len(local_values))
+        elif normalization == "sum":
+            local_score = math.fsum(local_values)
+        else:
+            raise ValueError(
+                "terminal_score_normalization must be mean, sqrt, or sum"
+            )
+
+        return math.fsum((
+            self.config.terminal_score_scale * local_score,
+            self.config.triplet_credit_scale * self._triplet_root_weight(triplet_id),
+        ))
+
+    def _retrieval_candidate_pairs_for_legal(
+        self,
+        board: chess.Board,
+        legal: Mapping[str, chess.Move],
+        *,
+        masked_triplets: set[str] | None = None,
+    ) -> list[tuple[str, str, int]]:
+        """Build deterministic bounded source pairs for each legal action.
+
+        Every action gets its strongest learned incumbent first.  The
+        remaining per-action slots are filled by retrieval-ranked challengers
+        (shared-atom overlap for the shared substrate, or nearest-prototype
+        rank for the older generalized substrate).  Exact sources are added
+        explicitly and therefore never suppress generalized sources merely
+        because the exact triplet has already materialized.
+        """
+
+        per_move: dict[str, list[tuple[str, str, int]]] = {}
+        per_move_limit = max(0, int(self.config.max_prototype_candidates_per_move))
+        for move_uci, move in sorted(legal.items()):
+            keys = _triplet_keys(board, move, key_mode=self.config.key_mode)
+            exact_id = _triplet_id(*keys)
+            rows: dict[str, tuple[int, bool]] = {}
+
+            def add_candidate(
+                candidate_id: str,
+                retrieval_rank: int,
+                *,
+                exact: bool = False,
+            ) -> None:
+                candidate_id = str(candidate_id)
+                if candidate_id not in self.triplet_ids:
+                    return
+                if candidate_id in self.pruned_triplet_ids:
+                    return
+                if masked_triplets and candidate_id in masked_triplets:
+                    return
+                previous = rows.get(candidate_id)
+                current = (int(retrieval_rank), bool(exact))
+                if previous is None or current[0] < previous[0] or (
+                    current[0] == previous[0] and current[1] and not previous[1]
+                ):
+                    rows[candidate_id] = current
+
+            if exact_id in self.triplet_ids:
+                # Exact is intentionally a first-class candidate, not a
+                # short-circuit that prevents generalized retrieval.  Its
+                # negative retrieval rank is a structural locality marker so
+                # a global bounded cap cannot discard the current action's
+                # exact incumbent in favour of aliases of that same source.
+                add_candidate(exact_id, -1, exact=True)
+
+            if self.config.shared_feature_atoms:
+                generalized = self._triplets_from_active_shared_atoms(keys)
+            elif self.config.key_mode != "exact":
+                generalized = tuple(
+                    candidate_id
+                    for candidate_id, _distance in self._nearest_triplets_for_keys(keys)
+                )
+            else:
+                generalized = ()
+            for retrieval_rank, candidate_id in enumerate(generalized):
+                add_candidate(
+                    candidate_id,
+                    retrieval_rank,
+                )
+
+            if not rows:
+                continue
+
+            # A zero configured retrieval width has no meaningful generalized
+            # candidate slot, but an already-materialized exact source remains
+            # a valid native incumbent.  This keeps exact lookup monotonic.
+            limit = max(1, per_move_limit) if exact_id in rows else per_move_limit
+            if limit <= 0:
+                continue
+
+            incumbent = min(
+                rows,
+                key=lambda candidate_id: (
+                    -self._triplet_local_utility(candidate_id),
+                    rows[candidate_id][0],
+                    0 if rows[candidate_id][1] else 1,
+                    candidate_id,
+                ),
+            )
+            exact_candidate = exact_id if exact_id in rows else None
+            ordered_ids: list[str] = []
+            if exact_candidate is not None:
+                ordered_ids.append(exact_candidate)
+            if incumbent not in ordered_ids:
+                ordered_ids.append(incumbent)
+            challengers = sorted(
+                (
+                    candidate_id
+                    for candidate_id in rows
+                    if candidate_id not in ordered_ids
+                ),
+                key=lambda candidate_id: (
+                    rows[candidate_id][0],
+                    -self._triplet_local_utility(candidate_id),
+                    candidate_id,
+                ),
+            )
+            ordered_ids.extend(challengers)
+            ordered_ids = ordered_ids[:limit]
+            per_move[move_uci] = [
+                (candidate_id, move_uci, rows[candidate_id][0])
+                for candidate_id in ordered_ids
+            ]
+
+        return [
+            candidate
+            for move_uci in sorted(per_move)
+            for candidate in per_move[move_uci]
+        ]
+
+    def _cap_shared_candidate_pairs(
+        self,
+        candidate_pairs: Iterable[tuple[str, str, int]],
+    ) -> list[tuple[str, str, int]]:
+        """Apply the global shared-source cap with incumbent-first fairness."""
+
+        cap = max(0, int(self.config.max_shared_atom_candidates_per_choice))
+        if cap == 0:
+            return []
+        unique: dict[tuple[str, str], tuple[str, str, int]] = {}
+        for triplet_id, move_uci, retrieval_rank in candidate_pairs:
+            pair = (str(triplet_id), str(move_uci))
+            candidate = (pair[0], pair[1], int(retrieval_rank))
+            previous = unique.get(pair)
+            if previous is None or candidate[2] < previous[2]:
+                unique[pair] = candidate
+        rows = sorted(
+            unique.values(),
+            key=lambda row: (row[1], row[2], row[0]),
+        )
+        if len(rows) <= cap:
+            return rows
+
+        by_move: dict[str, list[tuple[str, str, int]]] = {}
+        for row in rows:
+            by_move.setdefault(row[1], []).append(row)
+        for move_uci in by_move:
+            by_move[move_uci].sort(
+                key=lambda row: (
+                    -self._triplet_local_utility(row[0]),
+                    row[2],
+                    row[0],
+                    row[1],
+                )
+            )
+
+        selected: list[tuple[str, str, int]] = []
+        selected_pairs: set[tuple[str, str]] = set()
+        exacts = [row for row in rows if row[2] < 0]
+        exacts.sort(
+            key=lambda row: (
+                -self._triplet_local_utility(row[0]),
+                row[1],
+                row[0],
+            )
+        )
+        # Materialized exact branches are the most local learned evidence and
+        # must survive before generalized aliases consume a global cap.  The
+        # number of exact branches active on a novel board is normally small;
+        # if it alone exceeds the cap, learned utility adjudicates them.
+        for row in exacts:
+            if len(selected) >= cap:
+                break
+            selected.append(row)
+            selected_pairs.add((row[0], row[1]))
+
+        incumbents = [by_move[move_uci][0] for move_uci in sorted(by_move)]
+        incumbents.sort(
+            key=lambda row: (
+                -self._triplet_local_utility(row[0]),
+                row[2],
+                row[1],
+                row[0],
+            )
+        )
+        # Give each represented action its strongest incumbent before spending
+        # any remaining capacity on challengers.  If the cap is smaller than
+        # the number of represented actions, utility decides which incumbents
+        # can be represented and the UCI key keeps the choice replayable.
+        represented_moves = {row[1] for row in selected}
+        for row in incumbents:
+            if len(selected) >= cap:
+                break
+            if row[1] in represented_moves:
+                continue
+            selected.append(row)
+            selected_pairs.add((row[0], row[1]))
+            represented_moves.add(row[1])
+
+        challengers = [
+            row
+            for row in rows
+            if (row[0], row[1]) not in selected_pairs
+        ]
+        challengers.sort(
+            key=lambda row: (
+                row[2],
+                -self._triplet_local_utility(row[0]),
+                row[0],
+                row[1],
+            )
+        )
+        selected.extend(challengers[: max(0, cap - len(selected))])
+        return selected
+
     def _full_audit_candidates(
         self,
         board: chess.Board,
@@ -961,53 +1243,15 @@ class NativeReConKRKGraph:
         if not legal_map:
             return []
 
-        candidate_pairs: list[tuple[str, str, int]] = []
-        seen_pairs: set[tuple[str, str]] = set()
-        for move_uci, move in sorted(legal_map.items()):
-            keys = _triplet_keys(board, move, key_mode=self.config.key_mode)
-            exact_id = _triplet_id(*keys)
-            retrieval_ranks: Iterable[tuple[int, str]]
-            if exact_id in self.triplet_ids:
-                retrieval_ranks = ((0, exact_id),)
-            elif self.config.shared_feature_atoms:
-                retrieval_ranks = tuple(
-                    (rank, triplet_id)
-                    for rank, triplet_id in enumerate(
-                        self._triplets_from_active_shared_atoms(keys)
-                    )
-                )
-            elif self.config.key_mode != "exact":
-                retrieval_ranks = tuple(
-                    (rank, triplet_id)
-                    for rank, (triplet_id, _distance) in enumerate(
-                        self._nearest_triplets_for_keys(keys)
-                    )
-                )
-            else:
-                retrieval_ranks = ()
-            for retrieval_rank, triplet_id in retrieval_ranks:
-                triplet_id = str(triplet_id)
-                if triplet_id not in self.triplet_ids:
-                    continue
-                if masked_triplets and triplet_id in masked_triplets:
-                    continue
-                pair = (triplet_id, move_uci)
-                if pair not in seen_pairs:
-                    seen_pairs.add(pair)
-                    candidate_pairs.append((triplet_id, move_uci, retrieval_rank))
+        candidate_pairs = self._retrieval_candidate_pairs_for_legal(
+            board,
+            legal_map,
+            masked_triplets=masked_triplets,
+        )
 
         if self.config.shared_feature_atoms and len(candidate_pairs) > self.config.max_shared_atom_candidates_per_choice:
             self.scheduler_stats["shared_atom_candidate_pairs_before_cap"] += len(candidate_pairs)
-            candidate_pairs.sort(
-                key=lambda item: (
-                    self._triplet_root_weight(item[0]),
-                    -item[2],
-                    item[0],
-                    item[1],
-                ),
-                reverse=True,
-            )
-            candidate_pairs = candidate_pairs[: self.config.max_shared_atom_candidates_per_choice]
+            candidate_pairs = self._cap_shared_candidate_pairs(candidate_pairs)
             self.scheduler_stats["shared_atom_candidate_pairs_after_cap"] += len(candidate_pairs)
 
         self.scheduler_stats["choose_calls"] += 1
@@ -1201,28 +1445,14 @@ class NativeReConKRKGraph:
         *,
         masked_triplets: set[str] | None = None,
     ) -> dict[str, Any]:
-        candidate_pairs: list[tuple[str, str, int]] = []
-        seen_pairs: set[tuple[str, str]] = set()
-        for move_uci, move in legal.items():
-            keys = _triplet_keys(board, move, key_mode=self.config.key_mode)
-            for retrieval_rank, triplet_id in enumerate(self._triplets_from_active_shared_atoms(keys)):
-                pair = (triplet_id, move_uci)
-                if pair in seen_pairs or (masked_triplets and triplet_id in masked_triplets):
-                    continue
-                seen_pairs.add(pair)
-                candidate_pairs.append((triplet_id, move_uci, retrieval_rank))
+        candidate_pairs = self._retrieval_candidate_pairs_for_legal(
+            board,
+            legal,
+            masked_triplets=masked_triplets,
+        )
         if len(candidate_pairs) > self.config.max_shared_atom_candidates_per_choice:
             self.scheduler_stats["shared_atom_candidate_pairs_before_cap"] += len(candidate_pairs)
-            candidate_pairs.sort(
-                key=lambda item: (
-                    self._triplet_root_weight(item[0]),
-                    -item[2],
-                    item[0],
-                    item[1],
-                ),
-                reverse=True,
-            )
-            candidate_pairs = candidate_pairs[: self.config.max_shared_atom_candidates_per_choice]
+            candidate_pairs = self._cap_shared_candidate_pairs(candidate_pairs)
             self.scheduler_stats["shared_atom_candidate_pairs_after_cap"] += len(candidate_pairs)
         unique_triplets = {triplet_id for triplet_id, _move, _rank in candidate_pairs}
         self.scheduler_stats["choose_calls"] += 1
@@ -2162,6 +2392,15 @@ class NativeReConKRKGraph:
     def _apply_m3(self, triplet_id: str, *, reward: float) -> None:
         ids = _TripletNodeIds(triplet_id)
         bounded_reward = max(-1.0, min(1.0, reward))
+        mutable_shared_ids = {
+            node_id
+            for node_id in self.triplet_nodes.get(triplet_id, set())
+            if self.graph.nodes[node_id].meta.get("shared_feature_atom")
+            and not self.graph.nodes[node_id].meta.get("plasticity_frozen")
+        }
+        shared_credit_scale = self._shared_feature_credit_scale(
+            len(mutable_shared_ids)
+        )
         node_ids = [
             ids.triplet,
             ids.before_script,
@@ -2205,8 +2444,14 @@ class NativeReConKRKGraph:
                     node.meta["false_positive_count"] = int(node.meta.get("false_positive_count", 0)) + 1
             if node.meta.get("plasticity_frozen"):
                 continue
+            local_reward = (
+                bounded_reward * shared_credit_scale
+                if node_id in mutable_shared_ids
+                else bounded_reward
+            )
             node.meta["local_weight"] = _bounded(
-                float(node.meta.get("local_weight", 0.0)) + self.config.eta_m3 * bounded_reward,
+                float(node.meta.get("local_weight", 0.0))
+                + self.config.eta_m3 * local_reward,
                 self.config.max_abs_local_weight,
             )
             if node.meta.get("shared_feature_atom"):
@@ -2232,6 +2477,31 @@ class NativeReConKRKGraph:
             edge.w = _bounded(float(edge.w) + self.config.eta_m3 * bounded_reward, self.config.max_abs_local_weight)
             self.m3_update_count += 1
 
+    def _shared_feature_credit_scale(self, shared_count: int) -> float:
+        """Conserve one event's generalized score across shared features.
+
+        A triplet can activate scores of shared atoms.  Giving every atom the
+        full TD error duplicates one environmental observation and lets a
+        single lucky action lift unrelated choices.  Match responsibility to
+        the same aggregation norm used by policy scoring, so the bundle's
+        aggregate update is exactly one ordinary local update before bounds.
+        Exact/private nodes and edges retain the full action-specific credit.
+        """
+
+        count = max(0, int(shared_count))
+        if count <= 1:
+            return 1.0
+        normalization = str(self.config.terminal_score_normalization).lower()
+        if normalization == "mean":
+            return 1.0
+        if normalization == "sqrt":
+            return 1.0 / math.sqrt(count)
+        if normalization == "sum":
+            return 1.0 / count
+        raise ValueError(
+            "terminal_score_normalization must be mean, sqrt, or sum"
+        )
+
     def _reset_runtime_states(self, node_ids: Iterable[str] | None = None) -> None:
         nodes = self.graph.nodes.values() if node_ids is None else (self.graph.nodes[nid] for nid in node_ids if nid in self.graph.nodes)
         for node in nodes:
@@ -2245,7 +2515,7 @@ class NativeReConKRKGraph:
             triplet_id = _triplet_id(*keys)
             if triplet_id in self.triplet_ids:
                 triplets[triplet_id] = move.uci()
-            elif self.config.shared_feature_atoms:
+            if self.config.shared_feature_atoms:
                 for candidate_id in self._triplets_from_active_shared_atoms(keys):
                     triplets.setdefault(candidate_id, move.uci())
             elif self.config.key_mode != "exact":
@@ -2264,15 +2534,41 @@ class NativeReConKRKGraph:
                 overlap[triplet_id] = overlap.get(triplet_id, 0) + 1
         self.scheduler_stats["shared_atom_retrieval_calls"] += 1
         self.scheduler_stats["shared_atom_retrieved_triplets"] += len(overlap)
-        selected = sorted(
-            (
-                (count, self._triplet_root_weight(triplet_id), triplet_id)
-                for triplet_id, count in overlap.items()
-                if count >= self.config.shared_atom_min_overlap and triplet_id not in self.pruned_triplet_ids
-            ),
-            reverse=True,
+        ranked = [
+            (triplet_id, count)
+            for triplet_id, count in overlap.items()
+            if count >= self.config.shared_atom_min_overlap
+            and triplet_id not in self.pruned_triplet_ids
+        ]
+        ranked.sort(
+            key=lambda row: (
+                -row[1],
+                -self._triplet_local_utility(row[0]),
+                row[0],
+            )
         )
-        return tuple(triplet_id for _count, _weight, triplet_id in selected[: self.config.max_prototype_candidates_per_move])
+        limit = max(0, int(self.config.max_prototype_candidates_per_move))
+        if limit == 0 or not ranked:
+            return ()
+
+        # Retrieval order is deliberately hybrid: reserve one slot for the
+        # strongest learned utility even when overlap puts it below the normal
+        # cutoff, then spend the remaining slots on overlap-ranked challengers.
+        incumbent = min(
+            ranked,
+            key=lambda row: (
+                -self._triplet_local_utility(row[0]),
+                -row[1],
+                row[0],
+            ),
+        )
+        selected = [incumbent[0]]
+        selected.extend(
+            triplet_id
+            for triplet_id, _count in ranked
+            if triplet_id != incumbent[0]
+        )
+        return tuple(selected[:limit])
 
     def _shared_atom_ids_for_keys(
         self,

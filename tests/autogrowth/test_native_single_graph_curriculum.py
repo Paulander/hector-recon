@@ -1,6 +1,7 @@
 import chess
+import pytest
 
-from recon_lite import Graph, Node, NodeState, NodeType, ReConEngine
+from recon_lite import Graph, LinkType, Node, NodeState, NodeType, ReConEngine
 from recon_lite_chess.autogrowth import (
     NativeLocalTrainingDecision,
     NativeReConKRKGraph,
@@ -267,7 +268,8 @@ def test_local_td_credit_changes_a_later_executed_action_relative_to_control() -
         td_error=0.0,
         stage_diagnostic="local_r1_control_exposure",
     )
-    control_decision = control.choose_local_training_action(board, "local_r1")
+    control_decision = control.choose_local_policy_action(board)
+    assert control_decision is not None
 
     treated = NativeReConKRKGraph(config=config)
     for _ in range(10):
@@ -282,12 +284,30 @@ def test_local_td_credit_changes_a_later_executed_action_relative_to_control() -
         td_error=1.0,
         stage_diagnostic="local_r1",
     )
-    treated_decision = treated.choose_local_training_action(board, "local_r1")
+    treated_decision = treated.choose_local_policy_action(board)
+    assert treated_decision is not None
 
     assert treated_decision.move_uci == target.uci()
     assert treated_decision.move_uci != control_decision.move_uci
     assert treated_decision.source is not None
     assert treated_decision.prediction_source == "pre_emission_native_raw"
+
+    # Training remains curious after the positive event, but once the other
+    # equally exposed local patterns receive their ordinary neutral visits,
+    # the credited pattern is revisited without a host action schedule.
+    revisited = False
+    for _ in range(len(tuple(board.legal_moves))):
+        exploratory = treated.choose_local_training_action(board, "local_r1")
+        if exploratory.pattern_id == treated_decision.pattern_id:
+            revisited = True
+            break
+        treated.apply_intrinsic_td(
+            board,
+            exploratory.move,
+            td_error=0.0,
+            stage_diagnostic="local_r1_neutral_revisit",
+        )
+    assert revisited
 
 
 def test_local_training_choice_is_deterministic_and_alias_representative_is_exposure_indexed() -> None:
@@ -415,3 +435,271 @@ def test_local_full_audit_respects_shared_candidate_cap(monkeypatch) -> None:
     stats = network.scheduler_stats
     assert stats["shared_atom_candidate_pairs_before_cap"] >= len(calls)
     assert stats["shared_atom_candidate_pairs_after_cap"] == len(calls)
+
+
+def test_shared_retrieval_keeps_high_utility_source_below_overlap_width(monkeypatch) -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            shared_feature_atoms=True,
+            shared_atom_min_overlap=1,
+            max_prototype_candidates_per_move=2,
+            max_ticks=8,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))[:4]
+    source_ids = tuple(
+        network.ensure_triplet(board, move, stage="retrieval_incumbent")
+        for move in moves
+    )
+    active_atom_ids = tuple(f"synthetic_active_atom_{index}" for index in range(4))
+    network.shared_atom_triplets = {
+        active_atom_ids[0]: set(source_ids),
+        active_atom_ids[1]: set(source_ids[:3]),
+        active_atom_ids[2]: set(source_ids[:2]),
+        active_atom_ids[3]: {source_ids[0]},
+    }
+    monkeypatch.setattr(
+        network,
+        "_shared_atom_ids_for_keys",
+        lambda _keys: set(active_atom_ids),
+    )
+    for source_id, weight in zip(source_ids, (0.10, 0.20, 0.30, 0.95)):
+        edge = network.graph.get_edge("tg26o_root", source_id, LinkType.SUB)
+        assert edge is not None
+        edge.w = weight
+
+    retrieved = network._triplets_from_active_shared_atoms(
+        _triplet_keys(board, moves[0], key_mode=network.config.key_mode)
+    )
+
+    assert len(retrieved) == network.config.max_prototype_candidates_per_move
+    assert retrieved[0] == source_ids[-1]
+    assert source_ids[-1] in retrieved
+
+
+def test_local_full_audit_keeps_exact_and_generalized_source_and_generalized_can_win(
+    monkeypatch,
+) -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            shared_feature_atoms=True,
+            max_prototype_candidates_per_move=3,
+            max_shared_atom_candidates_per_choice=8,
+            max_ticks=8,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    target = sorted(board.legal_moves, key=lambda item: item.uci())[0]
+    generalized_source_move = sorted(board.legal_moves, key=lambda item: item.uci())[1]
+    exact_id = network.ensure_triplet(board, target, stage="exact_source")
+    generalized_id = network.ensure_triplet(
+        board,
+        generalized_source_move,
+        stage="generalized_source",
+    )
+    assert generalized_id != exact_id
+    monkeypatch.setattr(
+        network,
+        "_triplets_from_active_shared_atoms",
+        lambda _keys: (generalized_id,),
+    )
+    observed: list[tuple[str, str]] = []
+
+    def fake_confirmed_candidates(
+        legal,
+        triplet_ids,
+        candidate_move_by_triplet=None,
+    ):
+        triplet_id = sorted(triplet_ids)[0]
+        move_uci = str((candidate_move_by_triplet or {})[triplet_id])
+        observed.append((triplet_id, move_uci))
+        score = 0.10 if triplet_id == exact_id else 0.90
+        return [(score, move_uci, triplet_id)]
+
+    monkeypatch.setattr(network, "_confirmed_action_candidates", fake_confirmed_candidates)
+    candidates = network._full_audit_candidates(
+        board,
+        {target.uci(): target},
+    )
+
+    assert {triplet_id for triplet_id, _move_uci in observed} == {
+        exact_id,
+        generalized_id,
+    }
+    assert max(candidates)[2] == generalized_id
+
+
+def test_shared_global_cap_preserves_fair_incumbents_and_is_deterministic() -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            shared_feature_atoms=True,
+            max_prototype_candidates_per_move=2,
+            max_shared_atom_candidates_per_choice=4,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))[:3]
+    source_moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))[:6]
+    source_ids = tuple(
+        network.ensure_triplet(board, move, stage="global_cap_source")
+        for move in source_moves
+    )
+    weights = (0.90, 0.20, 0.80, 0.10, 0.70, 0.05)
+    for source_id, weight in zip(source_ids, weights):
+        edge = network.graph.get_edge("tg26o_root", source_id, LinkType.SUB)
+        assert edge is not None
+        edge.w = weight
+    candidate_pairs = [
+        (source_ids[0], moves[0].uci(), 0),
+        (source_ids[1], moves[0].uci(), 1),
+        (source_ids[2], moves[1].uci(), 0),
+        (source_ids[3], moves[1].uci(), 1),
+        (source_ids[4], moves[2].uci(), 0),
+        (source_ids[5], moves[2].uci(), 1),
+    ]
+
+    capped = network._cap_shared_candidate_pairs(candidate_pairs)
+    replayed = network._cap_shared_candidate_pairs(tuple(reversed(candidate_pairs)))
+
+    assert capped == replayed
+    assert len(capped) == network.config.max_shared_atom_candidates_per_choice
+    assert {move_uci for _triplet_id, move_uci, _rank in capped[:3]} == {
+        move.uci() for move in moves
+    }
+    assert {triplet_id for triplet_id, _move_uci, _rank in capped[:3]} == {
+        source_ids[0],
+        source_ids[2],
+        source_ids[4],
+    }
+    assert capped[3][0] == source_ids[1]
+
+
+def test_shared_global_cap_reserves_materialized_exact_before_aliases() -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            shared_feature_atoms=True,
+            max_shared_atom_candidates_per_choice=2,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))[:3]
+    exact_id = network.ensure_triplet(board, moves[0], stage="exact_cap_source")
+    generalized_id = network.ensure_triplet(
+        board,
+        moves[1],
+        stage="generalized_cap_source",
+    )
+    exact_edge = network.graph.get_edge("tg26o_root", exact_id, LinkType.SUB)
+    generalized_edge = network.graph.get_edge(
+        "tg26o_root", generalized_id, LinkType.SUB
+    )
+    assert exact_edge is not None and generalized_edge is not None
+    exact_edge.w = 0.10
+    generalized_edge.w = 0.90
+
+    capped = network._cap_shared_candidate_pairs([
+        (generalized_id, moves[0].uci(), 0),
+        (exact_id, moves[0].uci(), -1),
+        (generalized_id, moves[1].uci(), -1),
+        (generalized_id, moves[2].uci(), 0),
+    ])
+
+    assert (exact_id, moves[0].uci(), -1) in capped
+    assert all(retrieval_rank < 0 for _triplet, _move, retrieval_rank in capped)
+
+
+def test_local_exploration_ignores_unrelated_global_exposure() -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            shared_feature_atoms=True,
+            max_ticks=80,
+        )
+    )
+    # This counter includes outcomes from every position in the graph.  It is
+    # retained for lifetime diagnostics, but must not drive a new local
+    # population's novelty pressure.
+    network.graph.nodes["tg26o_root"].meta["request_exposures"] = 10_000
+
+    decision = network.choose_local_training_action(
+        chess.Board(MATE_ONE_FEN),
+        stage_diagnostic="local_exposure_scope",
+    )
+
+    assert decision.total_current_pattern_exposures == 0
+    assert decision.pattern_exposure == 0
+    assert decision.exploration_bonus == 1.0
+
+
+@pytest.mark.parametrize(
+    ("normalization", "expected_scale"),
+    (
+        ("mean", lambda count: 1.0),
+        ("sqrt", lambda count: 1.0 / count**0.5),
+        ("sum", lambda count: 1.0 / count),
+    ),
+)
+def test_one_td_event_conserves_shared_feature_credit(
+    normalization,
+    expected_scale,
+) -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            shared_feature_atoms=True,
+            shared_projection_atoms=True,
+            terminal_score_normalization=normalization,
+            eta_m3=0.10,
+            max_ticks=8,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    move = sorted(board.legal_moves, key=lambda item: item.uci())[0]
+    triplet_id = network.ensure_triplet(
+        board,
+        move,
+        stage="shared_credit_conservation",
+    )
+    shared_ids = tuple(
+        node_id
+        for node_id in network.triplet_nodes[triplet_id]
+        if network.graph.nodes[node_id].meta.get("shared_feature_atom")
+    )
+    assert len(shared_ids) > 1
+
+    network.apply_intrinsic_td(
+        board,
+        move,
+        td_error=1.0,
+        stage_diagnostic="shared_credit_conservation",
+    )
+
+    expected_atom_weight = network.config.eta_m3 * expected_scale(len(shared_ids))
+    assert sorted(
+        network.graph.nodes[node_id].meta["local_weight"]
+        for node_id in shared_ids
+    ) == pytest.approx([expected_atom_weight] * len(shared_ids))
+    if normalization == "mean":
+        aggregate = sum(
+            network.graph.nodes[node_id].meta["local_weight"]
+            for node_id in shared_ids
+        ) / len(shared_ids)
+    elif normalization == "sqrt":
+        aggregate = sum(
+            network.graph.nodes[node_id].meta["local_weight"]
+            for node_id in shared_ids
+        ) / len(shared_ids) ** 0.5
+    else:
+        aggregate = sum(
+            network.graph.nodes[node_id].meta["local_weight"]
+            for node_id in shared_ids
+        )
+    assert aggregate == pytest.approx(network.config.eta_m3)
+    root_edge = network.graph.get_edge("tg26o_root", triplet_id, LinkType.SUB)
+    assert root_edge is not None
+    assert root_edge.w == pytest.approx(network.config.eta_m3)
