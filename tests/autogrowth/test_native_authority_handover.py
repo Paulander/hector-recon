@@ -6,20 +6,34 @@ from pathlib import Path
 import chess
 import pytest
 
-from recon_lite import ChildResponse, FrameContext, FrameKind
+from recon_lite import (
+    AnonymousChoiceOption,
+    ChildResponse,
+    FrameContext,
+    FrameKind,
+    LinkType,
+    NodeType,
+)
+from recon_lite_hector.nodes import StemCellState
 from recon_lite_hector.learning import IntrinsicCreditConfig, IntrinsicCreditEngine
 from recon_lite_chess.autogrowth.native_authority_handover import (
     ChildQuery,
     FrozenCompetenceProvenance,
+    GraphTerminalSignal,
     NativeHandoverGenome,
     NativeR0Organism,
+    _OptionSignalCapture,
+    _alias_invariant_capture_union,
+    _formal_native_options,
     native_authority_tripwires,
     run_dream_firewall_canary,
 )
 from recon_lite_chess.autogrowth.native_intrinsic_curriculum import R0_COMPETENCE_ID
 from recon_lite_chess.autogrowth.native_single_graph_curriculum import (
+    ROOT_ID,
     NativeReConKRKGraph,
     NativeSingleGraphConfig,
+    _triplet_keys,
 )
 
 
@@ -314,3 +328,186 @@ def test_one_reply_failure_blocks_the_all_replies_parent_leg() -> None:
     one_fails = genome.decide(board, _AllReplyTestChild(target, target), arm="actual_child")
     assert all_confirm.actuation.move_uci == target
     assert one_fails.actuation.move_uci != target
+
+
+def test_same_move_aliases_share_formally_confirmed_trace_evidence() -> None:
+    """Alias order and anonymous winner must not change graph evidence."""
+
+    board = chess.Board(MATE_ONE)
+    target = chess.Move.from_uci("f2f1")
+    graph = NativeReConKRKGraph(config=NativeSingleGraphConfig(
+        include_symmetries=False,
+        max_ticks=80,
+        indexed_scheduler=True,
+        key_mode="canonical",
+        shared_feature_atoms=True,
+        shared_projection_atoms=True,
+        include_grouped_cache_terminals=False,
+        score_action_pattern_atoms=True,
+        terminal_score_normalization="sqrt",
+    ))
+    for move in board.legal_moves:
+        graph.ensure_triplet(board, move, stage="alias_trace_test")
+
+    def atom_ids(triplet_id: str) -> set[str]:
+        return {
+            node_id
+            for node_id in graph.triplet_nodes[triplet_id]
+            if graph.graph.nodes[node_id].ntype is NodeType.TERMINAL
+            and graph.graph.nodes[node_id].meta.get("shared_feature_atom")
+        }
+
+    # Choose deterministic aliases with different attached shared atoms.
+    ordered_aliases = tuple(sorted(
+        graph.triplet_ids,
+        key=lambda item: (len(atom_ids(item)), item),
+    ))
+    first_alias, second_alias = ordered_aliases[0], ordered_aliases[-1]
+    aliases = (first_alias, second_alias)
+    assert atom_ids(first_alias) != atom_ids(second_alias)
+    common_atoms = sorted(atom_ids(first_alias) & atom_ids(second_alias))
+    assert len(common_atoms) >= 2
+    composite_id = graph.materialize_shared_composite(
+        common_atoms[:2], aliases, stage="alias_trace_test"
+    )
+    graph.composite_cells[composite_id].state = StemCellState.MATURE
+
+    first_root_edge = graph.graph.get_edge(ROOT_ID, first_alias, LinkType.SUB)
+    second_root_edge = graph.graph.get_edge(ROOT_ID, second_alias, LinkType.SUB)
+    assert first_root_edge is not None and second_root_edge is not None
+    first_root_edge.w = 0.25
+    second_root_edge.w = 0.75
+
+    target_keys = _triplet_keys(
+        board,
+        target,
+        key_mode=graph.config.key_mode,
+    )
+
+    def run(allowed: tuple[str, ...]):
+        graph._triplets_from_active_shared_atoms = (  # type: ignore[method-assign]
+            lambda keys: allowed if keys == target_keys else ()
+        )
+        return _formal_native_options(
+            graph,
+            board,
+            allowed_triplets=allowed,
+            per_actuator_budget=16,
+        )
+
+    single_first, _ticks, first_captures = run((first_alias,))
+    single_second, _ticks, second_captures = run((second_alias,))
+    paired_forward, _ticks, forward_captures = run(
+        (first_alias, second_alias)
+    )
+    paired_reverse, _ticks, reverse_captures = run(
+        (second_alias, first_alias)
+    )
+    assert len(single_first) == len(single_second) == 1
+    assert len(paired_forward) == len(paired_reverse) == 2
+    first_option = single_first[0].identity
+    second_option = single_second[0].identity
+    expected_base_ids = tuple(sorted(
+        set(first_captures[first_option].base_terminal_node_ids)
+        | set(second_captures[second_option].base_terminal_node_ids)
+    ))
+    expected_composite_ids = tuple(sorted(
+        set(first_captures[first_option].mature_composite_ids)
+        | set(second_captures[second_option].mature_composite_ids)
+    ))
+
+    def evidence(captures, option_identity):
+        capture = captures[option_identity]
+        return (
+            capture.base_terminal_node_ids,
+            capture.mature_composite_ids,
+            capture.terminal_signals,
+        )
+
+    expected = (
+        expected_base_ids,
+        expected_composite_ids,
+        forward_captures[paired_forward[0].identity].terminal_signals,
+    )
+    assert expected_base_ids
+    assert expected_composite_ids == (composite_id,)
+    assert evidence(forward_captures, paired_forward[0].identity) == expected
+    assert evidence(forward_captures, paired_forward[1].identity) == expected
+    assert evidence(reverse_captures, paired_reverse[0].identity) == expected
+    assert evidence(reverse_captures, paired_reverse[1].identity) == expected
+    assert tuple(signal.identity for signal in expected[2]) == tuple(sorted(
+        (*expected_base_ids, *expected_composite_ids)
+    ))
+    composite_instances = {
+        graph.composite_node_by_triplet[(composite_id, alias)]
+        for alias in aliases
+    }
+    composite_signal = next(
+        signal for signal in expected[2]
+        if signal.identity == composite_id
+    )
+    assert composite_signal.source_node_identity in composite_instances
+    assert composite_signal.provenance == (
+        "same_actuator_formally_confirmed_mature_composite"
+    )
+
+    # Alias identity and strength still belong to each option; only evidence
+    # is shared.  The larger root weight remains visible to the choice genome.
+    assert {option.identity for option in paired_forward} == {
+        first_option,
+        second_option,
+    }
+    assert paired_forward[0].activation != paired_forward[1].activation
+
+
+def test_alias_evidence_union_isolated_by_exact_actuator() -> None:
+    first = AnonymousChoiceOption(
+        identity="alias:first",
+        actuator_identity="chess_move:a1a2",
+        activation=0.25,
+        confirmed=True,
+    )
+    second = AnonymousChoiceOption(
+        identity="alias:second",
+        actuator_identity="chess_move:a1a2",
+        activation=0.75,
+        confirmed=True,
+    )
+    other = AnonymousChoiceOption(
+        identity="alias:other",
+        actuator_identity="chess_move:b1b2",
+        activation=0.5,
+        confirmed=True,
+    )
+
+    def capture(option_identity: str, signal_identity: str):
+        signal = GraphTerminalSignal(
+            identity=signal_identity,
+            role="BASE_TERMINAL",
+            source_node_identity=signal_identity,
+            terminal_kind="shared_feature_atom",
+            provenance="same_actuator_formally_confirmed_terminal",
+        )
+        return _OptionSignalCapture(
+            option_identity=option_identity,
+            base_terminal_node_ids=(signal_identity,),
+            mature_composite_ids=(),
+            terminal_signals=(signal,),
+        )
+
+    captures = {
+        first.identity: capture(first.identity, "atom:first"),
+        second.identity: capture(second.identity, "atom:second"),
+        other.identity: capture(other.identity, "atom:other"),
+    }
+    normalized = _alias_invariant_capture_union(
+        (first, second, other), captures
+    )
+
+    assert normalized[first.identity].base_terminal_node_ids == (
+        "atom:first", "atom:second"
+    )
+    assert normalized[second.identity].base_terminal_node_ids == (
+        "atom:first", "atom:second"
+    )
+    assert normalized[other.identity] == captures[other.identity]

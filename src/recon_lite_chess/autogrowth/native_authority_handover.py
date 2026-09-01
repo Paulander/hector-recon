@@ -1012,7 +1012,7 @@ def _formal_native_options(
                         "terminal_kind", "shared_feature_atom"
                     )
                 ),
-                provenance="selected_option_confirmed_terminal",
+                provenance="same_actuator_formally_confirmed_terminal",
             )
             for node_id in base_ids
         )
@@ -1022,7 +1022,9 @@ def _formal_native_options(
                 role="MATURE_COMPOSITE",
                 source_node_identity=instance_id,
                 terminal_kind="stem_cell_composite",
-                provenance="selected_option_confirmed_mature_composite",
+                provenance=(
+                    "same_actuator_formally_confirmed_mature_composite"
+                ),
                 stem_cell_identity=composite_id,
             )
             for composite_id, instance_id in mature_composites
@@ -1045,7 +1047,101 @@ def _formal_native_options(
             activation=float(strength),
             confirmed=True,
         ))
+    captures = _alias_invariant_capture_union(options, captures)
     return tuple(options), total_ticks, captures
+
+
+def _alias_invariant_capture_union(
+    options: Sequence[AnonymousChoiceOption],
+    captures: Mapping[str, _OptionSignalCapture],
+) -> dict[str, _OptionSignalCapture]:
+    """Give aliases of one actuator the same formally observed evidence.
+
+    Shared-atom retrieval can expose more than one stored triplet for the
+    same move.  The option identity and activation remain triplet-specific,
+    but the graph evidence attached to that move must not depend on which
+    alias the anonymous genome happens to select.  The union is formed only
+    from captures that survived the formal confirmation pass above; no
+    outcome, label, or board identity participates in this operation.
+
+    Composite instances are per-parent graph nodes even though their stem
+    cell identity is shared.  Their signal source therefore uses the
+    lexicographically first formally confirmed instance, making the union
+    deterministic while retaining a real graph-node provenance.
+    """
+
+    by_actuator: dict[str, list[str]] = {}
+    for option in options:
+        if option.identity not in captures:
+            continue
+        by_actuator.setdefault(option.actuator_identity, []).append(
+            option.identity
+        )
+
+    normalized = dict(captures)
+    for option_ids in by_actuator.values():
+        rows = tuple(captures[option_id] for option_id in option_ids)
+        base_ids = tuple(sorted({
+            node_id
+            for row in rows
+            for node_id in row.base_terminal_node_ids
+        }))
+        composite_ids = tuple(sorted({
+            composite_id
+            for row in rows
+            for composite_id in row.mature_composite_ids
+        }))
+
+        base_signals: dict[str, GraphTerminalSignal] = {}
+        composite_signals: dict[str, list[GraphTerminalSignal]] = {}
+        for row in rows:
+            for signal in row.terminal_signals:
+                if signal.role == "BASE_TERMINAL":
+                    current = base_signals.get(signal.identity)
+                    if current is None or _signal_sort_key(signal) < _signal_sort_key(current):
+                        base_signals[signal.identity] = signal
+                elif signal.role == "MATURE_COMPOSITE":
+                    composite_signals.setdefault(signal.identity, []).append(signal)
+
+        union_base_signals = tuple(
+            base_signals[node_id]
+            for node_id in base_ids
+            if node_id in base_signals
+        )
+        union_composite_signals = tuple(
+            min(
+                composite_signals[composite_id],
+                key=_signal_sort_key,
+            )
+            for composite_id in composite_ids
+            if composite_id in composite_signals
+        )
+        union_signals = tuple(sorted(
+            (*union_base_signals, *union_composite_signals),
+            key=lambda item: item.identity,
+        ))
+
+        for row in rows:
+            normalized[row.option_identity] = _OptionSignalCapture(
+                option_identity=row.option_identity,
+                base_terminal_node_ids=base_ids,
+                mature_composite_ids=composite_ids,
+                terminal_signals=union_signals,
+            )
+    return normalized
+
+
+def _signal_sort_key(signal: GraphTerminalSignal) -> tuple[str, ...]:
+    """Return a total, deterministic ordering for typed graph signals."""
+
+    return (
+        signal.identity,
+        signal.role,
+        signal.source_node_identity,
+        signal.terminal_kind,
+        signal.provenance,
+        "" if signal.stem_cell_identity is None else signal.stem_cell_identity,
+    )
 
 
 def _always_legal_actuator(node: Node, env: Mapping[str, Any]) -> tuple[bool, bool]:

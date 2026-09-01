@@ -77,6 +77,8 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _generate_balanced_r1_split,
     _mechanistic_r1_arms,
     _native_v2_r0_admission_audit,
+    _native_v2_authority_ready_for_r1,
+    _native_v2_runtime_integrity_ready,
     _namespace_development_fullmoves,
     _r0_available,
     _r0_available_with_dispatch_cache,
@@ -3037,11 +3039,160 @@ def test_native_v2_r0_admission_is_read_only_and_requires_clean_jurisdiction(
     )
 
     assert audit["pass"] is True
+    assert audit["runtime_integrity_pass"] is True
+    assert audit["coverage_specificity_controls_r1_stage_entry"] is False
+    assert audit["runtime_integrity_controls_r1_stage_entry"] is True
+    assert audit["runtime_integrity_checks_all_emitted_actuations"] is True
     assert audit["positive_authorized_mate_count"] == 1
     assert audit["negative_available_count"] == 0
     assert audit["continuation_immutable"] is True
     assert audit["frozen_r0_immutable"] is True
     assert audit["validation_outcomes_consumed_by_learner"] is False
+
+
+def test_partial_native_r0_coverage_is_report_only_not_an_r1_entry_gate(
+    monkeypatch,
+) -> None:
+    positive = "k7/8/1K6/8/8/8/8/7R w - - 0 1"
+    decoy = "8/8/8/8/8/2K5/7R/k7 w - - 0 1"
+
+    class _R0:
+        @staticmethod
+        def inference_guard_identity() -> str:
+            return "immutable-r0"
+
+    class _Session:
+        def close(self) -> None:
+            pass
+
+    class _Authority:
+        base = SimpleNamespace(r0=_R0())
+
+        @staticmethod
+        def continuation_digest() -> str:
+            return "immutable-authority"
+
+        @staticmethod
+        def frame_session() -> _Session:
+            return _Session()
+
+    def abstaining(_authority, board, *, frame_id, frame_session=None):
+        assert frame_id.startswith("native-r0-admission:")
+        assert frame_session is not None
+        selected = next(iter(board.legal_moves), None)
+        return False, {
+            "selected_move": None if selected is None else selected.uci(),
+            "classification": {"state": "unknown"},
+        }
+
+    monkeypatch.setattr(curriculum_module, "_v2_r0_available", abstaining)
+    audit = _native_v2_r0_admission_audit(
+        _Authority(),
+        positive_fens=(positive,),
+        negative_fens=(decoy,),
+        max_samples=2,
+    )
+
+    assert audit["pass"] is False
+    assert audit["positive_authorized_count"] == 0
+    assert audit["negative_available_count"] == 0
+    assert audit["runtime_integrity_pass"] is True
+    assert _native_v2_runtime_integrity_ready(audit) is True
+    assert _native_v2_authority_ready_for_r1(
+        availability_mode=V2_PROSPECTIVE_AVAILABILITY,
+        authority_present=True,
+        boundary_ecology_enabled=True,
+        admission_audit=audit,
+    ) is True
+    assert audit["coverage_specificity_controls_r1_stage_entry"] is False
+
+
+def test_native_r0_available_illegal_actuation_blocks_runtime_integrity(
+    monkeypatch,
+) -> None:
+    positive = "k7/8/1K6/8/8/8/8/7R w - - 0 1"
+
+    class _R0:
+        @staticmethod
+        def inference_guard_identity() -> str:
+            return "immutable-r0"
+
+    class _Authority:
+        base = SimpleNamespace(r0=_R0())
+
+        @staticmethod
+        def continuation_digest() -> str:
+            return "immutable-authority"
+
+    monkeypatch.setattr(
+        curriculum_module,
+        "_v2_r0_available",
+        lambda *_args, **_kwargs: (
+            True,
+            {
+                "selected_move": "a1a8",
+                "classification": {"state": "available"},
+            },
+        ),
+    )
+    audit = _native_v2_r0_admission_audit(
+        _Authority(),
+        positive_fens=(positive,),
+        negative_fens=(),
+        max_samples=1,
+    )
+
+    assert audit["runtime_integrity_pass"] is False
+    assert audit["available_invalid_actuation_count"] == 1
+    assert _native_v2_runtime_integrity_ready(audit) is False
+    assert _native_v2_authority_ready_for_r1(
+        availability_mode=V2_PROSPECTIVE_AVAILABILITY,
+        authority_present=True,
+        boundary_ecology_enabled=True,
+        admission_audit=audit,
+    ) is False
+
+
+def test_native_r0_unknown_illegal_emission_blocks_runtime_integrity(
+    monkeypatch,
+) -> None:
+    positive = "k7/8/1K6/8/8/8/8/7R w - - 0 1"
+
+    class _R0:
+        @staticmethod
+        def inference_guard_identity() -> str:
+            return "immutable-r0"
+
+    class _Authority:
+        base = SimpleNamespace(r0=_R0())
+
+        @staticmethod
+        def continuation_digest() -> str:
+            return "immutable-authority"
+
+    monkeypatch.setattr(
+        curriculum_module,
+        "_v2_r0_available",
+        lambda *_args, **_kwargs: (
+            False,
+            {
+                "selected_move": "a1a8",
+                "classification": {"state": "unknown"},
+            },
+        ),
+    )
+    audit = _native_v2_r0_admission_audit(
+        _Authority(),
+        positive_fens=(positive,),
+        negative_fens=(),
+        max_samples=1,
+    )
+
+    assert audit["pass"] is False
+    assert audit["runtime_integrity_pass"] is False
+    assert audit["available_invalid_actuation_count"] == 0
+    assert audit["illegal_selection_count"] == 1
+    assert _native_v2_runtime_integrity_ready(audit) is False
 
 
 def test_cached_r0_replay_is_graph_memory_live_confirmed_and_reexecuted() -> None:

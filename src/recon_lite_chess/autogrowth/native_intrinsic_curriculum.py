@@ -751,16 +751,11 @@ def run_native_intrinsic_curriculum(
     selected_graph = graph
     selected_credit = credit
     availability_ready = bool(
-        (
-            cfg.r0_availability_mode == V2_PROSPECTIVE_AVAILABILITY
-            and r0_child_authority is not None
-            and (
-                not cfg.r0_boundary_ecology_enabled
-                or bool(
-                    native_r0_admission is not None
-                    and native_r0_admission.get("pass", False)
-                )
-            )
+        _native_v2_authority_ready_for_r1(
+            availability_mode=cfg.r0_availability_mode,
+            authority_present=r0_child_authority is not None,
+            boundary_ecology_enabled=cfg.r0_boundary_ecology_enabled,
+            admission_audit=native_r0_admission,
         )
         or (
             r0_gate is not None
@@ -1149,6 +1144,14 @@ def run_native_intrinsic_curriculum(
             "r0_and_r1_stopping_use_validation_only": True,
             "r0_gate_fit_and_maturity_use_train_validation_only": True,
             "r0_stage_entry_and_authority_use_validation_only": True,
+            "native_r0_coverage_specificity_is_report_only": bool(
+                cfg.r0_boundary_ecology_enabled
+            ),
+            "native_r0_coverage_specificity_controls_r1_stage_entry": False,
+            "native_r0_runtime_integrity_controls_r1_stage_entry": bool(
+                cfg.r0_boundary_ecology_enabled
+            ),
+            "native_r0_runtime_integrity_reads_outcome_labels": False,
             "r1_checkpoint_retention_split": "r0_validation",
             "regression_queries_in_progress": False,
             "r1_regression_withheld_until_final_evaluation": True,
@@ -1201,6 +1204,9 @@ def run_native_intrinsic_curriculum(
                 r0_child_authority is not None and r0_core_gate is None
             ),
             "operational": bool(
+                _native_v2_runtime_integrity_ready(native_r0_admission)
+            ),
+            "scientific_admission_pass": bool(
                 native_r0_admission is not None
                 and native_r0_admission.get("pass", False)
             ),
@@ -1238,11 +1244,13 @@ def run_native_intrinsic_curriculum(
                 "development_factorial_complete_no_r2_without_replication"
                 if r1_executed
                 else (
-                    "native_r0_jurisdiction_incomplete_do_not_enter_r1"
+                    "native_r0_authority_integrity_failure_do_not_enter_r1"
                     if r0_pass
                     and cfg.r0_boundary_ecology_enabled
                     and native_r0_admission is not None
-                    and not native_r0_admission.get("pass", False)
+                    and not _native_v2_runtime_integrity_ready(
+                        native_r0_admission
+                    )
                     else "r0_failed_or_gate_unavailable_do_not_advance"
                 )
             ),
@@ -5770,6 +5778,36 @@ def _v2_r0_available(
     return available, response
 
 
+def _native_v2_runtime_integrity_ready(
+    audit: Mapping[str, Any] | None,
+) -> bool:
+    """Use only an exact outcome-blind integrity result for R1 entry."""
+
+    return bool(
+        isinstance(audit, Mapping)
+        and audit.get("runtime_integrity_pass") is True
+    )
+
+
+def _native_v2_authority_ready_for_r1(
+    *,
+    availability_mode: str,
+    authority_present: bool,
+    boundary_ecology_enabled: bool,
+    admission_audit: Mapping[str, Any] | None,
+) -> bool:
+    """Admit native R1 without turning held-out coverage into authority."""
+
+    return bool(
+        availability_mode == V2_PROSPECTIVE_AVAILABILITY
+        and authority_present
+        and (
+            not boundary_ecology_enabled
+            or _native_v2_runtime_integrity_ready(admission_audit)
+        )
+    )
+
+
 def _native_v2_r0_admission_audit(
     authority: Any,
     *,
@@ -5777,13 +5815,16 @@ def _native_v2_r0_admission_audit(
     negative_fens: Sequence[str],
     max_samples: int,
 ) -> dict[str, Any]:
-    """Fail closed unless the native authority itself has R0 jurisdiction.
+    """Report native R0 jurisdiction and verify read-only runtime integrity.
 
-    This is a scientific stage boundary, not a runtime provider.  It performs
-    read-only VIRTUAL queries against the prospectively closed authority and
-    observes the selected action in a copied validation board.  No validation
-    outcome is consumed by the authority, used to alter a cell, or exposed as
-    a learner feature.
+    This is a report-only scientific audit, not a runtime provider or global
+    competence gate.  It performs read-only VIRTUAL queries against the
+    prospectively closed authority and observes the selected action in a
+    copied validation board.  Coverage and specificity never decide whether
+    R1 experience exists.  Only outcome-blind integrity (immutability, legal
+    graph emissions, and a legal non-null AVAILABLE actuation) can fail stage
+    entry.  No validation outcome is consumed by the authority, used to alter
+    a cell, or exposed as a learner feature.
     """
 
     continuation_before = str(authority.continuation_digest())
@@ -5796,6 +5837,7 @@ def _native_v2_r0_admission_audit(
         frame_session_factory() if callable(frame_session_factory) else None
     )
     positive_authorized = positive_mates = negative_available = 0
+    available_responses = available_invalid_actuations = 0
     illegal = null = 0
     samples: list[dict[str, Any]] = []
     try:
@@ -5830,6 +5872,8 @@ def _native_v2_r0_admission_audit(
                 )
                 null += int(selected_uci is None)
                 illegal += int(selected_uci is not None and not legal)
+                available_responses += int(available)
+                available_invalid_actuations += int(available and not legal)
                 if expected_positive:
                     positive_authorized += int(available and legal)
                     positive_mates += int(available and legal and observed_mate)
@@ -5860,6 +5904,16 @@ def _native_v2_r0_admission_audit(
         continuation_before == continuation_after
         and source_before == source_after
     )
+    # Runtime entry depends only on integrity, never on held-out chess
+    # outcomes or global coverage.  UNKNOWN is a safe local abstention: it
+    # cannot bootstrap a successor, but it must not prevent unrelated R1
+    # environmental experience.  The stricter coverage/specificity result
+    # below remains report-only.
+    runtime_integrity_pass = bool(
+        immutable
+        and illegal == 0
+        and available_invalid_actuations == 0
+    )
     passed = bool(
         positive_count > 0
         and positive_authorized == positive_count
@@ -5869,13 +5923,20 @@ def _native_v2_r0_admission_audit(
         and immutable
     )
     return {
-        "schema_version": "native_v2_r0_admission.v1",
+        "schema_version": "native_v2_r0_admission.v2",
         "pass": passed,
+        "scientific_coverage_specificity_pass": passed,
+        "runtime_integrity_pass": runtime_integrity_pass,
+        "coverage_specificity_controls_r1_stage_entry": False,
+        "runtime_integrity_controls_r1_stage_entry": True,
+        "runtime_integrity_checks_all_emitted_actuations": True,
         "positive_count": positive_count,
         "positive_authorized_count": positive_authorized,
         "positive_authorized_mate_count": positive_mates,
         "negative_count": negative_count,
         "negative_available_count": negative_available,
+        "available_response_count": available_responses,
+        "available_invalid_actuation_count": available_invalid_actuations,
         "illegal_selection_count": illegal,
         "null_selection_count": null,
         "virtual_queries_only": True,
