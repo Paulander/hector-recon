@@ -44,6 +44,9 @@ from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import
     StructuralMode,
     V2Mode,
 )
+from recon_lite_chess.autogrowth.native_prospective_boundary_candidate_ecology import (
+    ProspectiveBoundaryCandidateEcology,
+)
 from recon_lite_chess.autogrowth.native_trace_competence_authority import (
     TraceNativeCompetenceOrganism,
     TraceNativeLearningConfig,
@@ -65,6 +68,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _attach_terminal_r1_regression_report,
     _balanced_r0_quotas,
     _balanced_r1_quotas,
+    _boundary_ecology_step,
     _build_r0_replay_memory,
     _choose_with_child_priority,
     _classify_r0_stratum,
@@ -79,6 +83,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _native_v2_r0_admission_audit,
     _native_v2_authority_ready_for_r1,
     _native_v2_runtime_integrity_ready,
+    _new_boundary_ecology_from_authority_history,
     _namespace_development_fullmoves,
     _r0_available,
     _r0_available_with_dispatch_cache,
@@ -92,6 +97,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _v2_authoritative_predecessor_fens,
     _v2_r0_available,
     _v2_r0_observe_training_successor,
+    _verify_boundary_ecology_alignment,
     _write_live_r1_progress,
 )
 from recon_lite_chess.autogrowth.foundation_curriculum import (
@@ -1558,6 +1564,156 @@ def test_v2_duplicate_index_reads_only_fen_bearing_receipt_ledgers() -> None:
     assert _v2_authoritative_predecessor_fens(authority) == frozenset(
         (discovery_fen, prospective_fen)
     )
+
+
+def test_new_boundary_ecology_mirrors_only_existing_prospective_history() -> None:
+    def reference(
+        receipt_id: str,
+        ordinal: int,
+        *,
+        observed: bool,
+        signal_id: str | None = None,
+    ) -> SimpleNamespace:
+        resolved_signal_id = signal_id or f"atom:{receipt_id}"
+        return SimpleNamespace(
+            receipt_id=receipt_id,
+            ordinal=ordinal,
+            stable_physical_interaction_id=f"physical:{receipt_id}",
+            ordered_signal_identities=(resolved_signal_id,),
+            typed_signal_roles=((resolved_signal_id, "BASE_TERMINAL"),),
+            observed_outcome=observed,
+        )
+
+    discovery = reference("discovery", 3, observed=True)
+    shared_signal = "atom:shared"
+    first = reference(
+        "prospective:first", 7, observed=False, signal_id=shared_signal
+    )
+    second = reference(
+        "prospective:second", 5, observed=True, signal_id=shared_signal
+    )
+    authority = SimpleNamespace(
+        base=SimpleNamespace(receipts={discovery.receipt_id: object()}),
+        # Deliberately reverse chronology: initialization must canonicalize it.
+        consumed_receipts={
+            first.receipt_id: object(),
+            second.receipt_id: object(),
+        },
+        accepted_real_references={
+            discovery.receipt_id: discovery,
+            first.receipt_id: first,
+            second.receipt_id: second,
+        },
+        states={},
+        current_generation=0,
+    )
+
+    ecology = _new_boundary_ecology_from_authority_history(
+        authority,
+        genome_seed=23,
+    )
+
+    assert isinstance(ecology, ProspectiveBoundaryCandidateEcology)
+    assert tuple(ecology.observations) == (
+        second.receipt_id,
+        first.receipt_id,
+    )
+    assert discovery.receipt_id not in ecology.observations
+    assert ecology.active_sketch_count == 0
+    assert ecology.lifetime_birth_count == 0
+    assert not ecology.sketches
+    assert not ecology.tombstones
+    assert ecology.manifest()["demands"] == []
+    assert ecology.frontier_ordinal == first.ordinal
+    _verify_boundary_ecology_alignment(authority, ecology, roundtrip=True)
+
+    # The first later R1 receipt extends the exact same ledger rather than
+    # opening a second history after the mirrored prefix.  Earlier receipts
+    # may rank proposals, but cannot become support for the newborn sketch.
+    third = reference(
+        "r1:first", 8, observed=True, signal_id=shared_signal
+    )
+    authority.consumed_receipts[third.receipt_id] = object()
+    authority.accepted_real_references[third.receipt_id] = third
+    promotions, event = _boundary_ecology_step(
+        authority,
+        ecology,
+        receipt_id=third.receipt_id,
+        pre_outcome_state=AvailabilityState.UNKNOWN,
+    )
+    assert not promotions
+    assert event["observation_receipt_id"] == third.receipt_id
+    assert event["surprise_success"] is True
+    assert event["born_candidate_ids"]
+    prefix_ids = {first.receipt_id, second.receipt_id}
+    for candidate_id in event["born_candidate_ids"]:
+        candidate = ecology.sketches[candidate_id]
+        assert candidate.birth_ordinal == third.ordinal
+        assert candidate.triggering_receipt_id == third.receipt_id
+        assert candidate.positive_receipt_ids == (third.receipt_id,)
+        assert candidate.read_receipt_ids == (third.receipt_id,)
+        assert candidate.lifetime_match_count == 1
+        assert candidate.lifetime_support_count == 1
+        assert candidate.lifetime_contradiction_count == 0
+        assert prefix_ids.isdisjoint(candidate.positive_receipt_ids)
+        assert prefix_ids.isdisjoint(candidate.read_receipt_ids)
+    assert set(ecology.observations) == set(authority.consumed_receipts)
+    _verify_boundary_ecology_alignment(authority, ecology, roundtrip=True)
+
+    # Three later matching successes can promote the bud, but the matching
+    # prefix still cannot enter its full post-birth promotion audit.
+    promotions = ()
+    for ordinal in range(9, 12):
+        later = reference(
+            f"r1:support:{ordinal}",
+            ordinal,
+            observed=True,
+            signal_id=shared_signal,
+        )
+        authority.consumed_receipts[later.receipt_id] = object()
+        authority.accepted_real_references[later.receipt_id] = later
+        promotions, _event = _boundary_ecology_step(
+            authority,
+            ecology,
+            receipt_id=later.receipt_id,
+            pre_outcome_state=AvailabilityState.AVAILABLE,
+        )
+    assert len(promotions) == 1
+    request = promotions[0]
+    assert prefix_ids.isdisjoint(request.supporting_receipt_ids)
+    assert prefix_ids.isdisjoint(request.inspected_receipt_ids)
+    assert request.supporting_receipt_commitment is not None
+    assert request.inspected_receipt_commitment is not None
+    assert request.supporting_receipt_commitment.count == 4
+    assert request.inspected_receipt_commitment.count == 4
+    _verify_boundary_ecology_alignment(authority, ecology, roundtrip=True)
+
+    missing_reference = SimpleNamespace(
+        base=SimpleNamespace(receipts={}),
+        consumed_receipts={"missing": object()},
+        accepted_real_references={},
+    )
+    with pytest.raises(
+        RuntimeError,
+        match="lacks an accepted REAL reference",
+    ):
+        _new_boundary_ecology_from_authority_history(
+            missing_reference,
+            genome_seed=23,
+        )
+
+    malformed = reference("malformed", 12, observed=True)
+    malformed.ordinal = True
+    malformed_authority = SimpleNamespace(
+        base=SimpleNamespace(receipts={}),
+        consumed_receipts={malformed.receipt_id: object()},
+        accepted_real_references={malformed.receipt_id: malformed},
+    )
+    with pytest.raises(ValueError, match="non-negative integer"):
+        _new_boundary_ecology_from_authority_history(
+            malformed_authority,
+            genome_seed=23,
+        )
 
 
 @pytest.mark.parametrize(

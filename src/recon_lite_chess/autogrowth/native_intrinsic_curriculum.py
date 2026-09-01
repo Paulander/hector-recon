@@ -3221,8 +3221,9 @@ def _run_r1_arm(
             raise ValueError(
                 "boundary ecology requires event-driven structural authority"
             )
-        boundary_ecology = ProspectiveBoundaryCandidateEcology(
-            BoundaryEcologyConfig(genome_seed=int(config.seed))
+        boundary_ecology = _new_boundary_ecology_from_authority_history(
+            r0_child_authority,
+            genome_seed=int(config.seed),
         )
     effective_reply_policy = _effective_r1_reply_policy(
         config, r0_child_authority
@@ -6046,14 +6047,12 @@ def _boundary_ecology_step(
     """Update cheap local sketches and nominate at most one exact promotion."""
 
     reference = authority.accepted_real_references[receipt_id]
-    observation = BoundaryObservation(
-        ordinal=int(reference.ordinal),
-        receipt_id=str(reference.receipt_id),
-        physical_id=str(reference.stable_physical_interaction_id),
-        signal_ids=tuple(reference.ordered_signal_identities),
-        signal_roles=tuple(reference.typed_signal_roles),
-        observed=bool(reference.observed_outcome),
-    )
+    observation = _boundary_observation_from_v2_reference(reference)
+    if (
+        not isinstance(receipt_id, str)
+        or observation.receipt_id != receipt_id
+    ):
+        raise RuntimeError("V2 REAL reference key differs from receipt identity")
     ecology.observe(observation)
     refinement_ids = tuple(ecology.last_refinement_ids)
     predicted_correct = (
@@ -6134,6 +6133,64 @@ def _boundary_ecology_step(
         "active_candidate_count": ecology.active_sketch_count,
         "lifetime_birth_count": ecology.lifetime_birth_count,
     }
+
+
+def _boundary_observation_from_v2_reference(
+    reference: Any,
+) -> BoundaryObservation:
+    """Project one accepted V2 REAL reference into the local ecology."""
+
+    return BoundaryObservation(
+        ordinal=reference.ordinal,
+        receipt_id=reference.receipt_id,
+        physical_id=reference.stable_physical_interaction_id,
+        signal_ids=tuple(reference.ordered_signal_identities),
+        signal_roles=tuple(reference.typed_signal_roles),
+        observed=reference.observed_outcome,
+    )
+
+
+def _new_boundary_ecology_from_authority_history(
+    authority: Any,
+    *,
+    genome_seed: int,
+) -> ProspectiveBoundaryCandidateEcology:
+    """Start ecology at the authority's prospective REAL frontier.
+
+    The same-run R0 closure has already consumed a disjoint certification
+    tape before R1 begins.  Those accepted prospective receipts belong to the
+    lifetime REAL ledger, whereas discovery receipts in ``base.receipts`` do
+    not.  Mirroring the prospective prefix while no sketches exist cannot
+    bud, refine, or promote anything.  The mirrored prefix lies before every
+    later bud's birth frontier, so it may provide remembered proposal context
+    but cannot contribute support or certification to that later bud.
+    """
+
+    ecology = ProspectiveBoundaryCandidateEcology(
+        BoundaryEcologyConfig(genome_seed=int(genome_seed))
+    )
+    references = authority.accepted_real_references
+    observations: list[BoundaryObservation] = []
+    for receipt_id in authority.consumed_receipts:
+        reference = references.get(receipt_id)
+        if reference is None:
+            raise RuntimeError(
+                "prospective V2 receipt lacks an accepted REAL reference"
+            )
+        observation = _boundary_observation_from_v2_reference(reference)
+        if (
+            not isinstance(receipt_id, str)
+            or observation.receipt_id != receipt_id
+        ):
+            raise RuntimeError(
+                "prospective V2 receipt key differs from reference identity"
+            )
+        observations.append(observation)
+    ecology.observe_many(observations)
+    if ecology.active_sketch_count or ecology.lifetime_birth_count:
+        raise RuntimeError("prospective history mirroring created ecology buds")
+    _verify_boundary_ecology_alignment(authority, ecology, roundtrip=False)
+    return ecology
 
 
 def _boundary_promotion_request_from_candidate(
