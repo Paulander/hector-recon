@@ -27,6 +27,7 @@ boundaries and artifact identities.
 | Adaptive-boundary v8 residual-beam canary | Seed `2026082801`; random 8/4/4 R1 pools; one process/core; residual-guided beam; repaired recursive lifecycle; exact epoch-4 checkpoint | R0 `16/16`; R1 heldout `0/4`, retention `15/16`; 40 buds, 38 successors and depth 2. All 9 positive buds died; 20 negative buds promoted; zero AVAILABLE, handoffs or value. Stopped by predeclared no-functional-signal rule. |
 | Adaptive-boundary v9 multi-seed discriminator | Base `2f1b68c9`; local hybrid implementation; seeds `2026083101/02/03` in parallel plus viewed reference seed `2026082801`; one process/seed and numerical threads fixed to one; random 8/4/4 R1; exact epoch 4 | `3101` failed R0 validation (`13/16`) and never entered R1. The other three completed the primary arm at `0/16` exhaustive mate-in-2 and zero handoff/value. `3103` produced 5 surprise mates, 87 buds, 2 positive promotions and 23 live successors; `2801` produced 3 surprise mates and recursive refinement through generation 4 with 18 live successors; neither produced certified AVAILABLE authority. Durable epoch snapshots were preserved and the processes were stopped before control arms. |
 | Adaptive-boundary V14 mechanism gate | Implementation `55e940a9`; report repair `4cf1711b`; five fresh seeds, of which three passed R0 and two reached durable R1 snapshots | Bounded local turnover and positive promotion worked, but no post-birth certification, AVAILABLE envelope, handoff, successor value, or mate-in-2 conversion appeared. **NO-GO** for a longer run. |
+| Adaptive-boundary V15 follow-through protocol | Profile implementation `4a87eaa0`; seeds `2026090103/0104`; fresh eight-epoch runs | Predeclared four-epoch post-promotion opportunity window; no learner or pool change. Pending execution at this logbook boundary. |
 
 ## Purpose and validity scope
 
@@ -711,3 +712,29 @@ recorded in the V14 entry below as their source identity.
   the canary simply supplied no later REAL window. Even so, the predeclared
   staged rule required handoff and successor-value evidence before authorizing
   a longer run. That gate was not met, so no further seed was launched.
+
+### V15 predeclared post-promotion follow-through
+
+- Purpose: distinguish a real downstream lockout from the V14 horizon effect.
+  V14 roots were materialized at or near the final epoch-4 frontier and had no
+  later REAL certification window. This is a mechanism follow-through, not a
+  mate-in-2 performance estimate or a new seed search.
+- Profile implementation: `4a87eaa0ebd59d85d328c495dfedd4196899783d`.
+  The development-only `follow-through` profile differs from `canary` only in
+  `r1_epochs = 8` instead of `4`. Random `8/4/4` R1 pools, per-epoch validation
+  and snapshots, R0 training/gates, learner parameters, reply policy, action
+  ordering, oracle boundary, and resource controls remain byte-equivalent.
+- Conditions: fresh runs for deterministic qualifying seeds `2026090103` and
+  `2026090104`; one process per seed; all numerical thread pools fixed to one;
+  independent output directories; `7200 s`/`8192 MiB` safe-boundary ceilings;
+  no resume of V14 snapshots because the source fingerprint changed.
+- Required causal chain: post-birth matching REAL evidence, then a certified
+  positive root, then an AVAILABLE all-reply envelope, child handoff, nonzero
+  exact worst-reply successor value, and finally an exhaustive mate-in-2
+  conversion without R0 loss. Certification leakage, replay mismatch,
+  uncontrolled active growth or changed protected-core identity stop the run.
+- Decision rule: the balanced 1–2-hour gate remains unauthorized unless both
+  seeds retain R0 `16/16`, have zero leakage, and show nonzero certification,
+  AVAILABLE/handoff and successor-value evidence; at least one actual `4`-case
+  mate-in-2 conversion is also required. Otherwise preserve the snapshots and
+  stop at the fixed epoch-8 boundary.
