@@ -899,3 +899,57 @@ recorded in the V14 entry below as their source identity.
   ecology/authority tests passed. Thirty-one historical-compatibility cases
   could not run because two pre-existing result fixtures are absent from this
   checkout; no executed behavioral assertion failed.
+
+### V18 native-local canary and exact failure discrimination
+
+- Fresh development canary: seed `2026090106`, exact source
+  `0373c0cc26f719997dd1c8a6e723ef9ce32c92d0`, `canary` profile, one numerical
+  thread, independent directory
+  `native_local_closure_v18_seed_2026090106_0373c0cc_canary`, `7200 s` wall and
+  `8192 MiB` safe-boundary ceilings. It completed in exactly
+  `2916.2569021661766 s` with status `COMPLETED_R1_GATE_FAILED`.
+- R0: validation `16/16`; terminal report-only regression `14/16`; isolated
+  frozen native-policy retention after R1 `16/16`. The evolving V2 shell
+  covered only `6/16`; this is jurisdiction coverage, not graph forgetting.
+- R1 full arm: 32 episodes over four epochs, 30 fresh REAL successor events,
+  three AVAILABLE all-reply envelopes, one child handoff, nonzero successor
+  value, and two TD-credit events; exhaustive mate-in-2 validation remained
+  `0/4`. All 32 first-move pattern exposures were unique, so neither credited
+  decision was revisited and no ranking change can be inferred.
+- The run still inherited the old mixed 32/32 bootstrap authority. Its ecology
+  recorded zero adaptive births. The observed availability/handoff therefore
+  did not demonstrate self-grown outward closure. One exact learned candidate
+  could also be lost behind the global retrieval cap, and full TD was copied
+  into many shared atoms.
+- Decision: preserve V18 as a negative mechanism discriminator. Do not extend
+  it and do not infer mate-in-2 learning.
+
+### V19 empty-shell strict adaptive repair and pre-canary gate
+
+- `deedcb90` reserves the exact local branch and one learned incumbent per
+  remaining action before challenger capacity, localizes curiosity to the
+  current competitor population, and conserves TD responsibility across
+  shared atoms according to graph normalization.
+- `58abe72d` separates frozen native-policy retention from V2-shell coverage,
+  makes V2 integrity fail closed, repairs same-pattern revisit reporting, and
+  prevents synthetic nonmate outcomes from being trained as positive.
+- `b1a8ed1f` makes R0 and R1 use native local action competition, runs fixed
+  budgets with validation outcome mastery report-only, skips the prototype
+  gate, and starts adaptive V2 from an evidence-empty positive shell with no
+  scheduled frontier. Surprise REAL successes alone can bud future boundary
+  hypotheses; discovery evidence remains excluded from certification.
+- The adaptive entrypoint now rejects configurations that re-enable scheduled
+  actions, memoized R0 replay moves, validation-controlled transitions,
+  non-V2 routing, or disabled ecology. A strict no-prototype-gate R1 snapshot
+  crash found by independent review was fixed and covered by actual interval
+  snapshot/resume tests.
+- Purity boundary: learned evidence/credit and exactly-one emission are native;
+  the generic adapter still enumerates legal affordances, computes bounded
+  curiosity/alias rotation, ranks the adversarial counterexample reply, and
+  commits structure at content-blind safe points. The training-outcome R0
+  maturity/freeze boundary remains harness-controlled. No whole-curriculum
+  endogenous or pure in-graph arbitration claim is made.
+- Verification at `b1a8ed1f`: six directly affected compatibility suites
+  passed `137/137` in `274.99 s`; targeted strict/no-gate tests passed `5/5`,
+  adaptive runner tests passed `21/21`, compilation and `git diff --check` were
+  clean. No fresh V19 chess canary had been run when this entry was written.
