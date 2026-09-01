@@ -28,6 +28,7 @@ boundaries and artifact identities.
 | Adaptive-boundary v9 multi-seed discriminator | Base `2f1b68c9`; local hybrid implementation; seeds `2026083101/02/03` in parallel plus viewed reference seed `2026082801`; one process/seed and numerical threads fixed to one; random 8/4/4 R1; exact epoch 4 | `3101` failed R0 validation (`13/16`) and never entered R1. The other three completed the primary arm at `0/16` exhaustive mate-in-2 and zero handoff/value. `3103` produced 5 surprise mates, 87 buds, 2 positive promotions and 23 live successors; `2801` produced 3 surprise mates and recursive refinement through generation 4 with 18 live successors; neither produced certified AVAILABLE authority. Durable epoch snapshots were preserved and the processes were stopped before control arms. |
 | Adaptive-boundary V14 mechanism gate | Implementation `55e940a9`; report repair `4cf1711b`; five fresh seeds, of which three passed R0 and two reached durable R1 snapshots | Bounded local turnover and positive promotion worked, but no post-birth certification, AVAILABLE envelope, handoff, successor value, or mate-in-2 conversion appeared. **NO-GO** for a longer run. |
 | Adaptive-boundary V15 mechanism follow-through | Commit `58fbd0d8`; fresh independent seeds `2026090103/0104`; one process and one numerical thread; random `8/4/4` R1; exact eight-epoch runs | `0103`: wall `4932.0426137079485 s`, R1 full/control `1920.303802/1939.51825 s`; R0 `16/16` validation and `16/16` report regression. `0104`: wall `4845.015892208088 s`, R1 full/control `1885.137376/1912.423199 s`; R0 `16/16` validation and `12/16` report regression. Only `0104` full intrinsic reached the mechanism chain; both seeds/arms were `0/4` mate-in-2. **NO-GO**. |
+| Adaptive-boundary V16 native-local closure canary | Source `8e158397`; fresh seed `2026090106`; `canary`; one numerical thread; random `8/4/4`; `7200 s`/`8192 MiB` ceilings | R0 validation `16/16`, report-only regression `14/16`; the old native admission report authorized `14/16` positives and `0/16` negatives, then stopped before R1 after exact wall `645.8366680829786 s`. No R1 or mate-in-2 claim. Repair `67414302` makes native-authority coverage/specificity report-only; after the existing R0 mastery transition, only authority runtime integrity can veto R1 entry. |
 
 ## Purpose and validity scope
 
@@ -854,8 +855,47 @@ recorded in the V14 entry below as their source identity.
   `git diff --check` were clean. Independent review found and closed one
   evaluation blocker (zero-state lucky guessing) and found no remaining
   canary-blocking routing, closure, replay or snapshot defect.
-- Next gate: one fresh seed `2026090106`, `canary` profile, independent
-  non-existing output directory, one numerical thread, `7200 s`/`8192 MiB`
-  safe-boundary ceilings. A first fresh pass cannot satisfy the explicit
-  snapshot-resume bit; continuation is justified only if the granular learning
-  and closure signals are positive enough to warrant an exact resume check.
+- The predeclared next gate was one fresh seed `2026090106`, `canary` profile,
+  an independent output directory, one numerical thread, and
+  `7200 s`/`8192 MiB` safe-boundary ceilings; its result is recorded below.
+
+### V16 fresh native-local canary outcome and admission-boundary correction
+
+- Binding: the fresh canary used seed `2026090106` and source commit
+  `8e1583972cca391fc10a0d689ebd89f86387471b`, with no learner oracle, tuning,
+  protected outcomes, or legacy hash/round-robin first-move picker. Attempt
+  wall time was exactly `645.8366680829786 s`; R0 training took `10.239902 s`
+  for 48 episodes (2 observed mates, 45 nonterminal outcomes, one failure).
+- R0 result: validation was `16/16`; the report-only regression was `14/16`
+  (`0.875`). The recorded pre-repair native admission report had
+  `14/16` positive authorized/mating responses and `0/16` negative AVAILABLE
+  responses, so its old coverage/specificity `pass` was false. The final graph
+  grew from `1/0/0` to `555/12006/48` nodes/edges/triplets, with 48 frozen
+  policy triplets and 56 total authority candidates.
+- This run stopped honestly at R0: `r1_executed=false`, no R1 arm progress was
+  written, `curriculum_gate_passed=false`, and `scientific_gate_passed=false`.
+  It therefore supplies no R1 result and no mate-in-2 claim. The artifact's
+  focused eight-position in-memory deepcopy probe had equal choices, but
+  serialized snapshot resume was explicitly unimplemented; no resume-parity
+  claim is made.
+- Repair `67414302390040bc1047ef4c43489467a2162b38`: R0 authority coverage and specificity remain
+  in the read-only admission report (`scientific_coverage_specificity_pass`),
+  but no longer add a second global veto after the existing validation-derived
+  R0 mastery transition. The native-authority entry check now requires only the
+  outcome-blind `runtime_integrity_pass`: immutable authority/source
+  continuation, every emitted actuation legal, and every AVAILABLE response
+  backed by a legal non-null actuation. An `UNKNOWN` authority response is a
+  local abstention: it supplies no successor bootstrap/value and does not
+  globally block unrelated R1 environmental experience. R0 mastery and later
+  R1 validation stopping/consolidation remain outer scientific-harness stage
+  decisions; they do not select or rank moves. The recorded V16 canary predates
+  this separation and is not a post-repair R1 test.
+- Alias handling now unions only formally confirmed graph signals for aliases
+  of the same actuator, so emitted-action trace evidence is alias-invariant.
+  Option identity and activation/strength remain local to each triplet alias;
+  this normalization does not collapse local option competition or use
+  outcomes, labels, or board identity.
+- Post-repair verification: 106 focused core tests and 61 additional
+  ecology/authority tests passed. Thirty-one historical-compatibility cases
+  could not run because two pre-existing result fixtures are absent from this
+  checkout; no executed behavioral assertion failed.

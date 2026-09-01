@@ -8,6 +8,7 @@ This note describes the current working-tree design on branch
 
 - Prior architecture anchor: `52f666d3111e39c57fb6e16889678540c2fb6d62`.
 - Current adaptive-local implementation: `444b927f07882ae1c197b6006fad1c0672ef2245`.
+- Native admission/alias repair: `67414302390040bc1047ef4c43489467a2162b38`.
 - Original audited base: `2f1b68c992eb6868b468148004d8e5a4746c88ab`.
 
 The current implementation closes two concrete V15 control-loop defects: R1
@@ -16,9 +17,28 @@ evaluation no longer routes through a learned prototype gate or a host-side
 core/child/plastic fallback cascade. The previous modes remain only for exact
 historical replay; the adaptive runner selects the new local mode explicitly.
 
+The native admission/alias repair makes R0 authority coverage/specificity
+report-only. Once the existing R0 validation-mastery curriculum transition has
+been met, only outcome-blind authority runtime integrity can veto R1 entry. An
+`UNKNOWN` authority response abstains locally, while formally confirmed trace
+evidence is unioned across aliases of one actuator without merging local option
+identity or activation/strength.
+
 This is still a development architecture, not evidence of mate-in-2 learning.
-The focused 87-test suite passed at the implementation commit; a fresh bounded
-canary is the next gate. No not-yet-run chess result is claimed in this note.
+The focused 87-test suite passed at the implementation commit; the recorded V16
+canary is R0-only, and a post-repair bounded canary is the next gate. No
+mate-in-2 result is claimed in this note.
+
+The fresh V16 canary bound to `8e1583972cca391fc10a0d689ebd89f86387471b`
+(`2026090106`, exact wall `645.8366680829786 s`) stopped after R0: validation
+was `16/16`, report-only regression was `14/16`, and no R1 arm ran. It has no
+mate-in-2 result. Its old native admission report is preserved as a
+coverage/specificity diagnostic; repair `67414302` makes
+that diagnostic report-only and uses outcome-blind runtime integrity for the
+native-authority portion of stage entry. Post-repair verification passed 106
+focused core tests and 61 additional ecology/authority tests; 31 historical
+compatibility cases could not run because their pre-existing result fixtures
+are absent from this checkout.
 
 ## The idea in plain language
 
@@ -123,6 +143,15 @@ A bounded, digest-chained action-event ledger records emitted and credited
 identities, raw value, curiosity, successor value, and TD error for replay and
 audit. It is diagnostic state, not an action source.
 
+When several formally confirmed local triplet aliases can emit the same legal
+actuator, their captured graph signals are deterministically unioned before the
+trace is recorded. Emitted-action trace evidence is therefore alias-invariant:
+the anonymous winner does not change the formally observed evidence attached to
+that actuator. Option identity and activation/strength remain local to each
+triplet alias, so this does not collapse local competition or alias-specific
+choice semantics. The union uses only formally confirmed graph captures; no
+outcome, label, or board identity participates.
+
 Main implementation:
 
 - [`src/recon_lite_chess/autogrowth/native_single_graph_curriculum.py`](../../src/recon_lite_chess/autogrowth/native_single_graph_curriculum.py)
@@ -189,6 +218,10 @@ prototype-gate call, no `_choose_with_child_priority` cascade, and no fallthroug
 to the plastic graph. R0 retention evaluation likewise queries native V2
 authority directly and fails closed on abstention.
 
+`UNKNOWN` is a local abstention, not a global R1 stage veto: it cannot provide
+successor bootstrap/value for that reply, while unrelated R1 environmental
+experience remains admissible.
+
 This makes evaluation stricter and conceptually cleaner: a success must be
 produced by the learned first-move policy and grounded successor authority, not
 rescued by a host router.
@@ -198,8 +231,8 @@ rescued by a host router.
 The adaptive path no longer uses `OutcomeCalibratedPrototypeGate` as a runtime
 provider. The immutable learned R0 organism lives inside
 `NativeProspectiveAuthorityV2`, alongside its prospectively certified boundary
-descendants. A validation-only native admission audit asks whether that
-authority itself has clean R0 jurisdiction:
+descendants. A read-only native admission audit reports R0 authority coverage
+and specificity:
 
 - every R0 validation positive must receive an AVAILABLE legal response that
   actually mates in the copied environment;
@@ -207,13 +240,24 @@ authority itself has clean R0 jurisdiction:
 - all queries are VIRTUAL and both authority continuation and frozen-R0
   inference identity must remain unchanged.
 
-This audit is a scientific stage gate: it may stop a bad run, but it neither
-selects training actions nor provides runtime answers to the learner.
+The coverage/specificity result is report-only; it does not control R1 stage
+entry. After the pre-existing R0 mastery transition, the native-authority entry
+check uses only the outcome-blind `runtime_integrity_pass`: unchanged
+authority/source continuation, every emitted actuation legal, and every
+AVAILABLE response backed by a legal non-null actuation. The implementation
+records these boundaries explicitly as
+`coverage_specificity_controls_r1_stage_entry=false` and
+`runtime_integrity_controls_r1_stage_entry=true`. The audit never selects
+training actions or provides runtime answers to the learner. If authority is
+`UNKNOWN`, the local policy abstains and sends no successor bootstrap/value;
+that local abstention does not block unrelated R1 environmental experience.
 
 Main implementation:
 
 - [`src/recon_lite_chess/autogrowth/native_intrinsic_curriculum.py`](../../src/recon_lite_chess/autogrowth/native_intrinsic_curriculum.py)
-  - `_native_v2_r0_admission_audit` implements the read-only gate;
+  - `_native_v2_r0_admission_audit` implements the report and integrity audit;
+  - `_native_v2_authority_ready_for_r1` makes the native-authority entry
+    decision without reading coverage or outcome labels;
   - `_evaluate_r0` and `_evaluate_r1` use direct, fail-closed native authority
     in adaptive-local mode.
 - [`src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py`](../../src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py)
@@ -354,6 +398,14 @@ The harness must not choose the R1 move, override authority jurisdiction,
 rescue an abstention through a fallback policy, or expose validation outcomes to
 learning. The committed adaptive-local path satisfies those exclusions.
 
+The harness is not globally gate-free. Validation-derived R0 mastery still
+controls maturation, freezing, authority construction, and entry into the R1
+curriculum; R1 validation still controls stopping and consolidation. These are
+outer experimental stage decisions, not runtime move pickers: they do not rank
+candidate actions, choose replies for the learner, or inject solution labels
+into graph evidence. Removing those stage decisions would be a separate
+architectural experiment, not part of this minimal repair.
+
 One important limitation remains: **R0 pretraining still uses a content-blind
 scheduled legal-action exploration policy.** It is not an oracle—it supplies no
 correct moves or labels—but it is external experience selection. Consequently
@@ -376,6 +428,12 @@ The implementation and focused tests are intended to establish:
   confirmed support;
 - adaptive evaluation cannot reach the prototype gate, host priority cascade,
   or plastic fallback;
+- emitted-action trace evidence is invariant across aliases of one actuator,
+  while option identity and activation/strength remain alias-local;
+- R0 authority coverage/specificity is report-only, and after R0 mastery the
+  native-authority entry check uses only outcome-blind runtime integrity;
+- an `UNKNOWN` authority response abstains locally, cannot bootstrap successor
+  value, and does not globally veto unrelated R1 experience;
 - discovery and certification rows, receipts, and physical interactions are
   disjoint;
 - VIRTUAL queries cannot certify or train;
@@ -435,6 +493,10 @@ The highest-value tripwires are:
   reached;
 - unsupported local evaluation abstains;
 - authority abstention cannot fall through to another policy;
+- alias-equivalent emitted actions receive the same formally captured trace
+  evidence while retaining local option identity and activation/strength;
+- R0 coverage/specificity failure is reported but does not block R1 when
+  outcome-blind runtime integrity passes;
 - choice and audit do not increment exposure, while exact observed TD does;
 - fresh snapshot/resume reproduces action-event digest and authority history;
 - contradiction-driven requests settle before the next REAL certification
@@ -443,9 +505,11 @@ The highest-value tripwires are:
 
 If these pass, run one tiny fresh development canary with numerical-library
 threads fixed to one and an independent output directory. Stop rather than
-extend if native R0 admission fails, the run does not enter R1, legacy routing
-appears, emission/credit identity diverges, certification leaks, replay differs,
-or an active cap is uncontrolled.
+extend if outcome-blind runtime integrity fails, the run does not enter R1 for
+that integrity reason, legacy routing appears, emission/credit identity
+diverges, certification leaks, replay differs, or an active cap is
+uncontrolled. A native R0 coverage/specificity failure is recorded as a
+report-only diagnostic and is not itself a stage-entry stop.
 
 Only after that canary behaves mechanically should several short independent
 seeds be considered. The predeclared mechanism gate requires, at minimum:
