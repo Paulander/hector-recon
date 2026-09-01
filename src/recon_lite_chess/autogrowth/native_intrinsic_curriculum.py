@@ -5,8 +5,9 @@ credit engine. Exact mate predicates are used only to construct trainer-side
 curriculum pools. Training credit comes from an executed world transition or a
 mature child's consolidated value; no correct-move set is passed to the learner.
 
-The formal ReCoN engine confirms action branches. Weighted arbitration remains
-the existing content-blind Python host operation and is reported as such.
+Legacy runs retain the historical host-side action schedule.  Adaptive runs
+instead ask the graph's anonymous local-choice mechanism to emit the action;
+the harness executes and credits that exact emitted branch.
 """
 
 from __future__ import annotations
@@ -88,6 +89,12 @@ R1_REPLY_POLICIES = (
 )
 R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC = "lexicographic_round_robin"
 R1_ACTION_ORDER_STABLE_HASH_PERMUTATION = "stable_hash_permutation"
+R1_ACTION_SELECTION_SCHEDULED = "scheduled"
+R1_ACTION_SELECTION_LOCAL_RECON = "local_recon_optimism"
+R1_ACTION_SELECTION_MODES = (
+    R1_ACTION_SELECTION_SCHEDULED,
+    R1_ACTION_SELECTION_LOCAL_RECON,
+)
 # Short aliases keep the configuration readable for development callers while
 # the canonical values remain explicit in snapshots and fingerprints.
 R1_ACTION_ORDER_LEGACY = R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC
@@ -198,6 +205,7 @@ class NativeIntrinsicCurriculumConfig:
     mature_child_priority: bool = True
     r0_availability_mode: str = "virtual_frame_verified"
     r1_reply_policy: str = R1_REPLY_POLICY_SAMPLED_ROUND_ROBIN
+    r1_action_selection_mode: str = R1_ACTION_SELECTION_SCHEDULED
     r1_action_order: str = R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC
     r0_boundary_ecology_enabled: bool = False
     r1_mechanistic_factorial: bool = False
@@ -229,6 +237,19 @@ class NativeIntrinsicCurriculumConfig:
                 "prospective_counterexample"
             )
         object.__setattr__(self, "r1_reply_policy", policy)
+        selection_mode = str(self.r1_action_selection_mode).strip().lower()
+        selection_aliases = {
+            "local": R1_ACTION_SELECTION_LOCAL_RECON,
+            "native": R1_ACTION_SELECTION_LOCAL_RECON,
+            "native_local": R1_ACTION_SELECTION_LOCAL_RECON,
+        }
+        selection_mode = selection_aliases.get(selection_mode, selection_mode)
+        if selection_mode not in R1_ACTION_SELECTION_MODES:
+            raise ValueError(
+                "r1_action_selection_mode must be scheduled or "
+                "local_recon_optimism"
+            )
+        object.__setattr__(self, "r1_action_selection_mode", selection_mode)
         action_order = str(self.r1_action_order).strip().lower()
         action_aliases = {
             "legacy": R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC,
@@ -637,6 +658,7 @@ def run_native_intrinsic_curriculum(
         "enabled": False,
         "reason": "availability_mode_is_not_v2_prospective",
     }
+    native_r0_admission: dict[str, Any] | None = None
     if (
         cfg.run_r1
         and r0_pass
@@ -668,6 +690,16 @@ def run_native_intrinsic_curriculum(
             "continuation_digest": authority.continuation_digest(),
             **dict(authority_audit),
         }
+        if cfg.r0_boundary_ecology_enabled:
+            native_r0_admission = _native_v2_r0_admission_audit(
+                authority,
+                positive_fens=pools.r0_validation,
+                negative_fens=pools.gate_validation_decoys,
+                max_samples=cfg.max_samples,
+            )
+            r0_child_authority_audit["native_r0_admission"] = (
+                native_r0_admission
+            )
     # In V2 mode the authority already owns the immutable post-R0 organism.
     # Reuse that source graph for routing/report identity; frame-local queries
     # below run on its existing isolated dream session.  The non-V2 path has
@@ -685,9 +717,16 @@ def run_native_intrinsic_curriculum(
     else:
         r0_core_graph = copy.deepcopy(graph)
         r0_core_triplet_ids = frozenset(r0_core_graph.triplet_ids)
-    # The fitted gate is an immutable routing descriptor during R1; reuse the
-    # already supplied R0 gate rather than creating another serialized shadow.
-    r0_core_gate = r0_gate
+    # The host-side prototype gate remains available to legacy/control arms and
+    # as a report-only diagnostic.  Adaptive V2 uses the prospectively
+    # certified native authority as its sole runtime jurisdiction provider.
+    # Keeping the objects distinct here prevents a successful kNN descriptor
+    # from silently opening or preempting a native competence response.
+    r0_core_gate = (
+        None
+        if r0_child_authority is not None and cfg.r0_boundary_ecology_enabled
+        else r0_gate
+    )
     r0_core_semantic_sha256 = _hash_json(
         r0_core_graph.canonical_semantic_manifest()
     )
@@ -715,6 +754,13 @@ def run_native_intrinsic_curriculum(
         (
             cfg.r0_availability_mode == V2_PROSPECTIVE_AVAILABILITY
             and r0_child_authority is not None
+            and (
+                not cfg.r0_boundary_ecology_enabled
+                or bool(
+                    native_r0_admission is not None
+                    and native_r0_admission.get("pass", False)
+                )
+            )
         )
         or (
             r0_gate is not None
@@ -753,6 +799,11 @@ def run_native_intrinsic_curriculum(
                 if r0_child_authority is not None
                 else copy.deepcopy(r0_core_graph)
             )
+            arm_core_triplet_ids = (
+                None
+                if r0_child_authority is not None and r0_core_gate is None
+                else r0_core_triplet_ids
+            )
             arms[arm_name] = _run_r1_arm(
                 arm_name,
                 arm_graph,
@@ -767,7 +818,7 @@ def run_native_intrinsic_curriculum(
                 r0_child_authority=r0_child_authority,
                 r0_core_graph=arm_core_graph,
                 r0_core_gate=r0_core_gate,
-                r0_core_triplet_ids=r0_core_triplet_ids,
+                r0_core_triplet_ids=arm_core_triplet_ids,
                 run_started=run_started,
                 # Regression is a terminal report split.  Keep every arm's
                 # training/validation work complete before any arm can read
@@ -910,10 +961,24 @@ def run_native_intrinsic_curriculum(
             "one_persistent_graph_across_rungs": True,
             "ecology_uuid": ecology_uuid,
             "native_formal_confirmation_used": True,
-            "python_weighted_arbitration_used": True,
+            "python_weighted_arbitration_used_for_r1_training": bool(
+                cfg.r1_action_selection_mode
+                == R1_ACTION_SELECTION_SCHEDULED
+            ),
+            "native_anonymous_choice_used_for_r1_training": bool(
+                cfg.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
+            ),
+            # R0 pretraining still uses the historical content-blind legal
+            # action schedule, so this report does not overclaim whole-run
+            # native autonomy even when R1 arbitration is graph-owned.
             "pure_in_graph_arbitration_claimed": False,
             "training_exploration": (
-                "content_blind_round_robin_over_formally_confirmed_legal_action_branches"
+                "native_local_optimistic_competition_for_r1;"
+                "content_blind_round_robin_for_r0"
+                if cfg.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
+                else "content_blind_round_robin_over_formally_confirmed_legal_action_branches"
             ),
             "learner_visible_stage_labels": False,
             "correct_move_labels_used_for_training_credit": False,
@@ -932,12 +997,31 @@ def run_native_intrinsic_curriculum(
             "r0_availability_mode": cfg.r0_availability_mode,
             "mechanistic_factorial_enabled": cfg.r1_mechanistic_factorial,
             "exact_virtual_verification_is_oracle_control_not_autonomy_evidence": True,
-            "prototype_gate_is_learned_but_host_side": True,
+            "prototype_gate_participates_in_current_runtime": bool(
+                r0_child_authority is None
+            ),
+            "legacy_prototype_gate_retained_for_non_v2_modes": True,
             "composition_disabled_in_mechanistic_factorial": (
                 cfg.r1_mechanistic_factorial
             ),
-            "td_prediction_source": "exact_unrounded_confirmed_graph_action_score",
-            "policy_score_and_td_prediction_identical": True,
+            "td_prediction_source": (
+                "pre_emission_native_exploitation_score_excluding_exploration"
+                if cfg.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
+                else "exact_unrounded_confirmed_graph_action_score"
+            ),
+            "policy_ranking_value_transform": (
+                "v/(1+abs(v))"
+                if cfg.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
+                else "identity"
+            ),
+            "td_prediction_uses_raw_graph_value": True,
+            "policy_exploitation_score_and_td_prediction_identical": bool(
+                cfg.r1_action_selection_mode
+                != R1_ACTION_SELECTION_LOCAL_RECON
+            ),
+            "exploration_bonus_enters_td_prediction": False,
             "virtual_frames_create_grounding": False,
             "r0_replay_cache_used_as_provider": False,
             "r0_parameters_frozen_for_r1": cfg.freeze_r0_parameters_for_r1,
@@ -957,8 +1041,16 @@ def run_native_intrinsic_curriculum(
                 if r0_child_authority is not None
                 else "post_r0_report_copy"
             ),
-            "r0_core_routing_scope": "all_policy_boards_local_gate_only",
-            "r0_core_precedes_v2_when_available": True,
+            "r0_core_routing_scope": (
+                "native_v2_certified_local_cells"
+                if r0_child_authority is not None
+                and cfg.r0_boundary_ecology_enabled
+                else "all_policy_boards_local_gate_only"
+            ),
+            "r0_core_precedes_v2_when_available": bool(
+                r0_core_gate is not None
+            ),
+            "adaptive_v2_host_prototype_gate_used_at_runtime": False,
             "r0_child_dispatch_cache_used_as_external_provider": False,
             "r0_child_dispatch_cache_is_memoized_graph_response": True,
             "r0_child_dispatch_hits_live_formally_confirmed": (
@@ -968,8 +1060,33 @@ def run_native_intrinsic_curriculum(
                 cfg.r0_child_cache_validation_mode == "frozen_policy_token"
             ),
             "runtime_child_priority_uses_stage_labels": False,
-            "runtime_mature_child_priority_is_arm_specific": True,
-            "runtime_child_priority_source": "explicit_mechanistic_arm",
+            "runtime_mature_child_priority_is_arm_specific": bool(
+                cfg.r1_action_selection_mode
+                != R1_ACTION_SELECTION_LOCAL_RECON
+            ),
+            "runtime_child_priority_source": (
+                "not_used_native_local_policy_plus_certified_successor"
+                if cfg.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
+                else "explicit_mechanistic_arm"
+            ),
+            "adaptive_evaluation_host_priority_cascade_used": bool(
+                cfg.r0_boundary_ecology_enabled
+                and cfg.r1_action_selection_mode
+                != R1_ACTION_SELECTION_LOCAL_RECON
+            ),
+            "adaptive_evaluation_first_move_source": (
+                "read_only_native_local_exploitation_policy"
+                if cfg.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
+                else "legacy_host_routing"
+            ),
+            "adaptive_evaluation_successor_source": (
+                "certified_native_v2_authority_fail_closed"
+                if cfg.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
+                else "legacy_host_routing"
+            ),
             "v2_child_authority_derived_from_same_run_r0": bool(
                 r0_child_authority is not None
             ),
@@ -995,10 +1112,23 @@ def run_native_intrinsic_curriculum(
                 else "per_position_action_round_robin"
             ),
             "r1_action_order": cfg.r1_action_order,
+            "r1_action_selection_mode": cfg.r1_action_selection_mode,
             "r1_action_order_key": (
-                "lexicographic_uci_ids"
-                if cfg.r1_action_order == R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC
-                else "generic_seed_plus_opaque_position_identity"
+                "not_used_graph_local_anonymous_competition"
+                if cfg.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
+                else (
+                    "lexicographic_uci_ids"
+                    if cfg.r1_action_order
+                    == R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC
+                    else "generic_seed_plus_opaque_position_identity"
+                )
+            ),
+            "hash_action_schedule_reachable_in_r1_training": bool(
+                cfg.r1_action_selection_mode
+                == R1_ACTION_SELECTION_SCHEDULED
+                and cfg.r1_action_order
+                == R1_ACTION_ORDER_STABLE_HASH_PERMUTATION
             ),
             "r1_reply_policy_requested": cfg.r1_reply_policy,
             "r1_reply_policy_requires_r0_child_authority": True,
@@ -1067,12 +1197,23 @@ def run_native_intrinsic_curriculum(
         "r0_parameter_freeze": r0_parameter_freeze,
         "r0_core_routing": {
             "enabled": bool(r0_core_graph is not None and r0_core_gate is not None),
+            "native_authority_only": bool(
+                r0_child_authority is not None and r0_core_gate is None
+            ),
+            "operational": bool(
+                native_r0_admission is not None
+                and native_r0_admission.get("pass", False)
+            ),
             "graph": r0_core_graph.learned_state_audit(),
             "graph_semantic_state_sha256": r0_core_semantic_sha256,
             "triplet_ids": sorted(r0_core_triplet_ids),
             "gate": None if r0_core_gate is None else r0_core_gate.to_dict(),
-            "precedes_v2_when_available": True,
-            "routing_scope": "all_policy_boards_local_gate_only",
+            "precedes_v2_when_available": bool(r0_core_gate is not None),
+            "routing_scope": (
+                "native_v2_certified_local_cells"
+                if r0_child_authority is not None and r0_core_gate is None
+                else "all_policy_boards_local_gate_only"
+            ),
             "stage_specific_preemption": False,
         },
         "r0_child_authority": r0_child_authority_audit,
@@ -1096,7 +1237,14 @@ def run_native_intrinsic_curriculum(
             "interpretation": (
                 "development_factorial_complete_no_r2_without_replication"
                 if r1_executed
-                else "r0_failed_or_gate_unavailable_do_not_advance"
+                else (
+                    "native_r0_jurisdiction_incomplete_do_not_enter_r1"
+                    if r0_pass
+                    and cfg.r0_boundary_ecology_enabled
+                    and native_r0_admission is not None
+                    and not native_r0_admission.get("pass", False)
+                    else "r0_failed_or_gate_unavailable_do_not_advance"
+                )
             ),
         },
     }
@@ -2912,6 +3060,7 @@ def _attach_terminal_r1_regression_report(
             r0_core_graph=core_graph,
             r0_core_gate=core_gate,
             r0_core_triplet_ids=core_triplet_ids,
+            action_selection_mode=config.r1_action_selection_mode,
         )
         final_r0_regression_retention = _evaluate_r0(
             graph,
@@ -2924,6 +3073,7 @@ def _attach_terminal_r1_regression_report(
             r0_core_gate=core_gate,
             r0_core_triplet_ids=core_triplet_ids,
             allow_frozen_core=(core_graph is not None and core_gate is not None),
+            action_selection_mode=config.r1_action_selection_mode,
         )
     finally:
         _restore_disabled_composites(graph, heldout_disabled_state)
@@ -3016,7 +3166,11 @@ def _run_r1_arm(
         )
         authority_graph = getattr(authority_r0, "graph", None)
         authority_triplets = getattr(authority_r0, "frozen_triplet_ids", None)
-        if authority_graph is not None and authority_triplets is not None:
+        if (
+            r0_core_gate is not None
+            and authority_graph is not None
+            and authority_triplets is not None
+        ):
             if supplied_core_graph is not None and _hash_json(
                 supplied_core_graph.canonical_semantic_manifest()
             ) != _hash_json(authority_graph.canonical_semantic_manifest()):
@@ -3032,12 +3186,17 @@ def _run_r1_arm(
                 )
             r0_core_graph = authority_graph
             r0_core_triplet_ids = frozenset(authority_triplets)
-        elif r0_core_graph is None and (
+        elif r0_core_gate is not None and r0_core_graph is None and (
             r0_core_gate is not None or r0_core_triplet_ids
         ):
             raise TypeError(
                 "V2 child authority does not expose its immutable R0 organism"
             )
+        if r0_core_gate is None:
+            # Native V2 authority already owns and binds its immutable R0
+            # source.  Do not expose that graph as a second, host-routed core.
+            r0_core_graph = None
+            r0_core_triplet_ids = None
         if r0_core_graph is not None and r0_core_triplet_ids is None:
             r0_core_triplet_ids = frozenset(r0_core_graph.triplet_ids)
         if r0_core_graph is not None and not r0_core_triplet_ids.issubset(
@@ -3164,6 +3323,11 @@ def _run_r1_arm(
             "schema": "native_intrinsic_r1_reply_policy_events.v1",
             "events": [],
         })
+        local_action_events: list[dict[str, Any]] = []
+        local_action_event_digest = _hash_json({
+            "schema": "native_intrinsic_r1_local_action_events.v1",
+            "events": [],
+        })
         history_snapshot_paths: list[str] = []
         stopped_epoch = epoch_budget
         joint_mastery = False
@@ -3222,13 +3386,20 @@ def _run_r1_arm(
                 raise RuntimeError(
                     "restored V2 authority does not expose its immutable R0 organism"
                 )
-            if restored_graph is not None and restored_triplets is not None:
+            if (
+                core_routing_requested
+                and restored_graph is not None
+                and restored_triplets is not None
+            ):
                 r0_core_graph = restored_graph
                 r0_core_triplet_ids = frozenset(restored_triplets)
                 if not r0_core_triplet_ids.issubset(r0_core_graph.triplet_ids):
                     raise RuntimeError(
                         "restored V2 authority R0 IDs are not in its source graph"
                     )
+            elif not core_routing_requested:
+                r0_core_graph = None
+                r0_core_triplet_ids = None
             persisted_seen = restored.get("v2_seen_predecessor_fens")
             if not isinstance(persisted_seen, tuple):
                 raise RuntimeError("V2 R1 snapshot omitted its duplicate index")
@@ -3283,6 +3454,18 @@ def _run_r1_arm(
                 "reply_policy_event_digest",
                 _hash_json({
                     "schema": "native_intrinsic_r1_reply_policy_events.v1",
+                    "events": [],
+                }),
+            )
+        )
+        local_action_events = list(
+            restored.get("local_action_events", [])
+        )[-16:]
+        local_action_event_digest = str(
+            restored.get(
+                "local_action_event_digest",
+                _hash_json({
+                    "schema": "native_intrinsic_r1_local_action_events.v1",
                     "events": [],
                 }),
             )
@@ -3384,17 +3567,19 @@ def _run_r1_arm(
         try:
             for position_index, fen in enumerate(pools.r1_train):
                 board = chess.Board(fen)
-                move, triplet_id, confirmed, graph_prediction = _scheduled_confirmed_action(
+                (
+                    move,
+                    triplet_id,
+                    confirmed,
+                    graph_prediction,
+                    local_action_manifest,
+                ) = _select_r1_training_action(
                     graph,
                     board,
-                    schedule_index=epoch + position_index,
-                    stage_diagnostic="R1_mate_in_2",
-                    action_order=config.r1_action_order,
-                    generic_seed=config.seed,
-                    position_identity=_opaque_r1_position_identity(
-                        fen,
-                        position_index,
-                    ),
+                    epoch=epoch,
+                    position_index=position_index,
+                    fen=fen,
+                    config=config,
                 )
                 counters["formal_confirmation_failures"] += int(not confirmed)
                 after_first = board.copy(stack=False)
@@ -3592,12 +3777,34 @@ def _run_r1_arm(
                     prediction_override=graph_prediction,
                 )
                 counters["successor_value_sum"] += float(event.successor_value)
-                graph.apply_intrinsic_td(
+                credited_triplet_id = graph.apply_intrinsic_td(
                     board,
                     move,
                     td_error=event.td_error,
                     stage_diagnostic="R1_mate_in_2",
                 )
+                if credited_triplet_id != triplet_id:
+                    raise RuntimeError(
+                        "R1 TD credit diverged from the emitted action branch: "
+                        f"{credited_triplet_id} != {triplet_id}"
+                    )
+                if local_action_manifest is not None:
+                    action_event = {
+                        **local_action_manifest,
+                        "epoch": epoch + 1,
+                        "position_index": position_index,
+                        "credited_triplet_id": credited_triplet_id,
+                        "td_error": float(event.td_error),
+                        "successor_value": float(event.successor_value),
+                        "terminal_kind": terminal_kind,
+                    }
+                    local_action_events.append(action_event)
+                    if len(local_action_events) > 16:
+                        del local_action_events[:-16]
+                    local_action_event_digest = _hash_json({
+                        "prior": local_action_event_digest,
+                        "event": action_event,
+                    })
                 counters["episodes"] += 1
                 counters["failures"] += int(terminal_kind is not None)
         finally:
@@ -3718,6 +3925,7 @@ def _run_r1_arm(
                         r0_core_graph=r0_core_graph,
                         r0_core_gate=r0_core_gate,
                         r0_core_triplet_ids=r0_core_triplet_ids,
+                        action_selection_mode=config.r1_action_selection_mode,
                         cycle=epoch_number,
                     ),
                 }
@@ -3765,6 +3973,7 @@ def _run_r1_arm(
                 r0_core_graph=r0_core_graph,
                 r0_core_gate=r0_core_gate,
                 r0_core_triplet_ids=r0_core_triplet_ids,
+                action_selection_mode=config.r1_action_selection_mode,
             )
             # R1 checkpoint selection retains the core against the independent
             # validation split only.  Never query R0 regression while an arm
@@ -3782,6 +3991,7 @@ def _run_r1_arm(
                 allow_frozen_core=(
                     r0_core_graph is not None and r0_core_gate is not None
                 ),
+                action_selection_mode=config.r1_action_selection_mode,
             )
             latest_checkpoint = {
                 "epoch": epoch_number,
@@ -3874,6 +4084,8 @@ def _run_r1_arm(
                 "reply_policy": effective_reply_policy,
                 "reply_policy_events": reply_policy_events,
                 "reply_policy_event_digest": reply_policy_event_digest,
+                "local_action_events": local_action_events,
+                "local_action_event_digest": local_action_event_digest,
                 "r0_child_authority_payload": authority_payload,
                 "boundary_ecology_manifest": (
                     None
@@ -3941,6 +4153,7 @@ def _run_r1_arm(
         r0_core_graph=r0_core_graph,
         r0_core_gate=r0_core_gate,
         r0_core_triplet_ids=r0_core_triplet_ids,
+        action_selection_mode=config.r1_action_selection_mode,
     )
     if defer_regression_evaluation:
         final_regression = None
@@ -3956,6 +4169,7 @@ def _run_r1_arm(
             r0_core_graph=r0_core_graph,
             r0_core_gate=r0_core_gate,
             r0_core_triplet_ids=r0_core_triplet_ids,
+            action_selection_mode=config.r1_action_selection_mode,
         )
     final_r0_validation_retention = _evaluate_r0(
         graph,
@@ -3968,6 +4182,7 @@ def _run_r1_arm(
         r0_core_gate=r0_core_gate,
         r0_core_triplet_ids=r0_core_triplet_ids,
         allow_frozen_core=(r0_core_graph is not None and r0_core_gate is not None),
+        action_selection_mode=config.r1_action_selection_mode,
     )
     if defer_regression_evaluation:
         final_r0_regression_retention = None
@@ -3989,6 +4204,7 @@ def _run_r1_arm(
             allow_frozen_core=(
                 r0_core_graph is not None and r0_core_gate is not None
             ),
+            action_selection_mode=config.r1_action_selection_mode,
         )
         final_regression_pass_report_only = bool(
             final_regression["conversion_rate"] >= config.r1_mastery_threshold
@@ -4000,13 +4216,26 @@ def _run_r1_arm(
         or evaluation_child_authority is not None
     )
     current_routing_name = (
-        "child_priority_on" if current_child_priority else "child_priority_off"
+        "native_local_first_move_with_certified_successor"
+        if config.r1_action_selection_mode
+        == R1_ACTION_SELECTION_LOCAL_RECON
+        else (
+            "child_priority_on"
+            if current_child_priority else "child_priority_off"
+        )
     )
     current_routing: dict[str, Any] = {
         "validation": final_validation,
         "regression": final_regression,
         "reused_main_evaluation": True,
-        "descendant_priority_enabled": current_child_priority,
+        "descendant_priority_enabled": bool(
+            current_child_priority
+            and config.r1_action_selection_mode
+            != R1_ACTION_SELECTION_LOCAL_RECON
+        ),
+        "native_successor_authority_enabled": bool(
+            evaluation_child_authority is not None
+        ),
         "protected_core_held_constant": bool(
             r0_core_graph is not None and r0_core_gate is not None
         ),
@@ -4016,35 +4245,42 @@ def _run_r1_arm(
     routing_ablation: dict[str, Any] = {
         current_routing_name: current_routing,
     }
-    alternate_routing_name = (
-        "child_priority_off" if current_child_priority else "child_priority_on"
-    )
-    alternate_ids = (
-        None if current_child_priority else r0_child_triplet_ids
-    )
-    alternate_authority = None if current_child_priority else r0_child_authority
-    alternate_cache = child_dispatch_cache if alternate_ids is not None else None
-    routing_ablation[alternate_routing_name] = {
-        "validation": _evaluate_r1(
-            graph,
-            pools.r1_validation,
-            strata=pools.r1_validation_strata,
-            max_samples=0,
-            r0_child_triplet_ids=alternate_ids,
-            child_dispatch_cache=alternate_cache,
-            r0_child_authority=alternate_authority,
-            r0_core_graph=r0_core_graph,
-            r0_core_gate=r0_core_gate,
-            r0_core_triplet_ids=r0_core_triplet_ids,
-        ),
-        "regression": None,
-        "regression_withheld_from_routing_ablation": True,
-        "reused_main_evaluation": False,
-        "descendant_priority_enabled": not current_child_priority,
-        "protected_core_held_constant": bool(
-            r0_core_graph is not None and r0_core_gate is not None
-        ),
-    }
+    if config.r1_action_selection_mode != R1_ACTION_SELECTION_LOCAL_RECON:
+        alternate_routing_name = (
+            "child_priority_off"
+            if current_child_priority else "child_priority_on"
+        )
+        alternate_ids = (
+            None if current_child_priority else r0_child_triplet_ids
+        )
+        alternate_authority = (
+            None if current_child_priority else r0_child_authority
+        )
+        alternate_cache = (
+            child_dispatch_cache if alternate_ids is not None else None
+        )
+        routing_ablation[alternate_routing_name] = {
+            "validation": _evaluate_r1(
+                graph,
+                pools.r1_validation,
+                strata=pools.r1_validation_strata,
+                max_samples=0,
+                r0_child_triplet_ids=alternate_ids,
+                child_dispatch_cache=alternate_cache,
+                r0_child_authority=alternate_authority,
+                r0_core_graph=r0_core_graph,
+                r0_core_gate=r0_core_gate,
+                r0_core_triplet_ids=r0_core_triplet_ids,
+                action_selection_mode=config.r1_action_selection_mode,
+            ),
+            "regression": None,
+            "regression_withheld_from_routing_ablation": True,
+            "reused_main_evaluation": False,
+            "descendant_priority_enabled": not current_child_priority,
+            "protected_core_held_constant": bool(
+                r0_core_graph is not None and r0_core_gate is not None
+            ),
+        }
     _restore_disabled_composites(graph, heldout_disabled_state)
     v2_authority_audit: dict[str, Any] = {
         "enabled": False,
@@ -4319,11 +4555,40 @@ def _run_r1_arm(
                 reply_exposure_counts_by_reply
             ),
             "r1_action_order": config.r1_action_order,
+            "r1_action_selection_mode": config.r1_action_selection_mode,
             "r1_action_order_key": (
-                "lexicographic_uci_ids"
-                if config.r1_action_order
-                == R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC
-                else "generic_seed_plus_opaque_position_identity"
+                "not_used_graph_local_anonymous_competition"
+                if config.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
+                else (
+                    "lexicographic_uci_ids"
+                    if config.r1_action_order
+                    == R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC
+                    else "generic_seed_plus_opaque_position_identity"
+                )
+            ),
+            "local_action_event_count": (
+                counters["episodes"]
+                if config.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
+                else 0
+            ),
+            "local_action_event_digest": local_action_event_digest,
+            "local_action_recent_events": list(local_action_events),
+            "local_candidate_pairs_before_cap": int(
+                graph.scheduler_stats.get(
+                    "shared_atom_candidate_pairs_before_cap", 0
+                )
+            ),
+            "local_candidate_pairs_after_cap": int(
+                graph.scheduler_stats.get(
+                    "shared_atom_candidate_pairs_after_cap", 0
+                )
+            ),
+            "local_candidate_cap_bound": bool(
+                graph.scheduler_stats.get(
+                    "shared_atom_candidate_pairs_before_cap", 0
+                )
             ),
             "reply_schedule": (
                 "worst_authority_state_then_confidence_then_selected_exposure"
@@ -4434,6 +4699,7 @@ def _paired_composite_interventions(
     r0_core_graph: NativeReConKRKGraph | None = None,
     r0_core_gate: OutcomeCalibratedPrototypeGate | None = None,
     r0_core_triplet_ids: frozenset[str] | None = None,
+    action_selection_mode: str = R1_ACTION_SELECTION_SCHEDULED,
 ) -> list[dict[str, Any]]:
     results: list[dict[str, Any]] = []
     for composite_id in sorted(graph.composite_cells):
@@ -4452,6 +4718,7 @@ def _paired_composite_interventions(
             r0_core_graph=r0_core_graph,
             r0_core_gate=r0_core_gate,
             r0_core_triplet_ids=r0_core_triplet_ids,
+            action_selection_mode=action_selection_mode,
         )
         graph.set_composite_enabled(composite_id, enabled=False)
         disabled = _evaluate_r1(
@@ -4464,6 +4731,7 @@ def _paired_composite_interventions(
             r0_core_graph=r0_core_graph,
             r0_core_gate=r0_core_gate,
             r0_core_triplet_ids=r0_core_triplet_ids,
+            action_selection_mode=action_selection_mode,
         )
         graph.set_composite_enabled(composite_id, enabled=was_enabled)
         help_count = hurt_count = neutral_count = 0
@@ -4770,6 +5038,85 @@ def _scheduled_confirmed_action(
     return move, triplet_id, bool(confirmed), graph_prediction
 
 
+def _select_r1_training_action(
+    graph: NativeReConKRKGraph,
+    board: chess.Board,
+    *,
+    epoch: int,
+    position_index: int,
+    fen: str,
+    config: NativeIntrinsicCurriculumConfig,
+) -> tuple[chess.Move, str, bool, float, dict[str, Any] | None]:
+    """Select one R1 action without letting the harness rank local choices.
+
+    The legacy mode is retained for exact historical replay.  In native-local
+    mode the host supplies only the legal environment; the graph creates the
+    candidate activations and ``AnonymousChoiceGenome`` emits one actuator.
+    The returned manifest is diagnostic and cannot affect the decision.
+    """
+
+    if config.r1_action_selection_mode == R1_ACTION_SELECTION_LOCAL_RECON:
+        decision = graph.choose_local_training_action(
+            board,
+            stage_diagnostic="R1_mate_in_2",
+        )
+        move = chess.Move.from_uci(str(decision.move_uci))
+        if move not in board.legal_moves:
+            raise RuntimeError("native local selector emitted an illegal R1 move")
+        if not bool(decision.confirmed):
+            raise RuntimeError(
+                "native local selector could not formally confirm its emitted "
+                "exact R1 branch"
+            )
+        return (
+            move,
+            str(decision.triplet_id),
+            bool(decision.confirmed),
+            float(decision.prediction),
+            dict(decision.to_manifest()),
+        )
+
+    if config.r1_action_selection_mode != R1_ACTION_SELECTION_SCHEDULED:
+        raise ValueError(
+            "unsupported R1 action selection mode: "
+            f"{config.r1_action_selection_mode}"
+        )
+    move, triplet_id, confirmed, prediction = _scheduled_confirmed_action(
+        graph,
+        board,
+        schedule_index=epoch + position_index,
+        stage_diagnostic="R1_mate_in_2",
+        action_order=config.r1_action_order,
+        generic_seed=config.seed,
+        position_identity=_opaque_r1_position_identity(fen, position_index),
+    )
+    return move, triplet_id, confirmed, prediction, None
+
+
+def _supported_local_policy_action(
+    graph: NativeReConKRKGraph,
+    board: chess.Board,
+) -> chess.Move | None:
+    """Return a learned local action, or abstain without native support.
+
+    Anonymous emission confirms a legal actuator affordance.  Scientific
+    evaluation additionally requires that a persistent, formally confirmed
+    graph source supplied the winning pattern's value.  This prevents an
+    empty graph's deterministic zero-score tie break from being counted as
+    learned competence.
+    """
+
+    decision = graph.choose_local_policy_action(board)
+    if decision is None:
+        return None
+    if not bool(decision.policy_supported):
+        return None
+    move = decision.move
+    if move not in board.legal_moves:
+        raise RuntimeError("supported native local policy emitted an illegal move")
+    return move
+
+
 def _execute_white_and_observe(board: chess.Board, move: chess.Move) -> str | None:
     if move not in board.legal_moves:
         return "illegal"
@@ -4954,6 +5301,7 @@ def _evaluate_r0(
     r0_core_triplet_ids: frozenset[str] | None = None,
     allow_frozen_core: bool = False,
     allow_legacy_child_priority: bool | None = None,
+    action_selection_mode: str = R1_ACTION_SELECTION_SCHEDULED,
 ) -> dict[str, Any]:
     if (
         r0_child_authority is not None
@@ -4972,28 +5320,61 @@ def _evaluate_r0(
     correct = illegal = null = stalemate = rook_loss = 0
     for fen in fens:
         board = chess.Board(fen)
-        move = (
-            _choose_with_child_priority(
-                graph,
-                board,
-                r0_child_triplet_ids=r0_child_triplet_ids,
-                child_dispatch_cache=child_dispatch_cache,
-                r0_child_authority=r0_child_authority,
-                r0_core_graph=r0_core_graph,
-                r0_core_gate=r0_core_gate,
-                r0_core_triplet_ids=r0_core_triplet_ids,
-                allow_frozen_core=allow_frozen_core,
-                allow_legacy_child_priority=allow_legacy_child_priority,
-            )
-            if (
-                r0_child_triplet_ids
-                or r0_child_authority is not None
-                or allow_frozen_core
-                or (r0_core_graph is not None and r0_core_gate is not None)
-            )
+        if (
+            action_selection_mode == R1_ACTION_SELECTION_LOCAL_RECON
+            and r0_child_authority is not None
             and not masked_triplets
-            else graph.choose(board, masked_triplets=masked_triplets)
-        )
+        ):
+            available, response = _v2_r0_available(
+                r0_child_authority,
+                board,
+                frame_id=(
+                    "native-intrinsic-v2-r0-evaluation:"
+                    + hashlib.sha256(board.fen().encode("utf-8")).hexdigest()
+                ),
+            )
+            selected_uci = response.get("selected_move") if available else None
+            candidate = (
+                None
+                if selected_uci is None
+                else chess.Move.from_uci(str(selected_uci))
+            )
+            move = (
+                candidate
+                if candidate is not None and candidate in board.legal_moves
+                else None
+            )
+        elif (
+            action_selection_mode == R1_ACTION_SELECTION_LOCAL_RECON
+            and not masked_triplets
+        ):
+            move = _supported_local_policy_action(graph, board)
+        else:
+            move = (
+                _choose_with_child_priority(
+                    graph,
+                    board,
+                    r0_child_triplet_ids=r0_child_triplet_ids,
+                    child_dispatch_cache=child_dispatch_cache,
+                    r0_child_authority=r0_child_authority,
+                    r0_core_graph=r0_core_graph,
+                    r0_core_gate=r0_core_gate,
+                    r0_core_triplet_ids=r0_core_triplet_ids,
+                    allow_frozen_core=allow_frozen_core,
+                    allow_legacy_child_priority=allow_legacy_child_priority,
+                )
+                if (
+                    r0_child_triplet_ids
+                    or r0_child_authority is not None
+                    or allow_frozen_core
+                    or (
+                        r0_core_graph is not None
+                        and r0_core_gate is not None
+                    )
+                )
+                and not masked_triplets
+                else graph.choose(board, masked_triplets=masked_triplets)
+            )
         terminal_kind = None if move is None else _execute_white_and_observe(board, move)
         ok = terminal_kind == "mate"
         correct += int(ok)
@@ -5019,6 +5400,11 @@ def _evaluate_r0(
         "illegal_move_count": illegal,
         "stalemate_count": stalemate,
         "rook_loss_count": rook_loss,
+        "action_selection_mode": action_selection_mode,
+        "native_authority_fail_closed": bool(
+            action_selection_mode == R1_ACTION_SELECTION_LOCAL_RECON
+            and r0_child_authority is not None
+        ),
         "samples": rows,
     }
 
@@ -5036,6 +5422,7 @@ def _evaluate_r1(
     r0_core_graph: NativeReConKRKGraph | None = None,
     r0_core_gate: OutcomeCalibratedPrototypeGate | None = None,
     r0_core_triplet_ids: frozenset[str] | None = None,
+    action_selection_mode: str = R1_ACTION_SELECTION_SCHEDULED,
 ) -> dict[str, Any]:
     if (
         r0_child_authority is not None
@@ -5058,24 +5445,25 @@ def _evaluate_r1(
     for position_index, fen in enumerate(fens):
         stratum = "unstratified" if strata is None else str(strata[position_index])
         board = chess.Board(fen)
-        first = _choose_with_child_priority(
-            graph,
-            board,
-            r0_child_triplet_ids=r0_child_triplet_ids,
-            child_dispatch_cache=child_dispatch_cache,
-            r0_child_authority=r0_child_authority,
-            r0_core_graph=r0_core_graph,
-            r0_core_gate=r0_core_gate,
-            r0_core_triplet_ids=r0_core_triplet_ids,
-            # The same local gate is evaluated here and below.  There is no
-            # stage/host-vs-successor routing flag; an out-of-domain board
-            # naturally abstains and remains with the exploratory graph.
-            allow_frozen_core=(
-                r0_core_graph is not None and r0_core_gate is not None
-            ),
-            allow_legacy_child_priority=(
-                r0_core_graph is None or r0_core_gate is None
-            ),
+        first = (
+            _supported_local_policy_action(graph, board)
+            if action_selection_mode == R1_ACTION_SELECTION_LOCAL_RECON
+            else _choose_with_child_priority(
+                graph,
+                board,
+                r0_child_triplet_ids=r0_child_triplet_ids,
+                child_dispatch_cache=child_dispatch_cache,
+                r0_child_authority=r0_child_authority,
+                r0_core_graph=r0_core_graph,
+                r0_core_gate=r0_core_gate,
+                r0_core_triplet_ids=r0_core_triplet_ids,
+                allow_frozen_core=(
+                    r0_core_graph is not None and r0_core_gate is not None
+                ),
+                allow_legacy_child_priority=(
+                    r0_core_graph is None or r0_core_gate is None
+                ),
+            )
         )
         null += int(first is None)
         illegal += int(first is not None and first not in board.legal_moves)
@@ -5089,22 +5477,54 @@ def _evaluate_r1(
             for reply in replies:
                 before_second = after_first.copy(stack=False)
                 before_second.push(reply)
-                second = _choose_with_child_priority(
-                    graph,
-                    before_second,
-                    r0_child_triplet_ids=r0_child_triplet_ids,
-                    child_dispatch_cache=child_dispatch_cache,
-                    r0_child_authority=r0_child_authority,
-                    r0_core_graph=r0_core_graph,
-                    r0_core_gate=r0_core_gate,
-                    r0_core_triplet_ids=r0_core_triplet_ids,
-                    allow_frozen_core=(
-                        r0_core_graph is not None and r0_core_gate is not None
-                    ),
-                    allow_legacy_child_priority=(
-                        r0_core_graph is None or r0_core_gate is None
-                    ),
-                )
+                if action_selection_mode == R1_ACTION_SELECTION_LOCAL_RECON:
+                    if r0_child_authority is None:
+                        second = _supported_local_policy_action(
+                            graph,
+                            before_second,
+                        )
+                    else:
+                        available, response = _v2_r0_available(
+                            r0_child_authority,
+                            before_second,
+                            frame_id=(
+                                "native-intrinsic-v2-r1-evaluation-successor:"
+                                + hashlib.sha256(
+                                    before_second.fen().encode("utf-8")
+                                ).hexdigest()
+                            ),
+                        )
+                        selected_uci = (
+                            response.get("selected_move") if available else None
+                        )
+                        candidate = (
+                            None
+                            if selected_uci is None
+                            else chess.Move.from_uci(str(selected_uci))
+                        )
+                        second = (
+                            candidate
+                            if candidate is not None
+                            and candidate in before_second.legal_moves
+                            else None
+                        )
+                else:
+                    second = _choose_with_child_priority(
+                        graph,
+                        before_second,
+                        r0_child_triplet_ids=r0_child_triplet_ids,
+                        child_dispatch_cache=child_dispatch_cache,
+                        r0_child_authority=r0_child_authority,
+                        r0_core_graph=r0_core_graph,
+                        r0_core_gate=r0_core_gate,
+                        r0_core_triplet_ids=r0_core_triplet_ids,
+                        allow_frozen_core=(
+                            r0_core_graph is not None and r0_core_gate is not None
+                        ),
+                        allow_legacy_child_priority=(
+                            r0_core_graph is None or r0_core_gate is None
+                        ),
+                    )
                 terminal_kind = (
                     None
                     if second is None
@@ -5168,7 +5588,15 @@ def _evaluate_r1(
             "early_exit_on_failure" if stop_after_first_failure else "exhaustive"
         ),
         "mature_child_priority_enabled": bool(
-            r0_child_triplet_ids or r0_child_authority is not None
+            action_selection_mode != R1_ACTION_SELECTION_LOCAL_RECON
+            and (r0_child_triplet_ids or r0_child_authority is not None)
+        ),
+        "certified_successor_authority_enabled": bool(
+            r0_child_authority is not None
+        ),
+        "action_selection_mode": action_selection_mode,
+        "adaptive_host_priority_cascade_used": bool(
+            action_selection_mode != R1_ACTION_SELECTION_LOCAL_RECON
         ),
         "stratum_conversion": dict(sorted(stratum_conversion.items())),
         "samples": rows,
@@ -5340,6 +5768,124 @@ def _v2_r0_available(
         "virtual_frame_terminal_grounding_granted": False,
     }
     return available, response
+
+
+def _native_v2_r0_admission_audit(
+    authority: Any,
+    *,
+    positive_fens: Sequence[str],
+    negative_fens: Sequence[str],
+    max_samples: int,
+) -> dict[str, Any]:
+    """Fail closed unless the native authority itself has R0 jurisdiction.
+
+    This is a scientific stage boundary, not a runtime provider.  It performs
+    read-only VIRTUAL queries against the prospectively closed authority and
+    observes the selected action in a copied validation board.  No validation
+    outcome is consumed by the authority, used to alter a cell, or exposed as
+    a learner feature.
+    """
+
+    continuation_before = str(authority.continuation_digest())
+    r0 = getattr(getattr(authority, "base", None), "r0", None)
+    if r0 is None or not callable(getattr(r0, "inference_guard_identity", None)):
+        raise TypeError("native V2 admission requires an immutable R0 organism")
+    source_before = str(r0.inference_guard_identity())
+    frame_session_factory = getattr(authority, "frame_session", None)
+    frame_session = (
+        frame_session_factory() if callable(frame_session_factory) else None
+    )
+    positive_authorized = positive_mates = negative_available = 0
+    illegal = null = 0
+    samples: list[dict[str, Any]] = []
+    try:
+        for expected_positive, fens in (
+            (True, positive_fens),
+            (False, negative_fens),
+        ):
+            for index, fen in enumerate(fens):
+                board = chess.Board(fen)
+                available, response = _v2_r0_available(
+                    authority,
+                    board,
+                    frame_id=(
+                        "native-r0-admission:"
+                        f"{'positive' if expected_positive else 'negative'}:"
+                        f"{index}"
+                    ),
+                    frame_session=frame_session,
+                )
+                selected_uci = response.get("selected_move")
+                move: chess.Move | None = None
+                if selected_uci is not None:
+                    try:
+                        move = chess.Move.from_uci(str(selected_uci))
+                    except ValueError:
+                        move = None
+                legal = bool(move is not None and move in board.legal_moves)
+                observed_mate = bool(
+                    legal
+                    and move is not None
+                    and _execute_white_and_observe(board, move) == "mate"
+                )
+                null += int(selected_uci is None)
+                illegal += int(selected_uci is not None and not legal)
+                if expected_positive:
+                    positive_authorized += int(available and legal)
+                    positive_mates += int(available and legal and observed_mate)
+                else:
+                    negative_available += int(available)
+                if len(samples) < max(0, int(max_samples)):
+                    samples.append({
+                        "split": (
+                            "r0_validation_positive"
+                            if expected_positive
+                            else "r0_validation_decoy"
+                        ),
+                        "selected_move": selected_uci,
+                        "available": bool(available),
+                        "legal": legal,
+                        "observed_mate": observed_mate,
+                        "classification": response.get("classification"),
+                    })
+    finally:
+        if frame_session is not None:
+            frame_session.close()
+
+    continuation_after = str(authority.continuation_digest())
+    source_after = str(r0.inference_guard_identity())
+    positive_count = len(positive_fens)
+    negative_count = len(negative_fens)
+    immutable = bool(
+        continuation_before == continuation_after
+        and source_before == source_after
+    )
+    passed = bool(
+        positive_count > 0
+        and positive_authorized == positive_count
+        and positive_mates == positive_count
+        and negative_available == 0
+        and illegal == 0
+        and immutable
+    )
+    return {
+        "schema_version": "native_v2_r0_admission.v1",
+        "pass": passed,
+        "positive_count": positive_count,
+        "positive_authorized_count": positive_authorized,
+        "positive_authorized_mate_count": positive_mates,
+        "negative_count": negative_count,
+        "negative_available_count": negative_available,
+        "illegal_selection_count": illegal,
+        "null_selection_count": null,
+        "virtual_queries_only": True,
+        "validation_outcomes_consumed_by_learner": False,
+        "continuation_immutable": continuation_before == continuation_after,
+        "frozen_r0_immutable": source_before == source_after,
+        "continuation_digest": continuation_after,
+        "frozen_r0_inference_guard": source_after,
+        "samples": samples,
+    }
 
 
 def _advance_v2_structural_frontier(

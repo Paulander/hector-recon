@@ -57,6 +57,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     R1_BALANCED_STRATA,
     R1_RETIRED_DEVELOPMENT_FENS,
     R1CheckpointInterrupt,
+    R1_ACTION_SELECTION_LOCAL_RECON,
     R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
     V2_PROSPECTIVE_AVAILABILITY,
     _Pools,
@@ -75,11 +76,13 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _generate_balanced_r0_split,
     _generate_balanced_r1_split,
     _mechanistic_r1_arms,
+    _native_v2_r0_admission_audit,
     _namespace_development_fullmoves,
     _r0_available,
     _r0_available_with_dispatch_cache,
     _r1_orbit_key,
     _r1_snapshot_fingerprint,
+    _select_r1_training_action,
     _replay_r0,
     run_native_intrinsic_curriculum,
     _restore_disabled_composites,
@@ -1555,9 +1558,17 @@ def test_v2_duplicate_index_reads_only_fen_bearing_receipt_ledgers() -> None:
     )
 
 
-@pytest.mark.parametrize("v2_enabled", (False, True), ids=("legacy", "v2"))
+@pytest.mark.parametrize(
+    ("v2_enabled", "selection_mode"),
+    (
+        (False, "scheduled"),
+        (True, "scheduled"),
+        (True, R1_ACTION_SELECTION_LOCAL_RECON),
+    ),
+    ids=("legacy", "v2-scheduled", "v2-native-local"),
+)
 def test_r1_interval_snapshot_resume_matches_uninterrupted(
-    tmp_path, v2_enabled
+    tmp_path, monkeypatch, v2_enabled, selection_mode
 ) -> None:
     base_graph = _graph()
     base_credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
@@ -1605,8 +1616,34 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
         r1_snapshot_interval=1,
         r1_mastery_threshold=2.0,
         mature_child_priority=False,
+        r1_action_selection_mode=selection_mode,
         max_samples=0,
     )
+    if selection_mode == R1_ACTION_SELECTION_LOCAL_RECON:
+        def forbidden_legacy_path(*_args, **_kwargs):
+            raise AssertionError("retired host routing reached in native-local arm")
+
+        for name in (
+            "_scheduled_confirmed_action",
+            "_choose_with_child_priority",
+            "_r0_available",
+            "_r0_available_with_dispatch_cache",
+        ):
+            monkeypatch.setattr(
+                curriculum_module,
+                name,
+                forbidden_legacy_path,
+            )
+        monkeypatch.setattr(
+            OutcomeCalibratedPrototypeGate,
+            "confirms",
+            forbidden_legacy_path,
+        )
+        monkeypatch.setattr(
+            OutcomeCalibratedPrototypeGate,
+            "probability",
+            forbidden_legacy_path,
+        )
     uninterrupted_config = NativeIntrinsicCurriculumConfig(
         progress_path=str(tmp_path / "uninterrupted_progress.json"),
         r1_snapshot_dir=str(tmp_path / "uninterrupted"),
@@ -1643,7 +1680,11 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
     assert sum(
         row["regression"] is None
         for row in uninterrupted["routing_ablation"].values()
-    ) == 1
+    ) == (
+        0
+        if selection_mode == R1_ACTION_SELECTION_LOCAL_RECON
+        else 1
+    )
 
     resume_config = NativeIntrinsicCurriculumConfig(
         progress_path=str(tmp_path / "resume_progress.json"),
@@ -1727,6 +1768,18 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
     )
     assert resumed_credit.snapshot() == uninterrupted_credit.snapshot()
     assert resumed["training"]["resumed_from_snapshot"] is True
+    if selection_mode == R1_ACTION_SELECTION_LOCAL_RECON:
+        assert resumed["training"]["local_action_event_digest"] == (
+            uninterrupted["training"]["local_action_event_digest"]
+        )
+        assert resumed["training"]["local_action_recent_events"] == (
+            uninterrupted["training"]["local_action_recent_events"]
+        )
+        assert resumed["training"]["local_action_event_count"] > 0
+        assert all(
+            event["triplet_id"] == event["credited_triplet_id"]
+            for event in resumed["training"]["local_action_recent_events"]
+        )
     if v2_enabled:
         assert resumed["v2_child_authority"] == uninterrupted[
             "v2_child_authority"
@@ -2932,6 +2985,65 @@ def test_r0_replay_uses_graph_selected_action_and_real_outcome() -> None:
     assert credit.states[R0_COMPETENCE_ID].terminal_evidence == 1
 
 
+def test_native_v2_r0_admission_is_read_only_and_requires_clean_jurisdiction(
+    monkeypatch,
+) -> None:
+    positive = "k7/8/1K6/8/8/8/8/7R w - - 0 1"
+    decoy = "8/8/8/8/8/2K5/7R/k7 w - - 0 1"
+
+    class _R0:
+        @staticmethod
+        def inference_guard_identity() -> str:
+            return "immutable-r0"
+
+    class _Session:
+        def close(self) -> None:
+            pass
+
+    class _Authority:
+        base = SimpleNamespace(r0=_R0())
+
+        @staticmethod
+        def continuation_digest() -> str:
+            return "immutable-authority"
+
+        @staticmethod
+        def frame_session() -> _Session:
+            return _Session()
+
+    def available(_authority, board, *, frame_id, frame_session=None):
+        assert frame_id.startswith("native-r0-admission:")
+        assert frame_session is not None
+        if board.fen() == chess.Board(positive).fen():
+            mating = next(
+                move for move in board.legal_moves
+                if _execute_white_and_observe(board, move) == "mate"
+            )
+            return True, {
+                "selected_move": mating.uci(),
+                "classification": {"state": "available"},
+            }
+        return False, {
+            "selected_move": None,
+            "classification": {"state": "unknown"},
+        }
+
+    monkeypatch.setattr(curriculum_module, "_v2_r0_available", available)
+    audit = _native_v2_r0_admission_audit(
+        _Authority(),
+        positive_fens=(positive,),
+        negative_fens=(decoy,),
+        max_samples=2,
+    )
+
+    assert audit["pass"] is True
+    assert audit["positive_authorized_mate_count"] == 1
+    assert audit["negative_available_count"] == 0
+    assert audit["continuation_immutable"] is True
+    assert audit["frozen_r0_immutable"] is True
+    assert audit["validation_outcomes_consumed_by_learner"] is False
+
+
 def test_cached_r0_replay_is_graph_memory_live_confirmed_and_reexecuted() -> None:
     graph = _graph()
     board = chess.Board(MATE_ONE_FEN)
@@ -2970,3 +3082,255 @@ def test_cached_r0_replay_is_graph_memory_live_confirmed_and_reexecuted() -> Non
     assert replay["observed_mates"] == 1
     assert replay["formal_confirmation_failures"] == 0
     assert replay["cached_outcome_mismatches"] == 0
+
+
+def test_local_r1_action_selection_never_reaches_host_schedule(monkeypatch) -> None:
+    board = chess.Board(MATE_ONE_FEN)
+    emitted = next(iter(board.legal_moves))
+    triplet_id = "native-emitted-triplet"
+    calls: list[tuple[str, str]] = []
+
+    class _Decision:
+        move_uci = emitted.uci()
+        confirmed = True
+        prediction = 0.25
+
+        def __init__(self) -> None:
+            self.triplet_id = triplet_id
+
+        def to_manifest(self) -> dict[str, object]:
+            return {
+                "move_uci": self.move_uci,
+                "triplet_id": self.triplet_id,
+                "selection_authority": "native_anonymous_choice",
+            }
+
+    class _Graph:
+        @staticmethod
+        def choose_local_training_action(
+            received: chess.Board,
+            stage_diagnostic: str,
+        ) -> _Decision:
+            calls.append((received.fen(), stage_diagnostic))
+            return _Decision()
+
+    def forbidden_schedule(*_args, **_kwargs):
+        raise AssertionError("host action schedule reached in native-local mode")
+
+    monkeypatch.setattr(
+        curriculum_module,
+        "_scheduled_confirmed_action",
+        forbidden_schedule,
+    )
+    monkeypatch.setattr(
+        curriculum_module,
+        "_r1_legal_action_order",
+        forbidden_schedule,
+    )
+    monkeypatch.setattr(
+        curriculum_module,
+        "_stable_hash_action_permutation",
+        forbidden_schedule,
+    )
+    monkeypatch.setattr(
+        curriculum_module,
+        "_opaque_r1_position_identity",
+        forbidden_schedule,
+    )
+    config = replace(
+        NativeIntrinsicCurriculumConfig(),
+        r1_action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+    )
+
+    move, credited, confirmed, prediction, manifest = (
+        _select_r1_training_action(
+            _Graph(),
+            board,
+            epoch=99,
+            position_index=7,
+            fen=board.fen(),
+            config=config,
+        )
+    )
+
+    assert move == emitted
+    assert credited == triplet_id
+    assert confirmed is True
+    assert prediction == pytest.approx(0.25)
+    assert manifest["selection_authority"] == "native_anonymous_choice"
+    assert calls == [(board.fen(), "R1_mate_in_2")]
+
+
+def test_local_r1_training_fails_before_execution_when_exact_branch_is_unconfirmed() -> None:
+    board = chess.Board(MATE_ONE_FEN)
+    emitted = next(iter(board.legal_moves))
+
+    class _Decision:
+        move_uci = emitted.uci()
+        triplet_id = "unconfirmed-native-branch"
+        confirmed = False
+        prediction = 0.0
+
+        @staticmethod
+        def to_manifest() -> dict[str, object]:
+            return {}
+
+    class _Graph:
+        @staticmethod
+        def choose_local_training_action(
+            _received: chess.Board,
+            stage_diagnostic: str,
+        ) -> _Decision:
+            assert stage_diagnostic == "R1_mate_in_2"
+            return _Decision()
+
+    config = replace(
+        NativeIntrinsicCurriculumConfig(),
+        r1_action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+    )
+    with pytest.raises(RuntimeError, match="could not formally confirm"):
+        _select_r1_training_action(
+            _Graph(),
+            board,
+            epoch=0,
+            position_index=0,
+            fen=board.fen(),
+            config=config,
+        )
+
+
+def test_local_r1_evaluation_uses_native_policy_and_direct_successor_authority(
+    monkeypatch,
+) -> None:
+    fen = R1_RETIRED_DEVELOPMENT_FENS[0]
+    board = chess.Board(fen)
+    first_moves = tuple(sorted(
+        _forced_mate_in_two_first_moves(board),
+        key=lambda move: move.uci(),
+    ))
+    assert first_moves
+    first = first_moves[0]
+    native_policy_calls: list[str] = []
+    successor_queries: list[str] = []
+
+    class _Graph:
+        @staticmethod
+        def choose_local_policy_action(received: chess.Board):
+            native_policy_calls.append(received.fen())
+            return SimpleNamespace(move=first, policy_supported=True)
+
+        @staticmethod
+        def choose(*_args, **_kwargs):
+            raise AssertionError("legacy weighted graph chooser reached")
+
+        @staticmethod
+        def audit_choice(*_args, **_kwargs):
+            raise AssertionError("legacy graph audit chooser reached")
+
+    def forbidden_priority(*_args, **_kwargs):
+        raise AssertionError("host child-priority cascade reached")
+
+    def native_successor(_authority, successor, *, frame_id, **_kwargs):
+        successor_queries.append(frame_id)
+        mating = next(
+            move
+            for move in successor.legal_moves
+            if _execute_white_and_observe(successor, move) == "mate"
+        )
+        return True, {
+            "selected_move": mating.uci(),
+            "classification": {"state": "available"},
+        }
+
+    monkeypatch.setattr(
+        curriculum_module,
+        "_choose_with_child_priority",
+        forbidden_priority,
+    )
+    monkeypatch.setattr(
+        curriculum_module,
+        "_v2_r0_available",
+        native_successor,
+    )
+
+    result = _evaluate_r1(
+        _Graph(),
+        (fen,),
+        max_samples=1,
+        r0_child_authority=object(),
+        action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+    )
+
+    after_first = board.copy(stack=False)
+    after_first.push(first)
+    assert result["conversion_count"] == 1
+    assert result["adaptive_host_priority_cascade_used"] is False
+    assert result["certified_successor_authority_enabled"] is True
+    assert native_policy_calls == [board.fen()]
+    assert len(successor_queries) == len(tuple(after_first.legal_moves))
+
+
+def test_local_r1_evaluation_abstains_on_an_empty_native_graph(monkeypatch) -> None:
+    fen = R1_RETIRED_DEVELOPMENT_FENS[0]
+    graph = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            train_repetitions=1,
+            max_ticks=80,
+        )
+    )
+
+    def forbidden_successor(*_args, **_kwargs):
+        raise AssertionError("successor authority queried after unsupported first move")
+
+    monkeypatch.setattr(
+        curriculum_module,
+        "_v2_r0_available",
+        forbidden_successor,
+    )
+
+    result = _evaluate_r1(
+        graph,
+        (fen,),
+        max_samples=1,
+        r0_child_authority=object(),
+        action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+    )
+
+    assert result["conversion_count"] == 0
+    assert result["null_selection_count"] == 1
+    assert result["reply_evaluation_count"] == 0
+    assert result["samples"][0]["selected_first"] is None
+
+
+def test_local_r0_retention_fails_closed_on_native_authority_abstention(
+    monkeypatch,
+) -> None:
+    def forbidden_priority(*_args, **_kwargs):
+        raise AssertionError("host fallback reached after native abstention")
+
+    monkeypatch.setattr(
+        curriculum_module,
+        "_choose_with_child_priority",
+        forbidden_priority,
+    )
+    monkeypatch.setattr(
+        curriculum_module,
+        "_v2_r0_available",
+        lambda *_args, **_kwargs: (
+            False,
+            {"selected_move": None, "classification": {"state": "unknown"}},
+        ),
+    )
+
+    result = curriculum_module._evaluate_r0(
+        SimpleNamespace(),
+        (MATE_ONE_FEN,),
+        max_samples=1,
+        r0_child_authority=object(),
+        action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+    )
+
+    assert result["accuracy"] == 0.0
+    assert result["null_selection_count"] == 1
+    assert result["native_authority_fail_closed"] is True

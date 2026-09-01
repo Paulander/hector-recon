@@ -2,10 +2,15 @@ import chess
 
 from recon_lite import Graph, Node, NodeState, NodeType, ReConEngine
 from recon_lite_chess.autogrowth import (
+    NativeLocalTrainingDecision,
     NativeReConKRKGraph,
     NativeSingleGraphConfig,
 )
 from recon_lite_chess.autogrowth.foundation_curriculum import _mate_moves, _move_reward
+from recon_lite_chess.autogrowth.native_single_graph_curriculum import (
+    _triplet_id,
+    _triplet_keys,
+)
 
 
 MATE_ONE_FEN = "k7/8/1K6/8/8/8/8/7R w - - 0 1"
@@ -160,3 +165,253 @@ def test_consolidation_freezes_existing_parameters_but_not_new_growth() -> None:
     new_edges = network.triplet_trainable_edges[new_triplet]
     assert new_triplet != triplet
     assert any(float(edge.w) > 0.0 for edge in new_edges)
+
+
+def test_local_training_audit_does_not_change_exposure_counters() -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            train_repetitions=1,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    rewards = {move.uci(): 0.0 for move in board.legal_moves}
+    network.train_action_rewards(board, rewards=rewards, stage="audit_exposure")
+    before_root = int(network.graph.nodes["tg26o_root"].meta["request_exposures"])
+    before_triplets = {
+        triplet_id: int(
+            network.graph.nodes[triplet_id].meta["request_exposures"]
+        )
+        for triplet_id in network.triplet_ids
+    }
+
+    network.audit_choice(board)
+
+    assert int(network.graph.nodes["tg26o_root"].meta["request_exposures"]) == before_root
+    assert {
+        triplet_id: int(
+            network.graph.nodes[triplet_id].meta["request_exposures"]
+        )
+        for triplet_id in network.triplet_ids
+    } == before_triplets
+
+
+def test_local_training_materializes_only_the_emitted_branch_and_preserves_id_parity(
+    monkeypatch,
+) -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            train_repetitions=1,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    legacy_audit = network.audit_choice
+
+    def forbidden_host_picker(*_args, **_kwargs):
+        raise AssertionError("legacy host picker reached by local selector")
+
+    monkeypatch.setattr(network, "choose", forbidden_host_picker)
+    monkeypatch.setattr(network, "audit_choice", forbidden_host_picker)
+
+    decision = network.choose_local_training_action(board, "local_r1")
+
+    expected_id = _triplet_id(
+        *_triplet_keys(board, decision.move, key_mode=network.config.key_mode)
+    )
+    assert isinstance(decision, NativeLocalTrainingDecision)
+    assert decision.triplet_id == decision.pattern_id == expected_id
+    assert network.triplet_ids == {decision.triplet_id}
+    assert int(network.graph.nodes["tg26o_root"].meta["request_exposures"]) == 0
+    assert int(network.graph.nodes[decision.triplet_id].meta["request_exposures"]) == 0
+    assert decision.materialized_after_emission is True
+    assert decision.confirmed is True
+    assert decision.policy_supported is False
+    assert decision.prediction_source == "pre_emission_native_raw"
+
+    network.apply_intrinsic_td(
+        board,
+        decision.move,
+        td_error=0.25,
+        stage_diagnostic="local_r1",
+    )
+    assert int(network.graph.nodes["tg26o_root"].meta["request_exposures"]) == 1
+    assert int(network.graph.nodes[decision.triplet_id].meta["request_exposures"]) == 1
+    legacy_audit(board)
+    assert int(network.graph.nodes["tg26o_root"].meta["request_exposures"]) == 1
+    assert int(network.graph.nodes[decision.triplet_id].meta["request_exposures"]) == 1
+
+
+def test_local_td_credit_changes_a_later_executed_action_relative_to_control() -> None:
+    config = NativeSingleGraphConfig(
+        include_symmetries=False,
+        train_repetitions=1,
+        max_ticks=80,
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    target = sorted(board.legal_moves, key=lambda item: item.uci())[0]
+    neutral_rewards = {move.uci(): 0.0 for move in board.legal_moves}
+
+    control = NativeReConKRKGraph(config=config)
+    for _ in range(10):
+        control.train_action_rewards(
+            board,
+            rewards=neutral_rewards,
+            stage="local_r1_neutral_exposure",
+        )
+    control.apply_intrinsic_td(
+        board,
+        target,
+        td_error=0.0,
+        stage_diagnostic="local_r1_control_exposure",
+    )
+    control_decision = control.choose_local_training_action(board, "local_r1")
+
+    treated = NativeReConKRKGraph(config=config)
+    for _ in range(10):
+        treated.train_action_rewards(
+            board,
+            rewards=neutral_rewards,
+            stage="local_r1_neutral_exposure",
+        )
+    treated.apply_intrinsic_td(
+        board,
+        target,
+        td_error=1.0,
+        stage_diagnostic="local_r1",
+    )
+    treated_decision = treated.choose_local_training_action(board, "local_r1")
+
+    assert treated_decision.move_uci == target.uci()
+    assert treated_decision.move_uci != control_decision.move_uci
+    assert treated_decision.source is not None
+    assert treated_decision.prediction_source == "pre_emission_native_raw"
+
+
+def test_local_training_choice_is_deterministic_and_alias_representative_is_exposure_indexed() -> None:
+    config = NativeSingleGraphConfig(
+        include_symmetries=False,
+        key_mode="canonical",
+        train_repetitions=1,
+        max_ticks=80,
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    first = NativeReConKRKGraph(config=config)
+    second = NativeReConKRKGraph(config=config)
+
+    first_decision = first.choose_local_training_action(board, "local_r1")
+    second_decision = second.choose_local_training_action(board, "local_r1")
+
+    assert first_decision.to_manifest() == second_decision.to_manifest()
+    assert first_decision.alias_group_size >= 1
+    if first_decision.alias_group_size > 1:
+        assert first_decision.alias_index == 0
+        assert first_decision.move_uci == first_decision.source_move_uci or first_decision.source is None
+
+
+def test_local_policy_query_is_exploitation_only_and_semantically_read_only() -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            train_repetitions=1,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    target = sorted(board.legal_moves, key=lambda item: item.uci())[0]
+    network.apply_intrinsic_td(
+        board,
+        target,
+        td_error=1.0,
+        stage_diagnostic="local_policy_setup",
+    )
+    before = network.canonical_semantic_manifest()
+    triplets_before = frozenset(network.triplet_ids)
+
+    decision = network.choose_local_policy_action(board)
+
+    assert decision is not None
+    assert decision.move in board.legal_moves
+    assert decision.policy_supported is True
+    assert decision.exploration_bonus == 0.0
+    assert decision.materialized_after_emission is False
+    assert frozenset(network.triplet_ids) == triplets_before
+    assert network.canonical_semantic_manifest() == before
+
+
+def test_empty_local_policy_abstains_instead_of_emitting_a_zero_score_guess() -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            train_repetitions=1,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+
+    before = network.canonical_semantic_manifest()
+    assert network.choose_local_policy_action(board) is None
+    assert network.canonical_semantic_manifest() == before
+
+
+def test_local_policy_keeps_supported_negative_option_over_unsupported_zeroes() -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            train_repetitions=1,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    target = sorted(board.legal_moves, key=lambda item: item.uci())[0]
+    network.apply_intrinsic_td(
+        board,
+        target,
+        td_error=-1.0,
+        stage_diagnostic="local_policy_negative_support",
+    )
+
+    decision = network.choose_local_policy_action(board)
+
+    assert decision is not None
+    assert decision.move == target
+    assert decision.policy_supported is True
+    assert decision.raw_value < 0.0
+
+
+def test_local_full_audit_respects_shared_candidate_cap(monkeypatch) -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            shared_feature_atoms=True,
+            max_shared_atom_candidates_per_choice=2,
+            max_ticks=8,
+        )
+    )
+    source_board = chess.Board(MATE_ONE_FEN)
+    source_ids = tuple(
+        network.ensure_triplet(source_board, move, stage="shared_source")
+        for move in sorted(source_board.legal_moves, key=lambda item: item.uci())[:2]
+    )
+    query_board = chess.Board("8/8/8/8/4K3/8/6R1/7k w - - 0 1")
+    calls = []
+
+    monkeypatch.setattr(
+        network,
+        "_triplets_from_active_shared_atoms",
+        lambda _keys: source_ids,
+    )
+
+    def capture_candidates(legal, triplet_ids, candidate_move_by_triplet=None):
+        calls.append((tuple(triplet_ids), dict(candidate_move_by_triplet or {})))
+        return []
+
+    monkeypatch.setattr(network, "_confirmed_action_candidates", capture_candidates)
+    network._full_audit_candidates(query_board)
+
+    assert len(calls) == network.config.max_shared_atom_candidates_per_choice
+    stats = network.scheduler_stats
+    assert stats["shared_atom_candidate_pairs_before_cap"] >= len(calls)
+    assert stats["shared_atom_candidate_pairs_after_cap"] == len(calls)

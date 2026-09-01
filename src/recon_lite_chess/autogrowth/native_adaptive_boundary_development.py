@@ -21,7 +21,7 @@ from .native_intrinsic_curriculum import (
     NativeIntrinsicCurriculumConfig,
     NativeIntrinsicCurriculumResult,
     R1DevelopmentCeilingReached,
-    R1_ACTION_ORDER_STABLE_HASH_PERMUTATION,
+    R1_ACTION_SELECTION_LOCAL_RECON,
     R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
     _Pools,
 )
@@ -177,15 +177,141 @@ def _result_gate_fields(result_payload: Mapping[str, Any]) -> dict[str, Any]:
     if r1_pass is None:
         r1_pass = False
 
-    scientific_gate_passed = bool(
+    curriculum_gate_passed = bool(
         r0_pass is True and r1_executed is True and r1_pass is True
+    )
+    primary = (
+        r1_arms.get("full_intrinsic", {})
+        if isinstance(r1_arms, Mapping)
+        else {}
+    )
+    primary = primary if isinstance(primary, Mapping) else {}
+    training = primary.get("training")
+    training = training if isinstance(training, Mapping) else {}
+    validation = primary.get("validation")
+    validation = validation if isinstance(validation, Mapping) else {}
+    retention = primary.get("r0_validation_retention")
+    retention = retention if isinstance(retention, Mapping) else {}
+    authority = primary.get("v2_child_authority")
+    authority = authority if isinstance(authority, Mapping) else {}
+    lineages = authority.get("adaptive_positive_lineages")
+    lineages = lineages if isinstance(lineages, Mapping) else {}
+    recent_actions = training.get("local_action_recent_events")
+    recent_actions = (
+        recent_actions
+        if isinstance(recent_actions, list)
+        else []
+    )
+    prior_action_by_position: dict[int, Mapping[str, Any]] = {}
+    revisited_score_or_action_change = False
+    for event in recent_actions:
+        if not isinstance(event, Mapping):
+            continue
+        position_index = event.get("position_index")
+        if not isinstance(position_index, int):
+            continue
+        prior = prior_action_by_position.get(position_index)
+        if prior is not None and (
+            prior.get("move_uci") != event.get("move_uci")
+            or prior.get("raw_value") != event.get("raw_value")
+        ):
+            revisited_score_or_action_change = True
+        prior_action_by_position[position_index] = event
+    ecology = training.get("boundary_ecology")
+    ecology = ecology if isinstance(ecology, Mapping) else {}
+    structural_events = authority.get("structural_events")
+    structural_events = (
+        structural_events if isinstance(structural_events, list) else []
+    )
+    retirement_and_reuse_same_safe_point = any(
+        isinstance(event, Mapping)
+        and bool(event.get("retired_cell_ids"))
+        and bool(event.get("child_ids"))
+        for event in structural_events
+    )
+    mechanism_checks = {
+        "native_local_action_policy": (
+            training.get("r1_action_selection_mode")
+            == R1_ACTION_SELECTION_LOCAL_RECON
+        ),
+        "exact_emission_credit_identity": bool(
+            recent_actions
+            and all(
+                isinstance(event, Mapping)
+                and event.get("triplet_id")
+                == event.get("credited_triplet_id")
+                for event in recent_actions
+            )
+        ),
+        "candidate_cap_unbound": not bool(
+            training.get("local_candidate_cap_bound", True)
+        ),
+        "revisited_local_score_or_action_changed": (
+            revisited_score_or_action_change
+        ),
+        "positive_promoted_lineage": bool(
+            int(lineages.get("lineage_count", 0) or 0) > 0
+        ),
+        "postbirth_certification": bool(
+            int(lineages.get("certified_node_count", 0) or 0) > 0
+            and int(
+                lineages.get("postbirth_certification_receipt_count", 0)
+                or 0
+            ) > 0
+        ),
+        "zero_certification_leakage": bool(
+            lineages.get("all_certification_disjoint") is True
+            and lineages.get("all_certification_postbirth") is True
+            and int(lineages.get("certification_leak_count", -1) or 0) == 0
+        ),
+        "available_all_reply_envelope": bool(
+            int(training.get("all_reply_envelope_available_count", 0) or 0)
+            > 0
+        ),
+        "nonzero_handoff": bool(
+            int(training.get("child_handoff_count", 0) or 0) > 0
+        ),
+        "nonzero_successor_value": bool(
+            float(training.get("successor_value_sum", 0.0) or 0.0) > 0.0
+        ),
+        "actual_mate_in_two_conversion": bool(
+            int(validation.get("conversion_count", 0) or 0) > 0
+        ),
+        "r0_validation_retained": bool(
+            float(retention.get("accuracy", 0.0) or 0.0) == 1.0
+        ),
+        "authority_roundtrip_and_history_exact": bool(
+            authority.get("serialization_roundtrip_exact") is True
+            and authority.get("full_history_boundary_exact") is True
+        ),
+        "bounded_ecology_turnover": bool(
+            int(ecology.get("tombstone_count", 0) or 0) > 0
+            and int(ecology.get("active_candidate_count", 0) or 0)
+            <= int(ecology.get("active_candidate_cap", -1) or -1)
+        ),
+        "authority_retirement_and_slot_reuse": (
+            retirement_and_reuse_same_safe_point
+        ),
+        "actual_snapshot_resume_exercised": bool(
+            training.get("resumed_from_snapshot") is True
+        ),
+    }
+    mechanism_gate_passed = bool(
+        curriculum_gate_passed and all(mechanism_checks.values())
     )
     return {
         "r0_pass": r0_pass,
         "r1_executed": r1_executed,
         "r1_pass": r1_pass,
         "work_completed": True,
-        "scientific_gate_passed": scientific_gate_passed,
+        "curriculum_gate_passed": curriculum_gate_passed,
+        "mechanism_checks": mechanism_checks,
+        "per_run_mechanism_gate_passed": mechanism_gate_passed,
+        # Every artifact from this module is explicitly development-only, and
+        # the real go decision also requires replication across independent
+        # seeds.  A single local process must never call itself scientific.
+        "scientific_gate_passed": False,
+        "multi_seed_scientific_adjudication_required": True,
     }
 
 
@@ -201,7 +327,9 @@ def _completion_status(gates: Mapping[str, Any]) -> str:
         return "COMPLETED_R0_ONLY_NO_R1_GATE"
     if gates.get("r1_pass") is not True:
         return "COMPLETED_R1_GATE_FAILED"
-    return "SCIENTIFIC_GATE_PASSED"
+    if gates.get("per_run_mechanism_gate_passed") is not True:
+        return "COMPLETED_R1_MECHANISM_GATE_FAILED"
+    return "PER_RUN_MECHANISM_GATE_PASSED_DEVELOPMENT_ONLY"
 
 
 def _unknown_gate_fields(*, work_completed: bool) -> dict[str, Any]:
@@ -212,7 +340,11 @@ def _unknown_gate_fields(*, work_completed: bool) -> dict[str, Any]:
         "r1_executed": None,
         "r1_pass": None,
         "work_completed": bool(work_completed),
+        "curriculum_gate_passed": False,
+        "mechanism_checks": {},
+        "per_run_mechanism_gate_passed": False,
         "scientific_gate_passed": False,
+        "multi_seed_scientific_adjudication_required": True,
     }
 
 
@@ -231,7 +363,12 @@ def _development_protocol(
         },
         "frozen_r0_learner_settings": True,
         "r1_reply_policy": config.r1_reply_policy,
+        "r1_action_selection_mode": config.r1_action_selection_mode,
         "r1_action_order": config.r1_action_order,
+        "r1_action_order_field_used": False,
+        "legacy_hash_or_round_robin_first_move_picker_used": False,
+        "prototype_gate_used_for_adaptive_runtime_routing": False,
+        "stage_gates_are_harness_stop_go_only": True,
         "resource_ceilings": {
             "wall_seconds_safe_epoch_boundary": (
                 config.development_wall_ceiling_seconds
@@ -321,7 +458,7 @@ def development_config(
         base,
         seed=int(seed),
         r1_reply_policy=R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
-        r1_action_order=R1_ACTION_ORDER_STABLE_HASH_PERMUTATION,
+        r1_action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
         r0_boundary_ecology_enabled=True,
         development_fen_fullmove_base=DEVELOPMENT_FEN_FULLMOVE_BASE,
         **_PROFILE_WORK[normalized],

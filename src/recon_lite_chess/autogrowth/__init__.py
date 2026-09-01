@@ -299,7 +299,9 @@ from .single_graph_curriculum import (
     run_single_graph_curriculum,
 )
 from .native_single_graph_curriculum import (
+    LocalTrainingDecision,
     NativeReConKRKGraph,
+    NativeLocalTrainingDecision,
     NativeSingleGraphConfig,
     NativeSingleGraphResult,
     run_native_single_graph_curriculum,

@@ -21,7 +21,16 @@ from typing import Any, Iterable, Mapping
 
 import chess
 
-from recon_lite import FormalReConEngine, Graph, LinkType, Node, NodeState, NodeType
+from recon_lite import (
+    AnonymousChoiceGenome,
+    AnonymousChoiceOption,
+    FormalReConEngine,
+    Graph,
+    LinkType,
+    Node,
+    NodeState,
+    NodeType,
+)
 from recon_lite_hector.nodes.stem_cell import StemCellState, StemCellTerminal
 
 from .curated_replay_curriculum import _mate2_buckets
@@ -91,6 +100,113 @@ class NativeSingleGraphConfig:
 
 
 @dataclass(frozen=True)
+class NativeLocalTrainingDecision:
+    """One graph-local training action selected through anonymous emission.
+
+    ``source`` identifies the best already-confirmed native candidate that
+    supplied the pre-emission value.  It is deliberately kept separate from
+    ``triplet_id``: the latter is the exact local triplet emitted for this
+    board/action and may be newly materialized.  ``prediction`` is the
+    pre-emission native raw value used by TD (never the exploration bonus),
+    while ``exact_confirmation_score_raw`` records the post-emission exact
+    confirmation independently.  ``policy_supported`` is stricter than legal
+    emission: it is true only when a persistent, formally confirmed native
+    source supplied the pre-emission value.  Training may explore an
+    unsupported legal pattern after materializing it; read-only evaluation
+    must abstain when this field is false.
+    """
+
+    move_uci: str
+    triplet_id: str
+    pattern_id: str
+    source: str | None
+    prediction: float
+    confirmed: bool
+    policy_supported: bool
+    raw_value: float
+    normalized_value: float
+    exploration_bonus: float
+    activation: float
+    pattern_exposure: int
+    total_current_pattern_exposures: int
+    alias_index: int
+    alias_group_size: int
+    source_move_uci: str | None
+    source_score_raw: float | None
+    exact_confirmation_score_raw: float | None
+    prediction_source: str
+    formal_ticks: int
+    materialized_after_emission: bool
+    audit_candidate_count: int
+    pattern_count: int
+
+    @property
+    def move(self) -> chess.Move:
+        """Return the emitted legal action for legacy tuple-style callers."""
+
+        return chess.Move.from_uci(self.move_uci)
+
+    @property
+    def selected_move(self) -> str:
+        return self.move_uci
+
+    @property
+    def selected_triplet(self) -> str:
+        return self.triplet_id
+
+    @property
+    def graph_prediction(self) -> float:
+        return self.prediction
+
+    @property
+    def exact_prediction(self) -> float | None:
+        return self.exact_confirmation_score_raw
+
+    @property
+    def selected_score_raw(self) -> float:
+        return self.prediction
+
+    @property
+    def selected_score(self) -> float:
+        return round(self.prediction, 6)
+
+    @property
+    def source_triplet_id(self) -> str | None:
+        return self.source
+
+    def __iter__(self):
+        """Allow compatibility unpacking as ``move, id, confirmed, value``."""
+
+        yield self.move
+        yield self.triplet_id
+        yield self.confirmed
+        yield self.prediction
+
+    def to_manifest(self) -> dict[str, Any]:
+        """Return a JSON-safe decision manifest, including explicit aliases."""
+
+        payload = asdict(self)
+        payload.update({
+            "selected_move": self.move_uci,
+            "selected_triplet": self.triplet_id,
+            "graph_prediction": float(self.prediction),
+            "selected_score_raw": float(self.prediction),
+            "selected_score": round(float(self.prediction), 6),
+        })
+        return payload
+
+    def to_dict(self) -> dict[str, Any]:
+        """Compatibility alias for callers that use result-style records."""
+
+        return self.to_manifest()
+
+
+# The shorter name is useful to callers that do not need the module prefix;
+# retaining one concrete dataclass keeps the snapshot/type identity stable.
+LocalTrainingDecision = NativeLocalTrainingDecision
+
+
+@dataclass(frozen=True)
 class NativeSingleGraphResult:
     config: NativeSingleGraphConfig
     dataset: dict[str, Any]
@@ -144,6 +260,11 @@ class NativeReConKRKGraph:
             "origin": "tg26o_native_single_graph",
             "confirm_policy": "k_of_n",
             "confirm_k": 1,
+            # Root-level request count is the graph-owned total used by the
+            # local UCB-style action selector.  It is incremented only after
+            # an anonymous choice has emitted a legal actuator, so read-only
+            # audits/queries cannot change exposure statistics.
+            "request_exposures": 0,
             "tier": "mature",
         }))
         self.triplet_ids: set[str] = set()
@@ -179,6 +300,8 @@ class NativeReConKRKGraph:
             "prototype_scan_truncated_calls": 0,
             "shared_atom_retrieval_calls": 0,
             "shared_atom_retrieved_triplets": 0,
+            "shared_atom_candidate_pairs_before_cap": 0,
+            "shared_atom_candidate_pairs_after_cap": 0,
         }
 
     def __deepcopy__(self, memo: dict[int, Any]) -> "NativeReConKRKGraph":
@@ -371,6 +494,14 @@ class NativeReConKRKGraph:
         if schema != "native_recon_krk_graph.v1":
             raise ValueError(f"unsupported native graph snapshot schema: {schema!r}")
         self.__dict__.update(state)
+        # v1 snapshots predate local-choice cap telemetry.  These counters are
+        # diagnostic only, so a missing field resumes at zero without changing
+        # learned graph semantics.
+        for key in (
+            "shared_atom_candidate_pairs_before_cap",
+            "shared_atom_candidate_pairs_after_cap",
+        ):
+            self.scheduler_stats.setdefault(key, 0)
         self._rebind_triplet_trainable_edges()
         self._validate_derived_graph_indexes()
         self._restore_runtime_predicates()
@@ -515,6 +646,435 @@ class NativeReConKRKGraph:
             return None
         return chess.Move.from_uci(str(selected))
 
+    def choose_local_training_action(
+        self,
+        board: chess.Board,
+        stage_diagnostic: str,
+    ) -> NativeLocalTrainingDecision:
+        """Emit one exploratory action and grow only its exact branch."""
+
+        decision = self._choose_local_action(
+            board,
+            stage_diagnostic=stage_diagnostic,
+            exploration_enabled=True,
+            materialize_emitted=True,
+        )
+        if decision is None:
+            raise AssertionError("exploratory local choice produced no decision")
+        return decision
+
+    def choose_local_policy_action(
+        self,
+        board: chess.Board,
+    ) -> NativeLocalTrainingDecision | None:
+        """Emit the learned local policy or abstain without native support.
+
+        Runtime terminal states and scheduler counters remain diagnostic; no
+        node/edge, exposure, or weight is created or changed by this query.
+        Unsupported novel patterns do not enter policy competition, so their
+        zero baseline cannot suppress a supported negative-valued option.
+        """
+
+        return self._choose_local_action(
+            board,
+            stage_diagnostic="read_only_local_policy",
+            exploration_enabled=False,
+            materialize_emitted=False,
+        )
+
+    def _choose_local_action(
+        self,
+        board: chess.Board,
+        *,
+        stage_diagnostic: str,
+        exploration_enabled: bool,
+        materialize_emitted: bool,
+    ) -> NativeLocalTrainingDecision | None:
+        """Choose one R1 training action from graph-local pattern competition.
+
+        The read-only audit runs before any new triplet is grown.  Every legal
+        move receives an exact local-pattern identity, including patterns with
+        no current native source (raw value zero).  A fresh anonymous choice
+        graph then emits one actuator.  Only that emitted move is materialized
+        and confirmed, which keeps exploration outcome-blind and prevents a
+        pre-emission ``ensure_triplet`` call from changing the competition.
+        """
+
+        legal = {
+            move.uci(): move
+            for move in sorted(board.legal_moves, key=lambda item: item.uci())
+        }
+        if not legal:
+            raise ValueError("training position has no legal action")
+
+        # The root request count is the graph-owned total used by the bounded
+        # exploration bonus.  It is read-only here; only a later
+        # outcome-grounded ``apply_intrinsic_td`` records the exposure.
+        total_exposures = self._root_request_exposures()
+        full_candidates = self._full_audit_candidates(board, legal)
+
+        # A generalized/prototype source can offer more than one native
+        # candidate for a move.  Keep the strongest source deterministically,
+        # independently of the audit's compact top-16 reporting view.
+        best_by_move: dict[str, tuple[float, str]] = {}
+        for score, move_uci, source_triplet_id in full_candidates:
+            if move_uci not in legal or not math.isfinite(float(score)):
+                continue
+            candidate = (float(score), str(source_triplet_id))
+            previous = best_by_move.get(move_uci)
+            if previous is None or candidate[0] > previous[0] or (
+                candidate[0] == previous[0] and candidate[1] < previous[1]
+            ):
+                best_by_move[move_uci] = candidate
+
+        moves_by_pattern: dict[str, list[str]] = {}
+        for move_uci, move in legal.items():
+            # This is intentionally the canonical local identity used by both
+            # grouping and post-emission parity checks.  It contains no FEN,
+            # epoch, position hash, or external action/oracle label.
+            pattern_id = _triplet_id(
+                *_triplet_keys(board, move, key_mode=self.config.key_mode)
+            )
+            moves_by_pattern.setdefault(pattern_id, []).append(move_uci)
+
+        pattern_rows: list[dict[str, Any]] = []
+        for pattern_id in sorted(moves_by_pattern):
+            member_moves = tuple(sorted(moves_by_pattern[pattern_id]))
+            member_candidates = [
+                (best_by_move[move_uci][0], move_uci, best_by_move[move_uci][1])
+                for move_uci in member_moves
+                if move_uci in best_by_move
+            ]
+            member_candidates.sort(
+                key=lambda row: (-float(row[0]), str(row[1]), str(row[2]))
+            )
+            best_member = member_candidates[0] if member_candidates else None
+            raw_value = 0.0 if best_member is None else float(best_member[0])
+            source_move_uci = None if best_member is None else str(best_member[1])
+            source_triplet_id = None if best_member is None else str(best_member[2])
+            pattern_exposure = self._local_pattern_exposure(
+                pattern_id,
+            )
+            normalized_value = raw_value / (1.0 + abs(raw_value))
+            exploration_bonus = (
+                math.sqrt(
+                    max(
+                        0.0,
+                        2.0
+                        * math.log1p(max(0, total_exposures))
+                        / (1.0 + pattern_exposure),
+                    )
+                )
+                if exploration_enabled
+                else 0.0
+            )
+            activation = normalized_value + exploration_bonus
+            alias_index = pattern_exposure % max(1, len(member_moves))
+            pattern_rows.append({
+                "pattern_id": pattern_id,
+                "member_moves": member_moves,
+                "representative_move_uci": member_moves[alias_index],
+                "alias_index": alias_index,
+                "alias_group_size": len(member_moves),
+                "raw_value": raw_value,
+                "normalized_value": normalized_value,
+                "exploration_bonus": exploration_bonus,
+                "activation": activation,
+                "pattern_exposure": pattern_exposure,
+                "source": source_triplet_id,
+                "source_move_uci": source_move_uci,
+                "source_score_raw": None if best_member is None else raw_value,
+            })
+
+        if not exploration_enabled:
+            pattern_rows = [
+                row for row in pattern_rows if row["source"] is not None
+            ]
+            if not pattern_rows:
+                return None
+
+        # The generic genome owns exactly-one arbitration.  The deterministic
+        # order makes ties reproducible while leaving score comparison inside
+        # the formal choice primitive.
+        pattern_rows.sort(key=lambda row: (-float(row["activation"]), str(row["pattern_id"])))
+        options = tuple(
+            AnonymousChoiceOption(
+                identity=str(row["pattern_id"]),
+                actuator_identity=str(row["representative_move_uci"]),
+                activation=float(row["activation"]),
+                confirmed=True,
+            )
+            for row in pattern_rows
+        )
+        choice = AnonymousChoiceGenome().emit(
+            options,
+            max_ticks=max(1, int(self.config.max_ticks)),
+        )
+        selected_pattern_id = str(choice.option_identity)
+        selected_row = next(
+            row for row in pattern_rows if row["pattern_id"] == selected_pattern_id
+        )
+        selected_move_uci = str(choice.actuator_identity)
+        if selected_move_uci not in legal:
+            raise AssertionError(
+                "anonymous local choice emitted a non-legal actuator"
+            )
+
+        emitted_pattern_id = _triplet_id(
+            *_triplet_keys(
+                board,
+                legal[selected_move_uci],
+                key_mode=self.config.key_mode,
+            )
+        )
+        if emitted_pattern_id != selected_pattern_id:
+            raise AssertionError(
+                "anonymous choice pattern identity disagrees with emitted move"
+            )
+        exact_triplet_preexisting = emitted_pattern_id in self.triplet_ids
+        exact_triplet_id = emitted_pattern_id
+        if materialize_emitted:
+            exact_triplet_id = self.ensure_triplet(
+                board,
+                legal[selected_move_uci],
+                stage=stage_diagnostic,
+            )
+        if exact_triplet_id != emitted_pattern_id:
+            raise AssertionError(
+                "materialized local triplet identity disagrees with emission"
+            )
+        exact_confirmation = (
+            self.confirm_candidate(
+                board,
+                triplet_id=exact_triplet_id,
+                move_uci=selected_move_uci,
+            )
+            if exact_triplet_id in self.triplet_ids
+            else {}
+        )
+        exact_score = exact_confirmation.get("selected_score_raw")
+        exact_confirmed = (
+            exact_confirmation.get("selected_move") == selected_move_uci
+            and exact_confirmation.get("selected_triplet") == exact_triplet_id
+        )
+        # TD must see the native exploitation estimate that won the local
+        # competition.  The exploration bonus is a choice-time activation,
+        # not a value estimate, and a newly materialized exact branch often
+        # confirms with score zero.  Preserve that exact score separately.
+        prediction = float(selected_row["raw_value"])
+        prediction_source = "pre_emission_native_raw"
+
+        self.runtime_choice_count += 1
+        return NativeLocalTrainingDecision(
+            move_uci=selected_move_uci,
+            triplet_id=exact_triplet_id,
+            pattern_id=selected_pattern_id,
+            source=(
+                None
+                if selected_row["source"] is None
+                else str(selected_row["source"])
+            ),
+            prediction=prediction,
+            confirmed=bool(exact_confirmed),
+            policy_supported=bool(selected_row["source"] is not None),
+            raw_value=float(selected_row["raw_value"]),
+            normalized_value=float(selected_row["normalized_value"]),
+            exploration_bonus=float(selected_row["exploration_bonus"]),
+            activation=float(selected_row["activation"]),
+            pattern_exposure=int(selected_row["pattern_exposure"]),
+            total_current_pattern_exposures=int(total_exposures),
+            alias_index=int(selected_row["alias_index"]),
+            alias_group_size=int(selected_row["alias_group_size"]),
+            source_move_uci=(
+                None
+                if selected_row["source_move_uci"] is None
+                else str(selected_row["source_move_uci"])
+            ),
+            source_score_raw=(
+                None
+                if selected_row["source_score_raw"] is None
+                else float(selected_row["source_score_raw"])
+            ),
+            exact_confirmation_score_raw=(
+                None
+                if exact_score is None or not math.isfinite(float(exact_score))
+                else float(exact_score)
+            ),
+            prediction_source=prediction_source,
+            formal_ticks=int(choice.formal_ticks)
+            + int(exact_confirmation.get("formal_ticks_run", 0) or 0),
+            materialized_after_emission=bool(
+                materialize_emitted and not exact_triplet_preexisting
+            ),
+            audit_candidate_count=len(full_candidates),
+            pattern_count=len(pattern_rows),
+        )
+
+    def _root_request_exposures(self) -> int:
+        """Read the graph root's cumulative local-choice exposure count."""
+
+        root = self.graph.nodes[ROOT_ID]
+        try:
+            return max(0, int(root.meta.get("request_exposures", 0)))
+        except (TypeError, ValueError):
+            return 0
+
+    def _local_pattern_exposure(
+        self,
+        pattern_id: str,
+    ) -> int:
+        """Return prior exposure for the exact current local pattern only."""
+
+        if pattern_id not in self.triplet_ids:
+            return 0
+        triplet_node = self.graph.nodes.get(_TripletNodeIds(pattern_id).triplet)
+        if triplet_node is None:
+            return 0
+        try:
+            return max(0, int(triplet_node.meta.get("request_exposures", 0)))
+        except (TypeError, ValueError):
+            return 0
+
+    def _full_audit_candidates(
+        self,
+        board: chess.Board,
+        legal: Mapping[str, chess.Move] | None = None,
+        *,
+        masked_triplets: set[str] | None = None,
+    ) -> list[tuple[float, str, str]]:
+        """Return bounded confirmed ``(score, move, source)`` candidates.
+
+        ``audit_choice`` intentionally keeps a compact 16-row report for
+        historical artifacts.  Local training needs the complete source set,
+        including one source/move pair for every legal alias, so it uses this
+        internal helper instead of parsing that presentation slice.
+        """
+
+        legal_map = (
+            dict(legal)
+            if legal is not None
+            else {
+                move.uci(): move
+                for move in sorted(board.legal_moves, key=lambda item: item.uci())
+            }
+        )
+        if not legal_map:
+            return []
+
+        candidate_pairs: list[tuple[str, str, int]] = []
+        seen_pairs: set[tuple[str, str]] = set()
+        for move_uci, move in sorted(legal_map.items()):
+            keys = _triplet_keys(board, move, key_mode=self.config.key_mode)
+            exact_id = _triplet_id(*keys)
+            retrieval_ranks: Iterable[tuple[int, str]]
+            if exact_id in self.triplet_ids:
+                retrieval_ranks = ((0, exact_id),)
+            elif self.config.shared_feature_atoms:
+                retrieval_ranks = tuple(
+                    (rank, triplet_id)
+                    for rank, triplet_id in enumerate(
+                        self._triplets_from_active_shared_atoms(keys)
+                    )
+                )
+            elif self.config.key_mode != "exact":
+                retrieval_ranks = tuple(
+                    (rank, triplet_id)
+                    for rank, (triplet_id, _distance) in enumerate(
+                        self._nearest_triplets_for_keys(keys)
+                    )
+                )
+            else:
+                retrieval_ranks = ()
+            for retrieval_rank, triplet_id in retrieval_ranks:
+                triplet_id = str(triplet_id)
+                if triplet_id not in self.triplet_ids:
+                    continue
+                if masked_triplets and triplet_id in masked_triplets:
+                    continue
+                pair = (triplet_id, move_uci)
+                if pair not in seen_pairs:
+                    seen_pairs.add(pair)
+                    candidate_pairs.append((triplet_id, move_uci, retrieval_rank))
+
+        if self.config.shared_feature_atoms and len(candidate_pairs) > self.config.max_shared_atom_candidates_per_choice:
+            self.scheduler_stats["shared_atom_candidate_pairs_before_cap"] += len(candidate_pairs)
+            candidate_pairs.sort(
+                key=lambda item: (
+                    self._triplet_root_weight(item[0]),
+                    -item[2],
+                    item[0],
+                    item[1],
+                ),
+                reverse=True,
+            )
+            candidate_pairs = candidate_pairs[: self.config.max_shared_atom_candidates_per_choice]
+            self.scheduler_stats["shared_atom_candidate_pairs_after_cap"] += len(candidate_pairs)
+
+        self.scheduler_stats["choose_calls"] += 1
+        self.scheduler_stats["candidate_triplets_ticked"] += len(
+            {triplet_id for triplet_id, _move_uci, _rank in candidate_pairs}
+        )
+        self.scheduler_stats["triplets_skipped_by_index"] += max(
+            0,
+            len(self.triplet_ids)
+            - len({triplet_id for triplet_id, _move_uci, _rank in candidate_pairs}),
+        )
+        if not candidate_pairs:
+            self.scheduler_stats["empty_candidate_calls"] += 1
+            return []
+
+        candidates: list[tuple[float, str, str]] = []
+        triplet_key_cache: dict[
+            tuple[str, str, str],
+            tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]],
+        ] = {}
+        for triplet_id, move_uci, _retrieval_rank in candidate_pairs:
+            active_nodes = (
+                self._active_nodes_for_triplets({triplet_id})
+                if self.config.indexed_scheduler
+                else None
+            )
+            if active_nodes is None:
+                self._reset_runtime_states()
+            else:
+                self.scheduler_stats["active_nodes_ticked"] += len(active_nodes)
+                self.scheduler_stats["full_graph_node_resets_avoided"] += max(
+                    0, len(self.graph.nodes) - len(active_nodes)
+                )
+                self._reset_runtime_states(active_nodes)
+            env: dict[str, Any] = {
+                "board": board,
+                "candidate_move_by_triplet": {triplet_id: move_uci},
+                "shared_atom_move_uci": move_uci,
+                "__triplet_keys_cache": triplet_key_cache,
+            }
+            engine = FormalReConEngine(
+                self.graph,
+                validate_pairs=False,
+                record_trace=False,
+            )
+            engine.request(ROOT_ID)
+            until = None
+            if self.config.indexed_scheduler:
+                until = lambda _engine, current_triplet=triplet_id: self._candidate_triplets_settled(
+                    {current_triplet}
+                )
+            engine.run(
+                max_ticks=self.config.max_ticks,
+                env=env,
+                active_nodes=active_nodes,
+                until=until,
+            )
+            self.scheduler_stats["formal_ticks_run"] += engine.tick
+            candidates.extend(
+                self._confirmed_action_candidates(
+                    legal_map,
+                    {triplet_id},
+                    candidate_move_by_triplet={triplet_id: move_uci},
+                )
+            )
+        return candidates
+
     def confirm_candidate(self, board: chess.Board, *, triplet_id: str, move_uci: str) -> dict[str, Any]:
         legal = {move.uci(): move for move in board.legal_moves}
         if move_uci not in legal or triplet_id not in self.triplet_ids:
@@ -652,6 +1212,7 @@ class NativeReConKRKGraph:
                 seen_pairs.add(pair)
                 candidate_pairs.append((triplet_id, move_uci, retrieval_rank))
         if len(candidate_pairs) > self.config.max_shared_atom_candidates_per_choice:
+            self.scheduler_stats["shared_atom_candidate_pairs_before_cap"] += len(candidate_pairs)
             candidate_pairs.sort(
                 key=lambda item: (
                     self._triplet_root_weight(item[0]),
@@ -662,6 +1223,7 @@ class NativeReConKRKGraph:
                 reverse=True,
             )
             candidate_pairs = candidate_pairs[: self.config.max_shared_atom_candidates_per_choice]
+            self.scheduler_stats["shared_atom_candidate_pairs_after_cap"] += len(candidate_pairs)
         unique_triplets = {triplet_id for triplet_id, _move, _rank in candidate_pairs}
         self.scheduler_stats["choose_calls"] += 1
         self.scheduler_stats["candidate_triplets_ticked"] += len(candidate_pairs)
@@ -761,6 +1323,12 @@ class NativeReConKRKGraph:
             raise ValueError(f"cannot credit illegal observed move: {move.uci()}")
         triplet_id = self.ensure_triplet(board, move, stage=stage_diagnostic)
         self._apply_m3(triplet_id, reward=float(td_error))
+        # A local exposure is an outcome-grounded observed action, not a
+        # prospective audit or anonymous choice query.  Keep the total on the
+        # graph root so the next local selector can compute its bonus without
+        # introducing a second exposure ledger.
+        root = self.graph.nodes[ROOT_ID]
+        root.meta["request_exposures"] = self._root_request_exposures() + 1
         return triplet_id
 
     def learned_state_audit(self) -> dict[str, Any]:

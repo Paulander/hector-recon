@@ -29,6 +29,7 @@ from .native_authority_handover import (
     NativeR0Organism,
 )
 from .native_competence_envelope import (
+    AvailabilityState,
     CompetenceEnvelopeConfig,
     MixedOutcomeDisposition,
     SpecializationMode,
@@ -63,6 +64,10 @@ DEVELOPMENT_FEN_FULLMOVE_BASE = 900_000
 DISCOVERY_POSITIVE_COUNT = 16
 DISCOVERY_NEGATIVE_COUNT = 16
 DISCOVERY_TAPE_COUNT = DISCOVERY_POSITIVE_COUNT + DISCOVERY_NEGATIVE_COUNT
+# Certification is deliberately another content-defined slice of the same
+# training-only source.  Keeping this count separate from the discovery
+# constants makes the two ledgers (and their exclusion proof) explicit.
+CERTIFICATION_TAPE_COUNT = 32
 PROSPECTIVE_EVENTS_BEFORE_STRUCTURE = 64
 DEFAULT_OUTPUT_DIR = Path(
     "reports/autogrowth/development/"
@@ -111,6 +116,132 @@ def _neutral_discovery_tape(source_fens: Sequence[str]) -> tuple[str, ...]:
         for fen in source_fens
     )
     return tuple(fen for _digest, fen in ranked[:DISCOVERY_TAPE_COUNT])
+
+
+def _selection_identity_fen(fen: str) -> str:
+    """Normalize a row for content-defined ranking when it is a FEN."""
+
+    try:
+        return chess.Board(str(fen)).fen()
+    except (ValueError, TypeError):
+        # A few unit-level callers use opaque stand-ins to test partition
+        # ordering.  Production pool rows are all valid FENs; retaining the
+        # stand-in keeps that compatibility path content-blind as well.
+        return str(fen)
+
+
+def _canonical_selection_fen(fen: str) -> str:
+    """Return the canonical FEN used by content-defined row selection.
+
+    Pool generation currently emits canonical FEN strings already, but the
+    explicit normalization is part of the development protocol: selection
+    must not depend on equivalent textual FEN spellings.  Keeping this helper
+    local also means the discovery and certification audit can name the exact
+    row identity that was used for the digest.
+    """
+
+    return _selection_identity_fen(fen)
+
+
+def _selection_row_digest(fen: str) -> str:
+    """Digest one canonical FEN for a stable, content-blind row identity."""
+
+    canonical = _canonical_selection_fen(fen)
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def _neutral_certification_tape(
+    source_fens: Sequence[str],
+    discovery_fens: Sequence[str],
+    *,
+    count: int = CERTIFICATION_TAPE_COUNT,
+) -> tuple[str, ...]:
+    """Select a deterministic post-nomination tape from the same source.
+
+    Rows are ranked only by a digest of canonical FEN, never by pool role,
+    outcome, or generated input order.  Canonical de-duplication is important
+    here: feeding two equivalent FEN spellings to the REAL authority would
+    remint one physical interaction and correctly fail closed.  Returning the
+    canonical FEN also makes the exclusion proof auditable by value.
+    """
+
+    if isinstance(count, bool) or not isinstance(count, int) or count < 0:
+        raise ValueError("certification tape count must be non-negative")
+    discovery_canonical = {
+        _canonical_selection_fen(fen) for fen in discovery_fens
+    }
+    candidates = {
+        _canonical_selection_fen(fen)
+        for fen in source_fens
+    }.difference(discovery_canonical)
+    ranked = sorted(
+        candidates,
+        key=lambda fen: (
+            hashlib.sha256(
+                b"native-intrinsic-v2-neutral-certification|"
+                + fen.encode("utf-8")
+            ).digest(),
+            fen,
+        ),
+    )
+    return tuple(ranked[:count])
+
+
+def _certify_real_rows(
+    authority: NativeProspectiveAuthorityV2,
+    fens: Sequence[str],
+) -> tuple[tuple[Any, ...], tuple[Any, ...]]:
+    """Ground selected rows through the frozen authority's REAL capability.
+
+    The only outcome read here is ``successor.is_checkmate()`` inside the
+    authority-issued environment receipt.  No split labels, expected moves,
+    or validation/regression rows enter this path.  One frozen frame session
+    covers the complete tape so a shared R0 mutation would fail closed.
+    """
+
+    receipts: list[Any] = []
+    emissions: list[Any] = []
+    frame_session = authority.frame_session()
+    try:
+        for index, fen in enumerate(fens):
+            predecessor = chess.Board(fen)
+            frame = FrameContext(
+                frame_id=f"native-intrinsic-v2-certification:{index:04d}",
+                kind=FrameKind.REAL,
+                values={"board": predecessor},
+            )
+            pending, trace = authority.open_real_event(
+                frame,
+                frame_session=frame_session,
+            )
+            if trace is None or trace.actuation is None:
+                raise RuntimeError(
+                    f"frozen R0 emitted no certification action at row {index}"
+                )
+            actuation = trace.actuation
+            successor = predecessor.copy(stack=False)
+            successor.push(chess.Move.from_uci(actuation.move_uci))
+            receipt = authority.mint_environment_receipt(
+                pending_token=pending.pending_token,
+                trace=trace,
+                predecessor=predecessor,
+                successor=successor,
+            )
+            emission = authority.consume(
+                receipt,
+                frame_session=frame_session,
+            )
+            receipts.append(receipt)
+            emissions.append(emission)
+            if authority.structural_mode is StructuralMode.EVENT_DRIVEN:
+                # REAL consumption is quiescent here.  Let the existing
+                # content-blind authority safe point atomically settle the
+                # complete bounded queue (including any contradiction-driven
+                # recursive request) before the next row is admitted.
+                authority.settle_pending_structural_requests()
+    finally:
+        frame_session.close()
+    return tuple(receipts), tuple(emissions)
 
 
 def _mint_discovery_receipts(
@@ -193,6 +324,35 @@ def build_same_run_v2_r0_authority(
     )
     source.open_prospective_discovery_epoch()
     ordered_fens = _neutral_discovery_tape(training_source_fens)
+    certification_fens = _neutral_certification_tape(
+        training_source_fens,
+        ordered_fens,
+    )
+    discovery_canonical_fens = tuple(
+        _canonical_selection_fen(fen) for fen in ordered_fens
+    )
+    certification_canonical_fens = tuple(
+        _canonical_selection_fen(fen) for fen in certification_fens
+    )
+    source_canonical_fens = frozenset(
+        _canonical_selection_fen(fen) for fen in training_source_fens
+    )
+    row_disjoint = not set(certification_canonical_fens).intersection(
+        discovery_canonical_fens
+    )
+    partition_exact = bool(
+        row_disjoint
+        and set(discovery_canonical_fens).union(certification_canonical_fens)
+        == source_canonical_fens
+    )
+    if len(training_source_fens) == 64 and not (
+        len(ordered_fens) == DISCOVERY_TAPE_COUNT
+        and len(certification_fens) == CERTIFICATION_TAPE_COUNT
+        and partition_exact
+    ):
+        raise RuntimeError(
+            "V2 production source must form an exact disjoint 32/32 partition"
+        )
     receipts = _mint_discovery_receipts(source, ordered_fens)
     source.grow_from_grounded_receipts(
         receipts,
@@ -227,9 +387,9 @@ def build_same_run_v2_r0_authority(
     authority.verify_full_history_boundary(
         "native-intrinsic-v2-discovery-boundary"
     )
-    payload = authority.dumps()
-    restored = NativeProspectiveAuthorityV2.loads(payload)
-    if restored.continuation_manifest() != authority.continuation_manifest():
+    discovery_payload = authority.dumps()
+    discovery_restored = NativeProspectiveAuthorityV2.loads(discovery_payload)
+    if discovery_restored.continuation_manifest() != authority.continuation_manifest():
         raise RuntimeError("initial same-run V2 authority failed roundtrip parity")
     expected_predecessor_fens = tuple(
         chess.Board(fen).fen() for fen in ordered_fens
@@ -242,6 +402,165 @@ def build_same_run_v2_r0_authority(
             "V2 discovery receipt/FEN sequence or multiplicity mismatch"
         )
 
+    # Close nomination before exposing the held-out half of the same
+    # training-only source.  Every certification row is then a prospective
+    # REAL event; the frame session freezes the authority-owned R0 while the
+    # environment derives the only outcome bit (checkmate at the successor).
+    closure_boundary_start = len(authority.generation_boundaries)
+    closure_consumption_count_start = len(authority.request_consumptions)
+    closure_pending_count_start = len(authority._pending_request_ids())
+    closure_consumption_start = frozenset(authority.request_consumptions)
+    closure_generation_start = int(authority.current_generation)
+    initial_prospectively_certified_count = sum(
+        state.prospectively_certified for state in authority.states.values()
+    )
+    certification_receipts, certification_emissions = _certify_real_rows(
+        authority,
+        certification_fens,
+    )
+    discovery_receipt_ids = tuple(sorted(source.receipts))
+    certification_receipt_ids = tuple(
+        receipt.receipt_id for receipt in certification_receipts
+    )
+    discovery_physical_ids = frozenset(
+        authority.discovery_prefix_physical_fingerprints
+    )
+    certification_physical_ids = frozenset(
+        receipt.interaction_fingerprint
+        for receipt in certification_receipts
+    )
+    certification_discovery_overlap = set(certification_receipt_ids).intersection(
+        discovery_receipt_ids
+    )
+    physical_discovery_overlap = certification_physical_ids.intersection(
+        discovery_physical_ids
+    )
+    if certification_discovery_overlap or physical_discovery_overlap:
+        raise RuntimeError(
+            "V2 certification reused discovery receipt or physical interaction"
+        )
+    if not row_disjoint:
+        raise RuntimeError("V2 certification tape overlaps discovery tape")
+
+    certification_ordinals = tuple(
+        int(receipt.ordinal) for receipt in certification_receipts
+    )
+    candidate_birth_frontiers = tuple(
+        int(state.hypothesis.birth_frontier)
+        for state in authority.states.values()
+    )
+    certification_leak_rows = tuple(
+        (state.hypothesis.cell_id, receipt_id)
+        for state in authority.states.values()
+        for receipt_id in state.certification_receipt_ids
+        if authority.accepted_real_references[receipt_id].ordinal
+        <= state.hypothesis.birth_frontier
+    )
+    all_certification_postbirth = not certification_leak_rows
+    postbirth_frontier = (
+        authority.next_expected_ordinal
+        if certification_ordinals
+        else max(candidate_birth_frontiers, default=-1) + 1
+    )
+    certified_available_count = sum(
+        state.prospectively_certified
+        and state.hypothesis.polarity is AvailabilityState.AVAILABLE
+        for state in authority.states.values()
+    )
+    certified_refuted_count = sum(
+        state.prospectively_certified
+        and state.hypothesis.polarity is AvailabilityState.REFUTED
+        for state in authority.states.values()
+    )
+    pending_structural_ids = tuple(
+        authority._pending_request_ids()
+        if callable(getattr(authority, "_pending_request_ids", None))
+        else ()
+    )
+    closure_boundaries = tuple(
+        authority.generation_boundaries[closure_boundary_start:]
+    )
+    closure_consumptions = tuple(
+        authority.request_consumptions[request_id].manifest()
+        for request_id in authority.request_consumptions
+        if request_id not in closure_consumption_start
+    )
+    closure_generation_delta = (
+        int(authority.current_generation) - closure_generation_start
+    )
+    closure_boundary_count_after = len(authority.generation_boundaries)
+    closure_consumption_count_after = len(authority.request_consumptions)
+    closure_pending_count_after = len(pending_structural_ids)
+    if authority.structural_mode is StructuralMode.EVENT_DRIVEN and pending_structural_ids:
+        raise RuntimeError(
+            "event-driven V2 closure left structural requests pending"
+        )
+    # The development closure never arbitrarily picks one request from an
+    # adaptive queue.  Event-driven requests are settled only by the
+    # authority's existing content-blind safe point; scheduled requests remain
+    # for their fixed predetermined frontier.
+    structural_queue_audit = {
+        "mode": authority.structural_mode.value,
+        "pending_request_count": len(pending_structural_ids),
+        "final_pending_request_count": len(pending_structural_ids),
+        "pending_request_ids_sha256": _hash_json(pending_structural_ids),
+        # In event-driven mode the safe point is invoked after every REAL
+        # event, even when that event emitted no request.  Report both the
+        # invocation contract and the number of non-empty batches so an empty
+        # final queue cannot be mistaken for skipped closure.
+        "safe_point_invocation_count": (
+            len(certification_receipts)
+            if authority.structural_mode is StructuralMode.EVENT_DRIVEN
+            else 0
+        ),
+        "settled": (
+            authority.structural_mode is StructuralMode.EVENT_DRIVEN
+            or bool(closure_boundaries or closure_consumptions)
+        ),
+        "settled_request_batch_count": int(closure_generation_delta),
+        "settled_request_count": len(closure_consumptions),
+        "generation_delta": int(closure_generation_delta),
+        "boundary_count": len(closure_boundaries),
+        "consumption_count": len(closure_consumptions),
+        "before": {
+            "generation": int(closure_generation_start),
+            "boundary_count": int(closure_boundary_start),
+            "request_consumption_count": int(
+                closure_consumption_count_start
+            ),
+            "pending_request_count": int(closure_pending_count_start),
+        },
+        "after": {
+            "generation": int(authority.current_generation),
+            "boundary_count": int(closure_boundary_count_after),
+            "request_consumption_count": int(
+                closure_consumption_count_after
+            ),
+            "pending_request_count": int(closure_pending_count_after),
+        },
+        "boundaries": [item.manifest() for item in closure_boundaries],
+        "consumptions": list(closure_consumptions),
+        "settlement_policy": (
+            "per_real_event_content_blind_atomic_all_pending"
+            if authority.structural_mode is StructuralMode.EVENT_DRIVEN
+            else (
+                "left_pending_for_predetermined_frontier"
+                if pending_structural_ids else "no_requests_emitted"
+            )
+        ),
+        "arbitrary_request_selection": False,
+    }
+    authority.verify_full_history_boundary(
+        "native-intrinsic-v2-r0-competence-closure"
+    )
+    payload = authority.dumps()
+    restored = NativeProspectiveAuthorityV2.loads(payload)
+    if restored.continuation_manifest() != authority.continuation_manifest():
+        raise RuntimeError("same-run V2 closure failed exact roundtrip parity")
+    restored.verify_full_history_boundary(
+        "native-intrinsic-v2-r0-competence-closure-roundtrip"
+    )
+
     audit = {
         "schema_version": SCHEMA_VERSION,
         "label": DEVELOPMENT_LABEL,
@@ -249,6 +568,8 @@ def build_same_run_v2_r0_authority(
         "fresh_or_frozen_experiment_touched": False,
         "same_run_empty_start_r0": True,
         "training_only_discovery": True,
+        "validation_regression_learning_excluded": True,
+        "labels_or_move_oracle_used": False,
         "pool_manifest_sha256": pool_manifest["combined_sha256"],
         "discovery": {
             "r0_train_source_count": len(pools.r0_train),
@@ -257,6 +578,14 @@ def build_same_run_v2_r0_authority(
             "selected_count": len(ordered_fens),
             "training_source_fens_sha256": training_source_digest,
             "ordered_fens_sha256": _hash_json(ordered_fens),
+            "canonical_fens_sha256": _hash_json(discovery_canonical_fens),
+            "row_digests": [
+                _selection_row_digest(fen) for fen in discovery_canonical_fens
+            ],
+            "row_digests_sha256": _hash_json(tuple(
+                _selection_row_digest(fen) for fen in discovery_canonical_fens
+            )),
+            "receipt_ids": list(discovery_receipt_ids),
             "receipt_count": len(receipts),
             "observed_outcome_counts": {
                 "mate": sum(
@@ -267,13 +596,94 @@ def build_same_run_v2_r0_authority(
                 ),
             },
             "receipt_ids_sha256": _hash_json(
-                tuple(receipt.event_id for receipt in receipts)
+                discovery_receipt_ids
+            ),
+        },
+        "certification": {
+            "source": "r0_train_plus_gate_train_decoys",
+            "source_count": len(training_source_fens),
+            "selected_count": len(certification_fens),
+            "canonical_fens_sha256": _hash_json(certification_canonical_fens),
+            "ordered_fens_sha256": _hash_json(certification_fens),
+            "row_digests": [
+                _selection_row_digest(fen)
+                for fen in certification_canonical_fens
+            ],
+            "row_digests_sha256": _hash_json(tuple(
+                _selection_row_digest(fen)
+                for fen in certification_canonical_fens
+            )),
+            "receipt_ids": list(certification_receipt_ids),
+            "receipt_count": len(certification_receipts),
+            "receipt_ids_sha256": _hash_json(certification_receipt_ids),
+            "observed_outcome_counts": {
+                "mate": sum(
+                    receipt.observed_outcome
+                    for receipt in certification_receipts
+                ),
+                "non_mate": sum(
+                    not receipt.observed_outcome
+                    for receipt in certification_receipts
+                ),
+            },
+            "emission_count": len(certification_emissions),
+            "environment_outcome_only": True,
+            "labels_read": False,
+            "move_oracle_used": False,
+            "validation_rows_used": False,
+            "regression_rows_used": False,
+        },
+        "row_partition": {
+            "source_count": len(training_source_fens),
+            "source_unique_canonical_count": len(source_canonical_fens),
+            "discovery_count": len(discovery_canonical_fens),
+            "certification_count": len(certification_canonical_fens),
+            "discovery_certification_disjoint": row_disjoint,
+            "exact_disjoint_partition": partition_exact,
+            "source_canonical_fens_sha256": _hash_json(
+                tuple(sorted(source_canonical_fens))
+            ),
+        },
+        "receipt_disjointness": {
+            "receipt_ids_disjoint": not certification_discovery_overlap,
+            "physical_interactions_disjoint": not physical_discovery_overlap,
+            "receipt_id_overlap_count": len(certification_discovery_overlap),
+            "physical_interaction_overlap_count": len(physical_discovery_overlap),
+            "all_certification_disjoint": not (
+                certification_discovery_overlap or physical_discovery_overlap
+            ),
+        },
+        "postbirth_frontier": postbirth_frontier,
+        "postbirth_frontier_audit": {
+            "first_certification_ordinal": (
+                min(certification_ordinals, default=None)
+            ),
+            "last_certification_ordinal": (
+                max(certification_ordinals, default=None)
+            ),
+            "next_expected_ordinal": int(authority.next_expected_ordinal),
+            "candidate_birth_frontier_min": min(
+                candidate_birth_frontiers, default=None
+            ),
+            "candidate_birth_frontier_max": max(
+                candidate_birth_frontiers, default=None
+            ),
+            "certification_leak_count": len(certification_leak_rows),
+            "all_certification_postbirth": all_certification_postbirth,
+        },
+        "certified_available_count": int(certified_available_count),
+        "certified_refuted_count": int(certified_refuted_count),
+        "certified_counts": {
+            "available": int(certified_available_count),
+            "refuted": int(certified_refuted_count),
+            "total": int(
+                certified_available_count + certified_refuted_count
             ),
         },
         "candidate_count": len(frozen_candidates),
         "dormant_shadow_count": dormant_shadow_count,
-        "initial_prospectively_certified_count": sum(
-            state.prospectively_certified for state in authority.states.values()
+        "initial_prospectively_certified_count": int(
+            initial_prospectively_certified_count
         ),
         "structural_schedule": {
             "mode": authority.structural_mode.value,
@@ -289,11 +699,14 @@ def build_same_run_v2_r0_authority(
                 if adaptive else "single_predetermined_event_frontier"
             ),
         },
+        "adaptive_structural_requests": structural_queue_audit,
         "r0_persistent_state": dict(r0.persistent_state_audit()),
         "serialized_bytes": len(payload),
         "serialized_sha256": hashlib.sha256(payload).hexdigest(),
         "serialization_roundtrip_exact": True,
         "full_history_boundary_exact": True,
+        "discovery_roundtrip_serialized_bytes": len(discovery_payload),
+        "discovery_roundtrip_exact": True,
     }
     return authority, audit
 

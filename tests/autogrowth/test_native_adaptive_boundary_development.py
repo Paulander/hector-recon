@@ -18,7 +18,7 @@ from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import
     StructuralMode,
 )
 from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
-    R1_ACTION_ORDER_STABLE_HASH_PERMUTATION,
+    R1_ACTION_SELECTION_LOCAL_RECON,
 )
 
 
@@ -147,8 +147,10 @@ def test_profiles_preserve_frozen_r0_and_only_change_r1_work(tmp_path: Path) -> 
     assert canary.r1_reply_policy == gate.r1_reply_policy == (
         "prospective_counterexample"
     )
-    assert canary.r1_action_order == gate.r1_action_order == (
-        R1_ACTION_ORDER_STABLE_HASH_PERMUTATION
+    # The adaptive selector never consults the legacy action-order field.
+    assert canary.r1_action_order == gate.r1_action_order == frozen.r1_action_order
+    assert canary.r1_action_selection_mode == gate.r1_action_selection_mode == (
+        R1_ACTION_SELECTION_LOCAL_RECON
     )
     assert canary.r0_boundary_ecology_enabled is True
     assert gate.r0_boundary_ecology_enabled is True
@@ -349,6 +351,75 @@ class _PayloadResult:
         self.payload: dict[str, object] = {}
 
 
+def test_complete_per_run_mechanism_evidence_never_claims_scientific_gate() -> None:
+    payload = {
+        "decision": {
+            "r0_pass": True,
+            "r1_executed": True,
+            "r1_pass": True,
+        },
+        "r1_arms": {
+            "full_intrinsic": {
+                "training": {
+                    "r1_action_selection_mode": R1_ACTION_SELECTION_LOCAL_RECON,
+                    "local_action_recent_events": [
+                        {
+                            "position_index": 0,
+                            "move_uci": "a1a2",
+                            "raw_value": 0.0,
+                            "triplet_id": "t0",
+                            "credited_triplet_id": "t0",
+                        },
+                        {
+                            "position_index": 0,
+                            "move_uci": "a1a2",
+                            "raw_value": 0.25,
+                            "triplet_id": "t1",
+                            "credited_triplet_id": "t1",
+                        },
+                    ],
+                    "local_candidate_cap_bound": False,
+                    "resumed_from_snapshot": True,
+                    "boundary_ecology": {
+                        "tombstone_count": 1,
+                        "active_candidate_count": 2,
+                        "active_candidate_cap": 32,
+                    },
+                    "all_reply_envelope_available_count": 1,
+                    "child_handoff_count": 1,
+                    "successor_value_sum": 0.25,
+                },
+                "validation": {"conversion_count": 1},
+                "r0_validation_retention": {"accuracy": 1.0},
+                "v2_child_authority": {
+                    "serialization_roundtrip_exact": True,
+                    "full_history_boundary_exact": True,
+                    "structural_events": [
+                        {"retired_cell_ids": ["old"], "child_ids": ["new"]}
+                    ],
+                    "adaptive_positive_lineages": {
+                        "lineage_count": 1,
+                        "certified_node_count": 1,
+                        "postbirth_certification_receipt_count": 1,
+                        "all_certification_disjoint": True,
+                        "all_certification_postbirth": True,
+                        "certification_leak_count": 0,
+                    },
+                },
+            }
+        },
+    }
+
+    gates = adaptive._result_gate_fields(payload)
+
+    assert gates["curriculum_gate_passed"] is True
+    assert gates["per_run_mechanism_gate_passed"] is True
+    assert gates["scientific_gate_passed"] is False
+    assert adaptive._completion_status(gates) == (
+        "PER_RUN_MECHANISM_GATE_PASSED_DEVELOPMENT_ONLY"
+    )
+
+
 def test_run_marks_result_payload_without_running_curriculum(
     tmp_path: Path, monkeypatch
 ) -> None:
@@ -445,7 +516,7 @@ def test_cli_normalizes_follow_through_and_reports_failed_scientific_gate(
         ),
         (
             _FakeGateResult(r0_pass=True, r1_executed=True, r1_pass=True),
-            "SCIENTIFIC_GATE_PASSED",
+            "COMPLETED_R1_MECHANISM_GATE_FAILED",
             True,
         ),
     ],
@@ -461,7 +532,9 @@ def test_cli_distinguishes_r1_gate_failure_from_success(
     assert attempt["r1_executed"] is True
     assert attempt["r1_pass"] is expected_gate
     assert attempt["work_completed"] is True
-    assert attempt["scientific_gate_passed"] is expected_gate
+    assert attempt["curriculum_gate_passed"] is expected_gate
+    assert attempt["per_run_mechanism_gate_passed"] is False
+    assert attempt["scientific_gate_passed"] is False
     if not expected_gate:
         assert "PASSED" not in attempt["status"]
 
