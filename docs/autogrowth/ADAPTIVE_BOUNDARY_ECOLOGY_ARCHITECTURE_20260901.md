@@ -2,194 +2,312 @@
 
 ## Status and scope
 
-This note describes the mechanism implemented on branch
-`codex/adaptive-boundary-ecology` at exact commit
-`ad3b0777ad22c26694e7496ef620eb7712ea05ad` in
-[`Paulander/hector-recon`](https://github.com/Paulander/hector-recon). The branch
-is pushed. Its implementation base is `2f1b68c992eb6868b468148004d8e5a4746c88ab`.
+This note describes the current working-tree design on branch
+`codex/adaptive-boundary-ecology` in
+[`Paulander/hector-recon`](https://github.com/Paulander/hector-recon).
 
-The mechanism has passed exact software/replay tests and a small viewed
-development experiment. It has **not** demonstrated mate-in-2 competence or a
-general learning result. The V15 validation and regression results were each
-`0/4` exhaustive mate-in-2 in both seeds and both factorial arms. Treat this as
-an architecture and mechanism handoff, not as a scientific claim.
+- Prior architecture anchor: `52f666d3111e39c57fb6e16889678540c2fb6d62`.
+- Current adaptive-local implementation: `444b927f07882ae1c197b6006fad1c0672ef2245`.
+- Original audited base: `2f1b68c992eb6868b468148004d8e5a4746c88ab`.
+
+The current implementation closes two concrete V15 control-loop defects: R1
+experience is no longer chosen by the host's hash schedule, and adaptive
+evaluation no longer routes through a learned prototype gate or a host-side
+core/child/plastic fallback cascade. The previous modes remain only for exact
+historical replay; the adaptive runner selects the new local mode explicitly.
+
+This is still a development architecture, not evidence of mate-in-2 learning.
+The focused 87-test suite passed at the implementation commit; a fresh bounded
+canary is the next gate. No not-yet-run chess result is claimed in this note.
 
 ## The idea in plain language
 
-The desired organism starts with a learned mate-in-1 competence skeleton. It
-then tries first moves from harder positions. After each possible opponent
-reply, it asks: “Does some already grounded local structure know how to finish
-from here?”
+The intended organism begins with a learned mate-in-1 competence skeleton. On
+a harder position it tries a first move using local patterns and values already
+stored in its graph, plus a bounded preference for underexplored patterns. The
+environment then supplies the consequences. If the move reaches positions that
+the frozen mate-in-1 authority can finish after **every** legal opponent reply,
+the weakest reply supplies the successor value credited to that exact first
+move pattern.
 
-When an unexpected environmental success occurs just outside the known
-boundary, a few cheap local pattern sketches are born from the graph features
-that were active. A sketch is only a proposal. It must recur on later, distinct
-REAL interactions before it receives authority. Failures do not merely kill a
-coarse sketch: they identify a residual region in which it must abstain, and
-narrower children may be tried. Useful local structures can become new anchors
-for further outward growth.
+Unexpected successes just outside known competence can bud tentative boundary
+structures. A bud is cheap and has no authority. It must recur on later,
+distinct REAL interactions before it can answer prospectively. Contradictions
+make a coarse structure abstain in the failed region and can trigger narrower
+residual children. Weak or exhausted structures become dormant or die; useful
+children can become anchors for the next outward shell.
 
-For a candidate first move to receive positive successor value, **every legal
-opponent reply** must be handled by grounded authority. A single refuted reply
-vetoes the move; an unknown reply keeps it unknown. The value is the minimum
-over replies. This is the adversarial, worst-reply part of the mechanism.
+The central loop is therefore:
+
+```text
+learned local value + bounded curiosity
+                  |
+                  v
+        emit exactly one first move
+                  |
+                  v
+      observe environmental consequence
+                  |
+                  +--> exact-pattern TD/eligibility credit
+                  |
+                  +--> local support, contrast, budding and refinement
+                  |
+                  v
+  atomically settle pending mutations at a quiescent safe point
+                  |
+                  v
+       repeat with the changed native state
+```
 
 No correct move, mate-distance label, tablebase, Stockfish answer, held-out
-answer, or absolute-position identity is supplied to the learner. Legal move
-generation, actual environmental outcomes, and exhaustive report-only
-evaluation are environment/harness functions, not teacher labels.
+answer, epoch-specific prescription, or absolute-position identity is supplied
+to the learner's action competition. Legal action generation and observed game
+outcomes come from the environment. Exhaustive mate evaluation is report-only.
 
 ## Vocabulary
 
 | Term | Meaning here |
 | --- | --- |
-| **R0 / core** | The previously learned native mate-in-1 competence. “R0” is a curriculum index, not a different kind of network. |
-| **R1 / boundary task** | Learning a first move whose resulting positions can be finished by the core or certified descendants after every opponent reply. In this development curriculum it corresponds to mate-in-2. |
-| **REAL receipt** | An immutable record of one action/outcome interaction actually opened to the learner. |
-| **VIRTUAL query** | A read-only prospective query. It may test whether authority responds but cannot certify or train it. |
-| **Bud / sketch** | A cheap, tentative conjunction of locally active graph-visible signals. It has no authority. |
+| **R0 / core** | The learned native mate-in-1 competence. “R0” is a curriculum index, not a second kind of network. |
+| **R1 / boundary task** | Learning a first move whose successors are finishable after every opponent reply. In this curriculum it is mate-in-2. |
+| **Local action pattern** | The canonical before/delta/after triplet induced by one legal action. It contains local graph features, not FEN, epoch, stage, or an answer label. |
+| **REAL receipt** | An immutable record of an action/outcome interaction actually opened to the learner. |
+| **VIRTUAL query** | A read-only authority query. It can test jurisdiction but cannot train or certify. |
+| **Bud / sketch** | A cheap tentative conjunction of locally active graph-visible signals. It has no authority. |
 | **Promotion** | Atomic materialization of an eligible sketch as a dormant authority child. Promotion still gives it zero authority. |
-| **Certification** | Later, post-birth REAL evidence makes a promoted child prospectively authoritative. Discovery evidence is excluded. |
-| **Handoff** | A complete all-reply envelope exposes grounded successor value to credit the exploratory first move. |
-| **Safe point** | A content-blind quiescent boundary at which pending graph mutations are committed atomically. It decides *when* mutation is safe, not *what* should grow. |
+| **Certification** | Distinct post-birth REAL evidence makes a promoted child prospectively authoritative. Discovery evidence is excluded. |
+| **Handoff** | A complete all-reply envelope exposes grounded successor value to the exploratory first move. |
+| **Safe point** | A content-blind quiescent boundary at which pending graph mutations commit atomically. It decides when mutation is safe, not what deserves to grow. |
 
-## End-to-end loop
+## One R1 learning step
+
+### 1. Generate local competitors
+
+For every legal first move, the graph derives the same canonical local triplet
+identity used by its before-state, action/delta, and after-state machinery.
+Existing exact or shared-feature graph sources contribute their stored raw
+native value. A legal pattern with no source is assigned a neutral exploitation
+value only while training, so unexplored behavior remains reachable.
+
+The training activation is:
 
 ```text
-harder predecessor position
-        |
-        v
-choose and execute one candidate first move
-        |
-        v
-enumerate every legal opponent reply
-        |
-        +--> query frozen core and certified descendants for reply 1
-        +--> query frozen core and certified descendants for reply 2
-        +--> ...
-        |
-        v
-fail-closed all-reply envelope
-  REFUTED if any reply is refuted
-  AVAILABLE only if every reply is grounded and available
-  UNKNOWN otherwise
-  value = minimum grounded reply value
-        |
-        v
-choose the weakest/counterexample reply for one REAL challenge
-        |
-        v
-environmental outcome only
-        |
-        +--> TD/eligibility credit to the observed first-move pattern
-        |
-        +--> local ecology: support, contrast, birth, refinement, pruning
-        |
-        v
-quiescent safe point: atomically promote/retire/materialize pending structures
+bounded native value + sqrt(2 log(1 + total exposures) / (1 + pattern exposures))
 ```
 
-The implementation currently has one serious disconnect from this ideal:
-R1 training chooses first moves from a deterministic hash-permuted schedule,
-not from the learned ranking. TD changes graph scores, but those scores do not
-normally choose subsequent training actions. That is a current harness/policy
-limitation, not part of the intended architecture.
+The second term is a generic, bounded optimism bonus. It uses graph-owned
+exposure counts, not chess labels or position identities. Legal moves sharing
+one abstract pattern form an alias group; exposure rotates its representative
+deterministically, so the same alias is not chosen forever.
 
-## The native components
+### 2. Emit one action through a formal ReCoN choice
 
-### 1. Shared native graph and local patterns
+One `AnonymousChoiceOption` is created per local pattern. An
+`AnonymousChoiceGenome` performs exactly-one arbitration and emits the legal
+actuator. Only the emitted exact triplet is then materialized and formally
+confirmed. The implementation refuses to execute it if emitted identity,
+materialized triplet, and confirmation disagree.
 
-The graph represents before-state, action/delta, and after-state micropatterns,
-their shared atoms, composite cells, and action triplets. Outcome-grounded M3/TD
-updates change local weights. The same micropattern can recur at translated or
-symmetry-related board locations; this is deliberate generalization rather
-than absolute-position memorization.
+This ordering matters: candidate inspection does not eagerly grow a branch for
+every legal move. Growth follows the one action actually emitted.
+
+### 3. Observe, credit, and record exposure
+
+After the environment transition, `apply_intrinsic_td` must return the same
+triplet identity that was emitted. The TD prediction is the pre-emission raw
+native value, never the curiosity bonus. The exact pattern and graph root gain
+one exposure only after this outcome-grounded update; merely asking the policy
+does not consume an exposure.
+
+A bounded, digest-chained action-event ledger records emitted and credited
+identities, raw value, curiosity, successor value, and TD error for replay and
+audit. It is diagnostic state, not an action source.
 
 Main implementation:
 
 - [`src/recon_lite_chess/autogrowth/native_single_graph_curriculum.py`](../../src/recon_lite_chess/autogrowth/native_single_graph_curriculum.py)
-  - `apply_intrinsic_td` applies one scalar TD error only to an actually
-    observed action branch;
-  - `rank_shared_composite_candidates` finds reusable coactivations;
-  - graph choice/ranking provides the eventual policy substrate.
+  - `choose_local_training_action` performs exploratory local competition;
+  - `choose_local_policy_action` performs read-only learned-policy emission;
+  - `apply_intrinsic_td` credits the observed exact branch and records exposure.
+- [`src/recon_lite_chess/autogrowth/native_intrinsic_curriculum.py`](../../src/recon_lite_chess/autogrowth/native_intrinsic_curriculum.py)
+  - `_select_r1_training_action` selects the adaptive-local path;
+  - `_run_r1_arm` enforces emitted/credited triplet identity.
 
-One known tradeoff is action aliasing: different legal moves can instantiate
-the same abstract triplet. Credit then strengthens a local action pattern, not
-necessarily one exact UCI move. That is desirable when the abstraction is
-correct and harmful when it collapses strategically different actions.
+## What is native state, and what remains an adapter?
 
-### 2. Frozen mate-in-1 core and jurisdiction gate
+The current action mechanism deliberately removes the host from choosing a
+move, but it would be inaccurate to claim that every arithmetic operation is
+already embodied as a persistent graph circuit.
 
-After R0 training, the core graph and its triplet set are frozen. A learned
-outcome-calibrated local gate is intended to decide whether the core has
-jurisdiction on a successor. If it emits a grounded legal response, it has
-precedence over descendants and the plastic graph.
+Persistent learned/native state includes:
+
+- graph nodes, edges, triplets, weights, shared-feature sources, and exposure
+  counts;
+- formal confirmation of the selected branch;
+- competence values, eligibility/responsibility, and outcome-grounded TD
+  updates;
+- authority cells, lineages, REAL receipts, certification evidence, and
+  retirement tombstones;
+- formal exactly-one emission by `AnonymousChoiceGenome`.
+
+A generic Python adapter currently:
+
+- enumerates legal environmental affordances;
+- derives their canonical local triplet identities;
+- retrieves confirmed exact/shared graph sources and takes a deterministic
+  best source for each move;
+- computes value normalization, the UCB-like optimism term, the resource cap,
+  and alias rotation;
+- packages those activations as anonymous choice options.
+
+That adapter cannot read a correct move, mate label, FEN identity, epoch,
+curriculum stage, held-out answer, or external oracle. Its rule is domain-generic
+and replayable, but it is still substrate code surrounding the persistent graph.
+The precise claim is therefore **native learned evidence with formal ReCoN
+emission**, not “the complete arbitration circuit is already inside the graph.”
+
+The candidate scan also has an explicit finite cap. Reports expose pair counts
+before and after that cap, so a run cannot silently present a truncated action
+competition as an unbounded one.
+
+## Evaluation uses the learned policy, not a second picker
+
+Training and evaluation now differ only where exploration should differ:
+
+- training admits unsupported legal patterns at neutral value and adds the
+  curiosity bonus;
+- evaluation disables curiosity and materialization;
+- evaluation retains only options backed by a persistent, formally confirmed
+  graph source;
+- if no such source exists, the policy abstains.
+
+For mate-in-2 evaluation, that local exploitation policy chooses the first
+move. Each opponent successor then goes directly to the native V2 authority.
+If the authority is `UNKNOWN`, `REFUTED`, null, or illegal, evaluation abstains
+for that reply and the candidate does not count as converted. There is no
+prototype-gate call, no `_choose_with_child_priority` cascade, and no fallthrough
+to the plastic graph. R0 retention evaluation likewise queries native V2
+authority directly and fails closed on abstention.
+
+This makes evaluation stricter and conceptually cleaner: a success must be
+produced by the learned first-move policy and grounded successor authority, not
+rescued by a host router.
+
+## Frozen R0 authority and prospective closure
+
+The adaptive path no longer uses `OutcomeCalibratedPrototypeGate` as a runtime
+provider. The immutable learned R0 organism lives inside
+`NativeProspectiveAuthorityV2`, alongside its prospectively certified boundary
+descendants. A validation-only native admission audit asks whether that
+authority itself has clean R0 jurisdiction:
+
+- every R0 validation positive must receive an AVAILABLE legal response that
+  actually mates in the copied environment;
+- every validation decoy must receive no AVAILABLE response;
+- all queries are VIRTUAL and both authority continuation and frozen-R0
+  inference identity must remain unchanged.
+
+This audit is a scientific stage gate: it may stop a bad run, but it neither
+selects training actions nor provides runtime answers to the learner.
 
 Main implementation:
 
 - [`src/recon_lite_chess/autogrowth/native_intrinsic_curriculum.py`](../../src/recon_lite_chess/autogrowth/native_intrinsic_curriculum.py)
-  - `_protected_core_r0_available` performs the local frozen-core query;
-  - `_choose_with_child_priority` routes core, then V2 descendants, then the
-    plastic graph;
-  - `_r1_reply_authority_from_core_response` projects only grounded core value
-    into a reply envelope.
+  - `_native_v2_r0_admission_audit` implements the read-only gate;
+  - `_evaluate_r0` and `_evaluate_r1` use direct, fail-closed native authority
+    in adaptive-local mode.
+- [`src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py`](../../src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py)
+  owns the immutable core, prospectively certified descendants, and atomic
+  structural journal.
 
-The current implementation distinguishes “core routing configured” from
-“core routing actually grounded” imperfectly. In both V15 seeds the gate was
-globally `mature=false`, so the configured core abstained everywhere. The
-forensic note documents one concrete retention error caused by falling through
-to the plastic graph. In addition, the current top-level sequence fits this
-gate before `mature_existing_graph()` changes the graph that is subsequently
-frozen and routed. That sequencing did not cause the exact V15 abstention—the
-gate had already failed maturity—but a future operational gate must be fit or
-revalidated against the final frozen response distribution. Both issues must be
-repaired before a longer run.
+## Discovery and certification are an exact training-only partition
 
-### 3. All-reply adversarial envelope
+Construction of the same-run V2 authority uses a 64-row **training-only**
+source. It is split by canonical-content digest into:
 
-Each candidate first move gets one row for every legal opponent reply. Per
-reply, the row may be `AVAILABLE`, `UNKNOWN`, or `REFUTED` based only on
-grounded core/descendant authority.
+- 32 discovery rows; and
+- a disjoint 32-row certification tape from the remaining source.
 
-The aggregate is deliberately fail-closed:
+For a 64-row production source, the code requires that these two tapes form an
+exact 32/32 partition. Selection does not inspect pool role, expected move, or
+outcome. Nomination closes after discovery and before any certification row is
+opened.
 
-- any `REFUTED` reply makes the first move `REFUTED`;
-- all replies must be grounded `AVAILABLE` to make it `AVAILABLE`;
-- otherwise it remains `UNKNOWN`;
-- the positive value is the minimum reply value;
-- the weakest reply is selected as the next counterexample challenge.
+Each certification row is a new REAL interaction. The frozen R0 emits the
+action, the environment supplies only whether its successor is checkmate, and
+the authority consumes the receipt. In event-driven mode, after **each** REAL
+consumption the runner invokes the existing content-blind quiescent safe point.
+All currently pending bounded requests—including contradiction-driven recursive
+refinement—settle atomically before the next REAL row is admitted.
 
-This already supports composition across siblings: different certified cells
-may cover different reply contexts, and their union can satisfy the envelope.
-What V15 lacked was learned coverage of every reply, not an aggregation
-operator.
+The audit requires row, receipt, and physical-interaction disjointness;
+post-birth certification ordinals; zero discovery/certification leakage; and
+exact dump/load history. Validation, regression, and held-out answers never
+enter discovery or certification.
+
+Main implementation:
+
+- [`src/recon_lite_chess/autogrowth/native_intrinsic_v2_development.py`](../../src/recon_lite_chess/autogrowth/native_intrinsic_v2_development.py)
+  - `_neutral_discovery_tape` and `_neutral_certification_tape` construct the
+    exact training-only partition;
+  - `_certify_real_rows` consumes prospective REAL evidence and settles every
+    post-consumption safe point.
+
+## All-reply adversarial value
+
+For one emitted first move, every legal opponent reply gets an authority row:
+
+- any `REFUTED` reply makes the move `REFUTED`;
+- every reply must be grounded `AVAILABLE` for the move to be `AVAILABLE`;
+- otherwise the move stays `UNKNOWN`;
+- positive successor value is the minimum grounded reply value;
+- the weakest reply becomes the next counterexample challenge.
+
+Different certified cells may cover different reply contexts, so sibling
+composition is allowed. The envelope asks whether their union handles all
+replies; it does not require one global cell to memorize an entire position.
+Only a grounded AVAILABLE envelope can hand positive successor value back to
+the first move.
 
 Main implementation:
 
 - [`src/recon_lite_chess/autogrowth/native_all_reply_envelope.py`](../../src/recon_lite_chess/autogrowth/native_all_reply_envelope.py)
-  - `evaluate_all_reply_envelope` implements veto, unanimity, minimum value,
+  - `evaluate_all_reply_envelope` implements unanimity, veto, minimum value,
     and exact replay;
-  - `rank_counterexample_challenges` chooses the weakest reply without looking
-    at a correct move label.
+  - `rank_counterexample_challenges` chooses the weakest reply without a
+    correct-action label.
+- [`src/recon_lite_hector/learning/intrinsic_credit.py`](../../src/recon_lite_hector/learning/intrinsic_credit.py)
+  - `IntrinsicCreditEngine` owns grounded successor credit, competence value,
+    responsibility, and eligibility.
 
-### 4. Event-driven positive-shell ecology
+## Event-driven positive-shell ecology
 
-The ecology sees only:
+The boundary ecology may read only:
 
-- opaque, generic graph-visible signal identities and their roles;
-- the unique REAL receipt/physical-interaction identity and ordinal;
+- opaque graph-visible signal identities and their roles;
+- unique REAL receipt/physical-interaction identity and ordinal;
 - one grounded Boolean environmental outcome.
 
-It does not read board answers, held-out labels, mate distance, or an external
-chess oracle.
+On each REAL observation it updates matching sketches. A family is born only
+on **surprise success**: the observed outcome is positive while pre-outcome
+authority was not already AVAILABLE. Up to one best conjunction at widths 1,
+2, and 3 is proposed. A bounded evidence-ranked beam is mixed with a fixed
+share of content-blind hash exploration so a temporarily weak feature is not
+permanently excluded.
 
-On every REAL observation it updates matching sketches. A new family is born
-only on **surprise success**: the environmental outcome is positive while the
-pre-outcome authority was not already `AVAILABLE`. Up to one best conjunction
-at each width 1, 2, and 3 is proposed. Candidate generation combines a bounded
-evidence-ranked beam with a fixed share of content-blind hash exploration.
+A matching positive receipt is support; a matching negative receipt is a
+contradiction. Promotion eligibility currently requires at least four
+supports, zero contradictions, and Wilson lower bound at least `0.55` with
+`z=1.6448536269514722`. The Wilson score is a conservative competition/gating
+quantity, not an IID confidence guarantee for chess positions.
 
-Default resource bounds are architectural safety limits:
+A contradiction does not merely delete a coarse pattern. The parent enters
+`REFINING` and abstains in the contradicted region. Residual children add local
+contrast features absent from the parent. Refinement has finite event and child
+budgets. Exhausted parents become dormant when a strict residual remains, or
+dead otherwise. Redundancy and capacity pressure can also retire sketches.
+
+Current active-work bounds are:
 
 | Bound | Current value |
 | --- | ---: |
@@ -200,157 +318,86 @@ Default resource bounds are architectural safety limits:
 | Local observation proposal window | 256 |
 | Residual children per contradiction event | 3 |
 | Refinement events per sketch | 4 |
+| Live/dormant specialization children | 192 |
+
+Lifetime exploration remains open because retired slots can be reused, while
+the active ecology and live authority occupancy remain finite. Exact historical
+receipts and unique tombstones preserve replay; lifetime artifact size is not
+therefore claimed to be bounded.
 
 Main implementation:
 
 - [`src/recon_lite_chess/autogrowth/native_prospective_boundary_candidate_ecology.py`](../../src/recon_lite_chess/autogrowth/native_prospective_boundary_candidate_ecology.py)
-  - `BoundaryObservation` and `BoundaryExpandDemand` define permitted inputs;
-  - `ProspectiveBoundaryCandidateEcology.observe` updates matching sketches;
-  - `rank_candidates` runs bounded local competition;
-  - `retire_redundant` and the refinement lifecycle bound active metabolism.
-- [`src/recon_lite_chess/autogrowth/native_intrinsic_curriculum.py`](../../src/recon_lite_chess/autogrowth/native_intrinsic_curriculum.py)
-  - `_boundary_ecology_step` connects one accepted REAL receipt to the ecology;
-  - `_boundary_promotion_request_from_candidate` recloses an eligible sketch at
-    a safe point.
-
-### 5. Support, contradiction, refinement, dormancy, and death
-
-A live sketch collects matches. A matching positive receipt is support; a
-matching negative receipt is contradiction.
-
-Promotion eligibility is fixed at:
-
-- at least four supports;
-- zero contradictions;
-- Wilson lower bound at least `0.55`, with `z=1.6448536269514722`.
-
-The Wilson quantity should be understood as a conservative ranking/gating
-score. The development receipts are not guaranteed IID, so it is not a valid
-frequentist confidence claim about the full chess distribution.
-
-A first contradiction does not immediately kill a candidate. The coarse
-candidate enters `REFINING` and abstains in the contradicted region. Residual
-children add locally active contrast features that were absent from the
-parent. Refinement has a finite event and child budget. Once exhausted, the
-parent becomes dormant if a strict live residual exists, otherwise dead.
-Capacity pressure and exact-pattern redundancy can also retire sketches.
-
-The ecology keeps exact lifetime evidence/tombstones for replay, but recurring
-hot-path indexes are bounded by the active resource caps.
-
-### 6. Promotion is not authority
-
-An eligible ecology sketch is converted into a `BoundaryPromotionRequest`.
-At a content-blind safe point, the authority atomically:
-
-1. validates compact commitments against accepted REAL chronology;
-2. reserves/reclaims bounded successor capacity;
-3. materializes a new dormant child with zero authority;
-4. records an exact structural mutation/journal commitment;
-5. opens the next prospective generation.
-
-The discovery/eligibility receipts are committed to an exclusion set. They can
-never certify the new child. Only later matching REAL receipts with ordinal
-strictly beyond its birth frontier count. Current certification again requires
-four clean supports and the fixed lower-bound gate. A contradiction prevents
-`AVAILABLE` authority and can motivate narrower local refinement.
-
-The authority successor capacity is 192 live/dormant specialization children.
-Automatic retirement prefers weak replaceable leaves, protects immutable core
-cells and live lineage parents, preserves unique tombstones, and rolls back the
-entire structural transaction on any late failure.
-
-Main implementation:
-
+  owns surprise-success birth, bounded candidate competition, refinement,
+  dormancy, and retirement.
 - [`src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py`](../../src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py)
-  - `BoundaryPromotionRequest` binds the promotion evidence;
-  - `NativeProspectiveAuthorityV2.settle_pending_structural_requests` performs
-    event-driven atomic settlement;
-  - `retire_adaptive_leaves` provides bounded slot reuse;
-  - `evaluate_sealed_real` and the REAL transaction methods separate read-only
-    evaluation from learning.
+  owns post-birth certification, recursive requests, atomic settlement, slot
+  reuse, rollback, and tombstones.
+- [`src/recon_lite_chess/autogrowth/native_intrinsic_curriculum.py`](../../src/recon_lite_chess/autogrowth/native_intrinsic_curriculum.py)
+  connects outcome-grounded receipts to the ecology and safe-point promotion.
 
-### 7. Handoff and intrinsic credit
+## Learner versus scientific harness
 
-When an all-reply envelope is grounded `AVAILABLE`, its minimum successor value
-is handed back to the first-move branch. The intrinsic-credit engine combines
-that value with immediate environmental reward and eligibility/responsibility
-to produce a TD error. Only the observed first move receives this update; no
-unplayed action receives a synthetic positive label.
+This boundary is the answer to the “plumbing versus ReCoN” concern.
 
-Main implementation:
+| Inside the learning mechanism | Allowed harness responsibility |
+| --- | --- |
+| Local pattern identities and stored native values | Start episodes and enumerate legal environment actions/replies |
+| Anonymous exactly-one emission | Enforce wall-time, memory, and active-resource ceilings |
+| Outcome-grounded TD, eligibility, and exposure | Provide the outcome of the action actually taken |
+| Surprise-success budding and local contrast | Invoke a content-blind quiescent transaction boundary |
+| Prospective certification and recursive refinement | Snapshot, replay, and check invariants |
+| Worst-reply minimum/veto and handoff | Use validation only for stop/go and exhaustive evaluation only for reporting |
+| Retirement and slot reuse | Select deterministic development seeds and training-only tape partitions |
 
-- [`src/recon_lite_hector/learning/intrinsic_credit.py`](../../src/recon_lite_hector/learning/intrinsic_credit.py)
-  - `IntrinsicCreditEngine` owns competence values, responsibility, eligibility
-    traces, and grounded successor credit.
-- [`src/recon_lite_chess/autogrowth/native_single_graph_curriculum.py`](../../src/recon_lite_chess/autogrowth/native_single_graph_curriculum.py)
-  - `apply_intrinsic_td` writes the scalar update into the observed graph
-    pattern.
+The harness must not choose the R1 move, override authority jurisdiction,
+rescue an abstention through a fallback policy, or expose validation outcomes to
+learning. The committed adaptive-local path satisfies those exclusions.
 
-V15 proved that this write path can change later rankings relative to the
-no-bootstrap control. It did not prove improved action choice or mate-in-2,
-because the scheduled R1 training policy did not close the loop around those
-rankings.
+One important limitation remains: **R0 pretraining still uses a content-blind
+scheduled legal-action exploration policy.** It is not an oracle—it supplies no
+correct moves or labels—but it is external experience selection. Consequently
+the complete R0→R1 curriculum must not yet be described as fully pure-native.
+The present change closes the learned R1 loop and removes runtime routing
+handholding; replacing the R0 schedule is a later, separately testable purity
+step, not a reason to expand this bounded implementation now.
 
-## Learner architecture versus scientific harness
+## Defensible invariants after the adaptive-local change
 
-This distinction matters when discussing whether the design is genuinely
-local/self-organizing.
+The implementation and focused tests are intended to establish:
 
-### Learner/organism semantics
-
-- graph-visible micropattern activation and shared composites;
-- local support/contrast receipts;
-- surprise-success budding;
-- local candidate competition and residual refinement;
-- post-birth prospective certification;
-- core/descendant authority routing;
-- all-reply minimum/veto;
-- responsibility, eligibility, and TD updates;
-- bounded retirement and slot reuse.
-
-### Harness or execution scaffolding
-
-- generation of development positions and deterministic seeds;
-- legal move/reply enumeration supplied by the chess environment;
-- deterministic hash action schedule used by the current development runner;
-- content-blind epoch/quiescent safe points for atomic mutation;
-- independent full/no-bootstrap arms;
-- snapshots, exact replay/resume checks, resource ceilings, and stop/go gates;
-- held-out exhaustive mate evaluation used only after learning/reporting.
-
-A safe point is acceptable scaffolding because it does not inspect pattern
-content or decide what grows. The current stable-hash first-move schedule is
-more consequential: it decides experience while ignoring learned value, so it
-must not be mistaken for the desired autonomous policy. It uses an opaque
-position identity for reproducible action permutation; that identity is not a
-learner feature or certification signal, but it is still harness control over
-experience.
-
-## Defensible invariants
-
-The current code and tests support these limited claims:
-
-- discovery receipts are disjoint from certification receipts;
-- only unique REAL physical interactions can add evidence;
+- adaptive R1 action choice cannot reach the legacy hash schedule;
+- the environment never supplies FEN/epoch/stage/oracle data to local action
+  competition;
+- only the emitted exact branch is materialized;
+- an outcome update credits exactly the emitted triplet and records one
+  exposure;
+- evaluation is read-only, exploration-free, and abstains without persistent
+  confirmed support;
+- adaptive evaluation cannot reach the prototype gate, host priority cascade,
+  or plastic fallback;
+- discovery and certification rows, receipts, and physical interactions are
+  disjoint;
 - VIRTUAL queries cannot certify or train;
-- promoted children begin with zero prospective authority;
-- an all-reply `AVAILABLE` result requires every legal reply to be grounded;
-- any refuted reply vetoes and successor value is the minimum reply value;
+- promoted children start with zero prospective authority;
+- any refuted opponent reply vetoes a first move, and positive value is the
+  worst grounded reply value;
 - structural mutations are atomic and replay-exact or roll back;
-- active ecology work and live authority occupancy have explicit finite caps;
-- immutable core source state and unique retirement tombstones are preserved;
-- snapshot/resume and direct/replay paths are covered by exact tests.
+- active candidate search, ecology population, and live authority occupancy
+  have explicit finite caps;
+- immutable core state and unique retirement tombstones survive snapshot and
+  resume.
 
-The mechanism does **not** establish:
+The design does **not** establish:
 
-- convergence to mate-in-2 or any optimal policy;
-- IID support receipts or calibrated statistical confidence;
-- bounded lifetime artifact size (historical receipts/tombstones can grow);
-- correctness of every learned abstraction or action alias;
-- guaranteed core retention under the current immature-gate routing;
-- eventual exploration of every useful region under the current finite run;
-- a non-singleton, worst-reply-complete mate-in-2 handoff.
+- convergence to mate-in-2 or to an optimal policy;
+- that UCB-like exploration is the best local metabolism;
+- that all abstract action aliases are strategically sound;
+- IID evidence or calibrated statistical confidence;
+- bounded lifetime receipt/tombstone storage;
+- eventual discovery of every useful region;
+- whole-curriculum pure-native action selection while R0 remains scheduled;
+- any chess-performance improvement before a fresh experiment measures it.
 
 ## Exact code lineage
 
@@ -359,45 +406,76 @@ The mechanism does **not** establish:
 | `2f1b68c9` | Audited V2 intrinsic R0→R1 base and failed one-shot authority. |
 | `55e940a9` | Implemented positive-shell event-driven ecology, refinement, retirement, and atomic integration. |
 | `4cf1711b` | Corrected compact promotion commitment auditing. |
-| `4a87eaa0` | Added bounded eight-epoch follow-through profile. |
+| `4a87eaa0` | Added bounded post-promotion follow-through profile. |
 | `58fbd0d8` | Predeclared the V15 mechanism gate. |
-| `ad3b0777` | Added follow-through tests, exact audit assertions, and final branch logbook. |
+| `ad3b0777` | Added follow-through tests and exact audit assertions. |
+| `52f666d3` | Documented the architecture and V15 forensic evidence. |
+| `444b927f` | Replaces adaptive R1 hash selection and prototype/fallback routing with local learned action emission and direct native authority; adds disjoint closure certification and stricter gates. |
 
-Use [`BRANCH_LOGBOOK.md`](../../BRANCH_LOGBOOK.md) for the complete experiment
-ledger. The exact V15 forensic analysis is in
+Use [`BRANCH_LOGBOOK.md`](../../BRANCH_LOGBOOK.md) for the experiment ledger.
+The evidence motivating this repair is in
 [`ADAPTIVE_BOUNDARY_V15_FORENSICS_20260901.md`](ADAPTIVE_BOUNDARY_V15_FORENSICS_20260901.md).
 
-## Focused tests
+## Focused verification plan
 
-The most relevant suites are:
+Before any fresh chess claim, run the data-free focused suites:
 
-- [`tests/autogrowth/test_native_prospective_boundary_candidate_ecology.py`](../../tests/autogrowth/test_native_prospective_boundary_candidate_ecology.py)
-- [`tests/autogrowth/test_native_intrinsic_all_reply_policy.py`](../../tests/autogrowth/test_native_intrinsic_all_reply_policy.py)
+- [`tests/autogrowth/test_native_single_graph_curriculum.py`](../../tests/autogrowth/test_native_single_graph_curriculum.py)
 - [`tests/autogrowth/test_native_intrinsic_curriculum.py`](../../tests/autogrowth/test_native_intrinsic_curriculum.py)
+- [`tests/autogrowth/test_native_intrinsic_v2_development.py`](../../tests/autogrowth/test_native_intrinsic_v2_development.py)
+- [`tests/autogrowth/test_native_adaptive_boundary_development.py`](../../tests/autogrowth/test_native_adaptive_boundary_development.py)
+- [`tests/autogrowth/test_native_prospective_boundary_candidate_ecology.py`](../../tests/autogrowth/test_native_prospective_boundary_candidate_ecology.py)
 - [`tests/autogrowth/test_native_prospective_evidence_authority_v2.py`](../../tests/autogrowth/test_native_prospective_evidence_authority_v2.py)
+- [`tests/autogrowth/test_native_intrinsic_all_reply_policy.py`](../../tests/autogrowth/test_native_intrinsic_all_reply_policy.py)
 
-They cover surprise-success-only birth, failure-driven residual refinement,
-promotion/certification separation, discovery exclusion, worst-reply gating,
-core precedence, retirement/slot reuse, atomic rollback, exact replay/resume,
-and TD integration.
+The highest-value tripwires are:
 
-## The architectural questions that remain worth discussing
+- native-local training raises if any scheduled/hash selector is reached;
+- adaptive evaluation raises if prototype-gate or host-priority routing is
+  reached;
+- unsupported local evaluation abstains;
+- authority abstention cannot fall through to another policy;
+- choice and audit do not increment exposure, while exact observed TD does;
+- fresh snapshot/resume reproduces action-event digest and authority history;
+- contradiction-driven requests settle before the next REAL certification
+  event;
+- the production training-only source is exactly partitioned 32/32.
 
-1. What is the smallest genuinely local action-selection rule that lets learned
-   value affect future experience while preserving broad exploration and exact
-   replay?
-2. Should core jurisdiction remain a separate prototype gate, or become a
-   prospectively certified native competence shell using the same local
-   evidence ecology?
-3. When do abstract action triplets generalize correctly, and what local,
-   action-relative residual feature should split an alias without injecting an
-   absolute move or board identity?
-4. Should certification require diversity across local context signatures in
-   addition to unique physical receipts, to avoid several correlated patterns
-   certifying from the same small event set?
-5. How should local lineage families compete for reply coverage without adding
-   a global planner or a new infrastructure layer?
+If these pass, run one tiny fresh development canary with numerical-library
+threads fixed to one and an independent output directory. Stop rather than
+extend if native R0 admission fails, the run does not enter R1, legacy routing
+appears, emission/credit identity diverges, certification leaks, replay differs,
+or an active cap is uncontrolled.
 
-The next implementation should answer the first two correctness/control
-questions before expanding candidate machinery. The V15 evidence does not
-justify a broader redesign yet.
+Only after that canary behaves mechanically should several short independent
+seeds be considered. The predeclared mechanism gate requires, at minimum:
+
+- R0 retention;
+- a surviving positive promoted lineage with disjoint post-birth
+  certification;
+- a nonzero AVAILABLE all-reply envelope, handoff, and successor value;
+- a revisited local pattern whose learned score or emitted action changes;
+- at least one exhaustive mate-in-2 conversion;
+- bounded ecology turnover and authority slot reuse;
+- exact snapshot/resume and zero certification leakage.
+
+One development run can pass its mechanism checks, but it cannot make the
+scientific gate pass. A real curriculum run requires replicated independent
+evidence and a separate explicit go decision.
+
+## Remaining architectural questions
+
+1. Does the current local abstraction distinguish strategically different move
+   aliases, or must contradictions learn an action-relative residual split?
+2. Does weakest-reply experience produce enough sibling coverage for a complete
+   all-reply envelope without starving alternative boundary regions?
+3. Does credited value measurably alter later local competition after the same
+   pattern is revisited?
+4. Once R1 is mechanically sound, can R0's content-blind schedule be replaced
+   by the same local curiosity/emission rule without losing its mate-in-1
+   skeleton?
+5. Which parts of the generic Python selection adapter are scientifically
+   material enough to deserve later embodiment as persistent graph circuitry?
+
+Those questions should be answered by the focused tests and bounded canary
+before adding more candidate types, gates, routers, or monitoring machinery.

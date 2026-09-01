@@ -826,3 +826,36 @@ recorded in the V14 entry below as their source identity.
   evidence, not independent efficacy. The runner's narrower
   `scientific_gate_passed` curriculum-status field was false for both runs.
   **Strict NO-GO for a balanced/full run.**
+
+### V16 native-local closure implementation and pre-canary gate
+
+- Implementation commit `444b927f07882ae1c197b6006fad1c0672ef2245`
+  replaces adaptive R1 hash-scheduled experience selection with local
+  UCB-like competition over persistent graph evidence and formal
+  `AnonymousChoiceGenome` emission. Only the emitted exact triplet is grown,
+  and observed TD credit must return that same identity.
+- Adaptive evaluation now uses the corresponding exploration-free local
+  policy for the first move and direct fail-closed V2 successor authority.
+  Unsupported local patterns are excluded before evaluation competition; an
+  empty policy abstains. The old prototype gate, host child-priority cascade,
+  and plastic fallback are tripwired as unreachable in this mode.
+- Same-run authority construction now partitions the 64 training-only rows
+  into 32 digest-selected discovery and 32 disjoint certification rows.
+  Nomination closes first; every certification row is a REAL environmental
+  interaction followed by content-blind atomic settlement before the next
+  row. Receipt, physical-interaction, post-birth, leakage and round-trip audits
+  fail closed.
+- The complete curriculum is not yet claimed pure-native: R0 pretraining still
+  uses content-blind scheduled legal-action exploration, and a domain-generic
+  Python adapter retrieves local graph sources and computes normalization,
+  curiosity and alias rotation before formal choice. Neither path can read a
+  chess answer, held-out outcome, FEN identity, epoch or external oracle.
+- Data-free focused verification passed `87/87`; targeted `py_compile` and
+  `git diff --check` were clean. Independent review found and closed one
+  evaluation blocker (zero-state lucky guessing) and found no remaining
+  canary-blocking routing, closure, replay or snapshot defect.
+- Next gate: one fresh seed `2026090106`, `canary` profile, independent
+  non-existing output directory, one numerical thread, `7200 s`/`8192 MiB`
+  safe-boundary ceilings. A first fresh pass cannot satisfy the explicit
+  snapshot-resume bit; continuation is justified only if the granular learning
+  and closure signals are positive enough to warrant an exact resume check.
