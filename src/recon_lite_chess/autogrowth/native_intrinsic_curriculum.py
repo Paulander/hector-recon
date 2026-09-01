@@ -59,7 +59,6 @@ from .native_all_reply_envelope import (
 )
 from .native_prospective_boundary_candidate_ecology import (
     BoundaryEcologyConfig,
-    BoundaryExpandDemand,
     BoundaryObservation,
     ProspectiveBoundaryCandidateEcology,
     SketchLifecycle,
@@ -4106,24 +4105,6 @@ def _run_r1_arm(
             promotion_requests: list[BoundaryPromotionRequest] = []
             if boundary_ecology is not None:
                 for candidate_id in sorted(pending_boundary_candidate_ids):
-                    candidate = boundary_ecology.sketches.get(candidate_id)
-                    if (
-                        candidate is None
-                        or candidate.state is not SketchLifecycle.ACTIVE
-                        or not candidate.polarity
-                    ):
-                        continue
-                    polarity = AvailabilityState.AVAILABLE
-                    live_states = r0_child_authority._hot_live_states()
-                    if any(
-                        (
-                            state.hypothesis.members,
-                            state.hypothesis.polarity,
-                        ) == (candidate.members, polarity)
-                        for state in live_states.values()
-                    ):
-                        boundary_ecology.retire_redundant(candidate_id)
-                        continue
                     request = _boundary_promotion_request_from_candidate(
                         r0_child_authority,
                         boundary_ecology,
@@ -6581,7 +6562,7 @@ def _boundary_ecology_step(
     pre_outcome_state: AvailabilityState,
     excluded_candidate_ids: Iterable[str] = (),
 ) -> tuple[tuple[BoundaryPromotionRequest, ...], dict[str, Any]]:
-    """Update cheap local sketches and nominate at most one exact promotion."""
+    """Commit only the ecology's learner-owned reaction for one REAL event."""
 
     reference = authority.accepted_real_references[receipt_id]
     observation = _boundary_observation_from_v2_reference(reference)
@@ -6590,86 +6571,55 @@ def _boundary_ecology_step(
         or observation.receipt_id != receipt_id
     ):
         raise RuntimeError("V2 REAL reference key differs from receipt identity")
-    ecology.observe(observation)
-    refinement_ids = tuple(ecology.last_refinement_ids)
-    predicted_correct = (
-        pre_outcome_state is not AvailabilityState.UNKNOWN
-        and (
-            pre_outcome_state is AvailabilityState.AVAILABLE
-        ) is observation.observed
+    live_states = (
+        authority._hot_live_states()
+        if callable(getattr(authority, "_hot_live_states", None))
+        else {
+            cell_id: state
+            for cell_id, state in authority.states.items()
+            if not getattr(state, "retired", False)
+        }
     )
-    surprise_success = bool(
-        observation.observed
-        and pre_outcome_state is not AvailabilityState.AVAILABLE
-    )
-    born = ()
-    if surprise_success:
-        born = ecology.expand(BoundaryExpandDemand(
-            ordinal=observation.ordinal,
-            signal_ids=observation.signal_ids,
-            signal_roles=observation.signal_roles,
-            candidate_width=3,
-            triggering_receipt_id=observation.receipt_id,
-            polarity=True,
-        ))
-
-    promotion: BoundaryPromotionRequest | None = None
-    retired_redundant: list[str] = []
-    excluded = frozenset(str(item) for item in excluded_candidate_ids)
-    for candidate in ecology.rank_candidates():
-        if (
-            candidate.sketch_id in excluded
-            or
-            candidate.state is not SketchLifecycle.ACTIVE
-            or not candidate.polarity
-            or candidate.support_count < ecology.config.minimum_support
-            or candidate.contradiction_count
-            or candidate.lower_bound(ecology.config.wilson_z)
-            < ecology.config.lower_bound_threshold
-        ):
-            continue
-        polarity = AvailabilityState.AVAILABLE
-        pair = (candidate.members, polarity)
-        live_states = (
-            authority._hot_live_states()
-            if callable(getattr(authority, "_hot_live_states", None))
-            else {
-                cell_id: state
-                for cell_id, state in authority.states.items()
-                if not getattr(state, "retired", False)
-            }
-        )
-        if any(
-            (state.hypothesis.members, state.hypothesis.polarity) == pair
+    reaction = ecology.react(
+        observation,
+        pre_outcome_state=pre_outcome_state.value,
+        live_positive_patterns=(
+            state.hypothesis.members
             for state in live_states.values()
-        ):
-            ecology.retire_redundant(candidate.sketch_id)
-            retired_redundant.append(candidate.sketch_id)
-            continue
-        promotion = _boundary_promotion_request_from_candidate(
+            if state.hypothesis.polarity is AvailabilityState.AVAILABLE
+        ),
+        excluded_candidate_ids=excluded_candidate_ids,
+    )
+    promotion = (
+        None
+        if reaction.promotion_candidate_id is None
+        else _boundary_promotion_request_from_candidate(
             authority,
             ecology,
-            candidate.sketch_id,
+            reaction.promotion_candidate_id,
         )
-        if promotion is not None:
-            break
-    return (() if promotion is None else (promotion,)), {
-        "observation_ordinal": observation.ordinal,
-        "observation_receipt_id": observation.receipt_id,
-        "pre_outcome_state": pre_outcome_state.value,
-        "observed_outcome": observation.observed,
-        "local_prediction_error": not predicted_correct,
-        "surprise_success": surprise_success,
-        "contrast_observation": not observation.observed,
-        "born_candidate_ids": [item.sketch_id for item in born],
-        "refinement_candidate_ids": list(refinement_ids),
-        "retired_redundant_candidate_ids": retired_redundant,
-        "promotion_candidate_id": (
-            None if promotion is None else promotion.candidate_id
-        ),
-        "active_candidate_count": ecology.active_sketch_count,
-        "lifetime_birth_count": ecology.lifetime_birth_count,
-    }
+    )
+    if (
+        promotion is not None
+        and promotion.candidate_id != reaction.promotion_candidate_id
+    ):
+        raise RuntimeError("authority substituted the ecology nomination")
+    event = reaction.to_manifest()
+    event["reaction_digest"] = reaction.digest
+    # The exact full-ledger safe-point audit may reject a cheap local
+    # nomination.  That is a fail-closed validation of the same candidate,
+    # never a host-selected replacement.
+    event["promotion_candidate_id"] = (
+        None if promotion is None else promotion.candidate_id
+    )
+    event["promotion_nominated_candidate_id"] = (
+        reaction.promotion_candidate_id
+    )
+    event["promotion_rejected_at_safe_point"] = bool(
+        reaction.promotion_candidate_id is not None and promotion is None
+    )
+    event["active_candidate_count"] = ecology.active_sketch_count
+    return (() if promotion is None else (promotion,)), event
 
 
 def _boundary_observation_from_v2_reference(

@@ -179,6 +179,10 @@ def test_only_a_supported_positive_shell_can_request_authority_promotion() -> No
         request.inspected_receipt_ids
     )
     assert event["promotion_candidate_id"] == request.candidate_id
+    assert event["promotion_nominated_candidate_id"] == request.candidate_id
+    assert event["promotion_rejected_at_safe_point"] is False
+    assert isinstance(event["reaction_digest"], str)
+    assert len(event["reaction_digest"]) == 64
 
 
 def test_positive_promotion_commitment_covers_late_lexical_trigger() -> None:

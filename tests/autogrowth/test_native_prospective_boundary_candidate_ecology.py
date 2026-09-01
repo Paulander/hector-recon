@@ -73,6 +73,72 @@ def test_expand_buds_at_most_three_cheap_competing_sketches():
     assert ecology.active_sketch_count == 3
 
 
+def test_react_owns_birth_and_single_promotion_deterministically() -> None:
+    def run():
+        ecology = ProspectiveBoundaryCandidateEcology()
+        reactions = []
+        for ordinal in range(4):
+            reactions.append(ecology.react(
+                _observation(ordinal, ("alpha", "beta"), True),
+                pre_outcome_state="unknown",
+            ))
+        return ecology, reactions
+
+    first, first_reactions = run()
+    second, second_reactions = run()
+
+    assert [item.to_manifest() for item in first_reactions] == [
+        item.to_manifest() for item in second_reactions
+    ]
+    assert [item.digest for item in first_reactions] == [
+        item.digest for item in second_reactions
+    ]
+    assert first.manifest() == second.manifest()
+    final = first_reactions[-1]
+    assert final.promotion_candidate_id is not None
+    assert final.surprise_success is True
+    assert "ranked_candidate_ids" not in final.to_manifest()
+    with pytest.raises(FrozenInstanceError):
+        final.promotion_candidate_id = "host-substitution"
+
+
+def test_react_retires_authority_duplicate_before_nominating() -> None:
+    ecology = ProspectiveBoundaryCandidateEcology()
+    reaction = None
+    for ordinal in range(4):
+        reaction = ecology.react(
+            _observation(ordinal, ("known-pattern",), True),
+            pre_outcome_state="unknown",
+            live_positive_patterns=(("known-pattern",),),
+        )
+
+    assert reaction is not None
+    assert reaction.promotion_candidate_id is None
+    assert reaction.retired_redundant_candidate_ids
+    retired = tuple(
+        ecology.sketches[candidate_id]
+        for candidate_id in reaction.retired_redundant_candidate_ids
+    )
+    assert all(
+        item.retirement_reason == "redundant_authority_pattern"
+        for item in retired
+    )
+
+
+def test_react_treats_failure_as_contrast_without_birth() -> None:
+    ecology = ProspectiveBoundaryCandidateEcology()
+    reaction = ecology.react(
+        _observation(0, ("coarse",), False),
+        pre_outcome_state="unknown",
+    )
+
+    assert reaction.contrast_observation is True
+    assert reaction.surprise_success is False
+    assert reaction.born_candidate_ids == ()
+    assert reaction.promotion_candidate_id is None
+    assert ecology.lifetime_birth_count == 0
+
+
 def test_expand_never_scans_lifetime_tombstones() -> None:
     def run(*, padded: bool):
         ecology = ProspectiveBoundaryCandidateEcology()

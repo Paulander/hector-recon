@@ -1,9 +1,9 @@
 """Pure, data-free ecology for prospective boundary candidates.
 
 The ecology owns only generic graph-visible identities and grounded Boolean
-receipts.  It can bud a few cheap conjunction sketches before the native
-authority graph is materialized; authority integration is deliberately left
-to its caller.
+receipts.  It buds, refines, retires and nominates cheap local conjunctions;
+the caller may atomically commit the resulting opaque nomination but does not
+choose among the ecology's candidates.
 """
 
 from __future__ import annotations
@@ -541,6 +541,76 @@ class PromotionDecision:
             "receipt_kind": REAL_RECEIPT_KIND,
         }
 
+
+@dataclass(frozen=True)
+class BoundaryReaction:
+    """One deterministic learner-owned reaction to an accepted REAL event."""
+
+    observation_ordinal: int
+    observation_receipt_id: str
+    pre_outcome_state: str
+    observed_outcome: bool
+    local_prediction_error: bool
+    surprise_success: bool
+    contrast_observation: bool
+    born_candidate_ids: tuple[str, ...]
+    refinement_candidate_ids: tuple[str, ...]
+    retired_redundant_candidate_ids: tuple[str, ...]
+    promotion_candidate_id: str | None
+    active_candidate_count: int
+    lifetime_birth_count: int
+
+    def __post_init__(self) -> None:
+        _ordinal(self.observation_ordinal)
+        _text(self.observation_receipt_id, "observation_receipt_id")
+        if self.pre_outcome_state not in {"available", "refuted", "unknown"}:
+            raise ValueError("invalid pre-outcome availability state")
+        for name in (
+            "observed_outcome",
+            "local_prediction_error",
+            "surprise_success",
+            "contrast_observation",
+        ):
+            if type(getattr(self, name)) is not bool:
+                raise ValueError(f"{name} must be Boolean")
+        for name in (
+            "born_candidate_ids",
+            "refinement_candidate_ids",
+            "retired_redundant_candidate_ids",
+        ):
+            values = tuple(getattr(self, name))
+            if tuple(sorted(set(values))) != values:
+                raise ValueError(f"{name} must be canonical")
+        if self.promotion_candidate_id is not None:
+            _text(self.promotion_candidate_id, "promotion_candidate_id")
+        if self.active_candidate_count < 0 or self.lifetime_birth_count < 0:
+            raise ValueError("reaction counts must be non-negative")
+
+    def to_manifest(self) -> dict[str, Any]:
+        return {
+            "observation_ordinal": self.observation_ordinal,
+            "observation_receipt_id": self.observation_receipt_id,
+            "pre_outcome_state": self.pre_outcome_state,
+            "observed_outcome": self.observed_outcome,
+            "local_prediction_error": self.local_prediction_error,
+            "surprise_success": self.surprise_success,
+            "contrast_observation": self.contrast_observation,
+            "born_candidate_ids": list(self.born_candidate_ids),
+            "refinement_candidate_ids": list(
+                self.refinement_candidate_ids
+            ),
+            "retired_redundant_candidate_ids": list(
+                self.retired_redundant_candidate_ids
+            ),
+            "promotion_candidate_id": self.promotion_candidate_id,
+            "active_candidate_count": self.active_candidate_count,
+            "lifetime_birth_count": self.lifetime_birth_count,
+        }
+
+    @property
+    def digest(self) -> str:
+        return _digest(self.to_manifest())
+
 @dataclass(frozen=True)
 class BoundaryEcologyConfig:
     genome_seed: int = 2026071606
@@ -853,6 +923,87 @@ class ProspectiveBoundaryCandidateEcology:
         """
 
         return self._last_refinement_ids
+
+    def react(
+        self,
+        observation: BoundaryObservation,
+        *,
+        pre_outcome_state: str,
+        live_positive_patterns: Iterable[Sequence[str]] = (),
+        excluded_candidate_ids: Iterable[str] = (),
+    ) -> BoundaryReaction:
+        """Own the complete bounded content decision for one REAL event.
+
+        The caller supplies only the authority's pre-outcome tri-state and the
+        positive patterns it has already materialized.  The ecology consumes
+        the REAL observation, performs local birth/refinement/retirement, and
+        nominates at most one promotion.  A caller may commit that exact
+        nomination at a safe point; it is never given the ranked alternatives.
+        """
+
+        if not isinstance(observation, BoundaryObservation):
+            raise TypeError("react requires BoundaryObservation")
+        state = str(
+            getattr(pre_outcome_state, "value", pre_outcome_state)
+        ).strip().lower()
+        if state not in {"available", "refuted", "unknown"}:
+            raise ValueError("invalid pre-outcome availability state")
+        live_patterns = frozenset(
+            tuple(sorted(str(member) for member in members))
+            for members in live_positive_patterns
+        )
+        excluded = frozenset(str(item) for item in excluded_candidate_ids)
+
+        self.observe(observation)
+        refinements = tuple(sorted(self.last_refinement_ids))
+        surprise_success = bool(
+            observation.observed and state != "available"
+        )
+        born: tuple[BoundarySketch, ...] = ()
+        if surprise_success:
+            born = self.expand(BoundaryExpandDemand(
+                ordinal=observation.ordinal,
+                signal_ids=observation.signal_ids,
+                signal_roles=observation.signal_roles,
+                candidate_width=MAX_WIDTH,
+                triggering_receipt_id=observation.receipt_id,
+                polarity=True,
+            ))
+
+        retired: list[str] = []
+        promotion_candidate_id: str | None = None
+        for candidate in self.rank_candidates():
+            if candidate.sketch_id in excluded:
+                continue
+            if candidate.members in live_patterns:
+                self.retire_redundant(candidate.sketch_id)
+                retired.append(candidate.sketch_id)
+                continue
+            if self.promotion_decision(candidate.sketch_id).eligible:
+                promotion_candidate_id = candidate.sketch_id
+                break
+
+        predicted_correct = (
+            state != "unknown"
+            and (state == "available") is observation.observed
+        )
+        return BoundaryReaction(
+            observation_ordinal=observation.ordinal,
+            observation_receipt_id=observation.receipt_id,
+            pre_outcome_state=state,
+            observed_outcome=observation.observed,
+            local_prediction_error=not predicted_correct,
+            surprise_success=surprise_success,
+            contrast_observation=not observation.observed,
+            born_candidate_ids=tuple(sorted(
+                item.sketch_id for item in born
+            )),
+            refinement_candidate_ids=refinements,
+            retired_redundant_candidate_ids=tuple(sorted(retired)),
+            promotion_candidate_id=promotion_candidate_id,
+            active_candidate_count=self.active_sketch_count,
+            lifetime_birth_count=self.lifetime_birth_count,
+        )
 
     def expand(self, demand: BoundaryExpandDemand) -> tuple[BoundarySketch, ...]:
         """Handle one EXPAND and bud at most three scored sketches.
@@ -2325,6 +2476,7 @@ __all__ = [
     "MAX_RETAINED_RESIDUAL_IDS",
     "BoundaryObservation", "GroundedBoundaryObservation", "BoundaryExpandDemand",
     "SketchLifecycle", "BoundarySketch", "PromotionDecision",
+    "BoundaryReaction",
     "BoundaryEcologyConfig", "DuplicatePhysicalReceiptError",
     "ProspectiveBoundaryCandidateEcology", "wilson_lower_bound",
 ]
