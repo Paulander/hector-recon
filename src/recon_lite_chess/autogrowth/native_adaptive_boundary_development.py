@@ -192,6 +192,14 @@ def _result_gate_fields(result_payload: Mapping[str, Any]) -> dict[str, Any]:
     validation = validation if isinstance(validation, Mapping) else {}
     retention = primary.get("r0_validation_retention")
     retention = retention if isinstance(retention, Mapping) else {}
+    frozen_retention = primary.get("r0_frozen_native_policy_retention")
+    frozen_retention = (
+        frozen_retention if isinstance(frozen_retention, Mapping) else retention
+    )
+    shell_coverage = primary.get("r0_v2_shell_coverage")
+    shell_coverage = (
+        shell_coverage if isinstance(shell_coverage, Mapping) else None
+    )
     authority = primary.get("v2_child_authority")
     authority = authority if isinstance(authority, Mapping) else {}
     lineages = authority.get("adaptive_positive_lineages")
@@ -202,21 +210,29 @@ def _result_gate_fields(result_payload: Mapping[str, Any]) -> dict[str, Any]:
         if isinstance(recent_actions, list)
         else []
     )
-    prior_action_by_position: dict[int, Mapping[str, Any]] = {}
+    # A position being revisited is not evidence that the learned policy was
+    # revisited: native-local exploration can emit a fresh pattern each time.
+    # Require the exact local pattern identity to recur before reporting a
+    # score/action change.  A positive exposure count can corroborate that
+    # recurrence, but cannot replace the prior same-identity check.
+    prior_action_by_pattern: dict[str, Mapping[str, Any]] = {}
     revisited_score_or_action_change = False
     for event in recent_actions:
         if not isinstance(event, Mapping):
             continue
-        position_index = event.get("position_index")
-        if not isinstance(position_index, int):
+        pattern_id = event.get("pattern_id")
+        if not isinstance(pattern_id, str) or not pattern_id:
             continue
-        prior = prior_action_by_position.get(position_index)
-        if prior is not None and (
+        prior = prior_action_by_pattern.get(pattern_id)
+        same_pattern_id = bool(
+            prior is not None and prior.get("pattern_id") == pattern_id
+        )
+        if same_pattern_id and (
             prior.get("move_uci") != event.get("move_uci")
             or prior.get("raw_value") != event.get("raw_value")
         ):
             revisited_score_or_action_change = True
-        prior_action_by_position[position_index] = event
+        prior_action_by_pattern[pattern_id] = event
     ecology = training.get("boundary_ecology")
     ecology = ecology if isinstance(ecology, Mapping) else {}
     structural_events = authority.get("structural_events")
@@ -278,7 +294,11 @@ def _result_gate_fields(result_payload: Mapping[str, Any]) -> dict[str, Any]:
             int(validation.get("conversion_count", 0) or 0) > 0
         ),
         "r0_validation_retained": bool(
-            float(retention.get("accuracy", 0.0) or 0.0) == 1.0
+            # Keep the compatibility check name, but use the explicitly
+            # frozen native-policy metric when present.  In adaptive V2 the
+            # old retention field is shell admission coverage and may fall
+            # as the shell evolves without indicating graph forgetting.
+            float(frozen_retention.get("accuracy", 0.0) or 0.0) == 1.0
         ),
         "authority_roundtrip_and_history_exact": bool(
             authority.get("serialization_roundtrip_exact") is True
@@ -312,6 +332,10 @@ def _result_gate_fields(result_payload: Mapping[str, Any]) -> dict[str, Any]:
         # seeds.  A single local process must never call itself scientific.
         "scientific_gate_passed": False,
         "multi_seed_scientific_adjudication_required": True,
+        "r0_validation_retention_metric": retention.get("metric_name"),
+        "r0_validation_retention_semantics": retention.get("metric_semantics"),
+        "r0_frozen_native_policy_retention": frozen_retention,
+        "r0_v2_shell_coverage": shell_coverage,
     }
 
 
@@ -368,7 +392,22 @@ def _development_protocol(
         "r1_action_order_field_used": False,
         "legacy_hash_or_round_robin_first_move_picker_used": False,
         "prototype_gate_used_for_adaptive_runtime_routing": False,
-        "stage_gates_are_harness_stop_go_only": True,
+        # Validation-selected stage decisions also mutate lifecycle state and
+        # open/close curriculum rungs.  Keep the historical key for readers,
+        # but make its value truthful instead of reducing those decisions to
+        # a stop/go label.
+        "stage_gates_are_harness_stop_go_only": False,
+        "stage_gates_are_harness_controlled": True,
+        "validation_controls_maturity_consolidation_freeze_and_stage_entry": (
+            True
+        ),
+        "validation_selected_stage_mutations": [
+            "maturity",
+            "value_consolidation",
+            "parameter_freeze",
+            "curriculum_stage_entry",
+        ],
+        "validation_does_not_select_runtime_actions": True,
         "resource_ceilings": {
             "wall_seconds_safe_epoch_boundary": (
                 config.development_wall_ceiling_seconds

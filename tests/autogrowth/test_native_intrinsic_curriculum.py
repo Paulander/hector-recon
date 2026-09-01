@@ -490,6 +490,148 @@ def test_top_level_r0_stage_entry_uses_validation_and_reports_regression_last(
     assert progress["r0"]["regression_withheld_until_final"] is True
 
 
+def test_v2_runtime_integrity_failure_cannot_rescue_r1_with_legacy_gate(
+    monkeypatch, tmp_path
+) -> None:
+    """V2 admission must fail closed even when the old gate is mature."""
+
+    pools = _Pools(
+        r0_train=(MATE_ONE_FEN,),
+        r0_validation=(MATE_ONE_FEN,),
+        r0_regression=(MATE_ONE_FEN,),
+        gate_train_decoys=(R1_RETIRED_DEVELOPMENT_FENS[1],),
+        gate_validation_decoys=(R1_RETIRED_DEVELOPMENT_FENS[2],),
+        gate_regression_decoys=(R1_RETIRED_DEVELOPMENT_FENS[3],),
+        r1_train=(R1_RETIRED_DEVELOPMENT_FENS[4],),
+        r1_validation=(R1_RETIRED_DEVELOPMENT_FENS[5],),
+        r1_regression=(R1_RETIRED_DEVELOPMENT_FENS[6],),
+        r0_train_strata=("test",),
+        r0_validation_strata=("test",),
+        r0_regression_strata=("test",),
+        r0_excluded_fens=(),
+        r0_pool_mode="test",
+        r1_train_strata=("test",),
+        r1_validation_strata=("test",),
+        r1_regression_strata=("test",),
+        r1_pool_mode="test",
+    )
+    graph = _graph()
+
+    class Gate:
+        mature = True
+
+        @staticmethod
+        def to_dict() -> dict[str, object]:
+            return {"mature": True}
+
+    class Authority:
+        base = SimpleNamespace(
+            r0=SimpleNamespace(graph=graph, frozen_triplet_ids=frozenset())
+        )
+
+        @staticmethod
+        def open_virtual(*_args, **_kwargs):
+            raise AssertionError("failed V2 authority should not be queried")
+
+        @staticmethod
+        def continuation_digest() -> str:
+            return "failed-v2-integrity"
+
+    monkeypatch.setattr(
+        curriculum_module,
+        "_build_pools",
+        lambda _cfg: pools,
+    )
+    monkeypatch.setattr(
+        curriculum_module,
+        "_train_r0",
+        lambda *_args, **_kwargs: {
+            "episodes": 1,
+            "observed_mate_count": 1,
+            "observed_nonterminal_count": 0,
+            "observed_failure_count": 0,
+            "formal_confirmation_failure_count": 0,
+            "stopped_epoch": 1,
+            "validation_checkpoints": [],
+            "teacher_positive_move_sets_consumed": 0,
+            "forced_first_move_labels_consumed": 0,
+            "graph_after_training": {},
+            "duration_seconds": 0.0,
+        },
+    )
+
+    def evaluate(_graph, fens, **_kwargs):
+        return {
+            "position_count": len(tuple(fens)),
+            "correct_count": len(tuple(fens)),
+            "accuracy": 1.0,
+            "null_selection_count": 0,
+            "illegal_move_count": 0,
+            "stalemate_count": 0,
+            "rook_loss_count": 0,
+            "samples": [],
+        }
+
+    monkeypatch.setattr(curriculum_module, "_evaluate_r0", evaluate)
+    monkeypatch.setattr(
+        curriculum_module,
+        "_fit_r0_gate",
+        lambda *_args, **_kwargs: (Gate(), {"selection_split": "gate_validation"}),
+    )
+    monkeypatch.setattr(
+        curriculum_module,
+        "_evaluate_r0_gate_regression",
+        lambda *_args, **_kwargs: {
+            "true_positive": 1,
+            "false_positive": 0,
+        },
+    )
+    monkeypatch.setattr(
+        curriculum_module,
+        "_clone_parity",
+        lambda *_args, **_kwargs: {},
+    )
+    monkeypatch.setattr(
+        curriculum_module,
+        "_build_r0_replay_memory",
+        lambda *_args, **_kwargs: ((), {}),
+    )
+    monkeypatch.setattr(
+        curriculum_module,
+        "_native_v2_r0_admission_audit",
+        lambda *_args, **_kwargs: {
+            "runtime_integrity_pass": False,
+            "pass": False,
+        },
+    )
+
+    def forbidden_arm(*_args, **_kwargs):
+        raise AssertionError("legacy gate rescued failed V2 integrity")
+
+    monkeypatch.setattr(curriculum_module, "_run_r1_arm", forbidden_arm)
+
+    result = run_native_intrinsic_curriculum(
+        config=NativeIntrinsicCurriculumConfig(
+            seed=999,
+            run_r1=True,
+            r0_availability_mode=V2_PROSPECTIVE_AVAILABILITY,
+            r0_boundary_ecology_enabled=True,
+            output_path=str(tmp_path / "result.json"),
+            progress_path=str(tmp_path / "progress.json"),
+        ),
+        r0_child_authority_factory=lambda *_args: (
+            Authority(),
+            {"factory_audit": True},
+        ),
+    )
+
+    assert result.payload["r0_child_authority"]["native_r0_admission"][
+        "runtime_integrity_pass"
+    ] is False
+    assert result.payload["r1_arms"] == {}
+    assert result.payload["decision"]["r1_executed"] is False
+
+
 def test_live_progress_removes_stale_regression_from_reused_file(tmp_path) -> None:
     progress_path = tmp_path / "progress.json"
     progress_path.write_text(
@@ -1978,7 +2120,7 @@ def _real_ecology_authority() -> tuple[
     """Build a tiny actual V2 authority from code-defined chess positions."""
 
     r1_board = chess.Board(_REAL_ECOLOGY_R1_FEN)
-    target_rows: list[tuple[chess.Board, chess.Move]] = []
+    target_rows: list[tuple[chess.Board, chess.Move, float]] = []
     # Deterministically script enough test-only actions into this synthetic
     # source graph for every selected REAL challenge to have a native graph
     # actuation.  ``_mate_moves`` is used only to construct this code-defined
@@ -1995,7 +2137,11 @@ def _real_ecology_authority() -> tuple[
                 if mating_moves
                 else min(successor.legal_moves, key=lambda item: item.uci())
             )
-            target_rows.append((successor, action))
+            target_rows.append((
+                successor,
+                action,
+                1.0 if mating_moves else -1.0,
+            ))
 
     negative_board = chess.Board(_REAL_ECOLOGY_NEGATIVE_FEN)
     negative_action = next(
@@ -2016,12 +2162,15 @@ def _real_ecology_authority() -> tuple[
             terminal_score_normalization="sqrt",
         )
     )
-    for board, action in (*target_rows, (negative_board, negative_action)):
+    for board, action, observed_td in (
+        *target_rows,
+        (negative_board, negative_action, -1.0),
+    ):
         for _ in range(5):
             graph.apply_intrinsic_td(
                 board,
                 action,
-                td_error=1.0,
+                td_error=observed_td,
                 stage_diagnostic="real_v2_ecology_parity",
             )
     graph.mature_existing_graph()

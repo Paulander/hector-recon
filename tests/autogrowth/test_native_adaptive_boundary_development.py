@@ -365,6 +365,8 @@ def test_complete_per_run_mechanism_evidence_never_claims_scientific_gate() -> N
                     "local_action_recent_events": [
                         {
                             "position_index": 0,
+                            "pattern_id": "pattern:revisited",
+                            "pattern_exposure": 0,
                             "move_uci": "a1a2",
                             "raw_value": 0.0,
                             "triplet_id": "t0",
@@ -372,6 +374,8 @@ def test_complete_per_run_mechanism_evidence_never_claims_scientific_gate() -> N
                         },
                         {
                             "position_index": 0,
+                            "pattern_id": "pattern:revisited",
+                            "pattern_exposure": 1,
                             "move_uci": "a1a2",
                             "raw_value": 0.25,
                             "triplet_id": "t1",
@@ -420,6 +424,93 @@ def test_complete_per_run_mechanism_evidence_never_claims_scientific_gate() -> N
     )
 
 
+def test_fresh_pattern_turnover_is_not_reported_as_policy_revisit() -> None:
+    """Repeated positions with fresh local patterns are not a revisit."""
+
+    payload = {
+        "decision": {
+            "r0_pass": True,
+            "r1_executed": True,
+            "r1_pass": True,
+        },
+        "r1_arms": {
+            "full_intrinsic": {
+                "training": {
+                    "r1_action_selection_mode": R1_ACTION_SELECTION_LOCAL_RECON,
+                    "local_action_recent_events": [
+                        {
+                            "position_index": 0,
+                            "pattern_id": "pattern:fresh-a",
+                            "pattern_exposure": 0,
+                            "move_uci": "a1a2",
+                            "raw_value": 0.0,
+                            "triplet_id": "t0",
+                            "credited_triplet_id": "t0",
+                        },
+                        {
+                            "position_index": 0,
+                            "pattern_id": "pattern:fresh-b",
+                            "pattern_exposure": 0,
+                            "move_uci": "a1a3",
+                            "raw_value": 0.25,
+                            "triplet_id": "t1",
+                            "credited_triplet_id": "t1",
+                        },
+                    ],
+                    "local_candidate_cap_bound": False,
+                    "resumed_from_snapshot": True,
+                    "boundary_ecology": {
+                        "tombstone_count": 1,
+                        "active_candidate_count": 2,
+                        "active_candidate_cap": 32,
+                    },
+                    "all_reply_envelope_available_count": 1,
+                    "child_handoff_count": 1,
+                    "successor_value_sum": 0.25,
+                },
+                "validation": {"conversion_count": 1},
+                "r0_frozen_native_policy_retention": {"accuracy": 1.0},
+                "r0_validation_retention": {
+                    "accuracy": 0.375,
+                    "metric_name": "r0_v2_shell_coverage",
+                    "metric_semantics": (
+                        "native_v2_shell_available_mate_coverage;"
+                        "not_frozen_graph_retention"
+                    ),
+                },
+                "r0_v2_shell_coverage": {"accuracy": 0.375},
+                "v2_child_authority": {
+                    "serialization_roundtrip_exact": True,
+                    "full_history_boundary_exact": True,
+                    "structural_events": [
+                        {"retired_cell_ids": ["old"], "child_ids": ["new"]}
+                    ],
+                    "adaptive_positive_lineages": {
+                        "lineage_count": 1,
+                        "certified_node_count": 1,
+                        "postbirth_certification_receipt_count": 1,
+                        "all_certification_disjoint": True,
+                        "all_certification_postbirth": True,
+                        "certification_leak_count": 0,
+                    },
+                },
+            }
+        },
+    }
+
+    gates = adaptive._result_gate_fields(payload)
+
+    assert gates["r0_validation_retention_semantics"].startswith(
+        "native_v2_shell_available"
+    )
+    assert gates["r0_frozen_native_policy_retention"]["accuracy"] == 1.0
+    assert gates["r0_v2_shell_coverage"]["accuracy"] == 0.375
+    assert gates["mechanism_checks"][
+        "revisited_local_score_or_action_changed"
+    ] is False
+    assert gates["per_run_mechanism_gate_passed"] is False
+
+
 def test_run_marks_result_payload_without_running_curriculum(
     tmp_path: Path, monkeypatch
 ) -> None:
@@ -438,6 +529,12 @@ def test_run_marks_result_payload_without_running_curriculum(
     assert protocol["no_learner_oracle"] is True
     assert protocol["harness_exhaustive_evaluation_used"] is True
     assert protocol["harness_evaluation_influences_learning"] is False
+    assert protocol["stage_gates_are_harness_stop_go_only"] is False
+    assert protocol["stage_gates_are_harness_controlled"] is True
+    assert protocol[
+        "validation_controls_maturity_consolidation_freeze_and_stage_entry"
+    ] is True
+    assert protocol["validation_does_not_select_runtime_actions"] is True
 
 
 def test_cli_writes_independent_schema_and_source_identity(

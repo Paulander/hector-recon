@@ -758,7 +758,12 @@ def run_native_intrinsic_curriculum(
             admission_audit=native_r0_admission,
         )
         or (
-            r0_gate is not None
+            # The legacy prototype gate is a compatibility path for
+            # non-V2 availability modes only.  In V2, native authority
+            # integrity is the sole admission jurisdiction; allowing this
+            # mature host gate to rescue a failed audit would fail open.
+            cfg.r0_availability_mode != V2_PROSPECTIVE_AVAILABILITY
+            and r0_gate is not None
             and (
                 r0_gate.mature
                 or cfg.r0_availability_mode == "virtual_frame_verified"
@@ -1153,6 +1158,29 @@ def run_native_intrinsic_curriculum(
             ),
             "native_r0_runtime_integrity_reads_outcome_labels": False,
             "r1_checkpoint_retention_split": "r0_validation",
+            "r1_checkpoint_retention_metric": (
+                "r0_v2_shell_coverage_compatibility_alias"
+                if (
+                    r0_child_authority is not None
+                    and cfg.r0_availability_mode == V2_PROSPECTIVE_AVAILABILITY
+                    and cfg.r1_action_selection_mode
+                    == R1_ACTION_SELECTION_LOCAL_RECON
+                )
+                else "r0_validation_retention"
+            ),
+            "r0_validation_retention_is_frozen_native_policy": not (
+                r0_child_authority is not None
+                and cfg.r0_availability_mode == V2_PROSPECTIVE_AVAILABILITY
+                and cfg.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
+            ),
+            "r0_frozen_native_policy_retention_reported": True,
+            "r0_v2_shell_coverage_reported": bool(
+                r0_child_authority is not None
+                and cfg.r0_availability_mode == V2_PROSPECTIVE_AVAILABILITY
+                and cfg.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
+            ),
             "regression_queries_in_progress": False,
             "r1_regression_withheld_until_final_evaluation": True,
             "r0_regression_withheld_until_final_evaluation": True,
@@ -2950,6 +2978,18 @@ def _write_live_r1_progress(
         "r0_validation_retention_accuracy": checkpoint.get(
             "r0_validation_retention_accuracy"
         ),
+        "r0_validation_retention_metric": checkpoint.get(
+            "r0_validation_retention_metric"
+        ),
+        "r0_validation_retention_semantics": checkpoint.get(
+            "r0_validation_retention_semantics"
+        ),
+        "r0_frozen_native_policy_retention_accuracy": checkpoint.get(
+            "r0_frozen_native_policy_retention_accuracy"
+        ),
+        "r0_v2_shell_coverage_accuracy": checkpoint.get(
+            "r0_v2_shell_coverage_accuracy"
+        ),
         "regression_withheld_until_final": True,
         "child_handoff_count": checkpoint.get("child_handoff_count", 0),
         "snapshot_path": str(snapshot_path),
@@ -3083,6 +3123,31 @@ def _attach_terminal_r1_regression_report(
             allow_frozen_core=(core_graph is not None and core_gate is not None),
             action_selection_mode=config.r1_action_selection_mode,
         )
+        v2_shell_coverage_active = bool(
+            context["r0_child_authority"] is not None
+            and config.r1_action_selection_mode
+            == R1_ACTION_SELECTION_LOCAL_RECON
+        )
+        final_r0_regression_retention = _annotate_r0_metric(
+            final_r0_regression_retention,
+            metric_name=(
+                "r0_v2_shell_coverage"
+                if v2_shell_coverage_active
+                else "r0_regression_retention"
+            ),
+            metric_semantics=(
+                "native_v2_shell_available_mate_coverage;"
+                "not_frozen_graph_retention"
+                if v2_shell_coverage_active
+                else "regression_retention_for_current_legacy_routing"
+            ),
+            source=(
+                "native_v2_authority_graph_emission"
+                if v2_shell_coverage_active
+                else "current_r1_routing"
+            ),
+            compatibility_key="r0_regression_retention",
+        )
     finally:
         _restore_disabled_composites(graph, heldout_disabled_state)
 
@@ -3094,6 +3159,13 @@ def _attach_terminal_r1_regression_report(
     arm["regression"] = final_regression
     arm["r0_retention"] = final_r0_regression_retention
     arm["r0_regression_retention"] = final_r0_regression_retention
+    if (
+        context["r0_child_authority"] is not None
+        and config.r1_action_selection_mode == R1_ACTION_SELECTION_LOCAL_RECON
+    ):
+        arm["r0_v2_shell_regression_coverage"] = (
+            final_r0_regression_retention
+        )
     arm["regression_withheld_until_final"] = True
     arm["regression_pass_report_only"] = final_regression_pass_report_only
     routing_ablation = arm.get("routing_ablation")
@@ -3134,6 +3206,12 @@ def _run_r1_arm(
     arm = arm_spec or _legacy_r1_arm(arm_name, config)
     if arm.name != arm_name:
         raise ValueError(f"arm name mismatch: {arm.name} != {arm_name}")
+    # Capture the pre-R1 source before the arm graph is mutated.  Adaptive V2
+    # replaces this with the authority-owned immutable source below; legacy
+    # arms retain this isolated post-R0 copy for explicit policy retention.
+    initial_frozen_native_policy_graph = copy.deepcopy(
+        r0_core_graph if r0_core_graph is not None else graph
+    )
     graph.config = replace(
         graph.config,
         score_hierarchy_edge_weights=arm.hierarchy_edge_scoring,
@@ -3211,6 +3289,15 @@ def _run_r1_arm(
             r0_core_graph.triplet_ids
         ):
             raise ValueError("protected R0 core triplet ids are not in its graph")
+    frozen_native_policy_graph = (
+        _copy_frozen_native_r0_graph(
+            graph,
+            r0_child_authority=r0_child_authority,
+            r0_core_graph=r0_core_graph,
+        )
+        if r0_child_authority is not None
+        else initial_frozen_native_policy_graph
+    )
     boundary_ecology: ProspectiveBoundaryCandidateEcology | None = None
     if config.r0_boundary_ecology_enabled:
         if r0_child_authority is None:
@@ -4002,18 +4089,71 @@ def _run_r1_arm(
                 ),
                 action_selection_mode=config.r1_action_selection_mode,
             )
+            v2_shell_coverage_active = bool(
+                r0_child_authority is not None
+                and config.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
+            )
+            validation_retention = _annotate_r0_metric(
+                validation_retention,
+                metric_name=(
+                    "r0_v2_shell_coverage"
+                    if v2_shell_coverage_active
+                    else "r0_validation_retention"
+                ),
+                metric_semantics=(
+                    "native_v2_shell_available_mate_coverage;"
+                    "not_frozen_graph_retention"
+                    if v2_shell_coverage_active
+                    else "validation_retention_for_current_legacy_routing"
+                ),
+                source=(
+                    "native_v2_authority_graph_emission"
+                    if v2_shell_coverage_active
+                    else "current_r1_routing"
+                ),
+                compatibility_key="r0_validation_retention",
+            )
+            frozen_native_policy_retention = (
+                _evaluate_frozen_native_r0_policy(
+                    frozen_native_policy_graph,
+                    pools.r0_validation,
+                    max_samples=0,
+                    source=(
+                        "authority.base.r0.graph"
+                        if r0_child_authority is not None
+                        else "isolated_post_r0_graph"
+                    ),
+                )
+            )
             latest_checkpoint = {
                 "epoch": epoch_number,
                 "validation_conversion_rate": metrics["conversion_rate"],
                 "validation_stratum_conversion": metrics["stratum_conversion"],
                 "child_handoff_count": counters["child_handoffs"],
                 # Keep the historical key for consumers, but make its
-                # semantics explicit: it is validation retention, not a
-                # hidden regression result.
+                # semantics explicit: in adaptive V2 this compatibility key
+                # reports shell coverage, not frozen-graph forgetting.
                 "r0_retention_accuracy": validation_retention["accuracy"],
                 "r0_validation_retention_accuracy": validation_retention[
                     "accuracy"
                 ],
+                "r0_validation_retention_metric": validation_retention[
+                    "metric_name"
+                ],
+                "r0_validation_retention_semantics": validation_retention[
+                    "metric_semantics"
+                ],
+                "r0_frozen_native_policy_retention_accuracy": (
+                    None
+                    if frozen_native_policy_retention is None
+                    else frozen_native_policy_retention["accuracy"]
+                ),
+                "r0_v2_shell_coverage_accuracy": (
+                    validation_retention["accuracy"]
+                    if v2_shell_coverage_active
+                    else None
+                ),
             }
             validation_mastery = bool(
                 arm.bootstrap_enabled
@@ -4180,6 +4320,10 @@ def _run_r1_arm(
             r0_core_triplet_ids=r0_core_triplet_ids,
             action_selection_mode=config.r1_action_selection_mode,
         )
+    v2_shell_coverage_active = bool(
+        r0_child_authority is not None
+        and config.r1_action_selection_mode == R1_ACTION_SELECTION_LOCAL_RECON
+    )
     final_r0_validation_retention = _evaluate_r0(
         graph,
         pools.r0_validation,
@@ -4192,6 +4336,38 @@ def _run_r1_arm(
         r0_core_triplet_ids=r0_core_triplet_ids,
         allow_frozen_core=(r0_core_graph is not None and r0_core_gate is not None),
         action_selection_mode=config.r1_action_selection_mode,
+    )
+    final_r0_validation_retention = _annotate_r0_metric(
+        final_r0_validation_retention,
+        metric_name=(
+            "r0_v2_shell_coverage"
+            if v2_shell_coverage_active
+            else "r0_validation_retention"
+        ),
+        metric_semantics=(
+            "native_v2_shell_available_mate_coverage;"
+            "not_frozen_graph_retention"
+            if v2_shell_coverage_active
+            else "validation_retention_for_current_legacy_routing"
+        ),
+        source=(
+            "native_v2_authority_graph_emission"
+            if v2_shell_coverage_active
+            else "current_r1_routing"
+        ),
+        compatibility_key="r0_validation_retention",
+    )
+    final_r0_frozen_native_policy_retention = (
+        _evaluate_frozen_native_r0_policy(
+            frozen_native_policy_graph,
+            pools.r0_validation,
+            max_samples=config.max_samples,
+            source=(
+                "authority.base.r0.graph"
+                if r0_child_authority is not None
+                else "isolated_post_r0_graph"
+            ),
+        )
     )
     if defer_regression_evaluation:
         final_r0_regression_retention = None
@@ -4214,6 +4390,26 @@ def _run_r1_arm(
                 r0_core_graph is not None and r0_core_gate is not None
             ),
             action_selection_mode=config.r1_action_selection_mode,
+        )
+        final_r0_regression_retention = _annotate_r0_metric(
+            final_r0_regression_retention,
+            metric_name=(
+                "r0_v2_shell_coverage"
+                if v2_shell_coverage_active
+                else "r0_regression_retention"
+            ),
+            metric_semantics=(
+                "native_v2_shell_available_mate_coverage;"
+                "not_frozen_graph_retention"
+                if v2_shell_coverage_active
+                else "regression_retention_for_current_legacy_routing"
+            ),
+            source=(
+                "native_v2_authority_graph_emission"
+                if v2_shell_coverage_active
+                else "current_r1_routing"
+            ),
+            compatibility_key="r0_regression_retention",
         )
         final_regression_pass_report_only = bool(
             final_regression["conversion_rate"] >= config.r1_mastery_threshold
@@ -4471,6 +4667,22 @@ def _run_r1_arm(
                 if r0_core_graph is None
                 else _hash_json(r0_core_graph.canonical_semantic_manifest())
             ),
+            "r0_validation_retention_metric": final_r0_validation_retention[
+                "metric_name"
+            ],
+            "r0_validation_retention_semantics": final_r0_validation_retention[
+                "metric_semantics"
+            ],
+            "r0_frozen_native_policy_retention_accuracy": (
+                None
+                if final_r0_frozen_native_policy_retention is None
+                else final_r0_frozen_native_policy_retention["accuracy"]
+            ),
+            "r0_v2_shell_coverage_accuracy": (
+                final_r0_validation_retention["accuracy"]
+                if v2_shell_coverage_active
+                else None
+            ),
             "r0_child_dispatch_cache_entry_count": len(child_dispatch_cache),
             "r0_child_dispatch_cache_hit_count": counters["child_dispatch_cache_hits"],
             "r0_child_dispatch_cache_miss_count": counters["child_dispatch_cache_misses"],
@@ -4641,6 +4853,14 @@ def _run_r1_arm(
         # checkpoint and maturity uses the explicit validation field below.
         "r0_retention": final_r0_regression_retention,
         "r0_validation_retention": final_r0_validation_retention,
+        "r0_frozen_native_policy_retention": (
+            final_r0_frozen_native_policy_retention
+        ),
+        "r0_v2_shell_coverage": (
+            final_r0_validation_retention
+            if v2_shell_coverage_active
+            else None
+        ),
         "r0_regression_retention": final_r0_regression_retention,
         "graph": graph.learned_state_audit(),
         "credit": credit.snapshot(),
@@ -4923,6 +5143,8 @@ def _build_r0_replay_memory(
 
 def _arm_progress_summary(arm: Mapping[str, Any]) -> dict[str, Any]:
     validation_retention = arm["r0_validation_retention"]
+    frozen_retention = arm.get("r0_frozen_native_policy_retention")
+    shell_coverage = arm.get("r0_v2_shell_coverage")
     return {
         "training_episodes": arm["training"]["episodes"],
         "stopped_epoch": arm["training"]["stopped_epoch"],
@@ -4932,6 +5154,22 @@ def _arm_progress_summary(arm: Mapping[str, Any]) -> dict[str, Any]:
         "validation_conversion_rate": arm["validation"]["conversion_rate"],
         "r0_retention_accuracy": validation_retention["accuracy"],
         "r0_validation_retention_accuracy": validation_retention["accuracy"],
+        "r0_validation_retention_metric": validation_retention.get(
+            "metric_name", "r0_validation_retention"
+        ),
+        "r0_validation_retention_semantics": validation_retention.get(
+            "metric_semantics", "legacy_unannotated_retention"
+        ),
+        "r0_frozen_native_policy_retention_accuracy": (
+            None
+            if not isinstance(frozen_retention, Mapping)
+            else frozen_retention.get("accuracy")
+        ),
+        "r0_v2_shell_coverage_accuracy": (
+            None
+            if not isinstance(shell_coverage, Mapping)
+            else shell_coverage.get("accuracy")
+        ),
         "regression_withheld_until_final": True,
     }
 
@@ -5416,6 +5654,84 @@ def _evaluate_r0(
         ),
         "samples": rows,
     }
+
+
+def _copy_frozen_native_r0_graph(
+    graph: NativeReConKRKGraph,
+    *,
+    r0_child_authority: Any | None = None,
+    r0_core_graph: NativeReConKRKGraph | None = None,
+) -> NativeReConKRKGraph | None:
+    """Return an isolated copy of the immutable native R0 policy source.
+
+    Adaptive V2 evaluation has two distinct jurisdictions: the frozen R0
+    graph and the prospective V2 shell.  The authority owns the former, so
+    resolve that source explicitly instead of reusing a shell query as a
+    retention measurement.  A legacy core copy remains the source for
+    compatibility arms; absent either, the arm's graph is the pre-R1 source.
+    """
+
+    if r0_child_authority is not None:
+        authority_r0 = getattr(
+            getattr(r0_child_authority, "base", None), "r0", None
+        )
+        authority_graph = getattr(authority_r0, "graph", None)
+        if authority_graph is None:
+            return None
+        return copy.deepcopy(authority_graph)
+    source = r0_core_graph if r0_core_graph is not None else graph
+    return copy.deepcopy(source)
+
+
+def _annotate_r0_metric(
+    metrics: Mapping[str, Any] | None,
+    *,
+    metric_name: str,
+    metric_semantics: str,
+    source: str,
+    compatibility_key: str | None = None,
+) -> dict[str, Any] | None:
+    """Attach an explicit jurisdiction to a compatibility R0 metric."""
+
+    if metrics is None:
+        return None
+    annotated = dict(metrics)
+    annotated.update({
+        "metric_name": metric_name,
+        "metric_semantics": metric_semantics,
+        "metric_source": source,
+    })
+    if compatibility_key is not None:
+        annotated["compatibility_key"] = compatibility_key
+    return annotated
+
+
+def _evaluate_frozen_native_r0_policy(
+    frozen_graph: NativeReConKRKGraph | None,
+    fens: Sequence[str],
+    *,
+    max_samples: int,
+    source: str = "isolated_frozen_r0_graph",
+) -> dict[str, Any] | None:
+    """Measure retention of the frozen graph, excluding the V2 shell."""
+
+    if frozen_graph is None:
+        return None
+    metrics = _evaluate_r0(
+        frozen_graph,
+        fens,
+        max_samples=max_samples,
+        action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+    )
+    return _annotate_r0_metric(
+        metrics,
+        metric_name="r0_frozen_native_policy_retention",
+        metric_semantics=(
+            "frozen_native_r0_graph_policy_retention;"
+            "v2_shell_excluded"
+        ),
+        source=source,
+    )
 
 
 def _evaluate_r1(
