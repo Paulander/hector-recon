@@ -95,6 +95,9 @@ R1_ACTION_SELECTION_MODES = (
     R1_ACTION_SELECTION_SCHEDULED,
     R1_ACTION_SELECTION_LOCAL_RECON,
 )
+R0_ACTION_SELECTION_SCHEDULED = R1_ACTION_SELECTION_SCHEDULED
+R0_ACTION_SELECTION_LOCAL_RECON = R1_ACTION_SELECTION_LOCAL_RECON
+R0_ACTION_SELECTION_MODES = R1_ACTION_SELECTION_MODES
 # Short aliases keep the configuration readable for development callers while
 # the canonical values remain explicit in snapshots and fingerprints.
 R1_ACTION_ORDER_LEGACY = R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC
@@ -204,10 +207,12 @@ class NativeIntrinsicCurriculumConfig:
     run_redundant_child_ablation: bool = False
     mature_child_priority: bool = True
     r0_availability_mode: str = "virtual_frame_verified"
+    r0_action_selection_mode: str = R0_ACTION_SELECTION_SCHEDULED
     r1_reply_policy: str = R1_REPLY_POLICY_SAMPLED_ROUND_ROBIN
     r1_action_selection_mode: str = R1_ACTION_SELECTION_SCHEDULED
     r1_action_order: str = R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC
     r0_boundary_ecology_enabled: bool = False
+    validation_controls_stage_transitions: bool = True
     r1_mechanistic_factorial: bool = False
     r1_placebo_child_value: float = 0.5
     r1_shuffle_seed: int = 20260722
@@ -250,6 +255,18 @@ class NativeIntrinsicCurriculumConfig:
                 "local_recon_optimism"
             )
         object.__setattr__(self, "r1_action_selection_mode", selection_mode)
+        r0_selection_mode = str(self.r0_action_selection_mode).strip().lower()
+        r0_selection_mode = selection_aliases.get(
+            r0_selection_mode, r0_selection_mode
+        )
+        if r0_selection_mode not in R0_ACTION_SELECTION_MODES:
+            raise ValueError(
+                "r0_action_selection_mode must be scheduled or "
+                "local_recon_optimism"
+            )
+        object.__setattr__(
+            self, "r0_action_selection_mode", r0_selection_mode
+        )
         action_order = str(self.r1_action_order).strip().lower()
         action_aliases = {
             "legacy": R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC,
@@ -587,18 +604,44 @@ def run_native_intrinsic_curriculum(
         pools.r0_regression,
         config=cfg,
     )
-    # Validation is the only split allowed to select an epoch, fit a gate,
-    # consolidate the R0 graph, or open the next curriculum rung.  In
-    # particular, do not probe the regression pool here: it is a final,
-    # report-only measurement and must not become an indirect stopping signal.
+    # Legacy mode lets validation select an epoch, fit a gate, consolidate the
+    # R0 graph, and open the next curriculum rung. Strict adaptive mode keeps
+    # validation report-only and uses the already experienced training world
+    # for its explicit curriculum boundary. In either mode, do not probe the
+    # regression pool here: it is a final report and cannot become an indirect
+    # stopping signal.
     r0_validation = _evaluate_r0(
-        graph, pools.r0_validation, max_samples=cfg.max_samples
+        graph,
+        pools.r0_validation,
+        max_samples=cfg.max_samples,
+        action_selection_mode=cfg.r0_action_selection_mode,
     )
     r0_regression: dict[str, Any] | None = None
-    r0_pass = bool(
+    r0_validation_pass = bool(
         r0_validation["accuracy"] >= cfg.r0_mastery_threshold
         and r0_validation["illegal_move_count"] == 0
     )
+    r0_training_policy_probe: dict[str, Any] | None = None
+    if cfg.validation_controls_stage_transitions:
+        r0_pass = r0_validation_pass
+        r0_stage_selection_source = "validation_outcome_mastery"
+    else:
+        # Strict adaptive mode lets only training interaction decide whether
+        # the learned R0 policy is ready to freeze.  This probe executes the
+        # graph's own policy on the already experienced training environment;
+        # it receives no correct move, mate-distance, or held-out signal.
+        r0_training_policy_probe = _evaluate_r0(
+            graph,
+            pools.r0_train,
+            max_samples=cfg.max_samples,
+            action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+        )
+        r0_pass = bool(
+            r0_training_policy_probe["accuracy"]
+            >= cfg.r0_mastery_threshold
+            and r0_training_policy_probe["illegal_move_count"] == 0
+        )
+        r0_stage_selection_source = "training_outcome_policy_mastery"
 
     r0_gate: OutcomeCalibratedPrototypeGate | None = None
     r0_gate_selection: dict[str, Any] | None = None
@@ -606,7 +649,7 @@ def run_native_intrinsic_curriculum(
         "skipped": True,
         "reason": "r0_mastery_gate_failed",
     }
-    if r0_pass:
+    if r0_pass and cfg.validation_controls_stage_transitions:
         r0_gate, r0_gate_selection = _fit_r0_gate(
             graph,
             train_positive=pools.r0_train,
@@ -637,6 +680,38 @@ def run_native_intrinsic_curriculum(
             "gate": r0_gate.to_dict(),
             "gate_selection": r0_gate_selection,
             "graph_maturation": maturation,
+            "selection_source": r0_stage_selection_source,
+        }
+    elif r0_pass:
+        if r0_training_policy_probe is None:
+            raise RuntimeError("training-selected R0 pass omitted its probe")
+        disabled_training = _evaluate_r0(
+            graph,
+            pools.r0_train,
+            masked_triplets=set(graph.triplet_ids),
+            max_samples=0,
+            action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+        )
+        credit.set_mature(R0_COMPETENCE_ID)
+        intervention = credit.record_paired_intervention(
+            R0_COMPETENCE_ID,
+            enabled_return=float(r0_training_policy_probe["accuracy"]),
+            disabled_return=float(disabled_training["accuracy"]),
+        )
+        deltas = credit.consolidate((R0_COMPETENCE_ID,))
+        maturation = graph.mature_existing_graph()
+        r0_consolidation = {
+            "skipped": False,
+            "paired_intervention": asdict(intervention),
+            "value_consolidation_deltas": deltas,
+            "competence": credit.snapshot()["states"][R0_COMPETENCE_ID],
+            "gate": None,
+            "gate_selection": None,
+            "graph_maturation": maturation,
+            "selection_source": r0_stage_selection_source,
+            "training_policy_probe": r0_training_policy_probe,
+            "disabled_training_policy_probe": disabled_training,
+            "validation_influenced_maturity": False,
         }
 
     clone_parity = _clone_parity(graph, pools.r0_validation)
@@ -651,7 +726,11 @@ def run_native_intrinsic_curriculum(
     }
     if cfg.run_r1 and r0_pass and cfg.freeze_r0_parameters_for_r1:
         r0_parameter_freeze = graph.freeze_existing_parameters(
-            reason="R0_validation_mastery_consolidation",
+            reason=(
+                "R0_validation_mastery_consolidation"
+                if cfg.validation_controls_stage_transitions
+                else "R0_training_outcome_mastery_consolidation"
+            ),
         )
     r0_child_authority: Any | None = None
     r0_child_authority_audit: dict[str, Any] = {
@@ -741,6 +820,7 @@ def run_native_intrinsic_curriculum(
             "pass": r0_pass,
             "validation_accuracy": r0_validation["accuracy"],
             "stopped_epoch": r0_training["stopped_epoch"],
+            "stage_selection_source": r0_stage_selection_source,
             "availability_mode": cfg.r0_availability_mode,
             "regression_withheld_until_final": True,
         },
@@ -834,9 +914,9 @@ def run_native_intrinsic_curriculum(
             progress.pop("active_r1_arm", None)
             _write_json(cfg.progress_path, progress)
 
-        # R1 maturity and all graph mutations are validation-selected.  The
-        # regression arm results exist for the final report only and must not
-        # influence consolidation, freezing, or stage entry.
+        # Legacy mode retains validation-selected consolidation.  Strict
+        # adaptive mode leaves validation report-only: online local credit and
+        # ecology mutation are already committed during REAL interaction.
         full_rate = arms[primary_arm_name]["validation"]["conversion_rate"]
         no_bootstrap_rate = arms["no_bootstrap"]["validation"]["conversion_rate"]
         full_pass = (
@@ -844,7 +924,7 @@ def run_native_intrinsic_curriculum(
             and arms[primary_arm_name]["r0_validation_retention"]["accuracy"]
             >= cfg.r0_mastery_threshold
         )
-        if full_pass:
+        if full_pass and cfg.validation_controls_stage_transitions:
             selected_credit.set_mature(R1_COMPETENCE_ID)
             intervention = selected_credit.record_paired_intervention(
                 R1_COMPETENCE_ID,
@@ -862,6 +942,12 @@ def run_native_intrinsic_curriculum(
                 ),
                 "graph_maturation": graph_maturation,
                 "parameter_freeze": parameter_freeze,
+            }
+        elif not cfg.validation_controls_stage_transitions:
+            arms[primary_arm_name]["consolidation"] = {
+                "skipped": True,
+                "reason": "validation_is_report_only",
+                "validation_influenced_learning": False,
             }
 
         # ``_run_r1_arm`` records its local state before the top-level
@@ -913,6 +999,7 @@ def run_native_intrinsic_curriculum(
         r0_report_graph,
         pools.r0_regression,
         max_samples=cfg.max_samples,
+        action_selection_mode=cfg.r0_action_selection_mode,
     )
     r0_regression_pass = bool(
         r0_regression["accuracy"] >= cfg.r0_mastery_threshold
@@ -969,16 +1056,56 @@ def run_native_intrinsic_curriculum(
                 cfg.r1_action_selection_mode
                 == R1_ACTION_SELECTION_LOCAL_RECON
             ),
-            # R0 pretraining still uses the historical content-blind legal
-            # action schedule, so this report does not overclaim whole-run
-            # native autonomy even when R1 arbitration is graph-owned.
-            "pure_in_graph_arbitration_claimed": False,
-            "training_exploration": (
-                "native_local_optimistic_competition_for_r1;"
-                "content_blind_round_robin_for_r0"
-                if cfg.r1_action_selection_mode
+            # Learned values/exposures are native and exactly-one emission is
+            # formal ReCoN. A generic adapter still enumerates affordances,
+            # retrieves local sources, computes bounded curiosity, and packs
+            # options; do not call the complete arbitration circuit in-graph.
+            "r0_and_r1_runtime_action_sources_are_native_local": bool(
+                cfg.r0_action_selection_mode
+                == R0_ACTION_SELECTION_LOCAL_RECON
+                and cfg.r1_action_selection_mode
                 == R1_ACTION_SELECTION_LOCAL_RECON
-                else "content_blind_round_robin_over_formally_confirmed_legal_action_branches"
+            ),
+            "formal_recon_exactly_one_emission_used_for_r0_and_r1": bool(
+                cfg.r0_action_selection_mode
+                == R0_ACTION_SELECTION_LOCAL_RECON
+                and cfg.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
+            ),
+            "generic_adapter_packages_local_competitors": bool(
+                cfg.r0_action_selection_mode
+                == R0_ACTION_SELECTION_LOCAL_RECON
+                or cfg.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
+            ),
+            "pure_in_graph_arbitration_claimed": False,
+            "whole_curriculum_endogenous_claimed": False,
+            "remaining_host_curriculum_controls": [
+                "task_and_position_presentation",
+                "r0_training_outcome_stage_boundary",
+                "r0_maturity_consolidation_and_freeze_commit",
+                "worst_reply_environment_selection",
+                "resource_ceilings_and_final_evaluation",
+            ],
+            "training_exploration": (
+                "native_local_optimistic_competition_for_r0_and_r1"
+                if (
+                    cfg.r0_action_selection_mode
+                    == R0_ACTION_SELECTION_LOCAL_RECON
+                    and cfg.r1_action_selection_mode
+                    == R1_ACTION_SELECTION_LOCAL_RECON
+                )
+                else (
+                    "native_local_optimistic_competition_for_r1;"
+                    "content_blind_round_robin_for_r0"
+                    if cfg.r1_action_selection_mode
+                    == R1_ACTION_SELECTION_LOCAL_RECON
+                    else "content_blind_round_robin_over_formally_confirmed_legal_action_branches"
+                )
+            ),
+            "r0_action_selection_mode": cfg.r0_action_selection_mode,
+            "validation_controls_stage_transitions": (
+                cfg.validation_controls_stage_transitions
             ),
             "learner_visible_stage_labels": False,
             "correct_move_labels_used_for_training_credit": False,
@@ -1023,7 +1150,14 @@ def run_native_intrinsic_curriculum(
             ),
             "exploration_bonus_enters_td_prediction": False,
             "virtual_frames_create_grounding": False,
-            "r0_replay_cache_used_as_provider": False,
+            "r0_replay_cache_used_as_provider": bool(
+                cfg.r0_replay_per_r1_epoch > 0
+            ),
+            "adaptive_strict_profiles_disable_r0_replay_provider": bool(
+                cfg.r0_action_selection_mode
+                == R0_ACTION_SELECTION_LOCAL_RECON
+                and cfg.r0_replay_per_r1_epoch == 0
+            ),
             "r0_parameters_frozen_for_r1": cfg.freeze_r0_parameters_for_r1,
             "r0_child_queries_scoped_to_frozen_snapshot": True,
             # Legacy routing owns one report-only copy.  V2 routing instead
@@ -1146,9 +1280,29 @@ def run_native_intrinsic_curriculum(
                 else "registered_mature_child_value"
             ),
             "r1_partial_or_unknown_envelope_value_reaches_td": False,
-            "r0_and_r1_stopping_use_validation_only": True,
-            "r0_gate_fit_and_maturity_use_train_validation_only": True,
-            "r0_stage_entry_and_authority_use_validation_only": True,
+            "r0_and_r1_stopping_use_validation_only": bool(
+                cfg.validation_controls_stage_transitions
+            ),
+            "r0_gate_fit_and_maturity_use_train_validation_only": bool(
+                cfg.validation_controls_stage_transitions
+            ),
+            "r0_stage_entry_and_authority_use_validation_only": bool(
+                cfg.validation_controls_stage_transitions
+            ),
+            "validation_outcome_mastery_is_report_only_for_stage_transitions": not bool(
+                cfg.validation_controls_stage_transitions
+            ),
+            "validation_is_report_only_for_stage_transitions": False,
+            "validation_runtime_integrity_safety_veto_may_block_stage_entry": bool(
+                not cfg.validation_controls_stage_transitions
+                and cfg.r0_boundary_ecology_enabled
+            ),
+            "training_outcome_policy_mastery_controls_r0_stage_entry": not bool(
+                cfg.validation_controls_stage_transitions
+            ),
+            "training_outcome_stage_boundary_is_harness_controlled": not bool(
+                cfg.validation_controls_stage_transitions
+            ),
             "native_r0_coverage_specificity_is_report_only": bool(
                 cfg.r0_boundary_ecology_enabled
             ),
@@ -1217,7 +1371,9 @@ def run_native_intrinsic_curriculum(
             "consolidation": r0_consolidation,
             "regression_withheld_until_final": True,
             "pass": r0_pass,
-            "validation_pass": r0_pass,
+            "validation_pass": r0_validation_pass,
+            "stage_selection_source": r0_stage_selection_source,
+            "training_policy_probe": r0_training_policy_probe,
             "regression_pass_report_only": r0_regression_pass,
             "final_report_pass": r0_final_report_pass,
             "regression_source": "unmutated_post_r0_graph",
@@ -1737,17 +1893,39 @@ def _train_r0(
     episodes = mates = nonterminal = failures = 0
     started = perf_counter()
     formal_confirmation_failures = 0
+    local_action_count = 0
+    scheduled_action_count = 0
     checkpoints: list[dict[str, Any]] = []
     stopped_epoch = config.r0_epochs
     for epoch in range(config.r0_epochs):
         for position_index, fen in enumerate(train_fens):
             board = chess.Board(fen)
-            move, triplet_id, confirmed, graph_prediction = _scheduled_confirmed_action(
-                graph,
-                board,
-                schedule_index=epoch + position_index,
-                stage_diagnostic="R0_mate_in_1",
-            )
+            if (
+                config.r0_action_selection_mode
+                == R0_ACTION_SELECTION_LOCAL_RECON
+            ):
+                decision = graph.choose_local_training_action(
+                    board,
+                    stage_diagnostic="R0_mate_in_1",
+                )
+                move = decision.move
+                triplet_id = decision.triplet_id
+                confirmed = decision.confirmed
+                graph_prediction = decision.prediction
+                local_action_count += 1
+            else:
+                (
+                    move,
+                    triplet_id,
+                    confirmed,
+                    graph_prediction,
+                ) = _scheduled_confirmed_action(
+                    graph,
+                    board,
+                    schedule_index=epoch + position_index,
+                    stage_diagnostic="R0_mate_in_1",
+                )
+                scheduled_action_count += 1
             formal_confirmation_failures += int(not confirmed)
             terminal_kind = _execute_white_and_observe(board, move)
             credit.register(triplet_id, hierarchy_depth=1)
@@ -1778,17 +1956,28 @@ def _train_r0(
         )
         if not should_validate:
             continue
-        metrics = _evaluate_r0(graph, validation_fens, max_samples=0)
+        metrics = _evaluate_r0(
+            graph,
+            validation_fens,
+            max_samples=0,
+            action_selection_mode=config.r0_action_selection_mode,
+        )
         checkpoint = {
             "epoch": epoch + 1,
             "validation_accuracy": metrics["accuracy"],
+            "validation_action_selection_mode": metrics[
+                "action_selection_mode"
+            ],
             "triplet_count": len(graph.triplet_ids),
             "m3_update_count": graph.m3_update_count,
         }
         checkpoint["validation_mastery"] = bool(
             metrics["accuracy"] >= config.r0_mastery_threshold
         )
-        if checkpoint["validation_mastery"]:
+        if (
+            checkpoint["validation_mastery"]
+            and config.validation_controls_stage_transitions
+        ):
             # Validation selects the stopping epoch.  The regression split is
             # evaluated once, after training, and cannot influence selection.
             stopped_epoch = epoch + 1
@@ -1801,6 +1990,12 @@ def _train_r0(
         "observed_nonterminal_count": nonterminal,
         "observed_failure_count": failures,
         "formal_confirmation_failure_count": formal_confirmation_failures,
+        "r0_action_selection_mode": config.r0_action_selection_mode,
+        "native_local_action_count": local_action_count,
+        "scheduled_action_count": scheduled_action_count,
+        "validation_controls_stage_transitions": (
+            config.validation_controls_stage_transitions
+        ),
         "stopped_epoch": stopped_epoch,
         "validation_checkpoints": checkpoints,
         "teacher_positive_move_sets_consumed": 0,
@@ -1980,7 +2175,7 @@ def _r1_base_state_identity(
 def _r1_snapshot_fingerprint(
     graph: NativeReConKRKGraph,
     credit: IntrinsicCreditEngine,
-    r0_gate: OutcomeCalibratedPrototypeGate,
+    r0_gate: OutcomeCalibratedPrototypeGate | None,
     pools: _Pools,
     *,
     arm_name: str,
@@ -2009,7 +2204,7 @@ def _r1_snapshot_fingerprint(
         "arm_spec": asdict(arm_spec),
         "behavior_config": behavior_config,
         "pool_manifest": pools.manifest(),
-        "r0_gate": r0_gate.to_dict(),
+        "r0_gate": None if r0_gate is None else r0_gate.to_dict(),
         "r0_child_triplet_ids": sorted(r0_child_triplet_ids),
         "r0_child_authority_digest": r0_child_authority_digest,
         # A real V2 authority continuation digest already binds its immutable
@@ -3187,7 +3382,7 @@ def _run_r1_arm(
     arm_name: str,
     graph: NativeReConKRKGraph,
     credit: IntrinsicCreditEngine,
-    r0_gate: OutcomeCalibratedPrototypeGate,
+    r0_gate: OutcomeCalibratedPrototypeGate | None,
     pools: _Pools,
     *,
     r0_replay_memory: Sequence[_R0ReplayExperience],
@@ -4164,7 +4359,16 @@ def _run_r1_arm(
             # The historical snapshot field is retained for exact resume
             # compatibility, but it now means validation-selected stop.  The
             # regression split is withheld until the one final evaluation.
-            joint_mastery = validation_mastery
+            joint_mastery = bool(
+                validation_mastery
+                and config.validation_controls_stage_transitions
+            )
+            latest_checkpoint["validation_controls_stage_transitions"] = (
+                config.validation_controls_stage_transitions
+            )
+            latest_checkpoint["validation_report_only"] = not bool(
+                config.validation_controls_stage_transitions
+            )
             latest_checkpoint["joint_mastery"] = joint_mastery
             latest_checkpoint["regression_withheld_from_selection"] = True
             if joint_mastery:
@@ -5124,7 +5328,8 @@ def _build_r0_replay_memory(
     rows = [asdict(item) for item in experiences]
     return tuple(experiences), {
         "source": "mature_r0_graph_selected_responses",
-        "cache_used_as_move_provider": False,
+        "cache_contains_memoized_move_provider": True,
+        "cache_use_is_controlled_by_r0_replay_per_r1_epoch": True,
         "live_formal_reconfirmation_required": True,
         "world_outcome_reexecuted_on_every_replay": True,
         "teacher_solution_labels_consumed": 0,
@@ -5550,6 +5755,10 @@ def _evaluate_r0(
     allow_legacy_child_priority: bool | None = None,
     action_selection_mode: str = R1_ACTION_SELECTION_SCHEDULED,
 ) -> dict[str, Any]:
+    local_source_ablation = bool(
+        action_selection_mode == R1_ACTION_SELECTION_LOCAL_RECON
+        and masked_triplets
+    )
     if (
         r0_child_authority is not None
         and r0_core_graph is None
@@ -5567,7 +5776,13 @@ def _evaluate_r0(
     correct = illegal = null = stalemate = rook_loss = 0
     for fen in fens:
         board = chess.Board(fen)
-        if (
+        if local_source_ablation:
+            # A local-policy ablation means that every learned native source
+            # is unavailable. Abstain explicitly; falling through to the
+            # legacy graph chooser would introduce a second hidden picker and
+            # make the enabled/disabled intervention incomparable.
+            move = None
+        elif (
             action_selection_mode == R1_ACTION_SELECTION_LOCAL_RECON
             and r0_child_authority is not None
             and not masked_triplets
@@ -5648,6 +5863,11 @@ def _evaluate_r0(
         "stalemate_count": stalemate,
         "rook_loss_count": rook_loss,
         "action_selection_mode": action_selection_mode,
+        "effective_action_selection_mode": (
+            "native_local_all_sources_masked_abstention"
+            if local_source_ablation
+            else action_selection_mode
+        ),
         "native_authority_fail_closed": bool(
             action_selection_mode == R1_ACTION_SELECTION_LOCAL_RECON
             and r0_child_authority is not None
@@ -6138,10 +6358,11 @@ def _native_v2_r0_admission_audit(
     competence gate.  It performs read-only VIRTUAL queries against the
     prospectively closed authority and observes the selected action in a
     copied validation board.  Coverage and specificity never decide whether
-    R1 experience exists.  Only outcome-blind integrity (immutability, legal
-    graph emissions, and a legal non-null AVAILABLE actuation) can fail stage
-    entry.  No validation outcome is consumed by the authority, used to alter
-    a cell, or exposed as a learner feature.
+    R1 experience exists. Only outcome-blind integrity (immutability and the
+    legality of any AVAILABLE graph actuation) can fail stage entry. An empty
+    authority is expected to abstain everywhere initially. No validation
+    outcome is consumed by the authority, used to alter a cell, or exposed as
+    a learner feature.
     """
 
     continuation_before = str(authority.continuation_digest())

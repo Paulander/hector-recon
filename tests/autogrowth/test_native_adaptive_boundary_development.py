@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 import hashlib
 import inspect
 import json
@@ -18,6 +18,7 @@ from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import
     StructuralMode,
 )
 from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
+    R0_ACTION_SELECTION_LOCAL_RECON,
     R1_ACTION_SELECTION_LOCAL_RECON,
 )
 
@@ -154,6 +155,12 @@ def test_profiles_preserve_frozen_r0_and_only_change_r1_work(tmp_path: Path) -> 
     )
     assert canary.r0_boundary_ecology_enabled is True
     assert gate.r0_boundary_ecology_enabled is True
+    assert canary.r0_action_selection_mode == gate.r0_action_selection_mode == (
+        R0_ACTION_SELECTION_LOCAL_RECON
+    )
+    assert canary.validation_controls_stage_transitions is False
+    assert gate.validation_controls_stage_transitions is False
+    assert frozen.validation_controls_stage_transitions is True
     assert canary.seed == gate.seed == 17
     assert canary.development_fen_fullmove_base == (
         adaptive.DEVELOPMENT_FEN_FULLMOVE_BASE
@@ -200,6 +207,28 @@ def test_profiles_preserve_frozen_r0_and_only_change_r1_work(tmp_path: Path) -> 
         match="profile must be one of canary, follow-through, gate",
     ):
         adaptive.development_config("scientific")
+
+
+@pytest.mark.parametrize(
+    "override",
+    (
+        {"r0_action_selection_mode": "scheduled"},
+        {"r1_action_selection_mode": "scheduled"},
+        {"validation_controls_stage_transitions": True},
+        {"r0_replay_per_r1_epoch": 1},
+        {"r0_boundary_ecology_enabled": False},
+    ),
+)
+def test_adaptive_config_fails_closed_on_retired_host_controls(
+    tmp_path: Path,
+    override: dict[str, object],
+) -> None:
+    config = replace(
+        adaptive.development_config(output_dir=tmp_path),
+        **override,
+    )
+    with pytest.raises(ValueError, match="retired host control"):
+        adaptive._validate_adaptive_mechanism_config(config)
 
 
 def test_follow_through_is_an_eight_epoch_canary_extension(tmp_path: Path) -> None:
@@ -282,10 +311,10 @@ def test_factory_preserves_authority_constructed_in_event_mode(monkeypatch) -> N
 
     monkeypatch.setattr(
         adaptive._intrinsic,
-        "build_same_run_v2_r0_authority",
+        "build_empty_event_driven_v2_r0_authority",
         base_factory,
     )
-    observed, corrected = adaptive.build_same_run_v2_r0_authority(
+    observed, corrected = adaptive.build_empty_event_driven_v2_r0_authority(
         object(), object(), object(), object()
     )
 
@@ -309,11 +338,11 @@ def test_factory_rejects_post_construction_mode_rewrite(monkeypatch) -> None:
     authority = _FakeAuthority()
     monkeypatch.setattr(
         adaptive._intrinsic,
-        "build_same_run_v2_r0_authority",
+        "build_empty_event_driven_v2_r0_authority",
         lambda *_args: (authority, {}),
     )
     with pytest.raises(RuntimeError, match="not constructed in event-driven"):
-        adaptive.build_same_run_v2_r0_authority(
+        adaptive.build_empty_event_driven_v2_r0_authority(
             object(), object(), object(), object()
         )
     assert authority.structural_mode is StructuralMode.SCHEDULED
@@ -353,10 +382,30 @@ class _PayloadResult:
 
 def test_complete_per_run_mechanism_evidence_never_claims_scientific_gate() -> None:
     payload = {
+        "scientific_contract": {
+            "validation_outcome_mastery_is_report_only_for_stage_transitions": True,
+        },
         "decision": {
             "r0_pass": True,
             "r1_executed": True,
             "r1_pass": True,
+        },
+        "r0": {
+            "training": {
+                "r0_action_selection_mode": R0_ACTION_SELECTION_LOCAL_RECON,
+                "native_local_action_count": 48,
+                "scheduled_action_count": 0,
+            }
+        },
+        "r0_child_authority": {
+            "boundary_initialization": "empty_event_driven_positive_shell",
+            "no_scheduled_frontiers": True,
+            "initial_state": {
+                "base_receipt_count": 0,
+                "base_cell_count": 0,
+                "nominated_candidate_count": 0,
+                "authority_state_count": 0,
+            },
         },
         "r1_arms": {
             "full_intrinsic": {
@@ -417,6 +466,11 @@ def test_complete_per_run_mechanism_evidence_never_claims_scientific_gate() -> N
     gates = adaptive._result_gate_fields(payload)
 
     assert gates["curriculum_gate_passed"] is True
+    assert gates["mechanism_checks"]["r0_native_local_action_policy"] is True
+    assert gates["mechanism_checks"]["empty_event_driven_positive_shell"] is True
+    assert gates["mechanism_checks"][
+        "validation_outcome_mastery_report_only"
+    ] is True
     assert gates["per_run_mechanism_gate_passed"] is True
     assert gates["scientific_gate_passed"] is False
     assert adaptive._completion_status(gates) == (
@@ -531,8 +585,22 @@ def test_run_marks_result_payload_without_running_curriculum(
     assert protocol["harness_evaluation_influences_learning"] is False
     assert protocol["stage_gates_are_harness_stop_go_only"] is False
     assert protocol["stage_gates_are_harness_controlled"] is True
+    assert protocol["r0_stage_entry_controller"] == (
+        "training_outcome_policy_mastery_harness"
+    )
+    assert protocol[
+        "training_outcome_controls_maturity_consolidation_freeze_and_stage_entry"
+    ] is True
+    assert protocol["whole_curriculum_endogenous_claimed"] is False
     assert protocol[
         "validation_controls_maturity_consolidation_freeze_and_stage_entry"
+    ] is False
+    assert protocol[
+        "validation_outcome_mastery_is_report_only_for_stage_transitions"
+    ] is True
+    assert protocol["validation_is_report_only_for_stage_transitions"] is False
+    assert protocol[
+        "validation_runtime_integrity_safety_veto_may_block_stage_entry"
     ] is True
     assert protocol["validation_does_not_select_runtime_actions"] is True
 

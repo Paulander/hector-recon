@@ -711,6 +711,155 @@ def build_same_run_v2_r0_authority(
     return authority, audit
 
 
+def build_empty_event_driven_v2_r0_authority(
+    graph: NativeReConKRKGraph,
+    credit: IntrinsicCreditEngine,
+    _pools: _Pools,
+    config: NativeIntrinsicCurriculumConfig,
+) -> tuple[NativeProspectiveAuthorityV2, Mapping[str, Any]]:
+    """Wrap the trained R0 organism in an empty positive boundary shell.
+
+    The adaptive ecology must discover competence boundaries from later REAL
+    interaction.  It therefore starts with no discovery tape, no nominated
+    positive or negative hypotheses, and no certification evidence.  The
+    immutable R0 graph is still the native actuator/value substrate; the V2
+    shell initially has no jurisdiction and can acquire it only through
+    event-driven, post-birth positive certification.
+
+    ``_pools`` is deliberately unread.  In particular, neither validation nor
+    decoy membership can seed structure or decide which micropattern exists.
+    """
+
+    if config.r0_availability_mode != V2_PROSPECTIVE_AVAILABILITY:
+        raise ValueError("empty V2 factory requires v2_prospective mode")
+    if not config.r0_boundary_ecology_enabled:
+        raise ValueError("empty V2 factory requires the boundary ecology")
+    if not credit.states[R0_COMPETENCE_ID].mature:
+        raise RuntimeError("empty V2 factory requires mature R0 credit")
+
+    graph_copy = copy.deepcopy(graph)
+    credit_copy = copy.deepcopy(credit)
+    r0 = NativeR0Organism(
+        graph=graph_copy,
+        credit=credit_copy,
+        provenance=FrozenCompetenceProvenance.from_credit(
+            credit_copy, R0_COMPETENCE_ID
+        ),
+        frozen_triplet_ids=frozenset(graph_copy.triplet_ids),
+        source_manifest={
+            "kind": DEVELOPMENT_LABEL,
+            "scientific_use_permitted": False,
+            "same_run_empty_start_r0": True,
+            "curriculum_seed": int(config.seed),
+            "boundary_initialization": "empty_event_driven_positive_shell",
+            "pool_rows_read_for_boundary_initialization": 0,
+            "validation_or_regression_rows_read": False,
+        },
+    )
+    envelope_seed = int(config.seed) ^ 0x56325052
+    source = TraceNativeCompetenceOrganism.empty(
+        r0,
+        envelope_config=CompetenceEnvelopeConfig(
+            selection_seed=envelope_seed
+        ),
+        learning_config=TraceNativeLearningConfig(
+            lifecycle_connected=True,
+            specialization_mode=SpecializationMode.LOCAL_CONTRAST,
+            genome_seed=envelope_seed,
+            completion_terminal_identity="mate",
+            receipt_issuer_identity=(
+                "native_intrinsic_v2_empty_boundary_adapter.v1"
+            ),
+            receipt_capability_key=(
+                "native-intrinsic-v2-empty-boundary:"
+                + hashlib.sha256(str(config.seed).encode("utf-8")).hexdigest()
+            ),
+        ),
+    )
+    authority = NativeProspectiveAuthorityV2.from_organism(
+        source,
+        mode=V2Mode.PROSPECTIVE,
+        specialization_mode=SpecializationMode.LOCAL_CONTRAST,
+        structural_epoch_schedule=(),
+        structural_mode=StructuralMode.EVENT_DRIVEN,
+    )
+    frozen_candidates = authority.close_nomination()
+
+    zero_state = {
+        "base_receipt_count": len(source.receipts),
+        "base_cell_count": len(source.envelope.cells),
+        "nominated_candidate_count": len(frozen_candidates),
+        "authority_state_count": len(authority.states),
+        "accepted_real_reference_count": len(
+            authority.accepted_real_references
+        ),
+        "discovery_physical_fingerprint_count": len(
+            authority.discovery_prefix_physical_fingerprints
+        ),
+        "boundary_promotion_request_count": len(
+            authority.boundary_promotion_requests
+        ),
+        "pending_structural_request_count": len(
+            authority._pending_request_ids()
+        ),
+    }
+    if any(zero_state.values()):
+        raise RuntimeError(
+            "empty event-driven V2 authority acquired bootstrap evidence"
+        )
+    if authority.structural_epoch_schedule:
+        raise RuntimeError("empty event-driven authority retained a schedule")
+    if authority.structural_mode is not StructuralMode.EVENT_DRIVEN:
+        raise RuntimeError("empty authority is not event-driven")
+
+    authority.verify_full_history_boundary(
+        "native-intrinsic-v2-empty-boundary"
+    )
+    payload = authority.dumps()
+    restored = NativeProspectiveAuthorityV2.loads(payload)
+    if restored.continuation_manifest() != authority.continuation_manifest():
+        raise RuntimeError("empty V2 authority failed exact roundtrip parity")
+    restored.verify_full_history_boundary(
+        "native-intrinsic-v2-empty-boundary-roundtrip"
+    )
+
+    audit = {
+        "schema_version": "native_intrinsic_v2_empty_boundary.v1",
+        "label": DEVELOPMENT_LABEL,
+        "scientific_use_permitted": False,
+        "fresh_or_frozen_experiment_touched": False,
+        "same_run_empty_start_r0": True,
+        "boundary_initialization": "empty_event_driven_positive_shell",
+        "training_discovery_used": False,
+        "training_certification_used": False,
+        "validation_regression_learning_excluded": True,
+        "labels_or_move_oracle_used": False,
+        "pool_rows_read_for_boundary_initialization": 0,
+        "positive_only_future_births": True,
+        "negative_authority_roots_initialized": 0,
+        "initial_state": zero_state,
+        "candidate_count": 0,
+        "certified_available_count": 0,
+        "certified_refuted_count": 0,
+        "structural_mode": StructuralMode.EVENT_DRIVEN.value,
+        "structural_epoch_schedule": [],
+        "no_scheduled_frontiers": True,
+        "structural_schedule": {
+            "mode": StructuralMode.EVENT_DRIVEN.value,
+            "absolute_event_frontiers": [],
+            "scheduled_frontiers": [],
+            "frontier_policy": "post_real_quiescent_atomic_all_pending",
+            "no_scheduled_frontiers": True,
+        },
+        "serialization_roundtrip_exact": True,
+        "full_history_boundary_exact": True,
+        "serialized_bytes": len(payload),
+        "serialized_sha256": hashlib.sha256(payload).hexdigest(),
+        "continuation_digest": authority.continuation_digest(),
+    }
+    return authority, audit
+
+
 def development_config(
     *,
     output_dir: Path = DEFAULT_OUTPUT_DIR,

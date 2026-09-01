@@ -4,10 +4,20 @@ from types import SimpleNamespace
 
 import chess
 from recon_lite import FrameKind
+from recon_lite_hector.learning import IntrinsicCreditConfig, IntrinsicCreditEngine
 
 from recon_lite_chess.autogrowth import native_intrinsic_v2_development as intrinsic
+from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
+    NativeIntrinsicCurriculumConfig,
+    R0_COMPETENCE_ID,
+    V2_PROSPECTIVE_AVAILABILITY,
+)
 from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import (
     StructuralMode,
+)
+from recon_lite_chess.autogrowth.native_single_graph_curriculum import (
+    NativeReConKRKGraph,
+    NativeSingleGraphConfig,
 )
 
 
@@ -124,3 +134,58 @@ def test_event_driven_contradiction_settles_before_next_real_admission() -> None
         "consume:token:1",
         "settle-and-materialize",
     ]
+
+
+def test_empty_event_driven_factory_reads_no_pool_and_seeds_no_authority() -> None:
+    graph = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(include_symmetries=False)
+    )
+    board = chess.Board("k7/8/1K6/8/8/8/8/7R w - - 0 1")
+    graph.ensure_triplet(
+        board,
+        min(board.legal_moves, key=lambda item: item.uci()),
+        stage="empty_authority_test_r0",
+    )
+    credit = IntrinsicCreditEngine(
+        IntrinsicCreditConfig(min_grounding_evidence=1)
+    )
+    credit.register(R0_COMPETENCE_ID, mature=True)
+    state = credit.states[R0_COMPETENCE_ID]
+    state.fast_value = state.slow_value = 0.75
+    state.terminal_evidence = 1
+    state.causal_confirmations = 1
+    state.grounding_level = 0
+
+    class ForbiddenPools:
+        def __getattribute__(self, name):
+            raise AssertionError(f"empty boundary factory read pool field {name}")
+
+    graph_before = graph.canonical_semantic_manifest()
+    credit_before = credit.snapshot()
+    authority, audit = intrinsic.build_empty_event_driven_v2_r0_authority(
+        graph,
+        credit,
+        ForbiddenPools(),
+        NativeIntrinsicCurriculumConfig(
+            run_r1=True,
+            r0_availability_mode=V2_PROSPECTIVE_AVAILABILITY,
+            r0_boundary_ecology_enabled=True,
+        ),
+    )
+
+    assert authority.structural_mode is StructuralMode.EVENT_DRIVEN
+    assert authority.structural_epoch_schedule == ()
+    assert authority.states == {}
+    assert authority.accepted_real_references == {}
+    assert authority.boundary_promotion_requests == {}
+    assert authority._pending_request_ids() == ()
+    assert authority.base.receipts == {}
+    assert authority.base.envelope.cells == {}
+    assert audit["boundary_initialization"] == (
+        "empty_event_driven_positive_shell"
+    )
+    assert audit["pool_rows_read_for_boundary_initialization"] == 0
+    assert audit["negative_authority_roots_initialized"] == 0
+    assert audit["serialization_roundtrip_exact"] is True
+    assert graph.canonical_semantic_manifest() == graph_before
+    assert credit.snapshot() == credit_before

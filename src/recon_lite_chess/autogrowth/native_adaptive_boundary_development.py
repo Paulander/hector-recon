@@ -1,8 +1,8 @@
 """Viewed, development-only runner for the adaptive-boundary integration shot.
 
-The intrinsic V2 runner owns curriculum construction and execution.  This
-module only selects a bounded R1 work profile and wraps its same-run authority
-factory so deferred structure is event-driven rather than scheduled.
+The intrinsic V2 runner owns curriculum construction and execution. This
+module binds a bounded work profile to the strict local-action, empty-boundary
+mechanism and fails closed if a caller re-enables a retired host control.
 """
 from __future__ import annotations
 
@@ -20,6 +20,7 @@ from . import native_intrinsic_v2_development as _intrinsic
 from .native_intrinsic_curriculum import (
     NativeIntrinsicCurriculumConfig,
     NativeIntrinsicCurriculumResult,
+    R0_ACTION_SELECTION_LOCAL_RECON,
     R1DevelopmentCeilingReached,
     R1_ACTION_SELECTION_LOCAL_RECON,
     R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
@@ -33,9 +34,10 @@ from .native_single_graph_curriculum import NativeReConKRKGraph
 from recon_lite_hector.learning import IntrinsicCreditEngine
 
 
-# v2 adds an explicit scientific-gate summary to ``attempt.json``.  In
+# v3 binds the empty local shell and fail-closed adaptive mechanism contract in
+# addition to the explicit scientific-gate summary in ``attempt.json``. In
 # particular, process completion and an R1 gate pass are different outcomes.
-SCHEMA_VERSION = "native_adaptive_boundary_development.v2"
+SCHEMA_VERSION = "native_adaptive_boundary_development.v3"
 DEVELOPMENT_LABEL = "DEVELOPMENT_VIEWED_NOT_SCIENTIFIC"
 DEFAULT_SEED = _intrinsic.DEFAULT_SEED
 
@@ -161,6 +163,20 @@ def _result_gate_fields(result_payload: Mapping[str, Any]) -> dict[str, Any]:
     decision = decision if isinstance(decision, Mapping) else {}
     r0 = result_payload.get("r0")
     r0 = r0 if isinstance(r0, Mapping) else {}
+    r0_training = r0.get("training")
+    r0_training = r0_training if isinstance(r0_training, Mapping) else {}
+    contract = result_payload.get("scientific_contract")
+    contract = contract if isinstance(contract, Mapping) else {}
+    initial_authority = result_payload.get("r0_child_authority")
+    initial_authority = (
+        initial_authority if isinstance(initial_authority, Mapping) else {}
+    )
+    initial_authority_state = initial_authority.get("initial_state")
+    initial_authority_state = (
+        initial_authority_state
+        if isinstance(initial_authority_state, Mapping)
+        else {}
+    )
     r1_arms = result_payload.get("r1_arms")
     r1_executed_fallback = isinstance(r1_arms, Mapping) and bool(r1_arms)
 
@@ -246,6 +262,28 @@ def _result_gate_fields(result_payload: Mapping[str, Any]) -> dict[str, Any]:
         for event in structural_events
     )
     mechanism_checks = {
+        "r0_native_local_action_policy": bool(
+            r0_training.get("r0_action_selection_mode")
+            == R0_ACTION_SELECTION_LOCAL_RECON
+            and int(r0_training.get("native_local_action_count", 0) or 0) > 0
+            and int(r0_training.get("scheduled_action_count", -1) or 0) == 0
+        ),
+        "empty_event_driven_positive_shell": bool(
+            initial_authority.get("boundary_initialization")
+            == "empty_event_driven_positive_shell"
+            and initial_authority.get("no_scheduled_frontiers") is True
+            and initial_authority_state
+            and all(
+                int(value or 0) == 0
+                for value in initial_authority_state.values()
+            )
+        ),
+        "validation_outcome_mastery_report_only": bool(
+            contract.get(
+                "validation_outcome_mastery_is_report_only_for_stage_transitions"
+            )
+            is True
+        ),
         "native_local_action_policy": (
             training.get("r1_action_selection_mode")
             == R1_ACTION_SELECTION_LOCAL_RECON
@@ -391,22 +429,52 @@ def _development_protocol(
         "r1_action_order": config.r1_action_order,
         "r1_action_order_field_used": False,
         "legacy_hash_or_round_robin_first_move_picker_used": False,
+        "r0_replay_move_provider_used": bool(
+            config.r0_replay_per_r1_epoch > 0
+        ),
+        "adaptive_config_is_fail_closed": True,
         "prototype_gate_used_for_adaptive_runtime_routing": False,
-        # Validation-selected stage decisions also mutate lifecycle state and
-        # open/close curriculum rungs.  Keep the historical key for readers,
-        # but make its value truthful instead of reducing those decisions to
-        # a stop/go label.
+        "r0_action_selection_mode": config.r0_action_selection_mode,
+        "r0_native_local_action_selection": bool(
+            config.r0_action_selection_mode
+            == R0_ACTION_SELECTION_LOCAL_RECON
+        ),
+        # Validation no longer steers the adaptive run. The curriculum still
+        # owns an explicit training-outcome boundary that commits R0 maturity,
+        # consolidation, freezing, and R1 entry; do not misreport that broader
+        # process as wholly endogenous or as a mere stop/go diagnostic.
         "stage_gates_are_harness_stop_go_only": False,
         "stage_gates_are_harness_controlled": True,
-        "validation_controls_maturity_consolidation_freeze_and_stage_entry": (
-            True
+        "r0_stage_entry_controller": (
+            "training_outcome_policy_mastery_harness"
+            if not config.validation_controls_stage_transitions
+            else "validation_outcome_mastery_harness"
         ),
-        "validation_selected_stage_mutations": [
-            "maturity",
-            "value_consolidation",
-            "parameter_freeze",
-            "curriculum_stage_entry",
-        ],
+        "training_outcome_controls_maturity_consolidation_freeze_and_stage_entry": (
+            not bool(config.validation_controls_stage_transitions)
+        ),
+        "whole_curriculum_endogenous_claimed": False,
+        "validation_controls_maturity_consolidation_freeze_and_stage_entry": (
+            config.validation_controls_stage_transitions
+        ),
+        "validation_selected_stage_mutations": (
+            [
+                "maturity",
+                "value_consolidation",
+                "parameter_freeze",
+                "curriculum_stage_entry",
+            ]
+            if config.validation_controls_stage_transitions
+            else []
+        ),
+        "validation_outcome_mastery_is_report_only_for_stage_transitions": not bool(
+            config.validation_controls_stage_transitions
+        ),
+        "validation_is_report_only_for_stage_transitions": False,
+        "validation_runtime_integrity_safety_veto_may_block_stage_entry": bool(
+            not config.validation_controls_stage_transitions
+            and config.r0_boundary_ecology_enabled
+        ),
         "validation_does_not_select_runtime_actions": True,
         "resource_ceilings": {
             "wall_seconds_safe_epoch_boundary": (
@@ -417,6 +485,9 @@ def _development_protocol(
             ),
         },
         "no_protected_outcomes_or_learner_oracle_or_tuning": True,
+        "no_bootstrap_control_semantics": (
+            "same_authority_and_ecology_without_successor_value_handoff"
+        ),
     }
 
 
@@ -445,15 +516,15 @@ def _correct_event_driven_audit(
     return corrected
 
 
-def build_same_run_v2_r0_authority(
+def build_empty_event_driven_v2_r0_authority(
     graph: NativeReConKRKGraph,
     credit: IntrinsicCreditEngine,
     pools: _Pools,
     config: NativeIntrinsicCurriculumConfig,
 ) -> tuple[NativeProspectiveAuthorityV2, Mapping[str, Any]]:
-    """Wrap the intrinsic same-run factory with event-driven structure."""
+    """Build an evidence-empty shell whose later growth is event-driven."""
 
-    authority, audit = _intrinsic.build_same_run_v2_r0_authority(
+    authority, audit = _intrinsic.build_empty_event_driven_v2_r0_authority(
         graph, credit, pools, config
     )
     if authority.structural_mode is not StructuralMode.EVENT_DRIVEN:
@@ -496,21 +567,50 @@ def development_config(
     return replace(
         base,
         seed=int(seed),
+        r0_action_selection_mode=R0_ACTION_SELECTION_LOCAL_RECON,
         r1_reply_policy=R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
         r1_action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
         r0_boundary_ecology_enabled=True,
+        validation_controls_stage_transitions=False,
         development_fen_fullmove_base=DEVELOPMENT_FEN_FULLMOVE_BASE,
         **_PROFILE_WORK[normalized],
     )
+
+
+def _validate_adaptive_mechanism_config(
+    config: NativeIntrinsicCurriculumConfig,
+) -> None:
+    """Fail closed if a caller re-enables a retired host control."""
+
+    required = {
+        "r0_action_selection_mode": R0_ACTION_SELECTION_LOCAL_RECON,
+        "r1_action_selection_mode": R1_ACTION_SELECTION_LOCAL_RECON,
+        "r1_reply_policy": R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
+        "r0_availability_mode": _intrinsic.V2_PROSPECTIVE_AVAILABILITY,
+        "r0_boundary_ecology_enabled": True,
+        "validation_controls_stage_transitions": False,
+        "r0_replay_per_r1_epoch": 0,
+    }
+    mismatches = {
+        field: {"required": expected, "observed": getattr(config, field)}
+        for field, expected in required.items()
+        if getattr(config, field) != expected
+    }
+    if mismatches:
+        raise ValueError(
+            "adaptive mechanism config re-enabled a retired host control: "
+            + json.dumps(mismatches, sort_keys=True)
+        )
 
 
 def run_development(
     config: NativeIntrinsicCurriculumConfig | None = None,
 ) -> NativeIntrinsicCurriculumResult:
     cfg = config or development_config()
+    _validate_adaptive_mechanism_config(cfg)
     result = run_native_intrinsic_curriculum(
         config=cfg,
-        r0_child_authority_factory=build_same_run_v2_r0_authority,
+        r0_child_authority_factory=build_empty_event_driven_v2_r0_authority,
     )
     result.payload.update(_artifact_flags())
     result.payload["development_protocol"] = _development_protocol(cfg)

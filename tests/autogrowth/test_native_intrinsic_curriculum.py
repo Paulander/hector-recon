@@ -75,6 +75,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _classify_r1_stratum,
     _disable_nonmature_composites,
     _execute_white_and_observe,
+    _evaluate_r0,
     _evaluate_r1,
     _fit_r0_gate,
     _generate_balanced_r0_split,
@@ -90,6 +91,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _r1_orbit_key,
     _r1_snapshot_fingerprint,
     _select_r1_training_action,
+    _train_r0,
     _replay_r0,
     run_native_intrinsic_curriculum,
     _restore_disabled_composites,
@@ -337,6 +339,58 @@ def test_native_intrinsic_graph_starts_with_empty_learned_state() -> None:
         "m3_update_count": 0,
         "m4_event_count": 0,
     }
+
+
+def test_strict_r0_uses_local_choice_and_validation_cannot_stop_budget() -> None:
+    graph = _graph()
+    credit = IntrinsicCreditEngine(
+        IntrinsicCreditConfig(min_grounding_evidence=1)
+    )
+    credit.register(R0_COMPETENCE_ID)
+    config = NativeIntrinsicCurriculumConfig(
+        r0_epochs=2,
+        r0_validation_interval=1,
+        r0_mastery_threshold=0.0,
+        r0_action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+        validation_controls_stage_transitions=False,
+        max_samples=0,
+    )
+
+    training = _train_r0(
+        graph,
+        credit,
+        (MATE_ONE_FEN,),
+        (MATE_ONE_FEN,),
+        (),
+        config=config,
+    )
+
+    assert training["stopped_epoch"] == 2
+    assert training["episodes"] == 2
+    assert training["native_local_action_count"] == 2
+    assert training["scheduled_action_count"] == 0
+    assert training["validation_controls_stage_transitions"] is False
+    assert all(
+        checkpoint["validation_mastery"] is True
+        for checkpoint in training["validation_checkpoints"]
+    )
+    assert {
+        checkpoint["validation_action_selection_mode"]
+        for checkpoint in training["validation_checkpoints"]
+    } == {R1_ACTION_SELECTION_LOCAL_RECON}
+
+    disabled = _evaluate_r0(
+        graph,
+        (MATE_ONE_FEN,),
+        masked_triplets=set(graph.triplet_ids),
+        max_samples=1,
+        action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+    )
+    assert disabled["accuracy"] == 0.0
+    assert disabled["null_selection_count"] == 1
+    assert disabled["effective_action_selection_mode"] == (
+        "native_local_all_sources_masked_abstention"
+    )
 
 
 def test_r0_gate_selection_ignores_regression_until_final_report(monkeypatch) -> None:
@@ -1944,6 +1998,11 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
             "probability",
             forbidden_legacy_path,
         )
+    arm_gate = (
+        None
+        if v2_enabled and selection_mode == R1_ACTION_SELECTION_LOCAL_RECON
+        else gate
+    )
     uninterrupted_config = NativeIntrinsicCurriculumConfig(
         progress_path=str(tmp_path / "uninterrupted_progress.json"),
         r1_snapshot_dir=str(tmp_path / "uninterrupted"),
@@ -1956,7 +2015,7 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
         "no_bootstrap",
         uninterrupted_graph,
         uninterrupted_credit,
-        gate,
+        arm_gate,
         pools,
         r0_replay_memory=(),
         r0_child_triplet_ids=frozenset(),
@@ -1997,7 +2056,7 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
             "no_bootstrap",
             copy.deepcopy(base_graph),
             copy.deepcopy(base_credit),
-            gate,
+            arm_gate,
             pools,
             r0_replay_memory=(),
             r0_child_triplet_ids=frozenset(),
@@ -2017,7 +2076,7 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
         "no_bootstrap",
         resumed_graph,
         resumed_credit,
-        gate,
+        arm_gate,
         pools,
         r0_replay_memory=(),
         r0_child_triplet_ids=frozenset(),
@@ -2687,6 +2746,24 @@ def test_r1_snapshot_fingerprint_ignores_only_operational_controls(tmp_path) -> 
         development_peak_rss_ceiling_mib=8_192.0,
     )
     assert fingerprint(operationally_changed) == fingerprint(config)
+    strict_no_gate = _r1_snapshot_fingerprint(
+        graph,
+        credit,
+        None,
+        pools,
+        arm_name=arm.name,
+        arm_spec=arm,
+        r0_child_triplet_ids=r0_triplets,
+        r0_child_authority_digest="authority-digest",
+        config=replace(
+            config,
+            r0_action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+            r1_action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+            validation_controls_stage_transitions=False,
+        ),
+    )
+    assert isinstance(strict_no_gate, str) and len(strict_no_gate) == 64
+    assert strict_no_gate != fingerprint(config)
     assert fingerprint(replace(config, eta_m3=config.eta_m3 / 2.0)) != fingerprint(
         config
     )
