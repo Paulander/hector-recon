@@ -3,7 +3,7 @@ from __future__ import annotations
 from types import SimpleNamespace
 
 import chess
-from recon_lite import FrameKind
+from recon_lite import FrameContext, FrameKind
 from recon_lite_hector.learning import IntrinsicCreditConfig, IntrinsicCreditEngine
 
 from recon_lite_chess.autogrowth import native_intrinsic_v2_development as intrinsic
@@ -138,23 +138,42 @@ def test_event_driven_contradiction_settles_before_next_real_admission() -> None
 
 def test_empty_event_driven_factory_reads_no_pool_and_seeds_no_authority() -> None:
     graph = NativeReConKRKGraph(
-        config=NativeSingleGraphConfig(include_symmetries=False)
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            max_ticks=80,
+            indexed_scheduler=True,
+            key_mode="canonical",
+            shared_feature_atoms=True,
+            shared_projection_atoms=True,
+            include_grouped_cache_terminals=False,
+            score_action_pattern_atoms=True,
+            terminal_score_normalization="sqrt",
+        )
     )
-    board = chess.Board("k7/8/1K6/8/8/8/8/7R w - - 0 1")
-    graph.ensure_triplet(
+    board = chess.Board("8/8/8/8/8/7K/5R2/7k w - - 0 1")
+    mating_moves = []
+    for candidate in board.legal_moves:
+        successor = board.copy(stack=False)
+        successor.push(candidate)
+        if successor.is_checkmate():
+            mating_moves.append(candidate)
+    assert mating_moves
+    triplet_id = graph.apply_intrinsic_td(
         board,
-        min(board.legal_moves, key=lambda item: item.uci()),
-        stage="empty_authority_test_r0",
+        min(mating_moves, key=lambda item: item.uci()),
+        td_error=1.0,
+        stage_diagnostic="empty_authority_test_r0",
     )
+    graph.mature_existing_graph()
+    graph.freeze_existing_parameters(reason="local_provider_test")
     credit = IntrinsicCreditEngine(
         IntrinsicCreditConfig(min_grounding_evidence=1)
     )
-    credit.register(R0_COMPETENCE_ID, mature=True)
-    state = credit.states[R0_COMPETENCE_ID]
-    state.fast_value = state.slow_value = 0.75
-    state.terminal_evidence = 1
-    state.causal_confirmations = 1
-    state.grounding_level = 0
+    credit.register(triplet_id)
+    credit.begin_episode()
+    credit.transition(triplet_id, terminal_kind="mate")
+    local_audit = credit.consolidate_direct_outcome_providers((triplet_id,))
+    assert local_audit["provider_ids"] == [triplet_id]
 
     class ForbiddenPools:
         def __getattribute__(self, name):
@@ -186,6 +205,38 @@ def test_empty_event_driven_factory_reads_no_pool_and_seeds_no_authority() -> No
     )
     assert audit["pool_rows_read_for_boundary_initialization"] == 0
     assert audit["negative_authority_roots_initialized"] == 0
+    assert audit["local_direct_outcome_provider_count"] == 1
+    assert audit["global_r0_competence_provider_used"] is False
     assert audit["serialization_roundtrip_exact"] is True
     assert graph.canonical_semantic_manifest() == graph_before
     assert credit.snapshot() == credit_before
+
+    continuation_before = authority.continuation_digest()
+    opened = authority.open_virtual(FrameContext(
+        "local-provider-precedence",
+        FrameKind.VIRTUAL,
+        {"board": board.copy(stack=False)},
+    ))
+    query = opened["query"]
+    assert opened["classification"].state.value == "unknown"
+    assert query.response.available is True
+    assert query.response.child_id == triplet_id
+    assert query.response.expected_value > 0.0
+    assert query.availability_provenance["availability_route"] == (
+        "native_local_direct_outcome_provider"
+    )
+    assert query.availability_provenance["base_availability_provenance"][
+        "local_provider"
+    ]["cell_id"] == triplet_id
+    assert authority.continuation_digest() == continuation_before
+
+    restored = type(authority).loads(authority.dumps())
+    restored_query = restored.open_virtual(FrameContext(
+        "local-provider-precedence-roundtrip",
+        FrameKind.VIRTUAL,
+        {"board": board.copy(stack=False)},
+    ))["query"]
+    assert restored_query.response == query.response
+    assert restored_query.availability_provenance["availability_route"] == (
+        "native_local_direct_outcome_provider"
+    )

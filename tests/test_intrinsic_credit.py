@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import pickle
 
 import pytest
 
@@ -78,6 +79,84 @@ def test_value_requires_maturity_grounding_causality_and_consolidation() -> None
     assert signal is not None
     assert signal.value > 0.9
     assert signal.grounding_level == 1
+
+
+def test_exact_real_returns_can_authorize_a_local_provider_without_global_gate() -> None:
+    engine = IntrinsicCreditEngine(_config())
+    engine.register("clean")
+    engine.register("mixed")
+    for _ in range(3):
+        engine.begin_episode()
+        engine.transition("clean", terminal_kind="mate")
+        engine.begin_episode()
+        engine.transition("mixed", terminal_kind="mate")
+    engine.begin_episode()
+    engine.transition("mixed")
+
+    audit = engine.consolidate_direct_outcome_providers(("clean", "mixed"))
+
+    assert audit["provider_ids"] == ["clean"]
+    assert audit["aggregate_score_read"] is False
+    assert engine.direct_outcome_provider_response("clean") is not None
+    assert engine.direct_outcome_provider_response("mixed") is None
+    assert engine.states["clean"].causal_confirmations == 0
+    assert engine.states["mixed"].direct_contrast_evidence == 1
+
+
+def test_eligibility_credit_cannot_fake_direct_action_evidence() -> None:
+    engine = IntrinsicCreditEngine(_config())
+    engine.register("selected")
+    engine.register("parent")
+    for _ in range(3):
+        engine.begin_episode()
+        engine.transition(
+            "selected",
+            responsibilities=(
+                Responsibility("selected", parent_distance=0),
+                Responsibility("parent", parent_distance=1),
+            ),
+            terminal_kind="mate",
+        )
+
+    audit = engine.consolidate_direct_outcome_providers(
+        ("selected", "parent")
+    )
+
+    assert audit["provider_ids"] == ["selected"]
+    assert engine.states["parent"].terminal_evidence == 3
+    assert engine.states["parent"].direct_positive_evidence == 0
+
+
+def test_later_local_contrast_revokes_an_authorized_provider() -> None:
+    engine = IntrinsicCreditEngine(_config())
+    engine.register("branch")
+    for _ in range(3):
+        engine.begin_episode()
+        engine.transition("branch", terminal_kind="mate")
+    engine.consolidate_direct_outcome_providers(("branch",))
+    assert engine.direct_outcome_provider_response("branch") is not None
+
+    engine.begin_episode()
+    engine.transition("branch", terminal_kind="horizon")
+    assert engine.direct_outcome_provider_response("branch") is None
+    audit = engine.consolidate_direct_outcome_providers(("branch",))
+    assert audit["provider_ids"] == []
+    assert engine.states["branch"].mature is False
+
+
+def test_legacy_credit_pickle_defaults_to_no_local_authority() -> None:
+    engine = IntrinsicCreditEngine(_config())
+    state = engine.register("legacy")
+    del state.direct_positive_evidence
+    del state.direct_contrast_evidence
+    del state.direct_outcome_authorized
+
+    restored = pickle.loads(pickle.dumps(engine))
+    restored_state = restored.states["legacy"]
+    assert restored_state.direct_positive_evidence == 0
+    assert restored_state.direct_contrast_evidence == 0
+    assert restored_state.direct_outcome_authorized is False
+    assert restored.direct_outcome_provider_ids() == ()
 
 
 def test_known_positive_competence_bootstraps_a_three_rung_chain() -> None:

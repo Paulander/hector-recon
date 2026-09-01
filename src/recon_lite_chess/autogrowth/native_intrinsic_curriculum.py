@@ -97,6 +97,21 @@ R1_ACTION_SELECTION_MODES = (
 R0_ACTION_SELECTION_SCHEDULED = R1_ACTION_SELECTION_SCHEDULED
 R0_ACTION_SELECTION_LOCAL_RECON = R1_ACTION_SELECTION_LOCAL_RECON
 R0_ACTION_SELECTION_MODES = R1_ACTION_SELECTION_MODES
+
+
+def _strict_local_adaptive_mode(
+    config: "NativeIntrinsicCurriculumConfig",
+) -> bool:
+    """Return whether competence authority is owned by local REAL evidence."""
+
+    return bool(
+        config.r0_boundary_ecology_enabled
+        and not config.validation_controls_stage_transitions
+        and config.r0_action_selection_mode
+        == R0_ACTION_SELECTION_LOCAL_RECON
+    )
+
+
 # Short aliases keep the configuration readable for development callers while
 # the canonical values remain explicit in snapshots and fingerprints.
 R1_ACTION_ORDER_LEGACY = R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC
@@ -622,9 +637,35 @@ def run_native_intrinsic_curriculum(
         and r0_validation["illegal_move_count"] == 0
     )
     r0_training_policy_probe: dict[str, Any] | None = None
+    r0_training_mastery_report: bool | None = None
+    strict_local_adaptive = _strict_local_adaptive_mode(cfg)
+    local_provider_audit: dict[str, Any] | None = None
     if cfg.validation_controls_stage_transitions:
         r0_pass = r0_validation_pass
         r0_stage_selection_source = "validation_outcome_mastery"
+    elif strict_local_adaptive:
+        # The fixed R0 interaction budget ends the phase.  Replaying the
+        # learned policy on those same training positions is report-only;
+        # exact graph decisions acquire authority below from their own REAL
+        # returns, independently of this aggregate score.
+        r0_training_policy_probe = _evaluate_r0(
+            graph,
+            pools.r0_train,
+            max_samples=cfg.max_samples,
+            action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+        )
+        r0_training_mastery_report = bool(
+            r0_training_policy_probe["accuracy"]
+            >= cfg.r0_mastery_threshold
+            and r0_training_policy_probe["illegal_move_count"] == 0
+        )
+        local_provider_audit = (
+            credit.consolidate_direct_outcome_providers(graph.triplet_ids)
+        )
+        r0_pass = bool(local_provider_audit["provider_count"] > 0)
+        r0_stage_selection_source = (
+            "local_direct_outcome_provider_readiness"
+        )
     else:
         # Strict adaptive mode lets only training interaction decide whether
         # the learned R0 policy is ready to freeze.  This probe executes the
@@ -682,7 +723,7 @@ def run_native_intrinsic_curriculum(
             "graph_maturation": maturation,
             "selection_source": r0_stage_selection_source,
         }
-    elif r0_pass:
+    elif r0_pass and not strict_local_adaptive:
         if r0_training_policy_probe is None:
             raise RuntimeError("training-selected R0 pass omitted its probe")
         disabled_training = _evaluate_r0(
@@ -713,6 +754,18 @@ def run_native_intrinsic_curriculum(
             "disabled_training_policy_probe": disabled_training,
             "validation_influenced_maturity": False,
         }
+    elif strict_local_adaptive:
+        if local_provider_audit is None:
+            raise RuntimeError("local R0 provider audit was not constructed")
+        r0_consolidation = {
+            "skipped": False,
+            "selection_source": r0_stage_selection_source,
+            "local_provider_audit": local_provider_audit,
+            "global_r0_maturity_mutated": False,
+            "global_paired_intervention_recorded": False,
+            "graph_wide_maturation_performed": False,
+            "aggregate_scores_report_only": True,
+        }
 
     clone_parity = _clone_parity(graph, pools.r0_validation)
     r0_replay_memory, r0_replay_memory_audit = _build_r0_replay_memory(
@@ -729,7 +782,11 @@ def run_native_intrinsic_curriculum(
             reason=(
                 "R0_validation_mastery_consolidation"
                 if cfg.validation_controls_stage_transitions
-                else "R0_training_outcome_mastery_consolidation"
+                else (
+                    "R0_local_direct_outcome_snapshot"
+                    if strict_local_adaptive
+                    else "R0_training_outcome_mastery_consolidation"
+                )
             ),
         )
     r0_child_authority: Any | None = None
@@ -818,7 +875,18 @@ def run_native_intrinsic_curriculum(
         "ecology_uuid": ecology_uuid,
         "r0": {
             "pass": r0_pass,
+            "pass_semantics": (
+                "nonempty_local_direct_outcome_provider_set"
+                if strict_local_adaptive
+                else "aggregate_mastery_gate"
+            ),
             "validation_accuracy": r0_validation["accuracy"],
+            "training_mastery_report": r0_training_mastery_report,
+            "local_provider_count": (
+                0
+                if local_provider_audit is None
+                else int(local_provider_audit["provider_count"])
+            ),
             "stopped_epoch": r0_training["stopped_epoch"],
             "stage_selection_source": r0_stage_selection_source,
             "availability_mode": cfg.r0_availability_mode,
@@ -1031,11 +1099,19 @@ def run_native_intrinsic_curriculum(
         r1_executed
         and arms[primary_arm_name].get("regression_pass_report_only", False)
     )
-    r0_final_report_pass = bool(r0_pass and r0_regression_pass)
-    # Keep the externally consumed gate conservative: validation controls all
-    # training decisions, while the final scientific report also has to
-    # survive the untouched regression splits.  This value is never fed back
-    # into the graph or credit engine.
+    r0_mastery_report_pass = bool(
+        (
+            r0_training_mastery_report
+            if strict_local_adaptive
+            and r0_training_mastery_report is not None
+            else r0_pass
+        )
+        and r0_regression_pass
+    )
+    r0_final_report_pass = r0_mastery_report_pass
+    # This is a terminal performance report, not an endogenous readiness
+    # decision.  Neither validation nor regression is fed back into the graph,
+    # credit engine, provider authority, or stage entry in strict local mode.
     r1_pass = bool(
         r1_validation_pass and r1_regression_pass_report_only
     )
@@ -1082,11 +1158,27 @@ def run_native_intrinsic_curriculum(
             "whole_curriculum_endogenous_claimed": False,
             "remaining_host_curriculum_controls": [
                 "task_and_position_presentation",
-                "r0_training_outcome_stage_boundary",
-                "r0_maturity_consolidation_and_freeze_commit",
+                (
+                    "fixed_r0_budget_and_content_blind_freeze_boundary"
+                    if strict_local_adaptive
+                    else "r0_training_outcome_stage_boundary"
+                ),
                 "worst_reply_environment_selection",
                 "resource_ceilings_and_final_evaluation",
             ],
+            "strict_adaptive_local_provider_grounding": (
+                strict_local_adaptive
+            ),
+            "aggregate_r0_scores_are_report_only": strict_local_adaptive,
+            "global_r0_competence_maturity_mutated": not (
+                strict_local_adaptive
+            ),
+            "graph_wide_maturation_from_aggregate_score": not (
+                strict_local_adaptive
+            ),
+            "local_provider_promotion_reads_only_direct_real_returns": (
+                strict_local_adaptive
+            ),
             "training_exploration": (
                 "native_local_optimistic_competition_for_r0_and_r1"
                 if (
@@ -1292,16 +1384,23 @@ def run_native_intrinsic_curriculum(
             "validation_outcome_mastery_is_report_only_for_stage_transitions": not bool(
                 cfg.validation_controls_stage_transitions
             ),
-            "validation_is_report_only_for_stage_transitions": False,
+            "validation_is_report_only_for_stage_transitions": bool(
+                strict_local_adaptive
+            ),
             "validation_runtime_integrity_safety_veto_may_block_stage_entry": bool(
                 not cfg.validation_controls_stage_transitions
                 and cfg.r0_boundary_ecology_enabled
             ),
-            "training_outcome_policy_mastery_controls_r0_stage_entry": not bool(
-                cfg.validation_controls_stage_transitions
+            "training_outcome_policy_mastery_controls_r0_stage_entry": bool(
+                not cfg.validation_controls_stage_transitions
+                and not strict_local_adaptive
             ),
-            "training_outcome_stage_boundary_is_harness_controlled": not bool(
-                cfg.validation_controls_stage_transitions
+            "training_outcome_stage_boundary_is_harness_controlled": bool(
+                not cfg.validation_controls_stage_transitions
+                and not strict_local_adaptive
+            ),
+            "fixed_r0_budget_boundary_is_harness_controlled": (
+                strict_local_adaptive
             ),
             "native_r0_coverage_specificity_is_report_only": bool(
                 cfg.r0_boundary_ecology_enabled
@@ -1371,11 +1470,24 @@ def run_native_intrinsic_curriculum(
             "consolidation": r0_consolidation,
             "regression_withheld_until_final": True,
             "pass": r0_pass,
+            "pass_semantics": (
+                "nonempty_local_direct_outcome_provider_set"
+                if strict_local_adaptive
+                else "aggregate_mastery_gate"
+            ),
             "validation_pass": r0_validation_pass,
             "stage_selection_source": r0_stage_selection_source,
             "training_policy_probe": r0_training_policy_probe,
+            "training_mastery_report": r0_training_mastery_report,
+            "local_provider_audit": local_provider_audit,
             "regression_pass_report_only": r0_regression_pass,
             "final_report_pass": r0_final_report_pass,
+            "final_report_pass_semantics": (
+                "aggregate_training_and_regression_performance_report_only"
+                if strict_local_adaptive
+                else "selected_stage_gate_and_regression_report"
+            ),
+            "endogenous_readiness_pass": r0_pass,
             "regression_source": "unmutated_post_r0_graph",
             "gate_regression_report": r0_gate_regression,
         },
@@ -1400,9 +1512,16 @@ def run_native_intrinsic_curriculum(
             "gate": None if r0_core_gate is None else r0_core_gate.to_dict(),
             "precedes_v2_when_available": bool(r0_core_gate is not None),
             "routing_scope": (
-                "native_v2_certified_local_cells"
+                "native_local_direct_outcome_providers"
+                if strict_local_adaptive
+                and r0_child_authority is not None
+                and r0_core_gate is None
+                else "native_v2_certified_local_cells"
                 if r0_child_authority is not None and r0_core_gate is None
                 else "all_policy_boards_local_gate_only"
+            ),
+            "local_provider_precedes_outer_shell": bool(
+                strict_local_adaptive and r0_child_authority is not None
             ),
             "stage_specific_preemption": False,
         },
@@ -1412,11 +1531,21 @@ def run_native_intrinsic_curriculum(
         "final_credit": selected_credit.snapshot(),
         "decision": {
             "r0_pass": r0_pass,
+            "r0_pass_semantics": (
+                "nonempty_local_direct_outcome_provider_set"
+                if strict_local_adaptive
+                else "aggregate_mastery_gate"
+            ),
             "r1_executed": r1_executed,
             "r1_pass": r1_pass,
             "r1_validation_pass": r1_validation_pass,
             "r1_final_report_pass": r1_pass,
             "r0_final_report_pass": r0_final_report_pass,
+            "r0_final_report_pass_semantics": (
+                "aggregate_performance_report_only"
+                if strict_local_adaptive
+                else "selected_gate_plus_regression"
+            ),
             "r0_regression_pass_report_only": r0_regression_pass,
             "r1_regression_pass_report_only": r1_regression_pass_report_only,
             "primary_upper_bound_arm": primary_arm_name,
@@ -1932,12 +2061,17 @@ def _train_r0(
             terminal_kind = _execute_white_and_observe(board, move)
             credit.register(triplet_id, hierarchy_depth=1)
             credit.begin_episode()
-            event = credit.transition(
-                triplet_id,
-                responsibilities=(
+            responsibilities = (
+                (Responsibility(triplet_id, parent_distance=0),)
+                if _strict_local_adaptive_mode(config)
+                else (
                     Responsibility(triplet_id, parent_distance=0),
                     Responsibility(R0_COMPETENCE_ID, parent_distance=1),
-                ),
+                )
+            )
+            event = credit.transition(
+                triplet_id,
+                responsibilities=responsibilities,
                 terminal_kind=terminal_kind,
                 prediction_override=graph_prediction,
             )
@@ -2403,6 +2537,8 @@ def _r1_reply_authority_from_classification(
     *,
     exposure_count: int,
     grounded: Any,
+    provider_value: float | None = None,
+    provider_confidence: float | None = None,
 ) -> ReplyAuthority:
     """Project a V2 classification into the generic envelope's read-set."""
 
@@ -2448,11 +2584,35 @@ def _r1_reply_authority_from_classification(
     # Accept only the exact boolean type so missing values, strings, and
     # integer sentinels cannot silently open a child envelope.
     grounded_value = grounded if type(grounded) is bool else False
+    value = 1.0 - uncertainty
+    if provider_value is not None:
+        try:
+            local_value = float(provider_value)
+        except (TypeError, ValueError):
+            grounded_value = False
+        else:
+            if not math.isfinite(local_value) or not 0.0 < local_value <= 1.0:
+                grounded_value = False
+            else:
+                value = min(value, local_value)
+    if provider_confidence is not None:
+        try:
+            local_confidence = float(provider_confidence)
+        except (TypeError, ValueError):
+            grounded_value = False
+        else:
+            if (
+                not math.isfinite(local_confidence)
+                or not 0.0 < local_confidence <= 1.0
+            ):
+                grounded_value = False
+            else:
+                probability = min(probability, local_confidence)
     return ReplyAuthority(
         reply_id=str(reply_id),
         state=state,
         confidence=probability,
-        value=1.0 - uncertainty,
+        value=value,
         exposure_count=int(exposure_count),
         grounded=grounded_value,
     )
@@ -2472,6 +2632,51 @@ def _r1_terminal_reply_authority(
         value=0.0,
         exposure_count=int(exposure_count),
         grounded=True,
+    )
+
+
+def _r1_reply_authority_from_local_provider(
+    reply_id: str,
+    provider: Mapping[str, Any],
+    *,
+    exposure_count: int,
+) -> ReplyAuthority:
+    """Project one graph-selected, directly grounded R0 provider."""
+
+    try:
+        value = float(provider["expected_value"])
+        confidence = float(provider["confidence"])
+        uncertainty = float(provider["uncertainty"])
+        direct_positive = int(provider["direct_positive_evidence"])
+        direct_contrast = int(provider["direct_contrast_evidence"])
+    except (KeyError, TypeError, ValueError, OverflowError):
+        value = confidence = 0.0
+        uncertainty = 1.0
+        direct_positive = 0
+        direct_contrast = 1
+    valid = bool(
+        isinstance(provider.get("cell_id"), str)
+        and provider.get("cell_id")
+        and math.isfinite(value)
+        and 0.0 < value <= 1.0
+        and math.isfinite(confidence)
+        and 0.0 < confidence <= 1.0
+        and math.isfinite(uncertainty)
+        and 0.0 <= uncertainty < 1.0
+        and direct_positive > 0
+        and direct_contrast == 0
+    )
+    return ReplyAuthority(
+        reply_id=str(reply_id),
+        state=(
+            AvailabilityState.AVAILABLE
+            if valid
+            else AvailabilityState.UNKNOWN
+        ),
+        confidence=confidence if valid else 0.0,
+        value=value if valid else 0.0,
+        exposure_count=int(exposure_count),
+        grounded=valid,
     )
 
 
@@ -2642,8 +2847,23 @@ def _v2_grounding_audit(
     that omits those fields does not weaken the exact-boolean grounded check.
     """
 
-    provenance = getattr(getattr(getattr(authority, "base", None), "r0", None),
-                         "provenance", None)
+    r0 = getattr(getattr(authority, "base", None), "r0", None)
+    provenance = getattr(r0, "provenance", None)
+    direct_provider_ids = tuple(
+        sorted(getattr(r0, "direct_provider_ids", ()))
+    )
+    if direct_provider_ids:
+        return True, {
+            "grounded": True,
+            "mature": True,
+            "can_emit": True,
+            "grounding_source": "exact_selected_real_returns",
+            "consolidated_value": None,
+            "explicit_grounding_valid": True,
+            "local_direct_outcome_mode": True,
+            "direct_provider_count": len(direct_provider_ids),
+            "direct_provider_ids": list(direct_provider_ids),
+        }
     raw_grounded = getattr(provenance, "grounded", None)
     raw_mature = getattr(provenance, "mature", None)
     raw_can_emit = getattr(provenance, "can_emit", None)
@@ -2659,6 +2879,9 @@ def _v2_grounding_audit(
         "grounding_source": getattr(provenance, "grounding_source", None),
         "consolidated_value": getattr(provenance, "consolidated_value", None),
         "explicit_grounding_valid": bool(grounded),
+        "local_direct_outcome_mode": False,
+        "direct_provider_count": 0,
+        "direct_provider_ids": [],
     }
     return bool(grounded), audit
 
@@ -2708,6 +2931,8 @@ def _grounded_all_reply_successor_signal(
     bootstrap_enabled: bool,
     actual_mate: bool,
     clean_preoutcome_evidence: bool,
+    credit: IntrinsicCreditEngine | None = None,
+    provider_ids: Sequence[str] = (),
 ) -> CompetenceSignal | None:
     """Compose the exact worst-reply value without inventing a provider.
 
@@ -2735,12 +2960,39 @@ def _grounded_all_reply_successor_signal(
         or confidence <= 0.0
     ):
         return None
+    normalized_provider_ids = tuple(sorted(set(map(str, provider_ids))))
+    grounding_level = 1
+    grounding_ancestors: tuple[str, ...]
+    if normalized_provider_ids:
+        if credit is None:
+            raise ValueError("local all-reply providers require credit state")
+        providers = []
+        for provider_id in normalized_provider_ids:
+            state = credit.states.get(provider_id)
+            if (
+                state is None
+                or credit.direct_outcome_provider_response(provider_id)
+                is None
+            ):
+                return None
+            providers.append(state)
+        ancestors = set(normalized_provider_ids)
+        for provider in providers:
+            ancestors.update(provider.grounding_ancestors)
+        grounding_level = 1 + max(
+            int(provider.grounding_level or 0)
+            for provider in providers
+        )
+        grounding_ancestors = tuple(sorted(ancestors))
+    else:
+        normalized_provider_ids = (R0_COMPETENCE_ID,)
+        grounding_ancestors = (R0_COMPETENCE_ID,)
     return CompetenceSignal(
         value=value,
         confidence=min(1.0, confidence),
-        provider_ids=(R0_COMPETENCE_ID,),
-        grounding_level=1,
-        grounding_ancestors=(R0_COMPETENCE_ID,),
+        provider_ids=normalized_provider_ids,
+        grounding_level=grounding_level,
+        grounding_ancestors=grounding_ancestors,
     )
 
 
@@ -2816,6 +3068,7 @@ def _prospective_counterexample_reply_probe(
             v2_grounding: dict[str, Any] | None = None
             core_response: dict[str, Any] | None = None
             effective_core_response: dict[str, Any] | None = None
+            local_provider: Mapping[str, Any] | None = None
             core_available = False
             effective_core_available = False
         else:
@@ -2827,7 +3080,25 @@ def _prospective_counterexample_reply_probe(
             )
             classification = dict(v2_response.get("classification", {}))
             v2_grounded, v2_grounding = _v2_grounding_audit(authority)
-            if core_enabled:
+            local_provider = v2_response.get("local_provider")
+            if isinstance(local_provider, Mapping):
+                authority_row = _r1_reply_authority_from_local_provider(
+                    reply_id,
+                    local_provider,
+                    exposure_count=exposure_count,
+                )
+                core_available = authority_row.grounded
+                effective_core_available = authority_row.grounded
+                core_response = dict(v2_response)
+                effective_core_response = {
+                    **dict(v2_response),
+                    "available": authority_row.grounded,
+                    "grounded": authority_row.grounded,
+                    "availability_source": (
+                        "native_local_direct_outcome_provider"
+                    ),
+                }
+            elif core_enabled:
                 core_available, core_response = _protected_core_r0_available(
                     r0_core_graph,
                     r0_core_gate,
@@ -2856,7 +3127,17 @@ def _prospective_counterexample_reply_probe(
                         reply_id,
                         classification,
                         exposure_count=exposure_count,
-                        grounded=bool(v2_grounded),
+                        grounded=v2_response.get("grounded"),
+                        provider_value=(
+                            v2_response.get("provider_value")
+                            if v2_response.get("local_provider_available") is True
+                            else None
+                        ),
+                        provider_confidence=(
+                            v2_response.get("provider_confidence")
+                            if v2_response.get("local_provider_available") is True
+                            else None
+                        ),
                     )
             else:
                 core_available = False
@@ -2867,7 +3148,17 @@ def _prospective_counterexample_reply_probe(
                     reply_id,
                     classification,
                     exposure_count=exposure_count,
-                    grounded=bool(v2_grounded),
+                    grounded=v2_response.get("grounded"),
+                    provider_value=(
+                        v2_response.get("provider_value")
+                        if v2_response.get("local_provider_available") is True
+                        else None
+                    ),
+                    provider_confidence=(
+                        v2_response.get("provider_confidence")
+                        if v2_response.get("local_provider_available") is True
+                        else None
+                    ),
                 )
             virtual_query_count += 1
         authority_rows.append(authority_row)
@@ -2884,6 +3175,11 @@ def _prospective_counterexample_reply_probe(
             "core_response": core_response,
             "effective_core_available": bool(effective_core_available),
             "effective_core_response": effective_core_response,
+            "provider_id": (
+                None
+                if local_provider is None
+                else local_provider.get("cell_id")
+            ),
             "effective_available": bool(
                 authority_row.state is AvailabilityState.AVAILABLE
                 and authority_row.grounded
@@ -2894,7 +3190,11 @@ def _prospective_counterexample_reply_probe(
                 "terminal_refuted"
                 if terminal_kind is not None
                 else (
-                    "frozen_r0_local_competence_gate"
+                    (
+                        "native_local_direct_outcome_provider"
+                        if local_provider is not None
+                        else "frozen_r0_local_competence_gate"
+                    )
                     if effective_core_available
                     else (
                         "v2_grounded_descendant"
@@ -2920,6 +3220,13 @@ def _prospective_counterexample_reply_probe(
     )
     if selected is None:
         raise RuntimeError("all-reply envelope selected no enumerated reply")
+    provider_ids = tuple(sorted({
+        str(context["provider_id"])
+        for context in contexts
+        if context["effective_available"]
+        and isinstance(context.get("provider_id"), str)
+        and context["provider_id"]
+    }))
     return {
         "envelope": envelope,
         "contexts": tuple(contexts),
@@ -2928,6 +3235,7 @@ def _prospective_counterexample_reply_probe(
         "terminal_refuted_count": terminal_refuted_count,
         "reply_ids": tuple(context["reply_id"] for context in contexts),
         "selected_exposure_key": selected["exposure_key"],
+        "provider_ids": provider_ids,
     }
 
 
@@ -2935,6 +3243,7 @@ def _prospective_counterexample_episode(
     authority: Any,
     after_first: chess.Board,
     *,
+    credit: IntrinsicCreditEngine | None = None,
     fen: str,
     white_move_uci: str,
     arm_name: str,
@@ -3086,11 +3395,13 @@ def _prospective_counterexample_episode(
             bootstrap_enabled=arm_bootstrap_enabled,
             actual_mate=actual_mate,
             clean_preoutcome_evidence=clean_preoutcome_evidence,
+            credit=credit,
+            provider_ids=probe["provider_ids"],
         )
         if successor_signal is not None:
             counters["reply_counterexample_handoff_count"] += 1
             counters["child_handoffs"] += 1
-            successor_ids = (R0_COMPETENCE_ID,)
+            successor_ids = tuple(successor_signal.provider_ids)
             successor_signal_evidence = (
                 "fresh_preoutcome_envelope"
                 if real_event
@@ -3109,6 +3420,7 @@ def _prospective_counterexample_episode(
         "selected_reply_id": selected["reply_id"],
         "selected_black_move": selected["black_move"],
         "selected_terminal_kind": selected_terminal_kind,
+        "local_provider_ids": list(probe["provider_ids"]),
         "envelope": envelope.audit.to_manifest(),
         "reply_context": [
             {
@@ -3931,6 +4243,7 @@ def _run_r1_arm(
                         ) = _prospective_counterexample_episode(
                             r0_child_authority,
                             after_first,
+                            credit=credit,
                             fen=fen,
                             white_move_uci=move.uci(),
                             arm_name=arm_name,
@@ -6313,9 +6626,28 @@ def _v2_r0_available(
     # boundaries retain the complete source and replay audits.
     actuation = query.actuation
     selected_move = None if actuation is None else str(actuation.move_uci)
+    selected_triplet = (
+        None
+        if actuation is None
+        else str(
+            getattr(
+                actuation,
+                "selected_triplet_id",
+                actuation.option_identity,
+            )
+        )
+    )
     raw_grounded = getattr(query.response, "grounded", None)
     grounded = raw_grounded if type(raw_grounded) is bool else False
     authority_grounded, authority_grounding = _v2_grounding_audit(authority)
+    base_provenance = provenance.get("base_availability_provenance")
+    local_provider = (
+        base_provenance.get("local_provider")
+        if isinstance(base_provenance, Mapping)
+        else None
+    )
+    if not isinstance(local_provider, Mapping):
+        local_provider = None
     available = bool(
         query.response.available
         and grounded
@@ -6323,7 +6655,8 @@ def _v2_r0_available(
     )
     response = {
         "selected_move": selected_move,
-        "selected_triplet": (
+        "selected_triplet": selected_triplet,
+        "selected_option_identity": (
             None if actuation is None else str(actuation.option_identity)
         ),
         "observed_immediate_mate": available,
@@ -6333,6 +6666,25 @@ def _v2_r0_available(
         "grounded": raw_grounded,
         "grounding_source": getattr(query.response, "grounding_source", None),
         "authority_grounding": authority_grounding,
+        "local_provider_available": local_provider is not None,
+        "local_provider": (
+            None if local_provider is None else dict(local_provider)
+        ),
+        "provider_id": (
+            None
+            if local_provider is None
+            else str(local_provider["cell_id"])
+        ),
+        "provider_value": (
+            0.0
+            if local_provider is None
+            else float(local_provider["expected_value"])
+        ),
+        "provider_confidence": (
+            0.0
+            if local_provider is None
+            else float(local_provider["confidence"])
+        ),
         "virtual_frame_terminal_grounding_granted": False,
     }
     return available, response
@@ -7302,6 +7654,24 @@ def _v2_r0_observe_training_successor(
         raise ValueError("protected R0 core triplet ids are not in its graph")
 
     def add_core_routing(response: dict[str, Any]) -> None:
+        local_provider = response.get("local_provider")
+        if isinstance(local_provider, Mapping):
+            response["core_routing"] = {
+                "available": True,
+                "effective_available": True,
+                "local_available": True,
+                "response": dict(response),
+                "local_response": dict(response),
+                "v2_grounding": response.get("authority_grounding"),
+                "v2_fallback_available": bool(available),
+                "action_parity": True,
+                "core_selected_move": response.get("selected_move"),
+                "v2_selected_move": response.get("selected_move"),
+                "effective_source": (
+                    "native_local_direct_outcome_provider"
+                ),
+            }
+            return
         if not core_enabled:
             return
         _core_local_available, local_response = _protected_core_r0_available(
@@ -7404,26 +7774,61 @@ def _v2_r0_observe_training_successor(
     )
     seen_predecessor_fens.add(predecessor_fen)
     classification = pending.pre_outcome_classification.to_manifest()
-    provenance = getattr(getattr(authority.base, "r0", None), "provenance", None)
+    r0 = getattr(authority.base, "r0", None)
+    provenance = getattr(r0, "provenance", None)
+    selected_triplet = str(
+        getattr(
+            trace.actuation,
+            "selected_triplet_id",
+            trace.actuation.option_identity,
+        )
+    )
+    direct_provider_ids = tuple(
+        getattr(r0, "direct_provider_ids", ())
+    )
+    local_provider = (
+        r0.credit.direct_outcome_provider_response(selected_triplet)
+        if direct_provider_ids
+        else None
+    )
     raw_grounded = getattr(provenance, "grounded", None)
     authority_grounded, authority_grounding = _v2_grounding_audit(authority)
     grounded = bool(
-        type(raw_grounded) is bool
-        and raw_grounded
-        and authority_grounded
+        local_provider is not None and authority_grounded
+        if direct_provider_ids
+        else (
+            type(raw_grounded) is bool
+            and raw_grounded
+            and authority_grounded
+        )
     )
     available = bool(
         str(classification["state"]).lower() == "available" and grounded
     )
     response = {
         "selected_move": selected_move.uci(),
-        "selected_triplet": str(trace.actuation.option_identity),
+        "selected_triplet": selected_triplet,
+        "selected_option_identity": str(trace.actuation.option_identity),
         "observed_immediate_mate": successor.is_checkmate(),
         "availability_source": "v2_prospective_pre_outcome_graph_emission",
         "classification": classification,
-        "grounded": raw_grounded,
-        "grounding_source": getattr(provenance, "grounding_source", None),
+        # Preserve the provider's raw legacy value for audit while the local
+        # path exposes only its computed strict boolean.  ``available`` above
+        # always uses the fail-closed normalized value.
+        "grounded": (
+            grounded if direct_provider_ids else raw_grounded
+        ),
+        "grounding_source": (
+            None
+            if local_provider is None
+            else local_provider["grounding_source"]
+        ) if direct_provider_ids else getattr(
+            provenance, "grounding_source", None
+        ),
         "authority_grounding": authority_grounding,
+        "local_provider": (
+            None if local_provider is None else dict(local_provider)
+        ),
         "certification_emission": emission.manifest(),
         "virtual_frame_terminal_grounding_granted": False,
     }

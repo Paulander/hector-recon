@@ -20,6 +20,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _prospective_counterexample_reply_probe,
     _r1_reply_counter_defaults,
     _r1_reply_authority_from_classification,
+    _r1_reply_authority_from_local_provider,
     _r1_terminal_reply_terminal_kind,
 )
 from recon_lite_chess.autogrowth.native_all_reply_envelope import (
@@ -215,6 +216,45 @@ class _PerSuccessorAuthority(_Authority):
         )
 
 
+class _LocalProviderAuthority(_Authority):
+    """UNKNOWN shell around one exact, locally grounded native provider."""
+
+    def __init__(self):
+        super().__init__(state="UNKNOWN")
+        credit = IntrinsicCreditEngine(
+            IntrinsicCreditConfig(min_grounding_evidence=1)
+        )
+        credit.register("test-r0")
+        credit.begin_episode()
+        credit.transition("test-r0", terminal_kind="mate")
+        audit = credit.consolidate_direct_outcome_providers(("test-r0",))
+        assert audit["provider_ids"] == ["test-r0"]
+        self.credit = credit
+        self.base.r0.credit = credit
+        self.base.r0.direct_provider_ids = frozenset(("test-r0",))
+        self.base.r0.provenance = SimpleNamespace(
+            grounded=False,
+            mature=False,
+            can_emit=False,
+            consolidated_value=0.0,
+            grounding_source="unused_global_test_provenance",
+        )
+
+    def open_virtual(self, frame, **_kwargs):
+        opened = super().open_virtual(frame, **_kwargs)
+        provider = self.credit.direct_outcome_provider_response("test-r0")
+        assert provider is not None
+        opened["query"].response = SimpleNamespace(
+            available=True,
+            grounded=True,
+            grounding_source=provider["grounding_source"],
+        )
+        opened["query"].availability_provenance[
+            "base_availability_provenance"
+        ] = {"local_provider": provider}
+        return opened
+
+
 class _CoreGraph:
     """Small graph-shaped frozen-core double for envelope routing tests."""
 
@@ -293,10 +333,12 @@ def _episode(
     seen=None,
     core_graph=None,
     core_gate=None,
+    credit=None,
 ):
     return _prospective_counterexample_episode(
         authority,
         after_first,
+        credit=credit,
         fen=fen,
         white_move_uci=first.uci(),
         arm_name="test",
@@ -314,6 +356,85 @@ def _episode(
             None if core_graph is None else frozenset(core_graph.triplet_ids)
         ),
     )
+
+
+def test_unknown_shell_cannot_veto_exact_local_all_reply_providers() -> None:
+    authority = _LocalProviderAuthority()
+    fen = R1_RETIRED_DEVELOPMENT_FENS[0]
+    board = chess.Board(fen)
+    first = _forced_mate_in_two_first_moves(board)[0]
+    after_first = board.copy(stack=False)
+    after_first.push(first)
+    counters = {
+        **_r1_reply_counter_defaults(),
+        "availability_queries": 0,
+        "availability_positives": 0,
+        "virtual_frame_queries": 0,
+        "v2_duplicate_virtual_queries": 0,
+        "v2_real_observations": 0,
+        "v2_structural_transitions": 0,
+        "child_handoffs": 0,
+    }
+
+    probe = _prospective_counterexample_reply_probe(
+        authority,
+        after_first,
+        fen=fen,
+        white_move_uci=first.uci(),
+        exposure_counts={},
+        frame_prefix="test:local-provider-probe",
+        frame_session=None,
+        generic_seed=17,
+    )
+    assert probe["envelope"].state is AvailabilityState.AVAILABLE
+    assert probe["provider_ids"] == ("test-r0",)
+    assert all(
+        row["classification"]["state"] == "UNKNOWN"
+        for row in probe["contexts"]
+    )
+
+    terminal_kind, successor_ids, episode = _episode(
+        authority,
+        fen,
+        first,
+        after_first,
+        counters,
+        credit=authority.credit,
+    )
+    assert terminal_kind is None
+    assert successor_ids == ("test-r0",)
+    assert episode["successor_signal"].provider_ids == ("test-r0",)
+    assert episode["successor_signal"].value > 0.0
+
+
+@pytest.mark.parametrize(
+    "override",
+    (
+        {"expected_value": float("nan")},
+        {"confidence": float("inf")},
+        {"uncertainty": -0.1},
+        {"direct_positive_evidence": 0},
+        {"direct_contrast_evidence": 1},
+    ),
+)
+def test_malformed_local_provider_abstains(override) -> None:
+    provider = {
+        "cell_id": "local:test",
+        "expected_value": 0.8,
+        "confidence": 0.75,
+        "uncertainty": 0.25,
+        "direct_positive_evidence": 3,
+        "direct_contrast_evidence": 0,
+    }
+    provider.update(override)
+    row = _r1_reply_authority_from_local_provider(
+        "reply:test",
+        provider,
+        exposure_count=0,
+    )
+    assert row.state is AvailabilityState.UNKNOWN
+    assert row.grounded is False
+    assert row.value == 0.0
 
 
 def test_new_reply_policy_is_gated_by_authority_and_defaults_to_legacy() -> None:

@@ -379,6 +379,8 @@ def test_strict_r0_uses_local_choice_and_validation_cannot_stop_budget() -> None
         checkpoint["validation_action_selection_mode"]
         for checkpoint in training["validation_checkpoints"]
     } == {R1_ACTION_SELECTION_LOCAL_RECON}
+    assert credit.states[R0_COMPETENCE_ID].terminal_evidence == 0
+    assert credit.states[R0_COMPETENCE_ID].mature is False
 
     disabled = _evaluate_r0(
         graph,
@@ -576,6 +578,133 @@ def test_top_level_r0_stage_entry_uses_validation_and_reports_regression_last(
     progress = json.loads(Path(result.config.progress_path).read_text())
     assert "regression_accuracy" not in progress["r0"]
     assert progress["r0"]["regression_withheld_until_final"] is True
+
+
+def test_strict_stage_entry_reads_local_providers_not_aggregate_accuracy(
+    tmp_path, monkeypatch
+) -> None:
+    pools = _Pools(
+        r0_train=(MATE_ONE_FEN,),
+        r0_validation=(MATE_ONE_FEN,),
+        r0_regression=(MATE_ONE_FEN,),
+        gate_train_decoys=(R1_RETIRED_DEVELOPMENT_FENS[1],),
+        gate_validation_decoys=(R1_RETIRED_DEVELOPMENT_FENS[2],),
+        gate_regression_decoys=(R1_RETIRED_DEVELOPMENT_FENS[3],),
+        r1_train=(),
+        r1_validation=(),
+        r1_regression=(),
+        r0_train_strata=("test",),
+        r0_validation_strata=("test",),
+        r0_regression_strata=("test",),
+        r0_excluded_fens=(),
+        r0_pool_mode="test",
+        r1_train_strata=(),
+        r1_validation_strata=(),
+        r1_regression_strata=(),
+        r1_pool_mode="test",
+    )
+
+    class Gate:
+        mature = False
+
+        @staticmethod
+        def to_dict():
+            return {"mature": False}
+
+        @staticmethod
+        def evaluate(examples):
+            return {
+                "count": len(examples),
+                "true_positive": 0,
+                "false_positive": 0,
+                "true_negative": len(examples),
+                "false_negative": 0,
+                "precision": 0.0,
+                "recall": 0.0,
+            }
+
+    def seed_one_local_provider(graph, credit, *_args, **_kwargs):
+        board = chess.Board(MATE_ONE_FEN)
+        move = next(
+            item
+            for item in board.legal_moves
+            if _execute_white_and_observe(board, item) == "mate"
+        )
+        triplet_id = graph.apply_intrinsic_td(
+            board,
+            move,
+            td_error=1.0,
+            stage_diagnostic="strict_local_provider_test",
+        )
+        credit.register(triplet_id)
+        for _ in range(3):
+            credit.begin_episode()
+            credit.transition(triplet_id, terminal_kind="mate")
+        return {
+            "episodes": 3,
+            "observed_mate_count": 3,
+            "observed_nonterminal_count": 0,
+            "observed_failure_count": 0,
+            "formal_confirmation_failure_count": 0,
+            "stopped_epoch": 3,
+            "validation_checkpoints": [],
+            "teacher_positive_move_sets_consumed": 0,
+            "forced_first_move_labels_consumed": 0,
+            "graph_after_training": graph.learned_state_audit(),
+            "duration_seconds": 0.0,
+        }
+
+    def submastery_report(_graph, fens, **_kwargs):
+        count = len(tuple(fens))
+        return {
+            "position_count": count,
+            "correct_count": max(0, count - 1),
+            "accuracy": 0.9791666666666666,
+            "null_selection_count": 0,
+            "illegal_move_count": 0,
+            "stalemate_count": 0,
+            "rook_loss_count": 0,
+            "samples": [],
+        }
+
+    monkeypatch.setattr(curriculum_module, "_build_pools", lambda _cfg: pools)
+    monkeypatch.setattr(curriculum_module, "_train_r0", seed_one_local_provider)
+    monkeypatch.setattr(curriculum_module, "_evaluate_r0", submastery_report)
+    monkeypatch.setattr(
+        curriculum_module,
+        "_fit_r0_gate",
+        lambda *_args, **_kwargs: (Gate(), {"selection_split": "report_only"}),
+    )
+
+    result = run_native_intrinsic_curriculum(
+        config=NativeIntrinsicCurriculumConfig(
+            seed=456,
+            run_r1=False,
+            r0_action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+            r0_boundary_ecology_enabled=True,
+            validation_controls_stage_transitions=False,
+            output_path=str(tmp_path / "result.json"),
+            progress_path=str(tmp_path / "progress.json"),
+        )
+    )
+
+    assert result.payload["r0"]["pass"] is True
+    assert result.payload["r0"]["pass_semantics"] == (
+        "nonempty_local_direct_outcome_provider_set"
+    )
+    assert result.payload["r0"]["training_mastery_report"] is False
+    assert result.payload["r0"]["endogenous_readiness_pass"] is True
+    assert result.payload["r0"]["final_report_pass"] is False
+    assert result.payload["r0"]["final_report_pass_semantics"] == (
+        "aggregate_training_and_regression_performance_report_only"
+    )
+    assert result.payload["r0"]["local_provider_audit"]["provider_count"] == 1
+    assert result.payload["r0"]["consolidation"][
+        "global_r0_maturity_mutated"
+    ] is False
+    global_state = result.payload["final_credit"]["states"][R0_COMPETENCE_ID]
+    assert global_state["terminal_evidence"] == 0
+    assert global_state["mature"] is False
 
 
 def test_v2_runtime_integrity_failure_cannot_rescue_r1_with_legacy_gate(

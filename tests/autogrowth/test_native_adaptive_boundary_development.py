@@ -583,14 +583,18 @@ def test_run_marks_result_payload_without_running_curriculum(
     assert protocol["no_learner_oracle"] is True
     assert protocol["harness_exhaustive_evaluation_used"] is True
     assert protocol["harness_evaluation_influences_learning"] is False
-    assert protocol["stage_gates_are_harness_stop_go_only"] is False
+    assert protocol["stage_gates_are_harness_stop_go_only"] is True
     assert protocol["stage_gates_are_harness_controlled"] is True
     assert protocol["r0_stage_entry_controller"] == (
-        "training_outcome_policy_mastery_harness"
+        "local_direct_outcome_provider_readiness"
     )
     assert protocol[
         "training_outcome_controls_maturity_consolidation_freeze_and_stage_entry"
-    ] is True
+    ] is False
+    assert protocol["aggregate_training_score_controls_learning_or_stage_entry"] is False
+    assert protocol["exact_local_real_returns_control_exact_provider_authority"] is True
+    assert protocol["global_r0_competence_state_used"] is False
+    assert protocol["graph_wide_maturation_used"] is False
     assert protocol["whole_curriculum_endogenous_claimed"] is False
     assert protocol[
         "validation_controls_maturity_consolidation_freeze_and_stage_entry"
@@ -598,7 +602,7 @@ def test_run_marks_result_payload_without_running_curriculum(
     assert protocol[
         "validation_outcome_mastery_is_report_only_for_stage_transitions"
     ] is True
-    assert protocol["validation_is_report_only_for_stage_transitions"] is False
+    assert protocol["validation_is_report_only_for_stage_transitions"] is True
     assert protocol[
         "validation_runtime_integrity_safety_veto_may_block_stage_entry"
     ] is True

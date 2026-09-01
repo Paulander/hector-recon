@@ -735,16 +735,34 @@ def build_empty_event_driven_v2_r0_authority(
         raise ValueError("empty V2 factory requires v2_prospective mode")
     if not config.r0_boundary_ecology_enabled:
         raise ValueError("empty V2 factory requires the boundary ecology")
-    if not credit.states[R0_COMPETENCE_ID].mature:
-        raise RuntimeError("empty V2 factory requires mature R0 credit")
+    local_provider_ids = credit.direct_outcome_provider_ids(
+        graph.triplet_ids
+    )
+    if not local_provider_ids:
+        raise RuntimeError(
+            "empty V2 factory requires a directly grounded local R0 provider"
+        )
 
     graph_copy = copy.deepcopy(graph)
     credit_copy = copy.deepcopy(credit)
     r0 = NativeR0Organism(
         graph=graph_copy,
         credit=credit_copy,
-        provenance=FrozenCompetenceProvenance.from_credit(
-            credit_copy, R0_COMPETENCE_ID
+        # The legacy singleton competence record remains only as a serialized
+        # compatibility field.  In local-provider mode the organism never
+        # consults it: each selected triplet must carry its own grounded REAL
+        # outcome authority or the response abstains.
+        provenance=FrozenCompetenceProvenance(
+            child_id=R0_COMPETENCE_ID,
+            mature=False,
+            grounded=False,
+            can_emit=False,
+            consolidated_value=0.0,
+            uncertainty=1.0,
+            terminal_evidence=0,
+            causal_confirmations=0,
+            grounding_level=None,
+            grounding_source="unused_in_local_direct_outcome_mode",
         ),
         frozen_triplet_ids=frozenset(graph_copy.triplet_ids),
         source_manifest={
@@ -755,6 +773,10 @@ def build_empty_event_driven_v2_r0_authority(
             "boundary_initialization": "empty_event_driven_positive_shell",
             "pool_rows_read_for_boundary_initialization": 0,
             "validation_or_regression_rows_read": False,
+            "local_direct_outcome_provider_count": len(
+                local_provider_ids
+            ),
+            "global_r0_competence_provider_used": False,
         },
     )
     envelope_seed = int(config.seed) ^ 0x56325052
@@ -840,6 +862,8 @@ def build_empty_event_driven_v2_r0_authority(
         "negative_authority_roots_initialized": 0,
         "initial_state": zero_state,
         "candidate_count": 0,
+        "local_direct_outcome_provider_count": len(local_provider_ids),
+        "global_r0_competence_provider_used": False,
         "certified_available_count": 0,
         "certified_refuted_count": 0,
         "structural_mode": StructuralMode.EVENT_DRIVEN.value,

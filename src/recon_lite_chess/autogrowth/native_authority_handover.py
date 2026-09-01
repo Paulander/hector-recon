@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 import copy
 import hashlib
 import json
@@ -127,6 +127,20 @@ class GraphActuation:
     formal_ticks: int
     graph_owned: bool = True
     host_fallback: bool = False
+
+    @property
+    def selected_triplet_id(self) -> str:
+        """Return the native source bound to this emitted actuator."""
+
+        option = str(self.option_identity)
+        if option.startswith("tg26o_triplet_") and ":" in option:
+            triplet_id, bound_move = option.rsplit(":", 1)
+            if bound_move != str(self.move_uci):
+                raise RuntimeError(
+                    "native option identity is not bound to its move"
+                )
+            return triplet_id
+        return option
 
 
 @dataclass(frozen=True)
@@ -282,24 +296,57 @@ class NativeR0DreamSession:
         if mutation_count:
             raise RuntimeError("virtual R0 request mutated the persistent organism")
         policy_response = actuation is not None
+        selected_triplet = (
+            None if actuation is None else actuation.selected_triplet_id
+        )
+        local_provider = (
+            self.virtual_credit.direct_outcome_provider_response(
+                selected_triplet
+            )
+            if self.organism.direct_provider_ids
+            else None
+        )
+        local_mode = bool(self.organism.direct_provider_ids)
         grounded = bool(
-            self.organism.provenance.grounded
-            and self.organism.provenance.can_emit
+            local_provider is not None
+            if local_mode
+            else (
+                self.organism.provenance.grounded
+                and self.organism.provenance.can_emit
+            )
         )
         response = ChildResponse(
-            child_id=self.organism.provenance.child_id,
+            child_id=(
+                str(local_provider["cell_id"])
+                if local_provider is not None
+                else self.organism.provenance.child_id
+            ),
             confirmed=policy_response,
             policy_response=policy_response,
-            available=policy_response,
+            available=bool(policy_response and grounded),
             expected_value=(
-                self.organism.provenance.consolidated_value
-                if policy_response
-                else 0.0
+                float(local_provider["expected_value"])
+                if local_provider is not None
+                else (
+                    self.organism.provenance.consolidated_value
+                    if policy_response and grounded
+                    else 0.0
+                )
             ),
-            uncertainty=self.organism.provenance.uncertainty,
+            uncertainty=(
+                float(local_provider["uncertainty"])
+                if local_provider is not None
+                else self.organism.provenance.uncertainty
+            ),
             grounded=grounded,
             grounding_source=(
-                self.organism.provenance.grounding_source if grounded else None
+                str(local_provider["grounding_source"])
+                if local_provider is not None
+                else (
+                    self.organism.provenance.grounding_source
+                    if grounded
+                    else None
+                )
             ),
         )
         return ChildQuery(
@@ -308,6 +355,22 @@ class NativeR0DreamSession:
             frame_id=frame.frame_id,
             persistent_mutation_count=mutation_count,
             effect_attempts=tuple(dict(row) for row in firewall.attempts),
+            active_competence_signal_ids=(
+                ()
+                if local_provider is None
+                else (str(local_provider["cell_id"]),)
+            ),
+            availability_provenance={
+                "authority": "NativeR0DreamSession",
+                "local_direct_outcome_mode": local_mode,
+                "selected_triplet_id": selected_triplet,
+                "local_provider": (
+                    None
+                    if local_provider is None
+                    else copy.deepcopy(local_provider)
+                ),
+                "global_provenance_used": not local_mode,
+            },
             graph_signal_trace=signal_trace,
         )
 
@@ -338,12 +401,21 @@ class NativeR0Organism:
     frozen_triplet_ids: frozenset[str]
     source_manifest: Mapping[str, Any]
     retrieval_budget_per_actuator: int = 16
+    direct_provider_ids: frozenset[str] = field(
+        init=False,
+        default_factory=frozenset,
+    )
     schema_version: str = SCHEMA_VERSION
 
     def __post_init__(self) -> None:
         if self.schema_version != SCHEMA_VERSION:
             raise ValueError(f"unsupported organism schema: {self.schema_version}")
-        if not self.provenance.can_emit:
+        self.direct_provider_ids = frozenset(
+            self.credit.direct_outcome_provider_ids(
+                self.frozen_triplet_ids
+            )
+        )
+        if not self.provenance.can_emit and not self.direct_provider_ids:
             raise ValueError("R0 organism must be mature, grounded, and causally confirmed")
         if not self.frozen_triplet_ids:
             raise ValueError("R0 organism requires a non-empty frozen learned graph")
@@ -365,6 +437,11 @@ class NativeR0Organism:
         if not hasattr(self, "retrieval_budget_per_actuator"):
             self.retrieval_budget_per_actuator = 16
         self.graph.normalize_inference_runtime()
+        self.direct_provider_ids = frozenset(
+            self.credit.direct_outcome_provider_ids(
+                self.frozen_triplet_ids
+            )
+        )
         if not hasattr(self, "_trace_state_identity_cache"):
             self.trace_state_identity()
 

@@ -665,18 +665,49 @@ class TraceNativeCompetenceDreamSession:
             if trace is None
             else self.organism.classify_trace(trace)
         )
-        available = classification.state == AvailabilityState.AVAILABLE
+        r0_provenance = dict(query.availability_provenance or {})
+        local_provider = r0_provenance.get("local_provider")
+        if not isinstance(local_provider, Mapping):
+            local_provider = None
+        locally_available = local_provider is not None
+        available = bool(
+            locally_available
+            or classification.state == AvailabilityState.AVAILABLE
+        )
+        legacy_grounded = bool(
+            self.organism.r0.provenance.grounded
+            and self.organism.r0.provenance.can_emit
+        )
+        grounded = bool(locally_available or legacy_grounded)
         response = ChildResponse(
-            child_id=self.organism.r0.provenance.child_id,
+            child_id=(
+                str(local_provider["cell_id"])
+                if local_provider is not None
+                else self.organism.r0.provenance.child_id
+            ),
             confirmed=available,
             policy_response=query.actuation is not None,
             available=available,
             expected_value=(
-                self.organism.r0.provenance.consolidated_value if available else 0.0
+                float(local_provider["expected_value"])
+                if local_provider is not None
+                else (
+                    self.organism.r0.provenance.consolidated_value
+                    if available
+                    else 0.0
+                )
             ),
-            uncertainty=classification.uncertainty,
-            grounded=self.organism.r0.provenance.grounded,
-            grounding_source=self.organism.r0.provenance.grounding_source,
+            uncertainty=(
+                float(local_provider["uncertainty"])
+                if local_provider is not None
+                else classification.uncertainty
+            ),
+            grounded=grounded,
+            grounding_source=(
+                str(local_provider["grounding_source"])
+                if local_provider is not None
+                else self.organism.r0.provenance.grounding_source
+            ),
         )
         result = ChildQuery(
             response=response,
@@ -690,6 +721,17 @@ class TraceNativeCompetenceDreamSession:
             availability_provenance={
                 "classification": classification.to_manifest(),
                 "authority": "selected_graph_signal_trace",
+                "local_provider": (
+                    None
+                    if local_provider is None
+                    else copy.deepcopy(dict(local_provider))
+                ),
+                "r0_availability_provenance": r0_provenance,
+                "effective_source": (
+                    "native_local_direct_outcome_provider"
+                    if local_provider is not None
+                    else "trace_native_competence_envelope"
+                ),
             },
             graph_signal_trace=trace,
         )

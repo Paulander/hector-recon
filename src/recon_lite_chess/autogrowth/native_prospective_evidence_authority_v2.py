@@ -13397,10 +13397,25 @@ class NativeProspectiveAuthorityV2:
             classification = self._classification_from_emissions(
                 self.states, graph
             )
-        available = (
+        # Composition is monotone at the protected native core boundary: an
+        # already grounded local provider cannot be vetoed merely because the
+        # initially empty prospective shell has no matching hypothesis yet.
+        # Conversely, shell-only authority retains the legacy provenance
+        # requirement; a certified classification does not manufacture local
+        # grounding in the strict adaptive mode.
+        base_available = bool(
+            raw.actuation is not None
+            and raw.response.available
+            and raw.response.grounded is True
+        )
+        legacy_provenance = self.base.r0.provenance
+        shell_available = bool(
             raw.actuation is not None
             and classification.state is AvailabilityState.AVAILABLE
+            and legacy_provenance.grounded is True
+            and legacy_provenance.can_emit is True
         )
+        available = bool(base_available or shell_available)
         matched_certified = tuple(
             cell_id for cell_id in graph["commitment"]
             if self.states[cell_id].prospectively_certified
@@ -13429,14 +13444,38 @@ class NativeProspectiveAuthorityV2:
             for cell_id in matched_certified
         }
         response = ChildResponse(
-            child_id=self.base.r0.provenance.child_id,
+            child_id=(
+                raw.response.child_id
+                if base_available
+                else legacy_provenance.child_id
+            ),
             confirmed=available,
             policy_response=raw.actuation is not None,
             available=available,
-            expected_value=VIRTUAL_AVAILABLE_VALUE if available else 0.0,
-            uncertainty=VIRTUAL_RESPONSE_UNCERTAINTY,
-            grounded=self.base.r0.provenance.grounded,
-            grounding_source=self.base.r0.provenance.grounding_source,
+            expected_value=(
+                float(raw.response.expected_value)
+                if base_available
+                else VIRTUAL_AVAILABLE_VALUE if shell_available else 0.0
+            ),
+            uncertainty=(
+                float(raw.response.uncertainty)
+                if base_available
+                else VIRTUAL_RESPONSE_UNCERTAINTY if shell_available else 1.0
+            ),
+            grounded=(
+                raw.response.grounded
+                if base_available
+                else legacy_provenance.grounded if shell_available else False
+            ),
+            grounding_source=(
+                raw.response.grounding_source
+                if base_available
+                else (
+                    legacy_provenance.grounding_source
+                    if shell_available
+                    else None
+                )
+            ),
         )
         result = ChildQuery(
             response=response,
@@ -13454,8 +13493,27 @@ class NativeProspectiveAuthorityV2:
                 "available_cell_ids": list(graph["available"]),
                 "refuted_cell_ids": list(graph["refuted"]),
                 "certification_provenance": provenance,
-                "response_value": VIRTUAL_AVAILABLE_VALUE if available else 0.0,
-                "response_uncertainty": VIRTUAL_RESPONSE_UNCERTAINTY,
+                "response_value": (
+                    float(response.expected_value)
+                ),
+                "response_uncertainty": (
+                    float(response.uncertainty)
+                ),
+                "availability_route": (
+                    "native_local_direct_outcome_provider"
+                    if base_available
+                    else (
+                        "prospectively_certified_shell"
+                        if shell_available
+                        else "abstain"
+                    )
+                ),
+                "base_child_id": raw.response.child_id,
+                "base_grounded": raw.response.grounded,
+                "base_grounding_source": raw.response.grounding_source,
+                "base_availability_provenance": copy.deepcopy(
+                    dict(raw.availability_provenance or {})
+                ),
                 "certification_evidence_added": 0,
             },
             graph_signal_trace=trace,

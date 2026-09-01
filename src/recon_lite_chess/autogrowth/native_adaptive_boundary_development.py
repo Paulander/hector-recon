@@ -440,20 +440,22 @@ def _development_protocol(
             config.r0_action_selection_mode
             == R0_ACTION_SELECTION_LOCAL_RECON
         ),
-        # Validation no longer steers the adaptive run. The curriculum still
-        # owns an explicit training-outcome boundary that commits R0 maturity,
-        # consolidation, freezing, and R1 entry; do not misreport that broader
-        # process as wholly endogenous or as a mere stop/go diagnostic.
-        "stage_gates_are_harness_stop_go_only": False,
+        # The harness still decides when the fixed R0 interaction phase ends
+        # and when R1 examples begin.  At that content-blind safe point it may
+        # stop if the graph has no self-authorized local provider, but it does
+        # not turn an aggregate train/validation score into maturity, value,
+        # action priority, or graph structure.
+        "stage_gates_are_harness_stop_go_only": True,
         "stage_gates_are_harness_controlled": True,
-        "r0_stage_entry_controller": (
-            "training_outcome_policy_mastery_harness"
-            if not config.validation_controls_stage_transitions
-            else "validation_outcome_mastery_harness"
-        ),
+        "r0_stage_entry_controller": "local_direct_outcome_provider_readiness",
         "training_outcome_controls_maturity_consolidation_freeze_and_stage_entry": (
-            not bool(config.validation_controls_stage_transitions)
+            False
         ),
+        "aggregate_training_score_controls_learning_or_stage_entry": False,
+        "exact_local_real_returns_control_exact_provider_authority": True,
+        "content_blind_safe_point_commits_local_provider_states": True,
+        "global_r0_competence_state_used": False,
+        "graph_wide_maturation_used": False,
         "whole_curriculum_endogenous_claimed": False,
         "validation_controls_maturity_consolidation_freeze_and_stage_entry": (
             config.validation_controls_stage_transitions
@@ -471,7 +473,7 @@ def _development_protocol(
         "validation_outcome_mastery_is_report_only_for_stage_transitions": not bool(
             config.validation_controls_stage_transitions
         ),
-        "validation_is_report_only_for_stage_transitions": False,
+        "validation_is_report_only_for_stage_transitions": True,
         "validation_runtime_integrity_safety_veto_may_block_stage_entry": bool(
             not config.validation_controls_stage_transitions
             and config.r0_boundary_ecology_enabled

@@ -77,6 +77,20 @@ class CompetenceValueState:
     grounding_level: Optional[int] = None
     grounding_ancestors: set[str] = field(default_factory=set)
     last_provider_ids: tuple[str, ...] = ()
+    # These counters belong to the exact decision named by ``cell_id``.
+    # Unlike terminal/handoff evidence propagated through eligibility traces,
+    # they are updated only when this cell itself selected the REAL action.
+    direct_positive_evidence: int = 0
+    direct_contrast_evidence: int = 0
+    direct_outcome_authorized: bool = False
+
+    def __setstate__(self, state: Mapping[str, Any]) -> None:
+        """Read pre-local-authority pickles as unauthorized legacy state."""
+
+        self.__dict__.update(state)
+        self.__dict__.setdefault("direct_positive_evidence", 0)
+        self.__dict__.setdefault("direct_contrast_evidence", 0)
+        self.__dict__.setdefault("direct_outcome_authorized", False)
 
     @property
     def grounding_evidence(self) -> int:
@@ -86,6 +100,15 @@ class CompetenceValueState:
         evidence = float(self.grounding_evidence)
         return evidence / (evidence + config.confidence_prior)
 
+    def direct_outcome_confirmed(
+        self,
+        config: IntrinsicCreditConfig,
+    ) -> bool:
+        return bool(
+            self.direct_positive_evidence >= config.min_grounding_evidence
+            and self.direct_contrast_evidence == 0
+        )
+
     def can_emit(self, config: IntrinsicCreditConfig) -> bool:
         return (
             self.mature
@@ -94,6 +117,10 @@ class CompetenceValueState:
             and (
                 self.causal_confirmations + self.causal_failures
                 >= config.min_causal_confirmations
+                or (
+                    self.direct_outcome_authorized
+                    and self.direct_outcome_confirmed(config)
+                )
             )
         )
 
@@ -102,6 +129,9 @@ class CompetenceValueState:
         payload["grounding_ancestors"] = sorted(self.grounding_ancestors)
         payload["grounding_evidence"] = self.grounding_evidence
         payload["confidence"] = self.confidence(config)
+        payload["direct_outcome_confirmed"] = (
+            self.direct_outcome_confirmed(config)
+        )
         payload["can_emit"] = self.can_emit(config)
         return payload
 
@@ -733,6 +763,18 @@ class IntrinsicCreditEngine:
             raise ValueError("prediction_override must be finite")
         td_error = self._clip(immediate + self.config.gamma * successor_value - predicted)
 
+        # The exact selected decision receives its own causal outcome summary.
+        # This is derived from the same bounded reward/successor signal used by
+        # TD; no label, target action, held-out result, or aggregate score is
+        # accepted.  Eligibility may spread value, but it cannot manufacture
+        # direct action evidence for another cell.
+        if real_step:
+            direct_return = immediate + self.config.gamma * successor_value
+            if direct_return > self.config.causal_epsilon:
+                decision.direct_positive_evidence += 1
+            else:
+                decision.direct_contrast_evidence += 1
+
         self.observe_responsibility(responsibilities)
 
         updated: dict[str, float] = {}
@@ -830,6 +872,98 @@ class IntrinsicCreditEngine:
             state.slow_value = self._clip(state.slow_value + delta)
             deltas[state.cell_id] = delta
         return deltas
+
+    def consolidate_direct_outcome_providers(
+        self,
+        cell_ids: Iterable[str],
+    ) -> dict[str, Any]:
+        """Mature only exact decisions supported by their own REAL returns.
+
+        This is the local alternative to a global accuracy gate.  The caller
+        supplies a content-blind snapshot boundary and a finite set of graph
+        identities; all promotion information is already owned by each value
+        state.  Contradicted decisions abstain.
+        """
+
+        selected = tuple(sorted(set(map(str, cell_ids))))
+        for cell_id in selected:
+            state = self._state(cell_id)
+            eligible = bool(
+                state.direct_outcome_confirmed(self.config)
+                and state.grounding_evidence
+                >= self.config.min_grounding_evidence
+                and float(state.fast_value) > 0.0
+            )
+            state.direct_outcome_authorized = eligible
+            state.mature = eligible
+        deltas = self.consolidate(selected)
+        providers = self.direct_outcome_provider_ids(selected)
+        return {
+            "provider_count": len(providers),
+            "provider_ids": list(providers),
+            "value_consolidation_deltas": deltas,
+            "minimum_direct_positive_evidence": (
+                self.config.min_grounding_evidence
+            ),
+            "aggregate_score_read": False,
+        }
+
+    def direct_outcome_provider_ids(
+        self,
+        cell_ids: Optional[Iterable[str]] = None,
+    ) -> tuple[str, ...]:
+        selected = (
+            tuple(sorted(self.states))
+            if cell_ids is None
+            else tuple(sorted(set(map(str, cell_ids))))
+        )
+        return tuple(
+            cell_id
+            for cell_id in selected
+            if cell_id in self.states
+            and self.states[cell_id].direct_outcome_authorized
+            and self.states[cell_id].direct_outcome_confirmed(self.config)
+            and self.states[cell_id].can_emit(self.config)
+            and math.isfinite(float(self.states[cell_id].slow_value))
+            and float(self.states[cell_id].slow_value) > 0.0
+        )
+
+    def direct_outcome_provider_response(
+        self,
+        cell_id: str | None,
+    ) -> Optional[dict[str, Any]]:
+        """Return one exact local provider or abstain."""
+
+        if cell_id is None:
+            return None
+        normalized = str(cell_id)
+        state = self.states.get(normalized)
+        if (
+            state is None
+            or not state.direct_outcome_authorized
+            or not state.direct_outcome_confirmed(self.config)
+            or not state.can_emit(self.config)
+            or not math.isfinite(float(state.slow_value))
+            or float(state.slow_value) <= 0.0
+        ):
+            return None
+        evidence = float(state.direct_positive_evidence)
+        confidence = evidence / (
+            evidence + self.config.confidence_prior
+        )
+        return {
+            "cell_id": state.cell_id,
+            "expected_value": float(state.slow_value),
+            "confidence": confidence,
+            "uncertainty": 1.0 - confidence,
+            "grounding_level": int(state.grounding_level or 0),
+            "grounding_ancestors": tuple(
+                sorted(state.grounding_ancestors)
+            ),
+            "direct_positive_evidence": state.direct_positive_evidence,
+            "direct_contrast_evidence": state.direct_contrast_evidence,
+            "grounding_source": "exact_selected_real_returns",
+        }
 
     def snapshot(self) -> dict[str, Any]:
         return {
