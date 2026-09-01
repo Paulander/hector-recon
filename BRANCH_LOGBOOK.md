@@ -1000,3 +1000,36 @@ recorded in the V14 entry below as their source identity.
   grounding and fail-closed local abstention; keep evaluation report-only,
   enforce resource ceilings during R0, and optimize local arbitration only
   under exact decision/state/replay parity.
+
+### V20 exact local-outcome authority repair (pre-canary)
+
+- `7e15dc85` removes aggregate R0 mastery from strict adaptive stage entry.
+  Each exact graph triplet now records only its own selected REAL return; at a
+  content-blind phase boundary, repeated positive evidence with zero contrast
+  can authorize and consolidate that triplet. Eligibility traces cannot create
+  direct evidence for another cell, and any later contrast revokes emission.
+- Strict R0 no longer credits, matures, causally confirms, or consolidates the
+  singleton `native_intrinsic_r0_mate_in_1` state. Training/validation/regression
+  accuracy remains visible as a terminal scientific report but cannot create
+  value, alter graph topology, select an action, or block a nonempty local
+  provider set.
+- Frozen action emission carries its exact selected triplet identity through
+  the R0, trace, and V2 layers. An empty/UNKNOWN prospective shell cannot veto
+  a grounded local provider. Non-provider winners abstain rather than falling
+  back to a global gate. Exhaustive virtual reply rows retain exact provider
+  identities, and the minimum grounded reply value supplies first-move TD.
+- Action selection remains native-local anonymous competition; the adaptive
+  runner rejects scheduled/hash first-move selection and prototype-gate
+  routing. The host still presents legal affordances, ends fixed phases,
+  chooses the worst authority reply for one REAL challenge, applies resource
+  ceilings, and commits graph mutations at content-blind safe points.
+- Verification before the first V20 run: `153/153` focused tests passed in
+  `81.22 s`. Added gates cover aggregate-score noninterference, untouched
+  global R0 state, exact-provider roundtrip/provenance, UNKNOWN-shell
+  precedence, exhaustive all-reply provider credit, malformed-provider
+  abstention, eligibility isolation, and contrast revocation. Historical
+  artifact-backed authority suites remain unavailable in this sparse clone.
+- Remaining scientific question: this repair proves the mechanism path, not
+  chess competence. Run one bounded canary before parallel seeds; preserve and
+  stop if no local providers survive, R1 still fails to execute, exact provider
+  values never reach first-move TD, or snapshot/replay integrity fails.
