@@ -1337,3 +1337,135 @@ rather than the current branch tip.
   remaining single confirmation before considering a separately proven
   induced-edge engine optimization; do not alter exploration or ecology in
   the same discriminator.
+
+### V24 two-seed canary outcome and event-boundary diagnosis
+
+- Exact source `7a6f140d44286e6419772a145d4f50b64c294a7c`; seeds
+  `2026090108` and `2026090109`; four-epoch random-pool canaries; one process
+  and one numerical thread per seed; independent directories; `7200 s` wall
+  and `8192 MiB` RSS ceilings. Both completed normally with clean tracked
+  source identity in `4483.784 s` and `3864.307 s` respectively.
+- V24 repaired the V23 runtime failure. R0 completed all 96 epochs in both
+  seeds. Triplets plateaued at `828` from epoch 24 in `0108` and `835` from
+  epoch 24 in `0109`, while graph-weight updates continued to `577139` and
+  `577190`. The final runtime-choice/generalized-audit counts were
+  `4944/1179` and `4944/1157`, consistent with exact-Q audit elision after
+  local contact.
+- Frozen R0 retention after R1 was `16/16` in `0108` and `15/16` in `0109`.
+  The latter was already the seed's R0 validation miss, so it is a frozen-core
+  generalization failure rather than R1 forgetting, shell veto, or topology
+  mutation.
+- Both R1 arms completed 32 episodes and produced two surprise mates. `0108`
+  had 30 unique REAL observations, 32 distinct first actions, 30 ecology
+  births, 24 residual births, seven dormant roots, and 23 active sketches.
+  `0109` had 27 REAL observations, 12 births, six residual births, two dormant
+  roots, and ten active sketches. Immutable snapshot action records show 32
+  distinct first-contact options in each seed. `0109`'s reply-exposure counter
+  is only 31 because one first move was terminal and required no reply.
+  Both ecologies
+  stayed below the active cap of 32; false authority, formal confirmation
+  failures, and certification leakage were zero; authority history and
+  serialization round-tripped exactly.
+- Every sketch in both seeds ended with maximum lifetime positive support
+  `1`; therefore neither run promoted or certified a lineage, produced an
+  AVAILABLE all-reply envelope, handed off to the mate-in-1 core, propagated
+  successor value, or converted a held-out mate-in-2 position. Four epochs
+  end before reliable post-contact revisits and do not justify a
+  representation-specificity diagnosis.
+- The canaries did expose one unnecessary external clock. In `0109`, a
+  surprise at REAL ordinal 17 birthed roots; ordinal 18 contradicted two roots
+  and gave each one refinement event plus three residual children. The
+  post-epoch call then made both parents DORMANT even though their local
+  refinement budget was four events. The same broad settlement rule affected
+  `0108`. Epoch grouping, rather than local evidence exhaustion, was deciding
+  when a refinement parent stopped listening.
+- Decision: preserve V24 as the runtime/contact baseline. Remove only
+  post-epoch structural batching and broad refinement settlement. Commit an
+  already nominated promotion at the quiescent boundary after its own REAL
+  event; keep a contradicted parent REFINING and abstaining until its local
+  four-contrast budget or capacity eviction closes it. Do not loosen support,
+  confidence, ecology width, or learner values.
+
+### V25 event-local settlement (pre-gate)
+
+- Exact implementation commit:
+  `9671c8fc3c03d631d283a4f0dbea18ded8ab366f`.
+- The strengthened actual-provider canary exposed an independent latent
+  lockout present since `fabc2b79`: the authority emitted a certified shell
+  without `support`, `successes`, or `contradictions`, while the strict
+  reply adapter required all three. A fixture-provided record contained those
+  fields and had masked the producer/consumer mismatch. The real ninth event
+  had one legal opponent reply, an AVAILABLE shell, and a mating R0 actuation,
+  yet the adapter made its envelope UNKNOWN. The producer now includes the
+  already-validated post-birth ledger counts; no evidence rule is weakened.
+- Production growth must be invariant to arbitrary epoch grouping of the same
+  ordered interaction stream. One event is completely consumed and credited
+  before its nominated authority mutation commits. Its own receipt remains
+  discovery-only; a later receipt may certify the child even when both occur
+  in one harness epoch.
+- Adversarial review found that settling immediately after receipt consumption
+  was still too early: at capacity, a new promotion could retire a provider
+  needed by the current all-reply envelope, silently dropping its handoff.
+  Production therefore retains only that event's bounded nomination set until
+  live provider validation, TD, and the exact graph update finish; replacement
+  then commits before the next decision. No epoch picker or provider-pinning
+  subsystem is introduced.
+- Authority settlement retains its existing atomic journal. This does not
+  claim a cross-object transaction over graph, credit, ecology, curriculum,
+  and process failure; exact snapshots remain the recovery boundary.
+- Strict frame/receipt identity now uses the persisted interaction ordinal,
+  not epoch/position labels. This matters because receipt identity seeds
+  ecology-incarnation IDs and deterministic candidate ties. The same ordered
+  REAL stream with relabeled epochs must produce the same authority/ecology
+  continuation, not merely the same mutation timing.
+- Four report-only lifetime counters and a persisted exact-option identity
+  set record contact, exact-Q use, and later revisits of positively credited
+  `(pattern, actuator)` options. They replace the last-16-event ring as gate
+  evidence and are never read by the learner. This is evidence of re-selection
+  from learned exact Q, not a counterfactual claim that credit changed the
+  winning move. The intentional 64-source
+  generalized-search approximation is reported explicitly; consistent cap
+  accounting is not evidence of exhaustive candidate search.
+- The event-local reporting wrapper reads only the maintained bounded live
+  population and pending queue, not all lifetime states, tombstones, or request
+  consumptions. A no-op still invokes the authority's quiescent/sealed-state
+  checks; it simply avoids historical report scans.
+- The bounded follow-through profile is 32 R1 epochs over eight recurrent
+  random positions, with report-only validation and exact snapshots every
+  four epochs. Since a valid white-to-move KRK position has at most 22 legal
+  moves, this supplies at least ten post-first-contact decisions per recurrent
+  position without changing learner parameters, conditional on completing all
+  visits with stable local option identities/exposures. The actual V24 `0108`
+  and `0109` pools have 158 and 152 total legal options, so 256 visits would
+  supply at least 98 and 104 repeats respectively; aliased micropatterns do not
+  erase distinct actuator identities.
+- Gate the longer run on frozen-core integrity, zero leakage/false authority,
+  bounded ecology, exact replay, at least 80 post-contact decisions, and a
+  credited exact action later selected from learned exact Q. After that
+  post-contact window, stop for four or more surprise successes with maximum
+  candidate support still `1`, because that implicates micropattern recurrence.
+  A wall-limited run that never reaches the window is timing-inconclusive,
+  not evidence of structural learning failure. Promotion,
+  post-birth certification, a nonzero AVAILABLE all-reply envelope, handoff,
+  successor value, and an exhaustive mate-in-2 conversion remain the go
+  conditions for a real curriculum run—not promises of convergence.
+- Verification: the eight production-path suites passed `213/213` in
+  `169.19 s`; the five adjacent ecology/authority/retirement/credit suites
+  passed `114/114` in `359.11 s`. Compilation and diff checks were clean. The
+  strict code-defined canary now unconditionally requires promotion after
+  four discovery observations, certification on four later receipts, and an
+  actual positive all-reply handoff and TD event on the ninth observation.
+  This tests the causal mechanism with a synthetic competence source, not
+  learned mate-in-2 generalization. Real-provider contract tests now exercise
+  the actual producer, adapter, live resolver, and credit engine together.
+- Next bounded discriminator: independent fresh V25 executions of the already
+  viewed development seeds `2026090108` and `2026090109`, both `follow-through`
+  profiles, with one process and one numerical-library thread per seed,
+  independent `native_event_local_v25_seed_*_follow_through` directories, and
+  `7200 s` total-run / `8192 MiB` peak-RSS safe-boundary ceilings. Keep tracked
+  source unchanged while they run and preserve every checkpoint/result. These
+  are paired comparisons with V24, not frozen/fresh scientific experiments.
+  Seed `0109`'s pre-existing `15/16` R0 score makes it a mechanism comparison,
+  not a qualifying full-curriculum seed. Do not automatically extend either
+  run beyond its ceiling or launch a real curriculum; inspect the measured
+  post-contact and post-birth signals first.

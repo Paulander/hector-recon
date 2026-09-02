@@ -21,6 +21,8 @@ This note describes the current working-tree design on branch
   `02ffc08d430bd10025a1c83a8cde3dd1602c74b7`.
 - Exact-Q generalized-audit elision:
   `e2bdda3812f5a8350a8f5b658c3b6b923cd305de`.
+- Event-local post-credit settlement and real certified-provider contract:
+  `9671c8fc3c03d631d283a4f0dbea18ded8ab366f`.
 - Original audited base: `2f1b68c992eb6868b468148004d8e5a4746c88ab`.
 
 The current implementation closes the concrete V15–V21 control-loop defects:
@@ -54,9 +56,18 @@ This is still a development architecture, not evidence of mate-in-2 learning.
 V22 repaired the V21 action-value/credit mismatch but exposed starvation of
 untried local actions. V23 repaired that starvation, then two independent
 two-hour canaries stopped safely inside R0 because the larger contacted graph
-made redundant generalized formal audits dominate runtime. V24 removes only
-those behaviorally irrelevant audits. No mate-in-2 result is claimed here;
-V24 still requires a bounded curriculum canary.
+made redundant generalized formal audits dominate runtime. V24 removed only
+those behaviorally irrelevant audits. Its two independent canaries then
+completed R0 and four R1 epochs in 74.7 and 64.4 minutes, with two surprise
+mates each and bounded graphs. Neither produced post-birth positive support,
+promotion, handoff, or mate-in-2 conversion. They exposed an unnecessary
+epoch-controlled refinement closure; V25 removes that clock and tests a
+longer post-contact window. Its strengthened canary also exposed and repairs
+a producer/consumer contract mismatch: real certified-shell records omitted
+three post-birth counters required by the reply adapter, so the adapter
+rejected them even when the shell had valid certification. The counters now
+pass through unchanged; evidence thresholds are not relaxed. No mate-in-2
+competence is claimed here.
 
 The fresh V16 canary bound to `8e1583972cca391fc10a0d689ebd89f86387471b`
 (`2026090106`, exact wall `645.8366680829786 s`) stopped after R0: validation
@@ -439,15 +450,25 @@ contradiction. Promotion materializes an initially dormant authority child;
 the child still needs post-birth evidence before it can answer AVAILABLE.
 
 Each consumed REAL event may nominate local growth or refinement. Production
-batches those pending requests and commits them at the content-blind quiescent
-boundary after the training epoch; it does not currently mutate the structural
-frontier between two events in one epoch. The safe point decides when a batch
-may settle, never which chess content deserves to grow. Consequently, receipts
-from the discovery epoch remain pre-birth and cannot certify the newly
-materialized child; certification begins with later REAL experience. Exact
+commits those requests after that event's provider validation, TD credit, and
+exact graph update, at a content-blind quiescent boundary before the next
+decision. A bounded nomination set lasts for just that one event, not an epoch.
+This ordering prevents a replacement from retiring a competence provider while
+the current move is still using its value. The safe point decides only when an
+already nominated mutation may settle, never which chess content deserves to
+grow. Consequently, the discovery receipt is
+pre-birth and cannot certify the newly materialized child; certification begins
+with later REAL experience, even when it occurs in the same harness epoch. Exact
 receipt identity, physical-interaction identity, compact interval commitments,
 continuation digests, and dump/load replay guard discovery exclusion.
 Validation, regression, and held-out answers never enter this evidence stream.
+
+Strict frame identity uses the persisted monotone interaction ordinal rather
+than epoch/position labels. This is causally important: receipt IDs feed
+ecology-incarnation IDs and deterministic tie breaking. Relabeling the same
+ordered REAL stream must not silently change which equal-evidence bud wins.
+Epoch and position remain report metadata only; this does not claim invariance
+to reordering the actual experience stream.
 
 The legacy `build_same_run_v2_r0_authority` 32/32 tape remains available only
 for historical reproduction. The adaptive runner is bound to
@@ -503,7 +524,7 @@ pending authority event, boundary revision, exposure, or seen-predecessor
 mutation. Authority settlement itself retains its atomic journal and exact
 dump/load replay. The implementation does not claim a general multi-object
 rollback for an arbitrary process failure after every mutation; recovery from
-such an unexpected failure is the exact prior epoch snapshot.
+such an unexpected failure is the most recent exact snapshot.
 
 Main implementation:
 
@@ -579,9 +600,12 @@ quantity, not an IID confidence guarantee for chess positions.
 
 A contradiction does not merely delete a coarse pattern. The parent enters
 `REFINING` and abstains in the contradicted region. Residual children add local
-contrast features absent from the parent. Refinement has finite event and child
-budgets. Exhausted parents become dormant when a strict residual remains, or
-dead otherwise. Redundancy and capacity pressure can also retire sketches.
+contrast features absent from the parent. The parent remains locally active
+but abstaining after its first residual; supporting and unrelated events do
+not spend its contrast budget. At the fourth distinct matching contrast it
+becomes dormant if a live strict residual remains, or dead otherwise. No
+epoch-end call closes the parent early. Redundancy and capacity pressure can
+also retire sketches.
 
 Current active-work bounds are:
 
@@ -621,8 +645,8 @@ This boundary is the answer to the “plumbing versus ReCoN” concern.
 | Graph pattern identities, weights, bounded exact-action values, and per-action exposure | Enumerate legal affordances and derive canonical local keys | Start episodes and supply the consequence of the action actually taken |
 | Local evidence and exact-action provider eligibility | Max-pool native sources into untried priors and compute local first-contact/revisit activation | Enumerate every legal opponent reply and execute one weakest REAL challenge |
 | Formal anonymous exactly-one emission | Package activations and break exact ties by stable local identity | Enforce fixed phase, wall-time, memory, and active-resource ceilings |
-| TD, eligibility, responsibility, and exposure | Validate schemas, identities, parity, and replay | Invoke content-blind epoch safe points and preserve checkpoints |
-| Surprise-success budding, contrast, certification, refinement, retirement, and slot reuse | Atomically apply the already nominated structural batch | Evaluate held-out chess performance for reporting only |
+| TD, eligibility, responsibility, and exposure | Validate schemas, identities, parity, and replay | Invoke a content-blind post-REAL-event safe point and preserve checkpoints |
+| Surprise-success budding, contrast, certification, refinement, retirement, and slot reuse | Atomically apply the already nominated event-local authority mutation | Evaluate held-out chess performance for reporting only |
 | All-reply minimum/veto, provider handoff, and successor value | Project certified provider records, enforce generic core/shell precedence, and serialize exact state | Choose seeds, budgets, and independent data partitions before the run |
 
 The harness must not choose the R1 move, override authority jurisdiction,
@@ -730,6 +754,8 @@ The implementation and focused tests are intended to establish:
   before a pending REAL authority event is installed;
 - provider identity, grounding, evidence progression, ancestry, digest, value,
   and cycles are preflighted and revalidated at TD;
+- production structural replacement follows the current transition's credit,
+  so it cannot retire an in-flight provider before that provider is used;
 - any refuted opponent reply vetoes a first move, and positive value is the
   worst grounded reply value;
 - authority-owned REAL and structural mutations are internally journaled and
@@ -844,8 +870,9 @@ The highest-value tripwires are:
 - a surprise mate earns policy reward without authority/certification leakage,
   while provider-backed mate and terminal credit remain mutually exclusive;
 - fresh snapshot/resume reproduces action-event digest and authority history;
-- production batches event-driven nominations at the post-epoch safe point, so
-  a new child cannot consume same-epoch pre-birth receipts as certification;
+- production settles event-driven nominations at the post-REAL-event-and-TD safe
+  point, so a child cannot consume its discovery receipt but may learn from a
+  genuinely later receipt regardless of arbitrary epoch grouping;
 - direct and shell provider records survive round-trip, cannot shadow one
   another, and reach exact minimum all-reply TD only after live revalidation;
 - VIRTUAL/REAL actuation mismatch leaves authority continuation, pending state,
@@ -853,23 +880,45 @@ The highest-value tripwires are:
 - strict no-gate R1 snapshots fingerprint and resume exactly;
 - the empty adaptive factory cannot read any pool field and seeds no evidence.
 
-The V23 canaries stopped inside R0; the V24 runtime-only repair is now the
-current gate. Run exact comparison seed `2026090108` first, then one independent
-seed only if R0 completes, using separate directories and one numerical thread
-per process. The four-epoch profile is a causal runtime/contact discriminator:
-require completed R0, a finite triplet plateau, R1 entry, correct TD/value
-identity, broad first contact, exact replay and no certification leakage. It is
-too short to demand a mate, promotion or post-contact certification on boards
-with roughly 17--20 legal actions.
+The V24 canaries at exact source `7a6f140d44286e6419772a145d4f50b64c294a7c`
+completed with triplet plateaus of 828 and 835, broad R1 first contact, no
+confirmation failures, and zero certification leakage. Seed `0108` retained
+`16/16`; seed `0109` retained its pre-existing `15/16` frozen-core result. Both
+ended with candidate support at most one, so neither is mate-in-2 evidence.
 
-Proceed to the existing longer checkpointed profile if V24 restores bounded
-runtime and R1 reachability. Diagnose the next functional failure by its earliest
-unreached lifecycle boundary: no repeated cross-trajectory candidate match
-after at least four positives implicates representation specificity; four
-clean candidate supports without promotion implicate the ecology bridge; a
-promoted cell with four later matching supports but no certification
-implicates authority. Do not lower evidence thresholds merely to fit four
-epochs.
+V25 passed 213 production-path tests and 114 adjacent ecology/authority/credit
+tests, including event-local promotion, discovery exclusion, refinement-cap,
+in-flight-provider retirement, rollback, and exact resume. The strict
+code-defined canary requires an actual positive handoff and TD event after
+post-birth certification; it is mechanism evidence, not learned chess
+generalization. Its `follow-through` profile
+then uses eight recurrent random positions for 32 R1 epochs, with report-only
+validation and exact snapshots every four epochs. A valid white-to-move KRK
+position has at most 22 legal moves, so this horizon can supply at least 80
+post-first-contact decisions. The existing wall/RSS ceilings still apply and
+may stop it earlier at a complete snapshot; the horizon is not a runtime
+estimate or permission to bypass a safety stop.
+
+Lifetime counters—not the last-16-event presentation ring—record first
+contact, post-contact exact-Q selection, and later selection of an exact
+`(pattern, actuator)` option that previously received positive environmental
+credit. This proves re-selection using learned exact Q, not that this credit
+causally changed the winning move relative to a counterfactual policy. The
+counters are report-only and cannot affect learning. The
+64-source generalized retrieval cap is an intentional approximation: its
+truncation is reported, and accounting consistency is not a claim that the
+search was exhaustive. Its counters include R0 and read-only evaluation, so
+they are not mislabeled as an R1-only training measurement.
+
+Diagnose the next functional failure by its earliest unreached lifecycle
+boundary: no repeated cross-trajectory candidate match after at least four
+positives in the post-contact window implicates representation specificity;
+four clean candidate supports without promotion implicate the ecology bridge;
+a promoted cell with four later matching supports but no certification
+implicates authority. Do not lower evidence thresholds merely to fit a short
+run. Sparse runs need not saturate the authority cap; absent slot reuse or an
+uninterrupted run's missing resume exercise is untested engineering evidence,
+not proof of a learning defect.
 
 The eventual mechanism gate requires, at minimum:
 
@@ -877,7 +926,8 @@ The eventual mechanism gate requires, at minimum:
 - a surviving positive promoted lineage with disjoint post-birth
   certification;
 - a nonzero AVAILABLE all-reply envelope, handoff, and successor value;
-- a revisited local pattern whose learned score or emitted action changes;
+- later selection from learned exact Q of an exact `(pattern, actuator)` option
+  that previously received positive environmental credit;
 - at least one exhaustive mate-in-2 conversion;
 - bounded ecology turnover and authority slot reuse;
 - exact snapshot/resume and zero certification leakage.
@@ -892,7 +942,7 @@ evidence and a separate explicit go decision.
    different aliases, or must the micropattern representation itself refine?
 2. Does weakest-reply experience produce enough sibling coverage for a complete
    all-reply envelope without starving alternative boundary regions?
-3. Does a longer V24 run produce enough distinct positive trajectories, early
+3. Does the V25 post-contact run produce enough distinct positive trajectories, early
    enough, to test cross-trajectory candidate matching rather than only
    candidate birth?
 4. Can the host-controlled R0 maturity/freeze boundary become a local
