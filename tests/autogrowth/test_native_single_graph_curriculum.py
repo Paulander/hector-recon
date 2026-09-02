@@ -251,8 +251,8 @@ def test_local_training_materializes_only_the_emitted_branch_and_preserves_id_pa
     assert decision.prediction_source == "bounded_generalized_prior"
     assert decision.prediction == decision.normalized_value
     assert decision.prediction == 0.0
-    assert decision.exploration_bonus == 1.0
-    assert decision.activation == 1.0
+    assert decision.exploration_bonus == 3.0
+    assert decision.activation == 3.0
 
     network.apply_intrinsic_td(
         board,
@@ -665,6 +665,148 @@ def test_alias_actions_have_graph_owned_independent_exposure_and_roundtrip(
         restored.canonical_semantic_manifest()
         == network.canonical_semantic_manifest()
     )
+
+
+def test_first_contact_cannot_be_starved_by_maximal_learned_incumbent(
+    monkeypatch,
+) -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            key_mode="canonical",
+            train_repetitions=1,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+    incumbent = moves[0]
+    incumbent_id = network.ensure_triplet(
+        board,
+        incumbent,
+        stage="first-contact-incumbent",
+    )
+    incumbent_node = network.graph.nodes[incumbent_id]
+    incumbent_node.meta["local_action_value_by_actuator"] = {
+        incumbent.uci(): 1.0,
+    }
+    incumbent_node.meta["choice_exposure_by_actuator"] = {
+        incumbent.uci(): 10_000,
+    }
+    monkeypatch.setattr(
+        network,
+        "_full_audit_candidates",
+        lambda *_args, **_kwargs: [
+            (-1_000_000.0, move.uci(), incumbent_id) for move in moves
+        ],
+    )
+
+    decision = network.choose_local_training_action(
+        board,
+        "first-contact-no-starvation",
+    )
+
+    assert decision.move != incumbent
+    assert decision.action_option_exposure == 0
+    assert decision.inherited_prior_value < -0.999
+    assert decision.exploration_bonus == 3.0
+    assert decision.activation > 2.0
+
+
+def test_recurrent_local_choice_contacts_every_option_before_revisit() -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            key_mode="canonical",
+            train_repetitions=1,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    legal = {move.uci() for move in board.legal_moves}
+    emitted: list[str] = []
+
+    for _ in range(len(legal)):
+        decision = network.choose_local_training_action(
+            board,
+            "first-contact-coverage",
+        )
+        assert decision.action_option_exposure == 0
+        assert decision.exploration_bonus == 3.0
+        emitted.append(decision.move_uci)
+        network.apply_intrinsic_td(
+            board,
+            decision.move,
+            td_error=0.0,
+            stage_diagnostic="first-contact-coverage",
+            prediction_value=decision.prediction,
+        )
+
+    assert len(emitted) == len(set(emitted)) == len(legal)
+    assert set(emitted) == legal
+
+    revisit = network.choose_local_training_action(
+        board,
+        "post-contact-revisit",
+    )
+    assert revisit.action_option_exposure == 1
+    assert revisit.exploration_bonus > 1.0
+
+
+def test_local_first_contact_then_revisit_learns_terminal_success() -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            key_mode="canonical",
+            train_repetitions=1,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    legal_count = len(tuple(board.legal_moves))
+    mate_exposures = 0
+
+    # Three local-population widths are enough in this exact deterministic
+    # canary to contact every option, revisit the environmental success at
+    # least three times, and let its value win exploitation.  No move label or
+    # external action schedule is supplied.
+    for _ in range(3 * legal_count):
+        decision = network.choose_local_training_action(
+            board,
+            "first-contact-success-revisit",
+        )
+        successor = board.copy(stack=False)
+        successor.push(decision.move)
+        reward = 1.0 if successor.is_checkmate() else -1.0
+        if reward > 0.0:
+            mate_exposures += 1
+        network.apply_intrinsic_td(
+            board,
+            decision.move,
+            td_error=reward - decision.prediction,
+            stage_diagnostic="first-contact-success-revisit",
+            prediction_value=decision.prediction,
+        )
+
+    assert mate_exposures >= 3
+    assert all(
+        network._local_action_option_exposure(
+            _triplet_id(
+                *_triplet_keys(
+                    board,
+                    move,
+                    key_mode=network.config.key_mode,
+                )
+            ),
+            move.uci(),
+        ) > 0
+        for move in board.legal_moves
+    )
+    learned = network.choose_local_policy_action(board)
+    assert learned is not None
+    learned_successor = board.copy(stack=False)
+    learned_successor.push(learned.move)
+    assert learned_successor.is_checkmate()
 
 
 def test_policy_support_is_per_action_not_shared_by_pattern_alias(
@@ -1177,7 +1319,7 @@ def test_local_exploration_ignores_unrelated_global_exposure() -> None:
 
     assert decision.total_current_pattern_exposures == 0
     assert decision.pattern_exposure == 0
-    assert decision.exploration_bonus == 1.0
+    assert decision.exploration_bonus == 3.0
 
 
 @pytest.mark.parametrize(

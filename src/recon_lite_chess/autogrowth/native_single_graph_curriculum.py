@@ -43,6 +43,12 @@ from .terminal_substrate import _bucket, _delta_bucket, extract_terminal_feature
 
 ROOT_ID = "tg26o_root"
 _LOCAL_ACTION_VALUE_META_KEY = "local_action_value_by_actuator"
+# Exact action predictions are clipped to [-1, 1].  Adding three therefore
+# gives a never-observed option the disjoint [2, 4] first-contact tier, strictly
+# above the [-1, 1] tier of every already-observed option.  This is an ordinal
+# lifecycle separation derived from the known value span, not a reward-scale
+# tuning parameter.
+_LOCAL_FIRST_CONTACT_PRIORITY = 3.0
 _TRANSIENT_NODE_META_KEYS = frozenset({
     "activation_count",
     "choice_selected",
@@ -864,33 +870,43 @@ class NativeReConKRKGraph:
 
         # Exploration is local to the alternatives active in this choice.
         # A global graph-root counter made novelty pressure grow because of
-        # unrelated positions and could prevent a credited pattern from ever
-        # being revisited.  This is the ordinary UCB local-population term:
-        # each option reads only its own exposure and the summed exposures of
-        # its present competitors.  The harness supplies no action ordering.
+        # unrelated positions.  The former bounded ``prior + 1`` rule also
+        # admitted a starvation counterexample: a tried positive option could
+        # remain above a sufficiently negative untried prior forever.
+        #
+        # First contact is therefore an ordinal local lifecycle.  If any
+        # represented option has no REAL outcome, all such options occupy a
+        # disjoint activation tier and every tried option receives no novelty
+        # bonus.  The generalized graph value still orders the untried cohort,
+        # but cannot veto contact.  Only apply_intrinsic_td consumes this
+        # status.  Once the local population is fully contacted, ordinary
+        # uncapped logarithmic UCB supplies diminishing but renewable revisit
+        # pressure.  The harness supplies neither an action ordering nor a
+        # clock; the formal anonymous genome still emits the sole actuator.
         total_exposures = sum(
             int(row["action_option_exposure"]) for row in pattern_rows
+        )
+        has_untried_option = any(
+            int(row["action_option_exposure"]) == 0 for row in pattern_rows
         )
         for row in pattern_rows:
             option_exposure = int(row["action_option_exposure"])
             if not exploration_enabled:
                 exploration_bonus = 0.0
-            elif option_exposure == 0:
-                # A never-tried local alternative has maximal bounded novelty.
-                # This also gives the formal choice graph a positive signal at
-                # a genuinely empty start without consulting a global clock.
-                exploration_bonus = 1.0
+            elif has_untried_option:
+                exploration_bonus = (
+                    _LOCAL_FIRST_CONTACT_PRIORITY
+                    if option_exposure == 0
+                    else 0.0
+                )
             else:
-                exploration_bonus = min(
-                    1.0,
-                    math.sqrt(
-                        max(
-                            0.0,
-                            2.0
-                            * math.log1p(max(0, total_exposures))
-                            / (1.0 + option_exposure),
-                        )
-                    ),
+                exploration_bonus = math.sqrt(
+                    max(
+                        0.0,
+                        2.0
+                        * math.log1p(max(0, total_exposures))
+                        / option_exposure,
+                    )
                 )
             row["exploration_bonus"] = exploration_bonus
             row["activation"] = float(row["normalized_value"]) + exploration_bonus
