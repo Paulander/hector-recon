@@ -643,6 +643,36 @@ def test_child_mate_is_handoff_not_second_r1_terminal_and_exposure_is_selected_o
     assert audit["manifest"]["successor_signal"]["aggregation"] == (
         "minimum_over_all_grounded_available_replies"
     )
+    assert (
+        audit["manifest"]["retrospective_environmental_mate_credit"]
+        is False
+    )
+
+    # A prospective value handoff and a retrospective terminal return are
+    # mutually exclusive.  The selected R1 action pays only the ordinary move
+    # cost here; its positive value comes from the independently grounded
+    # successor provider.
+    credit = IntrinsicCreditEngine(IntrinsicCreditConfig(
+        min_grounding_evidence=1,
+        confidence_prior=0.0,
+    ))
+    provider = credit.register(R0_COMPETENCE_ID, mature=True)
+    provider.fast_value = provider.slow_value = 1.0
+    provider.grounding_level = 0
+    provider.terminal_evidence = 1
+    provider.causal_confirmations = 1
+    decision = credit.register("r1:handoff-only")
+    credit.begin_episode()
+    event = credit.transition(
+        decision.cell_id,
+        explicit_successor_signal=audit["successor_signal"],
+        terminal_kind=terminal_kind,
+    )
+    assert event.immediate_reward == -credit.config.real_move_cost
+    assert event.terminal_kind is None
+    assert event.provider_ids == (R0_COMPETENCE_ID,)
+    assert decision.terminal_evidence == 0
+    assert decision.handoff_evidence == 1
 
 
 def test_frozen_core_all_reply_rows_feed_grounded_min_td_value() -> None:
@@ -700,10 +730,12 @@ def test_core_abstention_and_unknown_v2_produce_no_successor_value() -> None:
         core_gate=_CoreGate(False),
     )
 
-    assert terminal_kind is None
+    assert terminal_kind == "mate"
     assert successor_ids == ()
     assert audit["successor_signal"] is None
     assert audit["manifest"]["envelope"]["state"] == "unknown"
+    assert audit["manifest"]["positive_handoff"] is False
+    assert audit["manifest"]["retrospective_environmental_mate_credit"] is True
 
 
 def test_grounded_core_handoff_is_not_vetoed_by_raw_v2_false_ids() -> None:
@@ -759,11 +791,161 @@ def test_false_authority_suppresses_same_event_handoff() -> None:
     terminal_kind, successor_ids, audit = _episode(
         authority, fen, first, after_first, counters
     )
-    assert terminal_kind is None
+    assert terminal_kind == "mate"
     assert successor_ids == ()
     assert audit["successor_signal"] is None
     assert audit["manifest"]["prequential_false_authority_ids"] == ["cell:x"]
+    assert audit["manifest"]["retrospective_environmental_mate_credit"] is True
     assert counters["reply_counterexample_false_authority_count"] == 1
+
+
+def test_surprise_mate_gets_terminal_credit_without_handoff_or_certification() -> None:
+    authority, fen, first, after_first, counters = _fixture(state="UNKNOWN")
+
+    terminal_kind, successor_ids, audit = _episode(
+        authority,
+        fen,
+        first,
+        after_first,
+        counters,
+    )
+
+    assert terminal_kind == "mate"
+    assert successor_ids == ()
+    assert audit["successor_signal"] is None
+    assert audit["manifest"]["actual_r0_action_mated"] is True
+    assert audit["manifest"]["positive_handoff"] is False
+    assert audit["manifest"]["envelope"]["state"] == "unknown"
+    assert audit["manifest"]["retrospective_environmental_mate_credit"] is True
+    assert counters["reply_counterexample_mate_count"] == 1
+    assert counters["reply_counterexample_surprise_success_count"] == 1
+    assert counters["reply_counterexample_handoff_count"] == 0
+    assert len(authority.consumed_receipts) == 1
+    assert len(authority.accepted_real_references) == 1
+    assert authority.states == {}
+
+    credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
+    decision = credit.register("r1:surprise-mate")
+    credit.begin_episode()
+    event = credit.transition(
+        decision.cell_id,
+        terminal_kind=terminal_kind,
+    )
+    assert event.immediate_reward == (
+        credit.config.terminal_win_value - credit.config.real_move_cost
+    )
+    assert event.successor_value == 0.0
+    assert event.provider_ids == ()
+    assert decision.direct_positive_evidence == 1
+    assert decision.direct_contrast_evidence == 0
+    assert decision.terminal_evidence == 1
+    assert decision.handoff_evidence == 0
+    assert decision.last_provider_ids == ()
+
+
+def test_duplicate_surprise_mate_retrains_policy_without_duplicate_authority_evidence() -> None:
+    authority, fen, first, after_first, counters = _fixture(state="UNKNOWN")
+    exposures: dict[tuple[str, str, str], int] = {}
+    seen: set[str] = set()
+
+    first_result = _episode(
+        authority, fen, first, after_first, counters, exposures, seen
+    )
+    duplicate_result = _episode(
+        authority, fen, first, after_first, counters, exposures, seen
+    )
+
+    for terminal_kind, successor_ids, audit in (
+        first_result,
+        duplicate_result,
+    ):
+        assert terminal_kind == "mate"
+        assert successor_ids == ()
+        assert audit["successor_signal"] is None
+        assert audit["manifest"]["retrospective_environmental_mate_credit"] is True
+    assert first_result[2]["manifest"]["real_event"] is True
+    assert duplicate_result[2]["manifest"]["duplicate_virtual_query"] is True
+    assert counters["reply_counterexample_real_event_count"] == 1
+    assert counters["reply_counterexample_duplicate_virtual_count"] == 1
+    assert counters["reply_counterexample_handoff_count"] == 0
+    assert authority.next_expected_ordinal == 1
+    assert len(authority.consumed_receipts) == 1
+    assert len(authority.accepted_real_references) == 1
+
+    credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
+    decision = credit.register("r1:repeatable-behavior")
+    for result in (first_result, duplicate_result):
+        credit.begin_episode()
+        credit.transition(decision.cell_id, terminal_kind=result[0])
+    assert decision.direct_positive_evidence == 2
+    assert decision.terminal_evidence == 2
+
+
+def test_discovery_receipt_cannot_bootstrap_the_event_that_made_authority_available() -> None:
+    class AvailableAfterConsume(_Authority):
+        def consume(self, receipt, **kwargs):
+            emission = super().consume(receipt, **kwargs)
+            self.state = "AVAILABLE"
+            return emission
+
+    authority, fen, first, after_first, counters = _fixture(state="UNKNOWN")
+    authority = AvailableAfterConsume(state="UNKNOWN")
+    exposures: dict[tuple[str, str, str], int] = {}
+    seen: set[str] = set()
+
+    discovery = _episode(
+        authority, fen, first, after_first, counters, exposures, seen
+    )
+    later = _episode(
+        authority, fen, first, after_first, counters, exposures, seen
+    )
+
+    assert discovery[0] == "mate"
+    assert discovery[1] == ()
+    assert discovery[2]["successor_signal"] is None
+    assert discovery[2]["manifest"]["retrospective_environmental_mate_credit"] is True
+    assert later[0] is None
+    assert later[1] == (R0_COMPETENCE_ID,)
+    assert later[2]["successor_signal"] is not None
+    assert later[2]["manifest"]["retrospective_environmental_mate_credit"] is False
+    assert authority.next_expected_ordinal == 1
+    assert len(authority.consumed_receipts) == 1
+
+
+def test_nonmating_child_keeps_horizon_contrast_credit() -> None:
+    class NonMatingAuthority(_Authority):
+        def _move(self, board: chess.Board) -> chess.Move:
+            for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+                successor = board.copy(stack=False)
+                successor.push(move)
+                if not successor.is_checkmate():
+                    return move
+            raise AssertionError("test fixture has no nonmating child action")
+
+    _authority, fen, first, after_first, counters = _fixture(state="UNKNOWN")
+    authority = NonMatingAuthority(state="UNKNOWN")
+    terminal_kind, successor_ids, audit = _episode(
+        authority, fen, first, after_first, counters
+    )
+
+    assert terminal_kind == "horizon"
+    assert successor_ids == ()
+    assert audit["successor_signal"] is None
+    assert audit["manifest"]["actual_r0_action_mated"] is False
+    assert audit["manifest"]["retrospective_environmental_mate_credit"] is False
+    assert counters["reply_counterexample_failure_count"] == 1
+    assert counters["reply_counterexample_surprise_success_count"] == 0
+
+    credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
+    decision = credit.register("r1:horizon")
+    credit.begin_episode()
+    event = credit.transition(decision.cell_id, terminal_kind=terminal_kind)
+    assert event.immediate_reward == (
+        credit.config.terminal_draw_value - credit.config.real_move_cost
+    )
+    assert decision.direct_positive_evidence == 0
+    assert decision.direct_contrast_evidence == 1
+    assert decision.handoff_evidence == 0
 
 
 def test_later_duplicate_certified_virtual_can_handoff() -> None:

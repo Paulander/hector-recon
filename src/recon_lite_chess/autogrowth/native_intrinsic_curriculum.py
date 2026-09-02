@@ -2128,6 +2128,12 @@ def _train_r0(
                 move,
                 td_error=event.td_error,
                 stage_diagnostic="R0_mate_in_1",
+                prediction_value=(
+                    graph_prediction
+                    if config.r0_action_selection_mode
+                    == R0_ACTION_SELECTION_LOCAL_RECON
+                    else None
+                ),
             )
             episodes += 1
             mates += int(terminal_kind == "mate")
@@ -3752,10 +3758,6 @@ def _prospective_counterexample_episode(
             counters["reply_counterexample_failure_count"] += 1
         if actual_mate and not envelope.positive_gate:
             counters["reply_counterexample_surprise_success_count"] += 1
-        # A mated R0 successor is represented by a child handoff signal; it is
-        # deliberately not a second terminal reward for R1.  A played R0
-        # action that does not mate is an explicit horizon/draw signal.
-        terminal_kind = None if actual_mate else "horizon"
         clean_preoutcome_evidence = bool(
             selected_provider_identity_parity and (
                 (real_event or duplicate)
@@ -3800,6 +3802,18 @@ def _prospective_counterexample_episode(
             )
         else:
             successor_ids = ()
+        # Keep two kinds of learning evidence separate.  A provider-backed
+        # all-reply signal is prospective value and must not also receive a
+        # terminal reward.  Without such a signal, an actually observed mate
+        # is still an ordinary environmental return for the exact R1 action;
+        # suppressing it would train successful behavior as failure.  This
+        # terminal credit neither creates a provider nor counts as shell
+        # certification, and duplicate authority evidence remains excluded.
+        terminal_kind = (
+            None
+            if successor_signal is not None
+            else ("mate" if actual_mate else "horizon")
+        )
     if selected_terminal_kind is not None:
         successor_ids = ()
     # Commit local challenge exposure only after the complete event path has
@@ -3870,6 +3884,9 @@ def _prospective_counterexample_episode(
         ),
         "prequential_false_authority_ids": list(false_authority_ids),
         "positive_handoff": bool(successor_ids),
+        "retrospective_environmental_mate_credit": bool(
+            terminal_kind == "mate" and not successor_ids
+        ),
         "successor_signal": (
             None
             if successor_signal is None
@@ -4857,6 +4874,11 @@ def _run_r1_arm(
                     move,
                     td_error=event.td_error,
                     stage_diagnostic="R1_mate_in_2",
+                    prediction_value=(
+                        graph_prediction
+                        if local_action_manifest is not None
+                        else None
+                    ),
                 )
                 if credited_triplet_id != triplet_id:
                     raise RuntimeError(
@@ -4881,7 +4903,9 @@ def _run_r1_arm(
                         "event": action_event,
                     })
                 counters["episodes"] += 1
-                counters["failures"] += int(terminal_kind is not None)
+                counters["failures"] += int(
+                    terminal_kind not in (None, "mate")
+                )
         finally:
             if r0_frame_session is not None:
                 r0_frame_session.close()
@@ -5741,7 +5765,15 @@ def _run_r1_arm(
             "boundary_ecology": boundary_ecology_audit,
             "observed_terminal_failure_count": counters["failures"],
             "unique_first_move_reply_exposures": len(reply_orbits),
-            "distinct_first_move_actions_exposed": len(reply_exposure_counts),
+            "distinct_first_move_actions_exposed": (
+                len({
+                    (key[0], key[1])
+                    for key in reply_exposure_counts_by_reply
+                })
+                if effective_reply_policy
+                == R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE
+                else len(reply_exposure_counts)
+            ),
             "distinct_exact_reply_exposures": len(
                 reply_exposure_counts_by_reply
             ),

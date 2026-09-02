@@ -158,17 +158,32 @@ def test_consolidation_freezes_existing_parameters_but_not_new_growth() -> None:
     node_ids = tuple(network.triplet_nodes[triplet])
     before_nodes = {nid: float(network.graph.nodes[nid].meta["local_weight"]) for nid in node_ids}
     before_edges = tuple(float(edge.w) for edge in network.triplet_trainable_edges[triplet])
+    before_action_value = network._local_action_option_value(
+        triplet,
+        first.uci(),
+    )
     frozen = network.freeze_existing_parameters(reason="R0_joint_mastery")
     assert frozen["frozen_node_parameter_count"] > 0
     assert frozen["frozen_edge_parameter_count"] > 0
     network.apply_intrinsic_td(board, first, td_error=-1.0, stage_diagnostic="R1")
     assert {nid: float(network.graph.nodes[nid].meta["local_weight"]) for nid in node_ids} == before_nodes
     assert tuple(float(edge.w) for edge in network.triplet_trainable_edges[triplet]) == before_edges
+    assert network._local_action_option_value(
+        triplet,
+        first.uci(),
+    ) == before_action_value
+    assert network._compute_frozen_policy_token(
+        network.frozen_policy_triplet_ids
+    ) == frozen["frozen_policy_token"]
     second = moves[1]
     new_triplet = network.apply_intrinsic_td(board, second, td_error=1.0, stage_diagnostic="R1")
     new_edges = network.triplet_trainable_edges[new_triplet]
     assert new_triplet != triplet
     assert any(float(edge.w) > 0.0 for edge in new_edges)
+    assert network._local_action_option_value(
+        new_triplet,
+        second.uci(),
+    ) is not None
 
 
 def test_local_training_audit_does_not_change_exposure_counters() -> None:
@@ -233,7 +248,11 @@ def test_local_training_materializes_only_the_emitted_branch_and_preserves_id_pa
     assert decision.materialized_after_emission is True
     assert decision.confirmed is True
     assert decision.policy_supported is False
-    assert decision.prediction_source == "pre_emission_native_raw"
+    assert decision.prediction_source == "bounded_generalized_prior"
+    assert decision.prediction == decision.normalized_value
+    assert decision.prediction == 0.0
+    assert decision.exploration_bonus == 1.0
+    assert decision.activation == 1.0
 
     network.apply_intrinsic_td(
         board,
@@ -293,7 +312,8 @@ def test_local_td_credit_changes_a_later_executed_action_relative_to_control() -
     assert treated_decision.move_uci == target.uci()
     assert treated_decision.move_uci != control_decision.move_uci
     assert treated_decision.source is not None
-    assert treated_decision.prediction_source == "pre_emission_native_raw"
+    assert treated_decision.prediction_source == "learned_exact_action_value"
+    assert treated_decision.prediction == treated_decision.normalized_value
 
     # Training remains curious after the positive event, but once the other
     # equally exposed local patterns receive their ordinary neutral visits,
@@ -311,6 +331,191 @@ def test_local_td_credit_changes_a_later_executed_action_relative_to_control() -
             stage_diagnostic="local_r1_neutral_revisit",
         )
     assert revisited
+
+
+def test_experienced_action_reads_its_credited_source_not_a_stronger_alias(
+    monkeypatch,
+) -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            key_mode="canonical",
+            shared_feature_atoms=True,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+    target = moves[0]
+    exact_id = network.ensure_triplet(
+        board, target, stage="experienced-exact"
+    )
+    generalized_id = next(
+        network.ensure_triplet(board, move, stage="generalized-prior")
+        for move in moves[1:]
+        if _triplet_id(
+            *_triplet_keys(board, move, key_mode=network.config.key_mode)
+        ) != exact_id
+    )
+    monkeypatch.setattr(
+        network,
+        "_full_audit_candidates",
+        lambda *_args, **_kwargs: [
+            (0.10, target.uci(), exact_id),
+            (9.00, target.uci(), generalized_id),
+        ],
+    )
+
+    prior = network.choose_local_policy_action(board)
+    assert prior is not None
+    assert prior.move == target
+    assert prior.source == generalized_id
+    assert prior.raw_value == pytest.approx(9.00)
+    assert prior.prediction == pytest.approx(0.90)
+    assert prior.prediction_source == "bounded_generalized_prior"
+
+    # The first REAL update starts from the bounded inherited prior rather
+    # than jumping to the unrelated exact raw score (0.10).  The next
+    # decision reads the exact option value that received the outcome.
+    network.apply_intrinsic_td(
+        board,
+        target,
+        td_error=0.5,
+        stage_diagnostic="experienced-exact",
+        prediction_value=prior.prediction,
+    )
+    rebound = network.choose_local_policy_action(board)
+    assert rebound is not None
+    assert rebound.move == target
+    assert rebound.source == exact_id
+    assert rebound.raw_value == pytest.approx(9.00)
+    assert rebound.inherited_prior_value == pytest.approx(0.90)
+    assert rebound.learned_action_value == pytest.approx(0.95)
+    assert rebound.prediction == pytest.approx(0.95)
+    assert rebound.prediction_source == "learned_exact_action_value"
+    assert rebound.action_option_exposure == 1
+
+
+def test_actions_sharing_one_generalized_prior_bind_credit_independently(
+    monkeypatch,
+) -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            key_mode="canonical",
+            shared_feature_atoms=True,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    aliases: dict[str, list[chess.Move]] = {}
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        pattern_id = _triplet_id(
+            *_triplet_keys(board, move, key_mode=network.config.key_mode)
+        )
+        aliases.setdefault(pattern_id, []).append(move)
+    pattern_id, alias_moves = next(
+        (item, group)
+        for item, group in sorted(aliases.items())
+        if len(group) > 1
+    )
+    first_move, second_move = alias_moves[:2]
+    network.ensure_triplet(
+        board,
+        first_move,
+        stage="independent-credit",
+    )
+    generalized_id = next(
+        network.ensure_triplet(
+            board,
+            move,
+            stage="generalized-prior",
+        )
+        for move in sorted(board.legal_moves, key=lambda item: item.uci())
+        if _triplet_id(
+            *_triplet_keys(board, move, key_mode=network.config.key_mode)
+        ) != pattern_id
+    )
+
+    monkeypatch.setattr(
+        network,
+        "_full_audit_candidates",
+        lambda *_args, **_kwargs: [
+            (0.60, first_move.uci(), generalized_id),
+            (0.60, second_move.uci(), generalized_id),
+        ],
+    )
+    inherited_prior = 0.60 / 1.60
+
+    network.apply_intrinsic_td(
+        board,
+        first_move,
+        td_error=1.0,
+        stage_diagnostic="first-exposure",
+        prediction_value=inherited_prior,
+    )
+    network.apply_intrinsic_td(
+        board,
+        second_move,
+        td_error=-1.0,
+        stage_diagnostic="second-exposure",
+        prediction_value=inherited_prior,
+    )
+    assert network._local_action_option_value(
+        pattern_id,
+        first_move.uci(),
+    ) == pytest.approx(inherited_prior + network.config.eta_m3)
+    assert network._local_action_option_value(
+        pattern_id,
+        second_move.uci(),
+    ) == pytest.approx(inherited_prior - network.config.eta_m3)
+
+    both_bound = network.choose_local_policy_action(board)
+    assert both_bound is not None
+    assert both_bound.move == first_move
+    assert both_bound.source == pattern_id
+    assert both_bound.prediction == pytest.approx(
+        inherited_prior + network.config.eta_m3
+    )
+    assert both_bound.prediction_source == "learned_exact_action_value"
+
+
+def test_stale_local_prediction_is_rejected_before_any_graph_mutation() -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            key_mode="canonical",
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    move = sorted(board.legal_moves, key=lambda item: item.uci())[0]
+    triplet_id = network.apply_intrinsic_td(
+        board,
+        move,
+        td_error=0.5,
+        prediction_value=0.20,
+        stage_diagnostic="prediction-parity",
+    )
+    assert network._local_action_option_value(
+        triplet_id,
+        move.uci(),
+    ) == pytest.approx(0.25)
+    before = network.canonical_semantic_manifest()
+
+    with pytest.raises(
+        ValueError,
+        match="TD prediction diverged from learned local action value",
+    ):
+        network.apply_intrinsic_td(
+            board,
+            move,
+            td_error=1.0,
+            prediction_value=0.20,
+            stage_diagnostic="stale-prediction",
+        )
+
+    assert network.canonical_semantic_manifest() == before
 
 
 def test_local_training_choice_is_deterministic_without_alias_representative_picker() -> None:
@@ -399,7 +604,7 @@ def test_alias_actions_have_graph_owned_independent_exposure_and_roundtrip(
     credited_id = network.apply_intrinsic_td(
         board,
         visited,
-        td_error=0.0,
+        td_error=0.25,
         stage_diagnostic="alias-option-exposure",
     )
     assert credited_id == pattern_id
@@ -410,6 +615,15 @@ def test_alias_actions_have_graph_owned_independent_exposure_and_roundtrip(
     assert network._local_action_option_exposure(
         pattern_id, unvisited.uci()
     ) == 0
+    learned_value = network._local_action_option_value(
+        pattern_id,
+        visited.uci(),
+    )
+    assert learned_value is not None
+    assert network._local_action_option_value(
+        pattern_id,
+        unvisited.uci(),
+    ) is None
 
     captured = []
     original_emit = graph_module.AnonymousChoiceGenome.emit
@@ -439,6 +653,14 @@ def test_alias_actions_have_graph_owned_independent_exposure_and_roundtrip(
     assert restored._local_action_option_exposure(
         pattern_id, unvisited.uci()
     ) == 0
+    assert restored._local_action_option_value(
+        pattern_id,
+        visited.uci(),
+    ) == learned_value
+    assert restored._local_action_option_value(
+        pattern_id,
+        unvisited.uci(),
+    ) is None
     assert (
         restored.canonical_semantic_manifest()
         == network.canonical_semantic_manifest()

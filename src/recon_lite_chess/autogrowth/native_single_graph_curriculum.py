@@ -42,6 +42,7 @@ from .terminal_substrate import _bucket, _delta_bucket, extract_terminal_feature
 
 
 ROOT_ID = "tg26o_root"
+_LOCAL_ACTION_VALUE_META_KEY = "local_action_value_by_actuator"
 _TRANSIENT_NODE_META_KEYS = frozenset({
     "activation_count",
     "choice_selected",
@@ -141,17 +142,19 @@ class _LocalDecisionCache:
 class NativeLocalTrainingDecision:
     """One graph-local training action selected through anonymous emission.
 
-    ``source`` identifies the best already-confirmed native candidate that
-    supplied the pre-emission value.  It is deliberately kept separate from
-    ``triplet_id``: the latter is the exact local triplet emitted for this
-    board/action and may be newly materialized.  ``prediction`` is the
-    pre-emission native raw value used by TD (never the exploration bonus),
-    while ``exact_confirmation_score_raw`` records the post-emission exact
-    confirmation independently.  ``policy_supported`` is stricter than legal
-    emission: it is true only when a persistent, formally confirmed native
-    source supplied the pre-emission value.  Training may explore an
-    unsupported legal pattern after materializing it; read-only evaluation
-    must abstain when this field is false.
+    ``source`` identifies the persistent native state that supplied the
+    pre-emission value.  It is deliberately kept separate from ``triplet_id``:
+    the latter is the exact local triplet emitted for this board/action and may
+    be newly materialized.  An untried option inherits the bounded value of its
+    strongest generalized source.  After one REAL outcome, the exact
+    ``(pattern, actuator)`` option owns a graph-local value initialized from
+    that same prior.  ``prediction`` is this bounded exploitation value used by
+    TD (never the exploration bonus), while ``exact_confirmation_score_raw``
+    records the post-emission formal score independently.  ``policy_supported``
+    is stricter than legal emission: it is true only when a persistent,
+    formally confirmed native source or an outcome-grounded exact option
+    supplied the value.  Training may explore an unsupported legal pattern;
+    read-only evaluation must abstain when this field is false.
     """
 
     move_uci: str
@@ -175,6 +178,8 @@ class NativeLocalTrainingDecision:
     alias_group_size: int
     source_move_uci: str | None
     source_score_raw: float | None
+    inherited_prior_value: float
+    learned_action_value: float | None
     exact_confirmation_score_raw: float | None
     prediction_source: str
     formal_ticks: int
@@ -759,8 +764,11 @@ class NativeReConKRKGraph:
         )
 
         # A generalized/prototype source can offer more than one native
-        # candidate for a move.  Keep the strongest source deterministically,
-        # independently of the audit's compact top-16 reporting view.
+        # candidate for a move.  Keep the strongest source deterministically
+        # as the prior for an untried local option, independently of the
+        # audit's compact top-16 reporting view.  A tried option later reads
+        # its graph-owned exact action value; it does not hard-switch to an
+        # unrelated exact raw score merely because one exposure occurred.
         best_by_move: dict[str, tuple[float, str]] = {}
         for score, move_uci, source_triplet_id in full_candidates:
             if move_uci not in legal or not math.isfinite(float(score)):
@@ -793,11 +801,6 @@ class NativeReConKRKGraph:
             pattern_id = pattern_by_move[move_uci]
             member_moves = tuple(sorted(moves_by_pattern[pattern_id]))
             alias_index = member_moves.index(move_uci)
-            best_member = best_by_move.get(move_uci)
-            raw_value = 0.0 if best_member is None else float(best_member[0])
-            source_triplet_id = (
-                None if best_member is None else str(best_member[1])
-            )
             pattern_exposure = self._local_pattern_exposure(
                 pattern_id,
             )
@@ -805,7 +808,24 @@ class NativeReConKRKGraph:
                 pattern_id,
                 move_uci,
             )
-            normalized_value = raw_value / (1.0 + abs(raw_value))
+            best_member = best_by_move.get(move_uci)
+            raw_value = 0.0 if best_member is None else float(best_member[0])
+            generalized_source_triplet_id = (
+                None if best_member is None else str(best_member[1])
+            )
+            inherited_prior_value = raw_value / (1.0 + abs(raw_value))
+            learned_action_value = self._local_action_option_value(
+                pattern_id,
+                move_uci,
+            )
+            if learned_action_value is None:
+                normalized_value = inherited_prior_value
+                source_triplet_id = generalized_source_triplet_id
+                prediction_source = "bounded_generalized_prior"
+            else:
+                normalized_value = learned_action_value
+                source_triplet_id = pattern_id
+                prediction_source = "learned_exact_action_value"
             choice_option_identity = (
                 "local-action-option:"
                 + hashlib.sha256(
@@ -828,6 +848,8 @@ class NativeReConKRKGraph:
                 "alias_group_size": len(member_moves),
                 "raw_value": raw_value,
                 "normalized_value": normalized_value,
+                "inherited_prior_value": inherited_prior_value,
+                "learned_action_value": learned_action_value,
                 "pattern_exposure": pattern_exposure,
                 "action_option_exposure": action_option_exposure,
                 "source": source_triplet_id,
@@ -837,6 +859,7 @@ class NativeReConKRKGraph:
                 "source_score_raw": (
                     None if best_member is None else raw_value
                 ),
+                "prediction_source": prediction_source,
             })
 
         # Exploration is local to the alternatives active in this choice.
@@ -951,12 +974,12 @@ class NativeReConKRKGraph:
             exact_confirmation.get("selected_move") == selected_move_uci
             and exact_confirmation.get("selected_triplet") == exact_triplet_id
         )
-        # TD must see the native exploitation estimate that won the local
-        # competition.  The exploration bonus is a choice-time activation,
-        # not a value estimate, and a newly materialized exact branch often
-        # confirms with score zero.  Preserve that exact score separately.
-        prediction = float(selected_row["raw_value"])
-        prediction_source = "pre_emission_native_raw"
+        # TD must see the same bounded exploitation estimate that won the
+        # local competition and that apply_intrinsic_td updates.  The
+        # exploration bonus is a choice-time activation, not a value estimate;
+        # the raw graph score and post-emission confirmation remain audit-only.
+        prediction = float(selected_row["normalized_value"])
+        prediction_source = str(selected_row["prediction_source"])
 
         self.runtime_choice_count += 1
         return NativeLocalTrainingDecision(
@@ -996,6 +1019,14 @@ class NativeReConKRKGraph:
                 None
                 if selected_row["source_score_raw"] is None
                 else float(selected_row["source_score_raw"])
+            ),
+            inherited_prior_value=float(
+                selected_row["inherited_prior_value"]
+            ),
+            learned_action_value=(
+                None
+                if selected_row["learned_action_value"] is None
+                else float(selected_row["learned_action_value"])
             ),
             exact_confirmation_score_raw=(
                 None
@@ -1044,11 +1075,10 @@ class NativeReConKRKGraph:
     ) -> int:
         """Return graph-owned REAL usage for one pattern/action option.
 
-        Several legal actions may share one relational micropattern.  Their
-        learned value is intentionally shared, but curiosity must not use a
-        host-side modulo picker to choose a representative.  The triplet owns
-        a small per-actuator usage map instead; the formal anonymous genome
-        sees every legal action and arbitrates their local activations.
+        Several legal actions may share one relational micropattern and its
+        generalized prior.  Their exact learned values and curiosity remain
+        actuator-local: the triplet owns small per-actuator maps and the formal
+        anonymous genome sees every legal action in the competition.
         """
 
         if pattern_id not in self.triplet_ids:
@@ -1063,6 +1093,39 @@ class NativeReConKRKGraph:
             return max(0, int(exposures.get(str(move_uci), 0)))
         except (TypeError, ValueError):
             return 0
+
+    def _local_action_option_value(
+        self,
+        pattern_id: str,
+        move_uci: str,
+    ) -> float | None:
+        """Return one outcome-grounded exact option value, if materialized.
+
+        The value is owned by the exact triplet node but keyed by actuator so
+        relationally aliased legal actions can accumulate independent local
+        evidence.  Absence means "inherit a generalized prior", not zero.
+        """
+
+        if (
+            pattern_id not in self.triplet_ids
+            or pattern_id in self.pruned_triplet_ids
+        ):
+            return None
+        triplet_node = self.graph.nodes.get(_TripletNodeIds(pattern_id).triplet)
+        if triplet_node is None:
+            return None
+        raw_values = triplet_node.meta.get(_LOCAL_ACTION_VALUE_META_KEY, {})
+        if not isinstance(raw_values, Mapping):
+            raise ValueError("local action-value map must be a mapping")
+        if str(move_uci) not in raw_values:
+            return None
+        try:
+            value = float(raw_values[str(move_uci)])
+        except (TypeError, ValueError) as exc:
+            raise ValueError("local action value must be numeric") from exc
+        if not math.isfinite(value) or not -1.0 <= value <= 1.0:
+            raise ValueError("local action value must be finite and bounded")
+        return value
 
     def _triplet_local_utility(
         self,
@@ -1871,6 +1934,7 @@ class NativeReConKRKGraph:
         *,
         td_error: float,
         stage_diagnostic: str,
+        prediction_value: float | None = None,
     ) -> str:
         """Apply one outcome-grounded TD error to an observed action branch.
 
@@ -1882,8 +1946,72 @@ class NativeReConKRKGraph:
 
         if move not in board.legal_moves:
             raise ValueError(f"cannot credit illegal observed move: {move.uci()}")
+        numeric_td_error = float(td_error)
+        if not math.isfinite(numeric_td_error):
+            raise ValueError("TD error must be finite")
+        bounded_td_error = max(-1.0, min(1.0, numeric_td_error))
         triplet_id = self.ensure_triplet(board, move, stage=stage_diagnostic)
-        self._apply_m3(triplet_id, reward=float(td_error))
+        move_uci = move.uci()
+        prior_exact_value = self._local_action_option_value(
+            triplet_id,
+            move_uci,
+        )
+        if prediction_value is None:
+            if prior_exact_value is None:
+                raw_prior = self._triplet_local_utility(triplet_id)
+                action_prediction = raw_prior / (1.0 + abs(raw_prior))
+            else:
+                action_prediction = prior_exact_value
+        else:
+            action_prediction = float(prediction_value)
+            if (
+                not math.isfinite(action_prediction)
+                or not -1.0 <= action_prediction <= 1.0
+            ):
+                raise ValueError(
+                    "local action prediction must be finite and bounded"
+                )
+            if prior_exact_value is not None and not math.isclose(
+                action_prediction,
+                prior_exact_value,
+                rel_tol=0.0,
+                abs_tol=1e-12,
+            ):
+                raise ValueError(
+                    "TD prediction diverged from learned local action value"
+                )
+
+        # The protected mate-in-1 skeleton is immutable after consolidation.
+        # An R1 collision may observe it, but cannot rewrite its exact policy
+        # value.  New predecessor triplets remain plastic and learn normally.
+        if triplet_id not in self.frozen_policy_triplet_ids:
+            learned_action_value = max(
+                -1.0,
+                min(
+                    1.0,
+                    action_prediction
+                    + self.config.eta_m3 * bounded_td_error,
+                ),
+            )
+            triplet_node = self.graph.nodes[
+                _TripletNodeIds(triplet_id).triplet
+            ]
+            raw_action_values = triplet_node.meta.get(
+                _LOCAL_ACTION_VALUE_META_KEY,
+                {},
+            )
+            action_values = (
+                dict(raw_action_values)
+                if isinstance(raw_action_values, Mapping)
+                else {}
+            )
+            action_values[move_uci] = learned_action_value
+            triplet_node.meta[_LOCAL_ACTION_VALUE_META_KEY] = {
+                key: float(action_values[key])
+                for key in sorted(action_values)
+            }
+
+        self._apply_m3(triplet_id, reward=bounded_td_error)
         # A local exposure is an outcome-grounded observed action, not a
         # prospective audit or anonymous choice query.  Keep the total on the
         # graph root so the next local selector can compute its bonus without
@@ -1899,7 +2027,6 @@ class NativeReConKRKGraph:
             if isinstance(raw_option_exposures, Mapping)
             else {}
         )
-        move_uci = move.uci()
         try:
             prior_option_exposure = max(
                 0,
@@ -2500,6 +2627,12 @@ class NativeReConKRKGraph:
                 node_id,
                 self.graph.nodes[node_id].ntype.name,
                 float(self.graph.nodes[node_id].meta.get("local_weight", 0.0)),
+                copy.deepcopy(
+                    self.graph.nodes[node_id].meta.get(
+                        _LOCAL_ACTION_VALUE_META_KEY,
+                        {},
+                    )
+                ),
                 bool(self.graph.nodes[node_id].meta.get("plasticity_frozen", False)),
             )
             for node_id in sorted(node_ids)
