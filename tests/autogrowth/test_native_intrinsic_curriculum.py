@@ -2075,6 +2075,56 @@ def test_new_boundary_ecology_mirrors_only_existing_prospective_history() -> Non
         )
 
 
+def test_local_action_lifetime_evidence_is_exact_and_resume_safe() -> None:
+    counters: dict[str, int | float] = {}
+    positive_options: set[tuple[str, str]] = set()
+
+    def record(move, *, exposure, source, td=0.0, terminal=None, value=0.0):
+        return curriculum_module._record_r1_local_action_evidence(
+            {
+                "pattern_id": "shared-pattern",
+                "move_uci": move,
+                "action_option_exposure": exposure,
+                "prediction_source": source,
+            },
+            td_error=td,
+            terminal_kind=terminal,
+            successor_value=value,
+            counters=counters,
+            positive_credit_options=positive_options,
+        )
+
+    # A success is evidence for a later revisit, never its own revisit.
+    assert not record(
+        "a1a2", exposure=0, source="bounded_generalized_prior",
+        td=0.5, terminal="mate",
+    )
+    # A sibling actuator sharing the pattern is not the credited option.
+    assert not record(
+        "a1a3", exposure=1, source="learned_exact_action_value",
+    )
+    # More than a presentation-ring length of unrelated events cannot erase
+    # the positive option's report-only evidence.
+    for index in range(20):
+        assert not record(
+            f"unrelated-{index}", exposure=0,
+            source="bounded_generalized_prior", td=0.1,
+        )
+    counters, positive_options = pickle.loads(pickle.dumps((
+        counters, positive_options,
+    )))
+    assert record(
+        "a1a2", exposure=1, source="learned_exact_action_value",
+    )
+    assert positive_options == {("shared-pattern", "a1a2")}
+    assert counters == {
+        "local_action_first_contact_selections": 21,
+        "local_action_post_contact_selections": 2,
+        "local_action_exact_q_selections": 2,
+        "local_action_positive_credit_revisits": 1,
+    }
+
+
 @pytest.mark.parametrize(
     ("v2_enabled", "selection_mode"),
     (
@@ -2298,6 +2348,13 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
             uninterrupted["training"]["local_action_recent_events"]
         )
         assert resumed["training"]["local_action_event_count"] > 0
+        assert (
+            resumed["training"]["local_action_first_contact_selection_count"]
+            + resumed["training"]["local_action_post_contact_selection_count"]
+        ) == resumed["training"]["local_action_event_count"]
+        assert resumed["training"][
+            "local_action_lifetime_evidence_is_report_only"
+        ] is True
         assert all(
             event["triplet_id"] == event["credited_triplet_id"]
             for event in resumed["training"]["local_action_recent_events"]
@@ -2336,10 +2393,19 @@ class _AlwaysAbstainCoreGate:
         return {"kind": "always_abstain_core_gate"}
 
 
-def _real_ecology_authority() -> tuple[
+def _real_ecology_authority(
+    *, seed_discovery: bool = True
+) -> tuple[
     NativeProspectiveAuthorityV2, frozenset[str]
 ]:
-    """Build a tiny actual V2 authority from code-defined chess positions."""
+    """Build a tiny actual V2 authority from code-defined chess positions.
+
+    ``seed_discovery`` retains the original historical-negative fixture for
+    tests of discovery exclusion.  The no-discovery variant starts with an
+    empty native envelope so the first four post-nomination REAL receipts are
+    ordinals 0..3; it is used where a zero-based birth frontier is itself the
+    invariant under test.
+    """
 
     r1_board = chess.Board(_REAL_ECOLOGY_R1_FEN)
     target_rows: list[tuple[chess.Board, chess.Move, float]] = []
@@ -2384,10 +2450,12 @@ def _real_ecology_authority() -> tuple[
             terminal_score_normalization="sqrt",
         )
     )
-    for board, action, observed_td in (
-        *target_rows,
-        (negative_board, negative_action, -1.0),
-    ):
+    graph_rows = (
+        (*target_rows, (negative_board, negative_action, -1.0))
+        if seed_discovery
+        else tuple(target_rows)
+    )
+    for board, action, observed_td in graph_rows:
         for _ in range(5):
             graph.apply_intrinsic_td(
                 board,
@@ -2426,46 +2494,47 @@ def _real_ecology_authority() -> tuple[
         ),
     )
 
-    # A mature REFUTED parent gives the real authority a native negative
-    # boundary hypothesis.  It is deliberately not prospectively certified:
-    # the parity run must birth ecology candidates from later observed success,
-    # never from discovery or a preloaded certification.
-    frame = FrameContext(
-        "real-v2-ecology:discovery",
-        FrameKind.REAL,
-        values={"board": negative_board},
-    )
-    actuation, trace = source.r0.emit_action_with_trace(frame)
-    assert actuation is not None and trace is not None
-    negative_successor = negative_board.copy(stack=False)
-    negative_successor.push(chess.Move.from_uci(actuation.move_uci))
-    assert not negative_successor.is_checkmate()
-    receipt = source.completion_terminal().mint(
-        trace, negative_board, negative_successor
-    )
-    record, inserted = source._accept_receipt(receipt)
-    assert inserted
-    assert source.envelope.add_unique_evidence(record)
+    if seed_discovery:
+        # A mature REFUTED parent gives the real authority a native negative
+        # boundary hypothesis.  It is deliberately not prospectively
+        # certified: the parity run must birth ecology candidates from later
+        # observed success, never from discovery or a preloaded certification.
+        frame = FrameContext(
+            "real-v2-ecology:discovery",
+            FrameKind.REAL,
+            values={"board": negative_board},
+        )
+        actuation, trace = source.r0.emit_action_with_trace(frame)
+        assert actuation is not None and trace is not None
+        negative_successor = negative_board.copy(stack=False)
+        negative_successor.push(chess.Move.from_uci(actuation.move_uci))
+        assert not negative_successor.is_checkmate()
+        receipt = source.completion_terminal().mint(
+            trace, negative_board, negative_successor
+        )
+        record, inserted = source._accept_receipt(receipt)
+        assert inserted
+        assert source.envelope.add_unique_evidence(record)
 
-    stem = StemCellTerminal("real_v2_ecology_refuted_parent")
-    stem.state = StemCellState.MATURE
-    stem.trial_node_id = stem.cell_id
-    stem.trial_parent_id = "competence_available_root"
-    parent = CompetenceContextCell(
-        cell_id=stem.cell_id,
-        members=("internal:policy_response",),
-        born_round=0,
-        born_request_ordinal=0,
-        stem_cell=stem,
-        polarity=AvailabilityState.REFUTED,
-        evidence_keys=(receipt.event_id,),
-        failures=1,
-        support=1,
-        prune_reason="real_v2_ecology_parity_negative_seed",
-    )
-    source.envelope.cells = {parent.cell_id: parent}
-    source.envelope._member_specs = {parent.members}
-    source.envelope.rebuild_graph()
+        stem = StemCellTerminal("real_v2_ecology_refuted_parent")
+        stem.state = StemCellState.MATURE
+        stem.trial_node_id = stem.cell_id
+        stem.trial_parent_id = "competence_available_root"
+        parent = CompetenceContextCell(
+            cell_id=stem.cell_id,
+            members=("internal:policy_response",),
+            born_round=0,
+            born_request_ordinal=0,
+            stem_cell=stem,
+            polarity=AvailabilityState.REFUTED,
+            evidence_keys=(receipt.event_id,),
+            failures=1,
+            support=1,
+            prune_reason="real_v2_ecology_parity_negative_seed",
+        )
+        source.envelope.cells = {parent.cell_id: parent}
+        source.envelope._member_specs = {parent.members}
+        source.envelope.rebuild_graph()
     authority = NativeProspectiveAuthorityV2.from_organism(
         source,
         mode=V2Mode.PROSPECTIVE,
@@ -2675,6 +2744,388 @@ def test_real_v2_boundary_ecology_snapshot_resume_matches_uninterrupted(
     assert resumed["v2_child_authority"]["full_history_boundary_exact"] is True
     assert resumed["v2_child_authority"]["certification_discovery_leak_count"] == 0
     assert resumed["training"]["resumed_from_snapshot"] is True
+
+
+def test_r1_production_uses_event_local_structural_settlement(
+    tmp_path, monkeypatch
+) -> None:
+    """Production R1 never queues boundary promotions until an epoch end."""
+
+    authority, child_triplet_ids = _real_ecology_authority(
+        seed_discovery=False
+    )
+    calls: list[object] = []
+    frame_events: list[object | None] = []
+    real_events: list[bool] = []
+    settlement_events: list[tuple[object, object | None]] = []
+    original = curriculum_module._v2_r0_observe_training_successor
+    original_settle = curriculum_module._settle_event_local_v2_boundary
+
+    def observe(*args, **kwargs):
+        # A fresh per-decision set is the deferred production mode.  In
+        # particular, a per-epoch set must not be reused across interactions.
+        calls.append(kwargs.get("pending_boundary_candidate_ids"))
+        result = original(*args, **kwargs)
+        frame_events.append(kwargs.get("frame_session"))
+        real_events.append(not result[2])
+        return result
+
+    def settle(authority_arg, ecology_arg, pending_arg):
+        result = original_settle(authority_arg, ecology_arg, pending_arg)
+        settlement_events.append((pending_arg, result))
+        return result
+
+    monkeypatch.setattr(
+        curriculum_module,
+        "_v2_r0_observe_training_successor",
+        observe,
+    )
+
+    # Hold the environment-facing action fixed so this mechanism test feeds
+    # the same positive, code-defined shell on every first move.  The
+    # production selector remains untouched; only the structural settlement
+    # ordering is under test here.
+    def select_positive_action(graph, board, **_kwargs):
+        return (*curriculum_module._scheduled_confirmed_action(
+            graph,
+            board,
+            schedule_index=0,
+            stage_diagnostic="R1_mate_in_2",
+            action_order=(
+                curriculum_module.R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC
+            ),
+        ), None)
+
+    monkeypatch.setattr(
+        curriculum_module,
+        "_select_r1_training_action",
+        select_positive_action,
+    )
+    monkeypatch.setattr(
+        curriculum_module,
+        "_settle_event_local_v2_boundary",
+        settle,
+    )
+
+    def forbidden_settlement(_ecology):
+        raise AssertionError(
+            "production R1 must not call epoch/event settle_refinements"
+        )
+
+    monkeypatch.setattr(
+        ProspectiveBoundaryCandidateEcology,
+        "settle_refinements",
+        forbidden_settlement,
+    )
+    base = chess.Board(_REAL_ECOLOGY_R1_FEN)
+    stream_fens = []
+    for index in range(8):
+        board = base.copy(stack=False)
+        board.fullmove_number = 400 + index
+        stream_fens.append(board.fen())
+    result = _real_ecology_run(
+        authority=authority,
+        child_triplet_ids=child_triplet_ids,
+        pools=replace(
+            _real_ecology_pools(),
+            r1_train=tuple(stream_fens),
+            r1_train_strata=tuple("synthetic" for _ in stream_fens),
+        ),
+        config=_real_ecology_config(tmp_path, resume=False),
+        gate=_AlwaysAbstainCoreGate(),
+    )
+
+    assert calls
+    assert all(isinstance(value, set) for value in calls)
+    assert len({id(value) for value in calls}) == len(calls)
+    real_indices = [index for index, is_real in enumerate(real_events) if is_real]
+    assert settlement_events
+    assert len(settlement_events) == len(real_indices)
+    assert all(
+        pending is calls[real_indices[index]]
+        for index, (pending, _structural) in enumerate(settlement_events)
+    )
+    transition_index = next(
+        index
+        for index, (_pending, structural) in enumerate(settlement_events)
+        if structural is not None
+    )
+    # The first four events share one frozen-R0 frame session.  The event-local
+    # structural commit then closes it; the next event must execute in a fresh
+    # session.  This is the only permitted refresh trigger within the epoch.
+    assert transition_index >= 1
+    assert all(
+        frame_events[real_indices[index]] is frame_events[real_indices[0]]
+        for index in range(transition_index + 1)
+    )
+    assert frame_events[real_indices[transition_index + 1]] is not frame_events[
+        real_indices[transition_index]
+    ]
+    assert result["training"]["v2_structural_transition_count"] >= 1
+
+
+def test_strict_reply_frame_identity_ignores_epoch_and_position_labels():
+    """Chunking/presentation labels cannot change a strict REAL stream."""
+
+    def run(label_offset: int):
+        authority, _child_triplet_ids = _real_ecology_authority()
+        ecology = ProspectiveBoundaryCandidateEcology()
+        seen: set[str] = set()
+        exposures: dict[tuple[str, str, str], int] = {}
+        counters = {
+            **curriculum_module._r1_reply_counter_defaults(),
+            "episodes": 0,
+            "child_handoffs": 0,
+            "availability_queries": 0,
+            "availability_positives": 0,
+            "virtual_frame_queries": 0,
+            "v2_duplicate_virtual_queries": 0,
+            "v2_real_observations": 0,
+            "v2_structural_transitions": 0,
+        }
+        stream = []
+        base = chess.Board(_REAL_ECOLOGY_R1_FEN)
+        for index in range(4):
+            board = base.copy(stack=False)
+            board.fullmove_number = 200 + index
+            move = min(board.legal_moves, key=lambda item: item.uci())
+            after_first = board.copy(stack=False)
+            after_first.push(move)
+            terminal_kind, successor_ids, audit = (
+                curriculum_module._prospective_counterexample_episode(
+                    authority,
+                    after_first,
+                    fen=board.fen(),
+                    white_move_uci=move.uci(),
+                    arm_name="strict-frame-identity",
+                    epoch=label_offset + index * 7,
+                    position_index=label_offset + index * 11,
+                    exposure_counts=exposures,
+                    seen_predecessor_fens=seen,
+                    frame_session=None,
+                    generic_seed=17,
+                    arm_bootstrap_enabled=True,
+                    counters=counters,
+                    strict_adaptive=True,
+                    boundary_ecology=ecology,
+                )
+            )
+            stream.append((
+                terminal_kind,
+                successor_ids,
+                authority.continuation_manifest(),
+                ecology.manifest(),
+            ))
+            counters["episodes"] += 1
+        return tuple(stream)
+
+    first = run(0)
+    relabeled = run(1000)
+    assert first == relabeled
+    assert first[-1][2]["accepted_real_references"]
+    assert first[-1][3]["observations"]
+
+
+def test_production_real_stream_promotes_before_postbirth_certification():
+    """A four-support bud commits first, then certifies on later REAL events."""
+
+    authority, _child_triplet_ids = _real_ecology_authority(
+        seed_discovery=False
+    )
+    ecology = ProspectiveBoundaryCandidateEcology()
+    seen: set[str] = set()
+    exposures: dict[tuple[str, str, str], int] = {}
+    counters = {
+        **curriculum_module._r1_reply_counter_defaults(),
+        "episodes": 0,
+        "child_handoffs": 0,
+        "availability_queries": 0,
+        "availability_positives": 0,
+        "virtual_frame_queries": 0,
+        "v2_duplicate_virtual_queries": 0,
+        "v2_real_observations": 0,
+        "v2_structural_transitions": 0,
+    }
+    base = chess.Board(_REAL_ECOLOGY_R1_FEN)
+    child_id: str | None = None
+    birth_exclusion_ids: tuple[str, ...] = ()
+    birth_exclusion_digest: str | None = None
+    birth_exclusion_frontier: int | None = None
+    for index in range(8):
+        board = base.copy(stack=False)
+        board.fullmove_number = 300 + index
+        move = min(board.legal_moves, key=lambda item: item.uci())
+        after_first = board.copy(stack=False)
+        after_first.push(move)
+        terminal_kind, successor_ids, audit = (
+            curriculum_module._prospective_counterexample_episode(
+                authority,
+                after_first,
+                fen=board.fen(),
+                white_move_uci=move.uci(),
+                arm_name="production-stream-gate",
+                # All eight interactions belong to one logical epoch.
+                epoch=0,
+                position_index=index,
+                exposure_counts=exposures,
+                seen_predecessor_fens=seen,
+                frame_session=None,
+                generic_seed=17,
+                arm_bootstrap_enabled=True,
+                counters=counters,
+                strict_adaptive=True,
+                boundary_ecology=ecology,
+            )
+        )
+        assert terminal_kind == "mate"
+        assert successor_ids == ()
+        assert audit["successor_signal"] is None
+        structural = audit["structural"]
+        if index < 3:
+            assert structural is None
+        elif index == 3:
+            assert structural is not None
+            assert len(structural["promotion_candidate_ids"]) == 1
+            assert len(structural["child_ids"]) == 1
+            child_id = structural["child_ids"][0]
+            child = authority.states[child_id]
+            assert child.hypothesis.birth_frontier == 3
+            birth_exclusion_ids = tuple(
+                sorted(authority.accepted_real_references)
+            )
+            assert len(birth_exclusion_ids) == 4
+            assert all(
+                authority.accepted_real_references[item].ordinal <= 3
+                for item in birth_exclusion_ids
+            )
+            exclusion = child.hypothesis.discovery_exclusion_commitment
+            assert exclusion is not None
+            birth_exclusion_digest = exclusion.digest
+            birth_exclusion_frontier = exclusion.exclusive_frontier
+            assert exclusion.count == 4
+            assert exclusion.exclusive_frontier == 4
+            assert set(exclusion.witness_ids) == set(birth_exclusion_ids)
+            assert set(child.hypothesis.discovery_exclusion_receipt_ids) == set(
+                birth_exclusion_ids
+            )
+            assert child.support == 0
+            assert child.prospectively_certified is False
+            assert child.certification_receipt_ids == ()
+        else:
+            assert child_id is not None
+            child = authority.states[child_id]
+            assert child.support == index - 3
+            assert child.prospectively_certified is (index == 7)
+            if index < 7:
+                # Receipt IDs are retained as the child's prospective
+                # evidence ledger before the threshold is reached; the
+                # certification bit, not an empty ledger, is the gate.
+                assert len(child.certification_receipt_ids) == index - 3
+
+        counters["episodes"] += 1
+
+    assert child_id is not None
+    child = authority.states[child_id]
+    assert child.support == 4
+    assert child.prospectively_certified is True
+    # The event that supplied the fourth post-birth receipt could not use its
+    # own newly certified child as a pre-outcome successor.
+    certification_ids = tuple(child.certification_receipt_ids)
+    assert certification_ids
+    assert set(certification_ids).isdisjoint(birth_exclusion_ids)
+    assert all(
+        authority.accepted_real_references[item].ordinal > 3
+        for item in certification_ids
+    )
+    assert birth_exclusion_digest is not None
+    assert birth_exclusion_frontier == 4
+
+    # The ninth unique REAL interaction is the first one allowed to expose
+    # the now-certified shell.  It is deliberately outside the four-event
+    # discovery prefix and carries a fresh persisted interaction ordinal.
+    credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
+    decision_id = "r1:ninth-postbirth-decision"
+    credit.register(decision_id, hierarchy_depth=1)
+    board = base.copy(stack=False)
+    board.fullmove_number = 308
+    move = min(board.legal_moves, key=lambda item: item.uci())
+    after_first = board.copy(stack=False)
+    after_first.push(move)
+    _terminal_kind, successor_ids, ninth_audit = (
+        curriculum_module._prospective_counterexample_episode(
+            authority,
+            after_first,
+            credit=credit,
+            decision_id=decision_id,
+            fen=board.fen(),
+            white_move_uci=move.uci(),
+            arm_name="production-stream-gate",
+            epoch=999,
+            position_index=999,
+            exposure_counts=exposures,
+            seen_predecessor_fens=seen,
+            frame_session=None,
+            generic_seed=17,
+            arm_bootstrap_enabled=True,
+            counters=counters,
+            strict_adaptive=True,
+            boundary_ecology=ecology,
+        )
+    )
+    assert counters["episodes"] == 8
+    assert ninth_audit["manifest"]["real_event"] is True
+    assert authority.next_expected_ordinal == 9
+
+    # This fixture has one legal opponent reply.  Its already-certified shell
+    # must close the actual strict envelope and carry value to the first move;
+    # a raw AVAILABLE classification without a valid provider is not enough.
+    signal = ninth_audit["successor_signal"]
+    assert signal is not None
+    assert signal.provider_ids == successor_ids
+    assert child_id in signal.provider_ids
+    assert signal.value > 0.0
+    assert counters["child_handoffs"] == 1
+    assert ninth_audit["manifest"]["positive_handoff"] is True
+    assert len(ninth_audit["manifest"]["reply_ids"]) == 1
+    credit.begin_episode()
+    credited = credit.transition(
+        decision_id,
+        explicit_successor_signal=signal,
+        external_provider_records=ninth_audit["external_provider_records"],
+        external_provider_resolver=authority.native_provider_response,
+        prediction_override=0.0,
+    )
+    assert credited.successor_value == pytest.approx(signal.value)
+    assert credited.td_error > 0.0
+
+    # A later VIRTUAL query may expose the same capability but cannot add
+    # certification evidence.  The preceding assertions used only the
+    # provider captured before the ninth REAL observation, not this query.
+    selected_black = chess.Move.from_uci(
+        ninth_audit["manifest"]["selected_black_move"]
+    )
+    ninth_successor = after_first.copy(stack=False)
+    ninth_successor.push(selected_black)
+    available, availability_response = curriculum_module._v2_r0_available(
+        authority,
+        ninth_successor,
+        frame_id="production-stream-gate:ninth:virtual-capability",
+    )
+    assert available is True
+    assert availability_response["classification"]["state"] == "available"
+    provenance = availability_response["availability_provenance"]
+    assert child_id in provenance["matching_certified_cell_ids"]
+    assert (
+        provenance["certification_provenance"][child_id][
+            "prospectively_certified"
+        ]
+        is True
+    )
+    assert provenance["certification_evidence_added"] == 0
+    assert all(
+        authority.accepted_real_references[item].ordinal > 3
+        for item in certification_ids
+    )
 
 
 def test_mastered_snapshot_resume_is_report_only_and_does_not_retrain(

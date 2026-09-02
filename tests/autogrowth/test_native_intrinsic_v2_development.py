@@ -414,6 +414,7 @@ def test_production_direct_providers_reach_all_reply_td_after_roundtrip() -> Non
     )
     counters = {
         **_r1_reply_counter_defaults(),
+        "episodes": 0,
         "availability_queries": 0,
         "availability_positives": 0,
         "virtual_frame_queries": 0,

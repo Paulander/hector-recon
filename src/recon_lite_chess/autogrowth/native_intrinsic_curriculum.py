@@ -1271,21 +1271,24 @@ def run_native_intrinsic_curriculum(
                 cfg.r1_mechanistic_factorial
             ),
             "td_prediction_source": (
-                "pre_emission_native_exploitation_score_excluding_exploration"
+                "bounded_native_exploitation_value_used_by_local_policy_excluding_exploration"
                 if cfg.r1_action_selection_mode
                 == R1_ACTION_SELECTION_LOCAL_RECON
                 else "exact_unrounded_confirmed_graph_action_score"
             ),
             "policy_ranking_value_transform": (
-                "v/(1+abs(v))"
+                "untried_generalized_prior:s/(1+abs(s));experienced_exact_q:identity"
                 if cfg.r1_action_selection_mode
                 == R1_ACTION_SELECTION_LOCAL_RECON
                 else "identity"
             ),
-            "td_prediction_uses_raw_graph_value": True,
-            "policy_exploitation_score_and_td_prediction_identical": bool(
+            "td_prediction_uses_raw_graph_value": bool(
                 cfg.r1_action_selection_mode
                 != R1_ACTION_SELECTION_LOCAL_RECON
+            ),
+            "policy_exploitation_score_and_td_prediction_identical": bool(
+                cfg.r1_action_selection_mode
+                == R1_ACTION_SELECTION_LOCAL_RECON
             ),
             "exploration_bonus_enters_td_prediction": False,
             "virtual_frames_create_grounding": False,
@@ -2533,6 +2536,43 @@ def _r1_reply_counter_defaults() -> dict[str, int | float]:
     }
 
 
+def _record_r1_local_action_evidence(
+    manifest: Mapping[str, Any],
+    *,
+    td_error: float,
+    terminal_kind: str | None,
+    successor_value: float,
+    counters: dict[str, int | float],
+    positive_credit_options: set[tuple[str, str]],
+) -> bool:
+    """Record report-only exact-option follow-through after successful TD.
+
+    The learner never reads these counters or this identity set.  Unlike the
+    presentation ring, they survive long runs and distinguish action aliases.
+    The current positive event is added only after checking for a *prior*
+    positive credit, so it cannot count as its own revisit.
+    """
+
+    exact_option = (str(manifest["pattern_id"]), str(manifest["move_uci"]))
+    prior_exposure = int(manifest.get("action_option_exposure", 0))
+    exact_q_selected = (
+        manifest.get("prediction_source") == "learned_exact_action_value"
+    )
+    positive_credit_revisit = bool(
+        exact_q_selected and exact_option in positive_credit_options
+    )
+    for key, increment in (
+        ("local_action_first_contact_selections", prior_exposure == 0),
+        ("local_action_post_contact_selections", prior_exposure > 0),
+        ("local_action_exact_q_selections", exact_q_selected),
+        ("local_action_positive_credit_revisits", positive_credit_revisit),
+    ):
+        counters[key] = counters.get(key, 0) + int(increment)
+    if td_error > 0.0 and (terminal_kind == "mate" or successor_value > 0.0):
+        positive_credit_options.add(exact_option)
+    return positive_credit_revisit
+
+
 def _r1_reply_policy_manifest(
     config: NativeIntrinsicCurriculumConfig,
     *,
@@ -3567,10 +3607,38 @@ def _prospective_counterexample_episode(
 ) -> tuple[str | None, tuple[str, ...], dict[str, Any]]:
     """Run the one selected REAL successor after an all-reply VIRTUAL probe."""
 
-    frame_prefix = (
-        f"native-intrinsic-v2:{arm_name}:{epoch}:{position_index}:"
-        f"{white_move_uci}"
-    )
+    if strict_adaptive:
+        # In the native path the persisted episode counter is the causal
+        # interaction ordinal.  Epoch/position are presentation metadata and
+        # must not enter receipt, ecology-incarnation, or authority IDs: a
+        # resumed/chunked stream with the same REAL interactions must replay
+        # the same organism.  Strict callers must provide the persisted
+        # counter explicitly: silently collapsing an omitted counter to zero
+        # would alias distinct interactions and invalidate replay identity.
+        if "episodes" not in counters:
+            raise ValueError(
+                "strict adaptive REAL frame identity requires explicit "
+                "counters['episodes']"
+            )
+        interaction_ordinal = counters["episodes"]
+        if (
+            isinstance(interaction_ordinal, bool)
+            or not isinstance(interaction_ordinal, int)
+            or interaction_ordinal < 0
+        ):
+            raise ValueError(
+                "strict adaptive REAL frame identity requires "
+                "counters['episodes'] to be a nonnegative integer"
+            )
+        frame_prefix = (
+            f"native-intrinsic-v2:{arm_name}:interaction:{interaction_ordinal}:"
+            f"{white_move_uci}"
+        )
+    else:
+        frame_prefix = (
+            f"native-intrinsic-v2:{arm_name}:{epoch}:{position_index}:"
+            f"{white_move_uci}"
+        )
     probe = _prospective_counterexample_reply_probe(
         authority,
         after_first,
@@ -3709,9 +3777,7 @@ def _prospective_counterexample_episode(
                 frame_session=frame_session,
                 expected_virtual_actuation=selected.get("v2_response"),
                 boundary_ecology=boundary_ecology,
-                pending_boundary_candidate_ids=(
-                    pending_boundary_candidate_ids
-                ),
+                pending_boundary_candidate_ids=pending_boundary_candidate_ids,
                 r0_core_graph=r0_core_graph,
                 r0_core_gate=r0_core_gate,
                 r0_core_triplet_ids=r0_core_triplet_ids,
@@ -4342,6 +4408,10 @@ def _run_r1_arm(
         start_epoch = 0
         counters = {
             "episodes": 0,
+            "local_action_first_contact_selections": 0,
+            "local_action_post_contact_selections": 0,
+            "local_action_exact_q_selections": 0,
+            "local_action_positive_credit_revisits": 0,
             "child_handoffs": 0,
             "failures": 0,
             "formal_confirmation_failures": 0,
@@ -4392,6 +4462,9 @@ def _run_r1_arm(
             "events": [],
         })
         local_action_events: list[dict[str, Any]] = []
+        # Report-only evidence for the finite mechanism gate.  This set never
+        # enters action competition, authority, reward, or candidate growth.
+        local_action_positive_credit_options: set[tuple[str, str]] = set()
         local_action_event_digest = _hash_json({
             "schema": "native_intrinsic_r1_local_action_events.v1",
             "events": [],
@@ -4502,6 +4575,13 @@ def _run_r1_arm(
             raise RuntimeError("legacy R1 arm snapshot contains V2 authority state")
         start_epoch = int(restored["next_epoch"])
         counters = dict(restored["counters"])
+        for key in (
+            "local_action_first_contact_selections",
+            "local_action_post_contact_selections",
+            "local_action_exact_q_selections",
+            "local_action_positive_credit_revisits",
+        ):
+            counters.setdefault(key, 0)
         for key, default in _r1_reply_counter_defaults().items():
             counters.setdefault(key, default)
         reply_orbits = set(restored["reply_orbits"])
@@ -4529,6 +4609,10 @@ def _run_r1_arm(
         local_action_events = list(
             restored.get("local_action_events", [])
         )[-16:]
+        local_action_positive_credit_options = set(
+            tuple(item)
+            for item in restored.get("local_action_positive_credit_options", ())
+        )
         local_action_event_digest = str(
             restored.get(
                 "local_action_event_digest",
@@ -4609,19 +4693,6 @@ def _run_r1_arm(
         else range(start_epoch, epoch_budget)
     )
     for epoch in epoch_iterator:
-        pending_boundary_candidate_ids: set[str] | None = (
-            set()
-            if (
-                r0_child_authority is not None
-                and StructuralMode(getattr(
-                    r0_child_authority,
-                    "structural_mode",
-                    StructuralMode.SCHEDULED,
-                ))
-                is StructuralMode.EVENT_DRIVEN
-            )
-            else None
-        )
         r0_frame_session = (
             None
             if (
@@ -4658,6 +4729,28 @@ def _run_r1_arm(
                 external_provider_records: dict[
                     str, Mapping[str, Any]
                 ] = {}
+                # Keep structural work born by this decision pending until
+                # the exact all-reply value has crossed credit and graph TD.
+                # This set is deliberately per interaction (never per epoch):
+                # a capacity retirement triggered by the new bud must not
+                # revoke a provider that the current handoff still needs.
+                pending_boundary_candidate_ids: set[str] | None = (
+                    set()
+                    if (
+                        r0_child_authority is not None
+                        and StructuralMode(
+                            getattr(
+                                r0_child_authority,
+                                "structural_mode",
+                                StructuralMode.SCHEDULED,
+                            )
+                        )
+                        is StructuralMode.EVENT_DRIVEN
+                    )
+                    else None
+                )
+                unique_real_event = False
+                reply_audit: dict[str, Any] | None = None
                 if terminal_kind is None:
                     replies = tuple(sorted(after_first.legal_moves, key=lambda item: item.uci()))
                     if not replies:
@@ -4699,15 +4792,16 @@ def _run_r1_arm(
                         external_provider_records = dict(
                             reply_audit.get("external_provider_records", {})
                         )
-                        reply_policy_events.append(reply_audit["manifest"])
-                        if len(reply_policy_events) > 16:
-                            del reply_policy_events[:-16]
-                        reply_policy_event_digest = _hash_json({
-                            "prior": reply_policy_event_digest,
-                            "event": reply_audit["manifest"],
-                        })
-                        if reply_audit["structural"] is not None:
-                            v2_structural_events.append(reply_audit["structural"])
+                        unique_real_event = bool(
+                            reply_audit["manifest"].get("real_event", False)
+                        )
+                        if (
+                            pending_boundary_candidate_ids is None
+                            and reply_audit["structural"] is not None
+                        ):
+                            v2_structural_events.append(
+                                reply_audit["structural"]
+                            )
                             if r0_frame_session is not None:
                                 r0_frame_session.close()
                                 r0_frame_session = r0_child_authority.frame_session()
@@ -4746,7 +4840,11 @@ def _run_r1_arm(
                             counters["virtual_frame_queries"] += int(duplicate)
                             counters["v2_duplicate_virtual_queries"] += int(duplicate)
                             counters["v2_real_observations"] += int(not duplicate)
-                            if structural is not None:
+                            unique_real_event = bool(not duplicate)
+                            if (
+                                pending_boundary_candidate_ids is None
+                                and structural is not None
+                            ):
                                 counters["v2_structural_transitions"] += 1
                                 v2_structural_events.append(structural)
                                 if r0_frame_session is not None:
@@ -4885,7 +4983,59 @@ def _run_r1_arm(
                         "R1 TD credit diverged from the emitted action branch: "
                         f"{credited_triplet_id} != {triplet_id}"
                     )
+
+                # In the native event-driven path, ecology/authority work is
+                # deliberately split around the learner update.  The REAL
+                # observation above may nominate a bud, but settling it can
+                # retire a weak provider.  Waiting until both credit and graph
+                # TD have returned keeps every provider used by this decision
+                # alive through its complete all-reply value calculation.  A
+                # duplicate VIRTUAL query and terminal-only outcome do not
+                # open a structural transaction.
+                settled_structural: dict[str, Any] | None = None
+                if (
+                    pending_boundary_candidate_ids is not None
+                    and unique_real_event
+                    and r0_child_authority is not None
+                ):
+                    settled_structural = _settle_event_local_v2_boundary(
+                        r0_child_authority,
+                        boundary_ecology,
+                        pending_boundary_candidate_ids,
+                    )
+                    if settled_structural is not None:
+                        counters["v2_structural_transitions"] += 1
+                        v2_structural_events.append(settled_structural)
+                        if reply_audit is not None:
+                            reply_audit["structural"] = settled_structural
+                        if r0_frame_session is not None:
+                            r0_frame_session.close()
+                            r0_frame_session = (
+                                r0_child_authority.frame_session()
+                            )
+
+                # Keep the policy event report causally after the complete
+                # decision.  In particular, a failed TD or structural commit
+                # must not publish a receipt that the resumed report treats as
+                # successfully settled.
+                if reply_audit is not None:
+                    reply_policy_event = reply_audit["manifest"]
+                    reply_policy_events.append(reply_policy_event)
+                    if len(reply_policy_events) > 16:
+                        del reply_policy_events[:-16]
+                    reply_policy_event_digest = _hash_json({
+                        "prior": reply_policy_event_digest,
+                        "event": reply_policy_event,
+                    })
                 if local_action_manifest is not None:
+                    positive_credit_revisit = _record_r1_local_action_evidence(
+                        local_action_manifest,
+                        td_error=float(event.td_error),
+                        terminal_kind=terminal_kind,
+                        successor_value=float(event.successor_value),
+                        counters=counters,
+                        positive_credit_options=local_action_positive_credit_options,
+                    )
                     action_event = {
                         **local_action_manifest,
                         "epoch": epoch + 1,
@@ -4894,6 +5044,9 @@ def _run_r1_arm(
                         "td_error": float(event.td_error),
                         "successor_value": float(event.successor_value),
                         "terminal_kind": terminal_kind,
+                        "positive_credited_exact_option_revisit": (
+                            positive_credit_revisit
+                        ),
                     }
                     local_action_events.append(action_event)
                     if len(local_action_events) > 16:
@@ -4909,39 +5062,6 @@ def _run_r1_arm(
         finally:
             if r0_frame_session is not None:
                 r0_frame_session.close()
-
-        if pending_boundary_candidate_ids is not None:
-            promotion_requests: list[BoundaryPromotionRequest] = []
-            if boundary_ecology is not None:
-                for candidate_id in sorted(pending_boundary_candidate_ids):
-                    request = _boundary_promotion_request_from_candidate(
-                        r0_child_authority,
-                        boundary_ecology,
-                        candidate_id,
-                    )
-                    if request is not None:
-                        promotion_requests.append(request)
-            structural = _advance_v2_structural_frontier(
-                r0_child_authority,
-                promotions=promotion_requests,
-            )
-            if structural is not None:
-                counters["v2_structural_transitions"] += 1
-                v2_structural_events.append(structural)
-            if boundary_ecology is not None:
-                for request in promotion_requests:
-                    if request.candidate_id not in (
-                        r0_child_authority.boundary_promotion_requests
-                    ):
-                        raise RuntimeError(
-                            "queued boundary promotion was not committed"
-                        )
-                    boundary_ecology.mark_promoted(request.candidate_id)
-                settled_refinements = boundary_ecology.settle_refinements()
-                if structural is not None:
-                    structural["settled_refinement_parent_ids"] = [
-                        item.sketch_id for item in settled_refinements
-                    ]
 
         replay = _replay_r0(
             graph,
@@ -5228,6 +5348,9 @@ def _run_r1_arm(
                 "reply_policy_events": reply_policy_events,
                 "reply_policy_event_digest": reply_policy_event_digest,
                 "local_action_events": local_action_events,
+                "local_action_positive_credit_options": tuple(
+                    sorted(local_action_positive_credit_options)
+                ),
                 "local_action_event_digest": local_action_event_digest,
                 "r0_child_authority_payload": authority_payload,
                 "boundary_ecology_manifest": (
@@ -5798,6 +5921,25 @@ def _run_r1_arm(
             ),
             "local_action_event_digest": local_action_event_digest,
             "local_action_recent_events": list(local_action_events),
+            "local_action_first_contact_selection_count": counters[
+                "local_action_first_contact_selections"
+            ],
+            "local_action_post_contact_selection_count": counters[
+                "local_action_post_contact_selections"
+            ],
+            "local_action_exact_q_selection_count": counters[
+                "local_action_exact_q_selections"
+            ],
+            "local_action_positive_credit_revisit_count": counters[
+                "local_action_positive_credit_revisits"
+            ],
+            "local_action_positive_credit_option_count": len(
+                local_action_positive_credit_options
+            ),
+            "local_action_lifetime_evidence_is_report_only": True,
+            "local_candidate_counter_scope": (
+                "lifetime_graph_including_r0_and_read_only_evaluation"
+            ),
             "local_candidate_pairs_before_cap": int(
                 graph.scheduler_stats.get(
                     "shared_atom_candidate_pairs_before_cap", 0
@@ -5811,6 +5953,9 @@ def _run_r1_arm(
             "local_candidate_cap_bound": bool(
                 graph.scheduler_stats.get(
                     "shared_atom_candidate_pairs_before_cap", 0
+                )
+                > graph.scheduler_stats.get(
+                    "shared_atom_candidate_pairs_after_cap", 0
                 )
             ),
             "reply_schedule": (
@@ -7385,14 +7530,48 @@ def _advance_v2_structural_frontier(
         getattr(authority, "structural_mode", StructuralMode.SCHEDULED)
     )
     if mode is StructuralMode.EVENT_DRIVEN:
+        pending_reader = getattr(authority, "_pending_request_ids", None)
+        live_reader = getattr(authority, "_hot_live_states", None)
+        bounded_projection = callable(pending_reader) and callable(live_reader)
+        pending_before = tuple(pending_reader()) if bounded_projection else ()
         generation_before = int(authority.current_generation)
-        states_before = set(authority.states)
-        retired_before = set(getattr(authority, "retired_tombstones", {}))
-        consumptions_before = set(authority.request_consumptions)
+        if bounded_projection:
+            # Event-local no-ops must not scan lifetime state/tombstone/
+            # consumption ledgers.  A real mutation needs only the bounded
+            # live population and pending queue; fresh IDs are never reused
+            # and all births remain live when the transaction opens again.
+            states_before = (
+                set(live_reader()) if promotions or pending_before else set()
+            )
+            retired_before: set[str] = set()
+            consumptions_before: set[str] = set()
+        else:
+            # Historical/minimal test authorities predate maintained live
+            # indexes.  Normal V2 authorities never take this fallback.
+            states_before = set(authority.states)
+            retired_before = set(getattr(authority, "retired_tombstones", {}))
+            consumptions_before = set(authority.request_consumptions)
         boundary_count_before = len(authority.generation_boundaries)
+        # Always invoke authority validation, even when the queue looks empty:
+        # a pending REAL event or sealed evaluation must still fail closed.
         prospective = authority.settle_pending_structural_requests(promotions)
         if prospective is None:
             return None
+        if bounded_projection:
+            child_ids = sorted(set(live_reader()) - states_before)
+            retired_cell_ids = list(prospective.retired_cell_ids)
+            settled_request_ids = sorted(
+                request_id for request_id in pending_before
+                if request_id in authority.request_consumptions
+            )
+        else:
+            child_ids = sorted(set(authority.states) - states_before)
+            retired_cell_ids = sorted(
+                set(getattr(authority, "retired_tombstones", {})) - retired_before
+            )
+            settled_request_ids = sorted(
+                set(authority.request_consumptions) - consumptions_before
+            )
         new_boundaries = authority.generation_boundaries[
             boundary_count_before:
         ]
@@ -7402,18 +7581,13 @@ def _advance_v2_structural_frontier(
             "safe_point_content_blind": True,
             "generation_before": generation_before,
             "generation_after": int(authority.current_generation),
-            "settled_request_ids": sorted(
-                set(authority.request_consumptions) - consumptions_before
-            ),
+            "settled_request_ids": settled_request_ids,
             "promotion_candidate_ids": sorted(
                 request.candidate_id for request in promotions
                 if request.candidate_id in authority.boundary_promotion_requests
             ),
-            "child_ids": sorted(set(authority.states) - states_before),
-            "retired_cell_ids": sorted(
-                set(getattr(authority, "retired_tombstones", {}))
-                - retired_before
-            ),
+            "child_ids": child_ids,
+            "retired_cell_ids": retired_cell_ids,
             "live_successor_ids": list(
                 authority.live_successor_ids()
                 if callable(getattr(authority, "live_successor_ids", None))
@@ -7643,6 +7817,48 @@ def _boundary_promotion_request_from_candidate(
         supporting_receipt_commitment=supporting_commitment,
         inspected_receipt_commitment=inspected_commitment,
     )
+
+
+def _settle_event_local_v2_boundary(
+    authority: Any,
+    ecology: ProspectiveBoundaryCandidateEcology | None,
+    pending_boundary_candidate_ids: Iterable[str],
+) -> dict[str, Any] | None:
+    """Settle one decision's deferred structural work after TD credit.
+
+    Event-driven authority settlement is intentionally split around the
+    decision's learner update.  REAL observation/ecology may nominate a new
+    shell, but it cannot retire an existing provider while that same provider
+    is still needed by the current all-reply handoff.  The caller invokes this
+    helper only after ``credit.transition`` and graph TD application have
+    returned successfully.  The candidate-ID set is per decision, never an
+    epoch batch; an empty set still lets native authority requests settle.
+    """
+
+    promotion_requests: list[BoundaryPromotionRequest] = []
+    if ecology is not None:
+        for candidate_id in sorted(set(map(str, pending_boundary_candidate_ids))):
+            request = _boundary_promotion_request_from_candidate(
+                authority,
+                ecology,
+                candidate_id,
+            )
+            if request is not None:
+                promotion_requests.append(request)
+    structural = _advance_v2_structural_frontier(
+        authority,
+        promotions=promotion_requests,
+    )
+    if structural is None:
+        return None
+    if ecology is not None:
+        for request in promotion_requests:
+            if request.candidate_id not in authority.boundary_promotion_requests:
+                raise RuntimeError(
+                    "event-local boundary promotion was not committed"
+                )
+            ecology.mark_promoted(request.candidate_id)
+    return structural
 
 
 def _v2_authoritative_predecessor_fens(authority: Any) -> frozenset[str]:
@@ -8564,17 +8780,13 @@ def _v2_r0_observe_training_successor(
             )
     elif promotions and ecology_event is not None:
         ecology_event["promotion_queued"] = True
-    if pending_boundary_candidate_ids is None and boundary_ecology is not None:
-        settled_refinements = boundary_ecology.settle_refinements()
-        if ecology_event is not None:
-            ecology_event["settled_refinement_parent_ids"] = [
-                item.sketch_id for item in settled_refinements
-            ]
-            ecology_event["active_candidate_count"] = (
-                boundary_ecology.active_sketch_count
-            )
     # Duplicate suppression is operational state, not evidence.  Commit it
-    # only after provider projection and ecology settlement have succeeded.
+    # only after provider projection and the event-local structural decision
+    # have succeeded.  Refinement parents deliberately remain REFINING here;
+    # ``observe`` closes them only when their local event cap is exhausted (or
+    # capacity pressure evicts them).  A caller may still invoke the retained
+    # ``settle_refinements`` compatibility helper explicitly, but production
+    # training never batches or epoch-settles this lifecycle.
     seen_predecessor_fens.add(predecessor_fen)
     return available, response, False, structural
 

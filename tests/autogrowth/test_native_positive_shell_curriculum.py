@@ -9,6 +9,7 @@ from recon_lite_chess.autogrowth.native_all_reply_envelope import (
 )
 from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _adaptive_positive_lineage_audit,
+    _advance_v2_structural_frontier,
     _boundary_promotion_request_from_candidate,
     _boundary_ecology_step,
 )
@@ -70,6 +71,123 @@ class _GuardedBoundaryAuthority(_BoundaryAuthority):
     def _hot_live_states(self):
         self.live_state_reads += 1
         return {}
+
+
+class _NoLifetimeTraversal(dict):
+    """Permit keyed ledger access while rejecting historical report scans."""
+
+    def __init__(self, name: str, values: dict[str, object]) -> None:
+        super().__init__(values)
+        self.name = name
+
+    def _reject_traversal(self):
+        raise AssertionError(f"structural wrapper traversed lifetime {self.name}")
+
+    def __iter__(self):
+        return self._reject_traversal()
+
+    def keys(self):
+        return self._reject_traversal()
+
+    def items(self):
+        return self._reject_traversal()
+
+    def values(self):
+        return self._reject_traversal()
+
+
+class _ReportBoundary:
+    def __init__(self, name: str, retired_cell_ids: tuple[str, ...] = ()) -> None:
+        self.name = name
+        self.retired_cell_ids = retired_cell_ids
+
+    def manifest(self) -> dict[str, object]:
+        return {
+            "name": self.name,
+            "retired_cell_ids": list(self.retired_cell_ids),
+        }
+
+
+class _BoundedSettlementAuthority:
+    """Data-free authority seam with a large history and tiny live state."""
+
+    structural_mode = StructuralMode.EVENT_DRIVEN
+
+    def __init__(
+        self,
+        *,
+        pending: bool = False,
+        guarded: bool = True,
+        validation_failure: bool = False,
+    ) -> None:
+        self.current_generation = 3
+        self.generation_boundaries = [_ReportBoundary("historical")]
+        self.boundary_promotion_requests: dict[str, object] = {}
+        self.validation_failure = validation_failure
+        self.settlement_calls = 0
+        self.live_state_reads = 0
+        self._live = {"core": object(), "retiring": object()}
+        self._pending = (
+            ("request-rejected", "request-child") if pending else ()
+        )
+        ledgers = {
+            "states": {
+                **{
+                    f"historical-state-{index:04d}": object()
+                    for index in range(512)
+                },
+                **self._live,
+            },
+            "retired_tombstones": {
+                f"historical-state-{index:04d}": object()
+                for index in range(512)
+            },
+            "request_consumptions": {
+                f"historical-request-{index:04d}": object()
+                for index in range(512)
+            },
+        }
+        for name, values in ledgers.items():
+            setattr(
+                self,
+                name,
+                _NoLifetimeTraversal(name, values) if guarded else values,
+            )
+
+    def _pending_request_ids(self) -> tuple[str, ...]:
+        return self._pending
+
+    def _hot_live_states(self) -> dict[str, object]:
+        self.live_state_reads += 1
+        return self._live
+
+    def live_successor_ids(self) -> tuple[str, ...]:
+        return tuple(sorted(cell_id for cell_id in self._live if cell_id != "core"))
+
+    def settle_pending_structural_requests(self, promotions=()):
+        self.settlement_calls += 1
+        if self.validation_failure:
+            raise RuntimeError("synthetic quiescent-boundary validation failure")
+        assert not promotions
+        if not self._pending:
+            return None
+        # A rejected proposal still consumes its pending request. Retirement
+        # precedes birth, and historical state/tombstone identities persist.
+        self.request_consumptions["request-rejected"] = {"child_cell_id": None}
+        self.request_consumptions["request-child"] = {"child_cell_id": "new-child"}
+        self.retired_tombstones["retiring"] = {"retired": True}
+        del self._live["retiring"]
+        self._live["new-child"] = object()
+        self.states["new-child"] = self._live["new-child"]
+        self._pending = ()
+        self.current_generation += 1
+        prospective = _ReportBoundary("prospective", ("retiring",))
+        self.generation_boundaries.extend((
+            _ReportBoundary("sealed"),
+            _ReportBoundary("structural"),
+            prospective,
+        ))
+        return prospective
 
 
 def test_failure_is_contrast_only_and_cannot_birth_a_negative_candidate() -> None:
@@ -537,3 +655,71 @@ def test_ecology_authority_interval_restore_has_exact_continuation() -> None:
         uninterrupted_authority,
         uninterrupted_ecology,
     )
+
+
+def test_structural_frontier_noop_does_not_traverse_lifetime_ledgers() -> None:
+    authority = _BoundedSettlementAuthority()
+
+    assert _advance_v2_structural_frontier(authority) is None
+
+    assert authority.settlement_calls == 1
+    assert authority.current_generation == 3
+    assert len(authority.generation_boundaries) == 1
+    assert len(authority.states) == 514
+    assert len(authority.retired_tombstones) == 512
+    assert len(authority.request_consumptions) == 512
+
+
+def test_structural_frontier_noop_still_runs_authority_validation() -> None:
+    authority = _BoundedSettlementAuthority(validation_failure=True)
+
+    with pytest.raises(RuntimeError, match="quiescent-boundary validation failure"):
+        _advance_v2_structural_frontier(authority)
+
+    assert authority.settlement_calls == 1
+    assert authority.current_generation == 3
+    assert len(authority.generation_boundaries) == 1
+
+
+def test_structural_frontier_bounded_deltas_match_lifetime_reference_report() -> None:
+    """The bounded projection preserves the former exact report semantics."""
+
+    reference = _BoundedSettlementAuthority(pending=True, guarded=False)
+    generation_before = reference.current_generation
+    states_before = set(reference.states)
+    retired_before = set(reference.retired_tombstones)
+    consumptions_before = set(reference.request_consumptions)
+    boundary_count_before = len(reference.generation_boundaries)
+    prospective = reference.settle_pending_structural_requests()
+    assert prospective is not None
+    expected = {
+        "mode": StructuralMode.EVENT_DRIVEN.value,
+        "safe_point": "post_consumption_quiescent_real",
+        "safe_point_content_blind": True,
+        "generation_before": generation_before,
+        "generation_after": reference.current_generation,
+        "settled_request_ids": sorted(
+            set(reference.request_consumptions) - consumptions_before
+        ),
+        "promotion_candidate_ids": [],
+        "child_ids": sorted(set(reference.states) - states_before),
+        "retired_cell_ids": sorted(set(reference.retired_tombstones) - retired_before),
+        "live_successor_ids": list(reference.live_successor_ids()),
+        "boundaries": [
+            item.manifest()
+            for item in reference.generation_boundaries[boundary_count_before:]
+        ],
+        "prospective_boundary": prospective.manifest(),
+    }
+    guarded = _BoundedSettlementAuthority(pending=True)
+
+    actual = _advance_v2_structural_frontier(guarded)
+
+    assert actual == expected
+    assert actual["settled_request_ids"] == ["request-child", "request-rejected"]
+    assert actual["child_ids"] == ["new-child"]
+    assert actual["retired_cell_ids"] == ["retiring"]
+    assert guarded.settlement_calls == 1
+    assert guarded._pending_request_ids() == ()
+    assert "retiring" in guarded.states
+    assert "retiring" in guarded.retired_tombstones

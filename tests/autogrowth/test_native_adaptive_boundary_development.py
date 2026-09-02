@@ -238,7 +238,7 @@ def test_adaptive_config_fails_closed_on_retired_host_controls(
         adaptive._validate_adaptive_mechanism_config(config)
 
 
-def test_follow_through_is_an_eight_epoch_canary_extension(tmp_path: Path) -> None:
+def test_follow_through_reaches_post_contact_choices(tmp_path: Path) -> None:
     canary = adaptive.development_config(
         "canary", output_dir=tmp_path, seed=17,
         max_wall_seconds=11.0, max_peak_rss_mib=22.0,
@@ -255,16 +255,20 @@ def test_follow_through_is_an_eight_epoch_canary_extension(tmp_path: Path) -> No
         for field in canary_payload
         if canary_payload[field] != follow_payload[field]
     }
-    assert changed == {"r1_epochs"}
+    assert changed == {
+        "r1_epochs",
+        "r1_validation_interval",
+        "r1_snapshot_interval",
+    }
     assert follow_through.r1_pool_mode == "random"
     assert (
         follow_through.r1_train_count,
         follow_through.r1_validation_count,
         follow_through.r1_regression_count,
     ) == (8, 4, 4)
-    assert follow_through.r1_epochs == 8
-    assert follow_through.r1_validation_interval == 1
-    assert follow_through.r1_snapshot_interval == 1
+    assert follow_through.r1_epochs == 32
+    assert follow_through.r1_validation_interval == 4
+    assert follow_through.r1_snapshot_interval == 4
     assert adaptive._normalize_profile("follow_through") == (
         adaptive.FOLLOW_THROUGH_PROFILE
     )
@@ -440,7 +444,10 @@ def test_complete_per_run_mechanism_evidence_never_claims_scientific_gate() -> N
                             "credited_triplet_id": "t1",
                         },
                     ],
+                    "local_candidate_pairs_before_cap": 0,
+                    "local_candidate_pairs_after_cap": 0,
                     "local_candidate_cap_bound": False,
+                    "local_action_positive_credit_revisit_count": 1,
                     "resumed_from_snapshot": True,
                     "boundary_ecology": {
                         "tombstone_count": 1,
@@ -480,11 +487,58 @@ def test_complete_per_run_mechanism_evidence_never_claims_scientific_gate() -> N
     assert gates["mechanism_checks"][
         "validation_outcome_mastery_report_only"
     ] is True
+    assert gates["mechanism_checks"][
+        "candidate_cap_accounting_consistent"
+    ] is True
     assert gates["per_run_mechanism_gate_passed"] is True
     assert gates["scientific_gate_passed"] is False
     assert adaptive._completion_status(gates) == (
         "PER_RUN_MECHANISM_GATE_PASSED_DEVELOPMENT_ONLY"
     )
+
+
+@pytest.mark.parametrize(
+    ("before", "after", "bound", "consistent"),
+    (
+        (0, 0, False, True),
+        (100, 64, True, True),
+        (100, 100, False, True),
+        (100, 64, False, False),
+        (64, 100, True, False),
+        (None, None, None, False),
+    ),
+)
+def test_candidate_cap_accounting_does_not_require_unbounded_search(
+    before, after, bound, consistent
+) -> None:
+    payload = {
+        "r1_arms": {"full_intrinsic": {"training": {
+            "local_candidate_pairs_before_cap": before,
+            "local_candidate_pairs_after_cap": after,
+            "local_candidate_cap_bound": bound,
+        }}}
+    }
+    gates = adaptive._result_gate_fields(payload)
+    assert gates["mechanism_checks"][
+        "candidate_cap_accounting_consistent"
+    ] is consistent
+    assert gates["local_candidate_search_truncation_exercised"] is bound
+
+
+def test_lifetime_revisit_evidence_survives_an_empty_presentation_ring() -> None:
+    payload = {
+        "r1_arms": {"full_intrinsic": {"training": {
+            "local_action_recent_events": [],
+            "local_action_positive_credit_revisit_count": 1,
+        }}}
+    }
+    gates = adaptive._result_gate_fields(payload)
+    assert gates["mechanism_checks"][
+        "positive_credited_exact_option_revisited"
+    ] is True
+    # A lifetime revisit alone is not a complete mechanism/scientific gate.
+    assert gates["per_run_mechanism_gate_passed"] is False
+    assert gates["scientific_gate_passed"] is False
 
 
 def test_fresh_pattern_turnover_is_not_reported_as_policy_revisit() -> None:
@@ -520,6 +574,8 @@ def test_fresh_pattern_turnover_is_not_reported_as_policy_revisit() -> None:
                             "credited_triplet_id": "t1",
                         },
                     ],
+                    "local_candidate_pairs_before_cap": 0,
+                    "local_candidate_pairs_after_cap": 0,
                     "local_candidate_cap_bound": False,
                     "resumed_from_snapshot": True,
                     "boundary_ecology": {
@@ -569,7 +625,7 @@ def test_fresh_pattern_turnover_is_not_reported_as_policy_revisit() -> None:
     assert gates["r0_frozen_native_policy_retention"]["accuracy"] == 1.0
     assert gates["r0_v2_shell_coverage"]["accuracy"] == 0.375
     assert gates["mechanism_checks"][
-        "revisited_local_score_or_action_changed"
+        "positive_credited_exact_option_revisited"
     ] is False
     assert gates["per_run_mechanism_gate_passed"] is False
 
@@ -589,6 +645,10 @@ def test_run_marks_result_payload_without_running_curriculum(
     protocol = result.payload["development_protocol"]
     assert protocol["profile"] == "canary"
     assert protocol["r1_reply_policy"] == "prospective_counterexample"
+    assert protocol["structural_settlement_cadence"] == (
+        "post_unique_real_event_and_td_quiescent_boundary"
+    )
+    assert protocol["epoch_boundary_controls_structural_mutation"] is False
     assert protocol["no_learner_oracle"] is True
     assert protocol["harness_exhaustive_evaluation_used"] is True
     assert protocol["harness_evaluation_influences_learning"] is False
@@ -675,9 +735,9 @@ def test_cli_normalizes_follow_through_and_reports_failed_scientific_gate(
     assert attempt["config"]["r1_train_count"] == 8
     assert attempt["config"]["r1_validation_count"] == 4
     assert attempt["config"]["r1_regression_count"] == 4
-    assert attempt["config"]["r1_epochs"] == 8
-    assert attempt["config"]["r1_validation_interval"] == 1
-    assert attempt["config"]["r1_snapshot_interval"] == 1
+    assert attempt["config"]["r1_epochs"] == 32
+    assert attempt["config"]["r1_validation_interval"] == 4
+    assert attempt["config"]["r1_snapshot_interval"] == 4
     assert attempt["status"] == "COMPLETED_R1_GATE_FAILED"
     assert attempt["r1_executed"] is True
     assert attempt["r1_pass"] is False

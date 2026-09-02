@@ -7,6 +7,7 @@ from recon_lite import FrameContext, FrameKind
 from recon_lite_chess.autogrowth.native_all_reply_envelope import (
     AvailabilityState,
     ReplyAuthority,
+    evaluate_all_reply_envelope,
 )
 from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _grounded_all_reply_successor_signal,
@@ -234,6 +235,12 @@ def test_external_shell_provider_schema_fails_closed_before_credit() -> None:
         malformed = dict(valid)
         malformed.update(changes)
         malformed_records.append(malformed)
+    # The native producer must emit these explicit ledger summaries.  The
+    # adapter and TD validator must not silently infer omitted fields.
+    for field in ("support", "successes", "contradictions"):
+        malformed = dict(valid)
+        del malformed[field]
+        malformed_records.append(malformed)
 
     for malformed in malformed_records:
         row = _r1_reply_authority_from_provider(
@@ -458,6 +465,72 @@ def test_certified_shell_is_self_grounded_read_only_and_revocable() -> None:
     assert 0.0 < provider["expected_value"] < 1.0
     assert provider["discovery_evidence_used"] is False
     assert provider["certification_receipt_count"] == 4
+    assert provider["support"] == state.support == len(
+        state.certification_receipt_ids
+    )
+    assert provider["successes"] == state.successes == len(
+        state.support_receipt_ids
+    )
+    assert provider["contradictions"] == state.contradictions == len(
+        state.contradiction_receipt_ids
+    )
+    assert all(
+        type(provider[field]) is int
+        for field in ("support", "successes", "contradictions")
+    )
+    assert set(state.certification_receipt_ids).isdisjoint(discovery_ids)
+
+    # Exercise the actual producer -> reply adapter -> all-reply composition
+    # -> TD contract.  A handcrafted provider dictionary can accidentally
+    # contain fields missing from the real authority's emitted capability.
+    authority_before_credit = authority.continuation_digest()
+    row = _r1_reply_authority_from_provider(
+        "real-shell-reply", provider, exposure_count=0,
+    )
+    assert row.state is AvailabilityState.AVAILABLE
+    assert row.grounded is True
+    envelope = evaluate_all_reply_envelope(
+        (row,), envelope_id="real-shell-envelope", generic_seed=17,
+    )
+    assert envelope.positive_gate is True
+    credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
+    credit.register("real-shell-recipient", hierarchy_depth=1)
+    records = {child_id: provider}
+    signal = _grounded_all_reply_successor_signal(
+        envelope,
+        bootstrap_enabled=True,
+        actual_mate=True,
+        clean_preoutcome_evidence=True,
+        credit=credit,
+        provider_ids=(child_id,),
+        provider_records=records,
+        external_provider_resolver=authority.native_provider_response,
+        strict_adaptive=True,
+    )
+    assert signal is not None
+    assert signal.provider_ids == (child_id,)
+    credit_before_preflight = credit.snapshot()
+    assert credit.preflight_explicit_successor_signal(
+        signal,
+        recipient_id="real-shell-recipient",
+        external_provider_records=records,
+        external_provider_resolver=authority.native_provider_response,
+    ) == signal
+    assert credit.snapshot() == credit_before_preflight
+    credit.begin_episode()
+    event = credit.transition(
+        "real-shell-recipient",
+        explicit_successor_signal=signal,
+        external_provider_records=records,
+        external_provider_resolver=authority.native_provider_response,
+        prediction_override=0.0,
+    )
+    assert event.provider_ids == (child_id,)
+    assert event.successor_value == pytest.approx(provider["expected_value"])
+    assert event.successor_value > 0.0
+    assert event.td_error > 0.0
+    assert child_id not in credit.states
+    assert authority.continuation_digest() == authority_before_credit
 
     restored = NativeProspectiveAuthorityV2.loads(authority.dumps())
     assert restored.native_provider_response(child_id) == provider
@@ -492,6 +565,15 @@ def test_certified_shell_is_self_grounded_read_only_and_revocable() -> None:
         reason="shell_provider_test_retirement",
     )
     assert authority.native_provider_response(child_id) is None
+    credit_before_retired_handoff = credit.snapshot()
+    with pytest.raises(ValueError, match="provider"):
+        credit.transition(
+            "real-shell-recipient",
+            explicit_successor_signal=signal,
+            external_provider_records=records,
+            external_provider_resolver=authority.native_provider_response,
+        )
+    assert credit.snapshot() == credit_before_retired_handoff
 
 
 def test_certifying_receipt_is_not_exposed_as_preoutcome_provider() -> None:

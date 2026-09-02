@@ -587,6 +587,52 @@ def test_refinement_parent_dies_only_after_bounded_exhaustion():
     assert parent.sketch_id in ecology.tombstones
 
 
+def test_refining_parent_survives_first_residual_until_local_cap():
+    """A residual keeps its parent refining until the event budget is spent."""
+
+    ecology = ProspectiveBoundaryCandidateEcology()
+    trigger = _observation(0, ("anchor", "good"), True)
+    ecology.observe(trigger)
+    parent = ecology.expand(BoundaryExpandDemand(
+        ordinal=0,
+        signal_ids=("anchor",),
+        candidate_width=1,
+        triggering_receipt_id=trigger.receipt_id,
+        polarity=True,
+    ))[0]
+
+    ecology.observe(_observation(1, ("anchor", "bad-1"), False))
+    current = ecology.sketches[parent.sketch_id]
+    assert current.state is SketchLifecycle.REFINING
+    assert current.refinement_receipt_ids == ("receipt-1",)
+    residual_ids = current.residual_sketch_ids
+    assert residual_ids
+    assert all(
+        ecology.sketches[item].state is SketchLifecycle.ACTIVE
+        for item in residual_ids
+    )
+
+    for index in range(2, 4):
+        ecology.observe(_observation(index, ("anchor", f"bad-{index}"), False))
+        assert ecology.sketches[parent.sketch_id].state is SketchLifecycle.REFINING
+
+    # The fourth contrast reaches the configured local cap.  No explicit
+    # epoch/event settlement is involved; observe() closes the parent while a
+    # live strict residual remains available for local competition.
+    ecology.observe(_observation(4, ("anchor", "bad-4"), False))
+    assert len(
+        ecology.sketches[parent.sketch_id].refinement_receipt_ids
+    ) == ecology.config.refinement_event_cap
+    assert ecology.sketches[parent.sketch_id].state is SketchLifecycle.DORMANT
+    assert ecology.sketches[parent.sketch_id].retirement_reason == (
+        "residual_refinement"
+    )
+    assert all(
+        ecology.sketches[item].state is SketchLifecycle.ACTIVE
+        for item in residual_ids
+    )
+
+
 def test_dead_sketch_frees_capacity_and_births_continue_beyond_cap():
     ecology = ProspectiveBoundaryCandidateEcology(
         BoundaryEcologyConfig(active_sketch_cap=1)

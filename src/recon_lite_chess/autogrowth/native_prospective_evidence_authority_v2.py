@@ -1100,6 +1100,12 @@ def prospective_available_provider_records(
             "grounding_ancestors": (),
             "direct_positive_evidence": int(state.successes),
             "direct_contrast_evidence": int(state.contradictions),
+            # The reply/credit adapter checks these exact post-birth counts
+            # against the same ledger totals.  Omitting them makes a valid
+            # certified cell fail the native provider contract and abstain.
+            "support": certification_count,
+            "successes": success_count,
+            "contradictions": contradiction_count,
             "certification_receipt_count": certification_count,
             "certification_receipt_digest": certification_digest,
             "evidence_scope": "post_birth_real_certification_ledger",

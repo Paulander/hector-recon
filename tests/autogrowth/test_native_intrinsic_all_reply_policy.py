@@ -368,6 +368,7 @@ def _fixture(*, state: str = "AVAILABLE", false_ids: tuple[str, ...] = ()):
     after_first.push(first)
     counters = {
         **_r1_reply_counter_defaults(),
+        "episodes": 0,
         "availability_queries": 0,
         "availability_positives": 0,
         "virtual_frame_queries": 0,
@@ -429,6 +430,7 @@ def test_unknown_shell_cannot_veto_exact_local_all_reply_providers() -> None:
     after_first.push(first)
     counters = {
         **_r1_reply_counter_defaults(),
+        "episodes": 0,
         "availability_queries": 0,
         "availability_positives": 0,
         "virtual_frame_queries": 0,
@@ -529,8 +531,12 @@ def test_virtual_real_actuation_mismatch_fails_before_receipt_consumption() -> N
     first = _forced_mate_in_two_first_moves(board)[0]
     after_first = board.copy(stack=False)
     after_first.push(first)
+    # Strict frame identity is keyed by the persisted interaction ordinal.
+    # This fixture calls the production helper directly, so provide it
+    # explicitly just as the runner does.
     counters = {
         **_r1_reply_counter_defaults(),
+        "episodes": 0,
         "availability_queries": 0,
         "availability_positives": 0,
         "virtual_frame_queries": 0,

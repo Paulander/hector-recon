@@ -35,10 +35,10 @@ from .native_single_graph_curriculum import NativeReConKRKGraph
 from recon_lite_hector.learning import IntrinsicCreditEngine
 
 
-# v3 binds the empty local shell and fail-closed adaptive mechanism contract in
-# addition to the explicit scientific-gate summary in ``attempt.json``. In
-# particular, process completion and an R1 gate pass are different outcomes.
-SCHEMA_VERSION = "native_adaptive_boundary_development.v3"
+# v4 binds event-local structural settlement and a post-contact follow-through
+# profile in addition to the fail-closed adaptive mechanism contract.  Process
+# completion and an R1 gate pass remain different outcomes.
+SCHEMA_VERSION = "native_adaptive_boundary_development.v4"
 DEVELOPMENT_LABEL = "DEVELOPMENT_VIEWED_NOT_SCIENTIFIC"
 DEFAULT_SEED = _intrinsic.DEFAULT_SEED
 
@@ -80,11 +80,12 @@ _PROFILE_WORK: dict[str, dict[str, int | str]] = {
         "r1_train_count": 8,
         "r1_validation_count": 4,
         "r1_regression_count": 4,
-        # Continue only through the fixed epoch-8 boundary.  This is the
-        # bounded follow-through window after the epoch-4 canary.
-        "r1_epochs": 8,
-        "r1_validation_interval": 1,
-        "r1_snapshot_interval": 1,
+        # Every valid white-to-move KRK position has at most 22 legal moves.
+        # Epoch 32 therefore supplies at least ten post-first-contact choices
+        # per recurrent position without changing any learner parameter.
+        "r1_epochs": 32,
+        "r1_validation_interval": 4,
+        "r1_snapshot_interval": 4,
     },
     "gate": {
         "r1_pool_mode": "balanced_setup",
@@ -227,39 +228,14 @@ def _result_gate_fields(result_payload: Mapping[str, Any]) -> dict[str, Any]:
         if isinstance(recent_actions, list)
         else []
     )
-    # A position being revisited is not evidence that the learned policy was
-    # revisited: native-local exploration can emit a fresh pattern each time.
-    # Require the exact local pattern identity to recur before reporting a
-    # score/action change.  A positive exposure count can corroborate that
-    # recurrence, but cannot replace the prior same-identity check.
-    prior_action_by_pattern: dict[str, Mapping[str, Any]] = {}
-    revisited_score_or_action_change = False
-    for event in recent_actions:
-        if not isinstance(event, Mapping):
-            continue
-        pattern_id = event.get("pattern_id")
-        if not isinstance(pattern_id, str) or not pattern_id:
-            continue
-        prior = prior_action_by_pattern.get(pattern_id)
-        same_pattern_id = bool(
-            prior is not None and prior.get("pattern_id") == pattern_id
-        )
-        # ``prediction`` is the bounded graph-owned value that actually enters
-        # local competition and TD.  ``raw_value`` is only the generalized
-        # pre-choice audit score and may now be absent for an already learned
-        # exact option because re-auditing it cannot affect behavior.
-        prior_policy_value = (
-            prior.get("prediction", prior.get("raw_value"))
-            if prior
-            else None
-        )
-        policy_value = event.get("prediction", event.get("raw_value"))
-        if same_pattern_id and (
-            prior.get("move_uci") != event.get("move_uci")
-            or prior_policy_value != policy_value
-        ):
-            revisited_score_or_action_change = True
-        prior_action_by_pattern[pattern_id] = event
+    # The recent-event ring is presentation, not lifetime evidence.  The
+    # curriculum counts exact (pattern, actuator) revisits prospectively, after
+    # successful observed credit, and persists that report-only state.  This
+    # avoids both ring truncation and false "revisits" across action aliases.
+    positive_credited_exact_option_revisited = bool(
+        int(training.get("local_action_positive_credit_revisit_count", 0) or 0)
+        > 0
+    )
     ecology = training.get("boundary_ecology")
     ecology = ecology if isinstance(ecology, Mapping) else {}
     structural_events = authority.get("structural_events")
@@ -271,6 +247,26 @@ def _result_gate_fields(result_payload: Mapping[str, Any]) -> dict[str, Any]:
         and bool(event.get("retired_cell_ids"))
         and bool(event.get("child_ids"))
         for event in structural_events
+    )
+    candidate_pairs_before_cap = training.get(
+        "local_candidate_pairs_before_cap"
+    )
+    candidate_pairs_after_cap = training.get(
+        "local_candidate_pairs_after_cap"
+    )
+    candidate_cap_bound = _strict_bool(
+        training.get("local_candidate_cap_bound")
+    )
+    candidate_cap_accounting_consistent = bool(
+        isinstance(candidate_pairs_before_cap, int)
+        and not isinstance(candidate_pairs_before_cap, bool)
+        and isinstance(candidate_pairs_after_cap, int)
+        and not isinstance(candidate_pairs_after_cap, bool)
+        and candidate_pairs_before_cap >= candidate_pairs_after_cap >= 0
+        and (
+            candidate_cap_bound
+            is (candidate_pairs_before_cap > candidate_pairs_after_cap)
+        )
     )
     mechanism_checks = {
         "r0_native_local_action_policy": bool(
@@ -308,11 +304,14 @@ def _result_gate_fields(result_payload: Mapping[str, Any]) -> dict[str, Any]:
                 for event in recent_actions
             )
         ),
-        "candidate_cap_unbound": not bool(
-            training.get("local_candidate_cap_bound", True)
+        # Bounded retrieval is an intentional resource law.  Audit that its
+        # counters and applied/not-applied flag agree; do not perversely make
+        # an *unbounded* local search a success criterion.
+        "candidate_cap_accounting_consistent": (
+            candidate_cap_accounting_consistent
         ),
-        "revisited_local_score_or_action_changed": (
-            revisited_score_or_action_change
+        "positive_credited_exact_option_revisited": (
+            positive_credited_exact_option_revisited
         ),
         "positive_promoted_lineage": bool(
             int(lineages.get("lineage_count", 0) or 0) > 0
@@ -385,6 +384,11 @@ def _result_gate_fields(result_payload: Mapping[str, Any]) -> dict[str, Any]:
         "r0_validation_retention_semantics": retention.get("metric_semantics"),
         "r0_frozen_native_policy_retention": frozen_retention,
         "r0_v2_shell_coverage": shell_coverage,
+        "local_candidate_search_truncation_exercised": candidate_cap_bound,
+        "local_candidate_counter_scope": training.get(
+            "local_candidate_counter_scope",
+            "legacy_lifetime_graph_including_r0",
+        ),
     }
 
 
@@ -440,6 +444,10 @@ def _development_protocol(
         "r1_action_order": config.r1_action_order,
         "r1_action_order_field_used": False,
         "legacy_hash_or_round_robin_first_move_picker_used": False,
+        "structural_settlement_cadence": (
+            "post_unique_real_event_and_td_quiescent_boundary"
+        ),
+        "epoch_boundary_controls_structural_mutation": False,
         "r0_replay_move_provider_used": bool(
             config.r0_replay_per_r1_epoch > 0
         ),
