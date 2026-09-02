@@ -357,13 +357,30 @@ def test_experienced_action_reads_its_credited_source_not_a_stronger_alias(
             *_triplet_keys(board, move, key_mode=network.config.key_mode)
         ) != exact_id
     )
+    audit_population_and_allowlist: list[tuple[set[str], set[str]]] = []
+
+    def generalized_candidates(
+        _board,
+        legal,
+        *,
+        _formal_move_uci_allowlist,
+        **_kwargs,
+    ):
+        audit_population_and_allowlist.append((
+            set(legal),
+            set(_formal_move_uci_allowlist),
+        ))
+        if target.uci() not in _formal_move_uci_allowlist:
+            return []
+        return [
+            (0.10, target.uci(), exact_id),
+            (9.00, target.uci(), generalized_id),
+        ]
+
     monkeypatch.setattr(
         network,
         "_full_audit_candidates",
-        lambda *_args, **_kwargs: [
-            (0.10, target.uci(), exact_id),
-            (9.00, target.uci(), generalized_id),
-        ],
+        generalized_candidates,
     )
 
     prior = network.choose_local_policy_action(board)
@@ -388,12 +405,100 @@ def test_experienced_action_reads_its_credited_source_not_a_stronger_alias(
     assert rebound is not None
     assert rebound.move == target
     assert rebound.source == exact_id
-    assert rebound.raw_value == pytest.approx(9.00)
-    assert rebound.inherited_prior_value == pytest.approx(0.90)
+    # Once the exact action owns an outcome-grounded value, its generalized
+    # audit is behaviorally irrelevant and is excluded from the expensive
+    # formal source search.  The persisted exact value remains the sole
+    # policy prediction and credited source.
+    assert target.uci() in audit_population_and_allowlist[0][0]
+    assert target.uci() in audit_population_and_allowlist[0][1]
+    assert target.uci() in audit_population_and_allowlist[1][0]
+    assert target.uci() not in audit_population_and_allowlist[1][1]
+    assert rebound.raw_value == 0.0
+    assert rebound.inherited_prior_value == 0.0
+    assert rebound.source_score_raw is None
     assert rebound.learned_action_value == pytest.approx(0.95)
     assert rebound.prediction == pytest.approx(0.95)
     assert rebound.prediction_source == "learned_exact_action_value"
     assert rebound.action_option_exposure == 1
+
+
+def test_fully_contacted_choice_bypasses_generalized_audit_but_confirms_and_updates(
+    monkeypatch,
+) -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            key_mode="canonical",
+            shared_feature_atoms=True,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+    expected_values: dict[str, float] = {}
+    denominator = max(1, len(moves) - 1)
+    for index, move in enumerate(moves):
+        td_error = -1.0 + (2.0 * index / denominator)
+        triplet_id = network.apply_intrinsic_td(
+            board,
+            move,
+            td_error=td_error,
+            prediction_value=0.0,
+            stage_diagnostic="exact-audit-bypass-contact",
+        )
+        value = network._local_action_option_value(triplet_id, move.uci())
+        assert value is not None
+        expected_values[move.uci()] = value
+
+    def forbidden_generalized_audit(*_args, **_kwargs):
+        raise AssertionError("fully contacted choice repeated generalized audit")
+
+    original_confirm = network.confirm_candidate
+    confirmed: list[tuple[str, str]] = []
+
+    def capture_confirm(confirm_board, *, triplet_id, move_uci):
+        confirmed.append((triplet_id, move_uci))
+        return original_confirm(
+            confirm_board,
+            triplet_id=triplet_id,
+            move_uci=move_uci,
+        )
+
+    monkeypatch.setattr(
+        network,
+        "_full_audit_candidates",
+        forbidden_generalized_audit,
+    )
+    monkeypatch.setattr(network, "confirm_candidate", capture_confirm)
+
+    decision = network.choose_local_training_action(
+        board,
+        "exact-audit-bypass-revisit",
+    )
+    expected_move = max(
+        moves,
+        key=lambda move: (expected_values[move.uci()], move.uci()),
+    )
+    assert decision.move == expected_move
+    assert decision.prediction == pytest.approx(
+        expected_values[expected_move.uci()]
+    )
+    assert decision.prediction_source == "learned_exact_action_value"
+    assert decision.source == decision.pattern_id
+    assert confirmed == [(decision.triplet_id, decision.move_uci)]
+
+    before = decision.prediction
+    network.apply_intrinsic_td(
+        board,
+        decision.move,
+        td_error=-0.25,
+        prediction_value=decision.prediction,
+        stage_diagnostic="exact-audit-bypass-update",
+    )
+    assert network._local_action_option_value(
+        decision.pattern_id,
+        decision.move_uci,
+    ) == pytest.approx(before - 0.25 * network.config.eta_m3)
 
 
 def test_actions_sharing_one_generalized_prior_bind_credit_independently(
@@ -753,6 +858,161 @@ def test_recurrent_local_choice_contacts_every_option_before_revisit() -> None:
     assert revisit.exploration_bonus > 1.0
 
 
+def test_post_contact_ucb_revisits_low_count_low_value_option(
+    monkeypatch,
+) -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            key_mode="canonical",
+            train_repetitions=1,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+    incumbent, target = moves[:2]
+
+    # Every option has REAL contact.  The incumbent starts with the maximal
+    # learned value and six visits, while the low-valued target has one.  All
+    # other options have enough visits to stay out of this two-option race.
+    for move in moves:
+        triplet_id = network.ensure_triplet(
+            board,
+            move,
+            stage="post-contact-renewable-ucb",
+        )
+        triplet_node = network.graph.nodes[triplet_id]
+        values = dict(
+            triplet_node.meta.get("local_action_value_by_actuator", {})
+        )
+        exposures = dict(
+            triplet_node.meta.get("choice_exposure_by_actuator", {})
+        )
+        values[move.uci()] = 1.0 if move == incumbent else -1.0
+        exposures[move.uci()] = (
+            6 if move == incumbent else (1 if move == target else 10)
+        )
+        triplet_node.meta["local_action_value_by_actuator"] = values
+        triplet_node.meta["choice_exposure_by_actuator"] = exposures
+
+    def forbidden_generalized_audit(*_args, **_kwargs):
+        raise AssertionError("post-contact UCB repeated generalized audit")
+
+    monkeypatch.setattr(
+        network,
+        "_full_audit_candidates",
+        forbidden_generalized_audit,
+    )
+
+    emitted: list[str] = []
+    for _ in range(64):
+        decision = network.choose_local_training_action(
+            board,
+            "post-contact-renewable-ucb",
+        )
+        emitted.append(decision.move_uci)
+        if decision.move == target:
+            break
+        network.apply_intrinsic_td(
+            board,
+            decision.move,
+            td_error=0.0,
+            prediction_value=decision.prediction,
+            stage_diagnostic="post-contact-renewable-ucb",
+        )
+
+    assert emitted[0] == incumbent.uci()
+    assert emitted[-1] == target.uci()
+    assert len(emitted) < 64
+
+
+def test_pickle_parity_across_last_first_contact_and_first_ucb_revisit() -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            key_mode="canonical",
+            train_repetitions=1,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    legal_count = len(tuple(board.legal_moves))
+
+    for _ in range(legal_count - 1):
+        decision = network.choose_local_training_action(
+            board,
+            "pickle-k-minus-one-contact",
+        )
+        assert decision.action_option_exposure == 0
+        network.apply_intrinsic_td(
+            board,
+            decision.move,
+            td_error=0.0,
+            prediction_value=decision.prediction,
+            stage_diagnostic="pickle-k-minus-one-contact",
+        )
+
+    restored = pickle.loads(pickle.dumps(network, protocol=5))
+    assert (
+        restored.canonical_semantic_manifest()
+        == network.canonical_semantic_manifest()
+    )
+
+    last_contact = network.choose_local_training_action(
+        board,
+        "pickle-kth-contact",
+    )
+    restored_last_contact = restored.choose_local_training_action(
+        board,
+        "pickle-kth-contact",
+    )
+    assert last_contact.to_manifest() == restored_last_contact.to_manifest()
+    assert last_contact.action_option_exposure == 0
+    assert last_contact.exploration_bonus == 3.0
+
+    for graph, selected in (
+        (network, last_contact),
+        (restored, restored_last_contact),
+    ):
+        graph.apply_intrinsic_td(
+            board,
+            selected.move,
+            td_error=0.25,
+            prediction_value=selected.prediction,
+            stage_diagnostic="pickle-kth-contact",
+        )
+
+    first_revisit = network.choose_local_training_action(
+        board,
+        "pickle-first-post-contact-ucb",
+    )
+    restored_first_revisit = restored.choose_local_training_action(
+        board,
+        "pickle-first-post-contact-ucb",
+    )
+    assert first_revisit.to_manifest() == restored_first_revisit.to_manifest()
+    assert first_revisit.action_option_exposure > 0
+    assert first_revisit.exploration_bonus > 0.0
+
+    for graph, selected in (
+        (network, first_revisit),
+        (restored, restored_first_revisit),
+    ):
+        graph.apply_intrinsic_td(
+            board,
+            selected.move,
+            td_error=-0.10,
+            prediction_value=selected.prediction,
+            stage_diagnostic="pickle-first-post-contact-ucb",
+        )
+
+    assert (
+        restored.canonical_semantic_manifest()
+        == network.canonical_semantic_manifest()
+    )
+
+
 def test_local_first_contact_then_revisit_learns_terminal_success() -> None:
     network = NativeReConKRKGraph(
         config=NativeSingleGraphConfig(
@@ -935,7 +1195,9 @@ def test_local_policy_keeps_supported_negative_option_over_unsupported_zeroes() 
     assert decision is not None
     assert decision.move == target
     assert decision.policy_supported is True
-    assert decision.raw_value < 0.0
+    assert decision.prediction < 0.0
+    assert decision.prediction_source == "learned_exact_action_value"
+    assert decision.raw_value == 0.0
 
 
 def test_local_full_audit_respects_shared_candidate_cap(monkeypatch) -> None:
@@ -972,6 +1234,69 @@ def test_local_full_audit_respects_shared_candidate_cap(monkeypatch) -> None:
     stats = network.scheduler_stats
     assert stats["shared_atom_candidate_pairs_before_cap"] >= len(calls)
     assert stats["shared_atom_candidate_pairs_after_cap"] == len(calls)
+
+
+def test_formal_audit_filter_preserves_all_legal_global_cap_population(
+    monkeypatch,
+) -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            shared_feature_atoms=True,
+            max_shared_atom_candidates_per_choice=2,
+            max_ticks=8,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    legal = {
+        move.uci(): move
+        for move in sorted(board.legal_moves, key=lambda item: item.uci())
+    }
+    known_move, untried_move, third_move = tuple(legal)[:3]
+    candidate_pairs = [
+        ("known-source", known_move, 0),
+        ("untried-source", untried_move, 0),
+        ("third-source", third_move, 0),
+    ]
+    cap_inputs: list[list[tuple[str, str, int]]] = []
+    formally_checked: list[str] = []
+
+    def fixed_retrieval(*_args, **_kwargs):
+        return list(candidate_pairs)
+
+    def capture_cap(rows, **_kwargs):
+        cap_inputs.append(list(rows))
+        # Model the original cap retaining one already-known action and one
+        # still-untried action.  The formal allowlist must be applied only
+        # after this all-action allocation.
+        return list(candidate_pairs[:2])
+
+    def reject_before(_board, _triplet_id, move_uci, **_kwargs):
+        formally_checked.append(move_uci)
+        return False
+
+    monkeypatch.setattr(
+        network,
+        "_retrieval_candidate_pairs_for_legal",
+        fixed_retrieval,
+    )
+    monkeypatch.setattr(network, "_cap_shared_candidate_pairs", capture_cap)
+    monkeypatch.setattr(network, "_before_role_can_confirm", reject_before)
+
+    result = network._full_audit_candidates(
+        board,
+        legal,
+        _formal_move_uci_allowlist=frozenset({untried_move}),
+    )
+
+    assert cap_inputs == [candidate_pairs]
+    assert {move_uci for _source, move_uci, _rank in cap_inputs[0]} == {
+        known_move,
+        untried_move,
+        third_move,
+    }
+    assert formally_checked == [untried_move]
+    assert result == []
 
 
 def test_shared_retrieval_keeps_high_utility_source_below_overlap_width(monkeypatch) -> None:

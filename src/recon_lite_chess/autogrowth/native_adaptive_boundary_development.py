@@ -244,9 +244,19 @@ def _result_gate_fields(result_payload: Mapping[str, Any]) -> dict[str, Any]:
         same_pattern_id = bool(
             prior is not None and prior.get("pattern_id") == pattern_id
         )
+        # ``prediction`` is the bounded graph-owned value that actually enters
+        # local competition and TD.  ``raw_value`` is only the generalized
+        # pre-choice audit score and may now be absent for an already learned
+        # exact option because re-auditing it cannot affect behavior.
+        prior_policy_value = (
+            prior.get("prediction", prior.get("raw_value"))
+            if prior
+            else None
+        )
+        policy_value = event.get("prediction", event.get("raw_value"))
         if same_pattern_id and (
             prior.get("move_uci") != event.get("move_uci")
-            or prior.get("raw_value") != event.get("raw_value")
+            or prior_policy_value != policy_value
         ):
             revisited_score_or_action_change = True
         prior_action_by_pattern[pattern_id] = event

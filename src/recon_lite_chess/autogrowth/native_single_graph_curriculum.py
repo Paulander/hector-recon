@@ -156,11 +156,14 @@ class NativeLocalTrainingDecision:
     ``(pattern, actuator)`` option owns a graph-local value initialized from
     that same prior.  ``prediction`` is this bounded exploitation value used by
     TD (never the exploration bonus), while ``exact_confirmation_score_raw``
-    records the post-emission formal score independently.  ``policy_supported``
-    is stricter than legal emission: it is true only when a persistent,
-    formally confirmed native source or an outcome-grounded exact option
-    supplied the value.  Training may explore an unsupported legal pattern;
-    read-only evaluation must abstain when this field is false.
+    records the post-emission formal score independently. ``raw_value`` and
+    ``source_score_raw`` describe the generalized prechoice audit only while
+    that audit can supply an uncontacted option's prior; they are zero/absent
+    once an exact option value makes the generalized audit irrelevant.
+    ``policy_supported`` is stricter than legal emission: it is true only when
+    a persistent, formally confirmed native source or an outcome-grounded
+    exact option supplied the value. Training may explore an unsupported legal
+    pattern; read-only evaluation must abstain when this field is false.
     """
 
     move_uci: str
@@ -763,31 +766,18 @@ class NativeReConKRKGraph:
             raise ValueError("training position has no legal action")
 
         decision_cache = _LocalDecisionCache()
-        full_candidates = self._full_audit_candidates(
-            board,
-            legal,
-            _decision_cache=decision_cache,
-        )
 
-        # A generalized/prototype source can offer more than one native
-        # candidate for a move.  Keep the strongest source deterministically
-        # as the prior for an untried local option, independently of the
-        # audit's compact top-16 reporting view.  A tried option later reads
-        # its graph-owned exact action value; it does not hard-switch to an
-        # unrelated exact raw score merely because one exposure occurred.
-        best_by_move: dict[str, tuple[float, str]] = {}
-        for score, move_uci, source_triplet_id in full_candidates:
-            if move_uci not in legal or not math.isfinite(float(score)):
-                continue
-            candidate = (float(score), str(source_triplet_id))
-            previous = best_by_move.get(move_uci)
-            if previous is None or candidate[0] > previous[0] or (
-                candidate[0] == previous[0] and candidate[1] < previous[1]
-            ):
-                best_by_move[move_uci] = candidate
-
+        # Resolve the exact local option state before generalized retrieval.
+        # Once an option owns an outcome-grounded exact value, no generalized
+        # formal score can affect its choice activation, TD prediction, or
+        # credited source below.  Re-running every generalized candidate for
+        # such an option was therefore pure dead work on recurrent positions.
+        # Options without an exact value still take the complete formal path;
+        # this includes novel policy queries as well as first contact during
+        # training.
         moves_by_pattern: dict[str, list[str]] = {}
         pattern_by_move: dict[str, str] = {}
+        learned_action_value_by_move: dict[str, float | None] = {}
         for move_uci, move in legal.items():
             # This is intentionally the canonical local identity used by both
             # grouping and post-emission parity checks.  It contains no FEN,
@@ -801,6 +791,45 @@ class NativeReConKRKGraph:
             )
             moves_by_pattern.setdefault(pattern_id, []).append(move_uci)
             pattern_by_move[move_uci] = pattern_id
+            learned_action_value_by_move[move_uci] = (
+                self._local_action_option_value(pattern_id, move_uci)
+            )
+
+        generalized_audit_move_uci = frozenset(
+            move_uci
+            for move_uci in sorted(legal)
+            if learned_action_value_by_move[move_uci] is None
+        )
+        full_candidates = (
+            self._full_audit_candidates(
+                board,
+                legal,
+                _decision_cache=decision_cache,
+                _formal_move_uci_allowlist=generalized_audit_move_uci,
+            )
+            if generalized_audit_move_uci
+            else []
+        )
+
+        # A generalized/prototype source can offer more than one native
+        # candidate for a move.  Keep the strongest source deterministically
+        # as the prior for an untried local option, independently of the
+        # audit's compact top-16 reporting view.  A tried option later reads
+        # its graph-owned exact action value; it does not hard-switch to an
+        # unrelated exact raw score merely because one exposure occurred.
+        best_by_move: dict[str, tuple[float, str]] = {}
+        for score, move_uci, source_triplet_id in full_candidates:
+            if (
+                move_uci not in generalized_audit_move_uci
+                or not math.isfinite(float(score))
+            ):
+                continue
+            candidate = (float(score), str(source_triplet_id))
+            previous = best_by_move.get(move_uci)
+            if previous is None or candidate[0] > previous[0] or (
+                candidate[0] == previous[0] and candidate[1] < previous[1]
+            ):
+                best_by_move[move_uci] = candidate
 
         pattern_rows: list[dict[str, Any]] = []
         for move_uci in sorted(legal):
@@ -820,10 +849,7 @@ class NativeReConKRKGraph:
                 None if best_member is None else str(best_member[1])
             )
             inherited_prior_value = raw_value / (1.0 + abs(raw_value))
-            learned_action_value = self._local_action_option_value(
-                pattern_id,
-                move_uci,
-            )
+            learned_action_value = learned_action_value_by_move[move_uci]
             if learned_action_value is None:
                 normalized_value = inherited_prior_value
                 source_triplet_id = generalized_source_triplet_id
@@ -1463,6 +1489,7 @@ class NativeReConKRKGraph:
         *,
         masked_triplets: set[str] | None = None,
         _decision_cache: _LocalDecisionCache | None = None,
+        _formal_move_uci_allowlist: frozenset[str] | None = None,
     ) -> list[tuple[float, str, str]]:
         """Return bounded confirmed ``(score, move, source)`` candidates.
 
@@ -1482,6 +1509,13 @@ class NativeReConKRKGraph:
         )
         if not legal_map:
             return []
+        if (
+            _formal_move_uci_allowlist is not None
+            and not _formal_move_uci_allowlist.issubset(legal_map)
+        ):
+            raise ValueError(
+                "formal audit move allowlist contains a non-legal action"
+            )
 
         decision_cache = _decision_cache or _LocalDecisionCache()
         candidate_pairs = self._retrieval_candidate_pairs_for_legal(
@@ -1498,6 +1532,19 @@ class NativeReConKRKGraph:
                 _decision_cache=decision_cache,
             )
             self.scheduler_stats["shared_atom_candidate_pairs_after_cap"] += len(candidate_pairs)
+
+        # Exact action values make generalized confirmation irrelevant only
+        # after retrieval and global cap allocation have run over the original
+        # all-legal population.  Filtering earlier could change which sources
+        # survive for still-untried competitors and therefore change their
+        # priors/order.  This private allowlist suppresses formal execution,
+        # not retrieval competition.
+        if _formal_move_uci_allowlist is not None:
+            candidate_pairs = [
+                row
+                for row in candidate_pairs
+                if row[1] in _formal_move_uci_allowlist
+            ]
 
         self.scheduler_stats["choose_calls"] += 1
         self.scheduler_stats["candidate_triplets_ticked"] += len(
