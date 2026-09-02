@@ -32,7 +32,8 @@ boundaries and artifact identities.
 | Adaptive-boundary V18 native-local canary | Source `0373c0cc`; seed `2026090106`; one numerical thread; random `8/4/4`; four R1 epochs | R0 retention `16/16`; three AVAILABLE envelopes, one handoff and two TD events, but every first-move pattern was seen only once, adaptive buds were zero, and mate-in-2 was `0/4`. Preserved as a negative discriminator for the old mixed-bootstrap mechanism. |
 | Adaptive-boundary V19 empty-shell local-R0 canary | Source `f68775e6`; seed `2026090107`; fixed 96-epoch R0 budget; one numerical thread | Local competition ran 4,608 episodes and reached training/validation/regression `47/48`, `15/16`, `16/16`, but an aggregate `48/48` host mastery gate discarded the core and R1 never ran. **NO-GO**; motivated exact local authority. |
 | V20 exact local-outcome authority gate | Commits `7e15dc85` and `eafcc488`; data-free/focused tests only | Exact selected actions own their REAL evidence; positive zero-contrast cells become direct providers; aggregate scores are report-only. `153/153` focused preflight tests passed. No fresh V20 chess result. |
-| V21 direct/shell provider closure gate | Current `codex/native-adaptive-organism` branch tip based on `eafcc488`; strict primary arm; data-free, synthetic, and production-path tests | Direct and post-birth shell providers are schema-bound and live-revalidated; exhaustive all-reply minimum reaches exact TD; VIRTUAL/REAL parity is precommit; legacy pickers/routers/gates fail closed. Focused `147/147` and broader `276/276` passed. **Software/mechanism evidence only; no fresh V21 chess canary yet.** |
+| V21 direct/shell provider canary | Source `fabc2b79`; seed `2026090108`; strict primary arm; 8/4/4 R1 pools, four epochs, one numerical thread | Clean `5323.803301249864 s` completion; R0 retention `16/16`, 47 direct providers; 32 R1 episodes, one unique surprise mate, 11 births, but zero promotion/certification/AVAILABLE/handoff/value and `0/4` mate-in-2. Raw graph prediction near `9.176` forced every TD error to `-1`, and the observed mate received no terminal reward. **NO-GO unchanged.** |
+| V22 local action-value/credit repair | Source `4b3e3a04`; data-free and production-path tests | Untried options inherit bounded generalized priors; experienced `(pattern, actuator)` options own the exploitation value used as TD prediction and update. Surprise mate is ordinary policy reward only, with no certification/handoff leakage. Focused `64/64`; broader `172/172`. Same-seed V22 discriminator is next. |
 
 ## Purpose and validity scope
 
@@ -44,10 +45,10 @@ inference. The constructed benchmark uses one persistent black knight to stay
 materially disjoint from the protected pure-KRK corpora; its two D4 geometries
 are not representative workload samples.
 
-Current branch: `codex/native-adaptive-organism`, currently based on
-`eafcc488c743bbea5c9e23ef7a1c11395dddbebc` plus the V21 shell-provider
-working tree. Historical experiment identities below remain unchanged; use the
-exact source commit recorded in each entry rather than the current branch tip.
+Current branch: `codex/native-adaptive-organism`; current implementation commit
+`4b3e3a04709df1a161ab7b000d646ab54918cf0c`. Historical experiment identities
+below remain unchanged; use the exact source commit recorded in each entry
+rather than the current branch tip.
 
 `reports/autogrowth/development/` is local and untracked at this snapshot.
 
@@ -1113,3 +1114,75 @@ exact source commit recorded in each entry rather than the current branch tip.
   Stop rather than fan out if no direct provider survives R0, R1 does not run,
   provider value does not reach first-move TD, VIRTUAL/REAL parity or replay
   fails, structural lockout recurs, or active growth escapes its caps.
+
+### V21 fresh canary outcome and action-credit forensics
+
+- Exact source `fabc2b796e2f8dcf6d8b3429b5f56fc86b5df747`, seed
+  `2026090108`, `canary` profile, one numerical thread, independent directory
+  `native_shell_provider_v21_seed_2026090108_fabc2b79_canary`, declared
+  `7200 s` wall and `8192 MiB` RSS ceilings. It exited cleanly after
+  `5323.803301249864 s` with `COMPLETED_R1_GATE_FAILED`; snapshots and final
+  reports are intact.
+- R0 used 4,608 local episodes across 96 epochs, produced 47 exact direct
+  providers, and retained the frozen policy at `16/16`. Final training,
+  validation, and report-only regression were `45/48`, `16/16`, and `15/16`.
+- R1 used 32 episodes over four epochs: 20 unique REAL successor observations,
+  eight duplicate virtual queries, four terminal refutations, 62 virtual reply
+  probes, 28 UNKNOWN envelopes, and four REFUTED envelopes. AVAILABLE,
+  handoff, successor-value sum, and exhaustive mate-in-2 conversion were all
+  zero.
+- The ecology remained bounded and event-driven: one unique positive and 19
+  negatives produced 11 births (three roots and eight residuals), five
+  contradictions, seven ACTIVE, two REFINING, two DORMANT, and zero DEAD
+  candidates. Nothing promoted or certified in four epochs. The one unique
+  surprise mate was `h3f3`, `e1d1`, `f3f1#`; its epoch-4 recurrence was a
+  duplicate for authority evidence and could not certify its own bud.
+- This was not a renewed structural lockout: later distinct matching successes
+  could still promote/certify a lineage. The immediate learning signal was
+  nevertheless wrong. All 32 R1 TD events had successor value zero and TD
+  error `-1`; even the mating event was treated as no terminal reward. The
+  successful move's raw generalized score was about `9.176`, far outside the
+  bounded return range, while exact confirmation moved from about `-1.079` to
+  `-2.043`. Later selection continued reading the stronger generalized alias,
+  so the state receiving credit did not control action ranking.
+- Decision: preserve V21 and do not extend it. Repair only environmental
+  surprise-mate policy reward, bounded prediction/value identity, and exact
+  action-option ownership; rerun the same seed/profile to discriminate those
+  semantics before changing pools or learner parameters.
+
+### V22 bounded exact-action value and retrospective mate credit (pre-canary)
+
+- Exact implementation commit
+  `4b3e3a04709df1a161ab7b000d646ab54918cf0c`. An untried
+  `(micropattern, actuator)` option inherits the bounded generalized prior
+  `s/(1+|s|)`. The first REAL update materializes an actuator-local graph value
+  from that prior; subsequent exploitation, TD prediction, and update all use
+  the same bounded scalar. Shared graph weights still receive conserved TD as
+  the transferable micropattern generalizer, but cannot mask the experienced
+  exact option.
+- An actually observed mate without a pre-outcome all-reply provider now gives
+  ordinary terminal policy reward. It cannot create a provider, certification,
+  AVAILABLE envelope, handoff, or same-event successor value. A provider-backed
+  transition and terminal mate reward remain mutually exclusive. Duplicate
+  trajectories may retrain policy but cannot duplicate authority evidence.
+- Exact option values are persisted on the triplet node per actuator, survive
+  pickle/canonical replay, and are bound into the frozen-policy token. Aliased
+  actuators learn independently; frozen provider values do not change; stale
+  prediction parity fails before mutation. Curiosity affects action activation
+  only and never enters TD prediction.
+- Verification: the directly affected suites passed `64/64` in `1.69 s`; the
+  six broader production-path curriculum/provider/action/runner suites passed
+  `172/172` in `95.96 s`. Targeted compilation and `git diff --check` passed.
+- Purity boundary: strict execution still rejects legacy first-move schedules,
+  replay providers, prototype/global maturity gates, fallback policy routing,
+  validation-driven transitions, and scheduled frontiers. Legal affordance
+  presentation, UCB arithmetic, atomic safe points, and certified-provider
+  projection/core precedence remain generic host substrate. They do not choose
+  chess answers; they are not claimed to be persistent graph circuitry.
+- Next gate: same seed/profile as V21, new independent output directory and
+  exact V22 source. This is an A/B mechanism discriminator, not an independent
+  scientific replication. Require positive mate reward to yield nonnegative
+  TD where warranted, exact learned value to control a later revisit, no
+  authority leakage, bounded/replay-exact state, and unchanged frozen-core
+  retention. Preserve and stop if those fail; only then consider a broader
+  diversity canary for distinct post-birth evidence.

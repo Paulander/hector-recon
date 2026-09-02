@@ -13,18 +13,21 @@ This note describes the current working-tree design on branch
 - Retention/jurisdiction reporting repair: `58abe72d`.
 - Current empty-shell strict adaptive mechanism: `b1a8ed1f`.
 - Exact local REAL-outcome authority: `7e15dc85`.
-- Shell-provider closure and transactional hardening: the current branch tip,
-  based on `eafcc488c743bbea5c9e23ef7a1c11395dddbebc`.
+- Shell-provider closure and transactional hardening:
+  `fabc2b796e2f8dcf6d8b3429b5f56fc86b5df747`.
+- Local action-value/credit closure:
+  `4b3e3a04709df1a161ab7b000d646ab54918cf0c`.
 - Original audited base: `2f1b68c992eb6868b468148004d8e5a4746c88ab`.
 
-The current implementation closes the concrete V15–V18 control-loop defects:
+The current implementation closes the concrete V15–V21 control-loop defects:
 R0 and R1 experience are no longer chosen by host schedules; adaptive
 evaluation no longer routes through a prototype gate or a host-side
 core/child/plastic fallback cascade; exact and generalized candidates cannot
-silently evict the credited local incumbent; and TD responsibility is no
-longer copied at full strength into every shared atom. The previous modes
-remain for historical runners, while the adaptive entrypoint now fails closed
-if a caller tries to re-enable them.
+silently evict the credited local incumbent; the bounded value used for local
+exploitation is now also the TD prediction and the value updated after the
+outcome; and TD responsibility is no longer copied at full strength into every
+shared atom. The previous modes remain for historical runners, while the
+adaptive entrypoint now fails closed if a caller tries to re-enable them.
 
 The native admission/alias repair makes R0 authority coverage/specificity
 report-only. Strict development now runs a fixed R0 budget; only exact local
@@ -44,9 +47,10 @@ later distinct REAL events certify it. This removes the old mixed-polarity
 only for legacy reproduction.
 
 This is still a development architecture, not evidence of mate-in-2 learning.
-The V18 and V19 canaries below predate the complete direct-provider and
-shell-provider closure. A fresh bounded canary at the current branch tip is the
-next gate. No mate-in-2 result is claimed in this note.
+The V21 canary exercised the complete provider closure but exposed a local
+action-value/credit mismatch; `4b3e3a04` repairs that mismatch. A same-seed,
+independent-output V22 discriminator is the next gate. No mate-in-2 result is
+claimed in this note.
 
 The fresh V16 canary bound to `8e1583972cca391fc10a0d689ebd89f86387471b`
 (`2026090106`, exact wall `645.8366680829786 s`) stopped after R0: validation
@@ -70,6 +74,28 @@ The run started from legacy mixed bootstrap roots and produced zero adaptive
 buds. These facts motivated the empty-shell, local-retrieval, and selective-
 credit changes above; V18 is evidence about the old mechanism, not efficacy
 evidence for the current direct/shell provider closure.
+
+The V21 canary at exact commit
+`fabc2b796e2f8dcf6d8b3429b5f56fc86b5df747` used seed `2026090108`, 8/4/4
+R1 positions, four epochs, one numerical thread, and `7200 s`/`8192 MiB`
+ceilings. It completed cleanly in `5323.803301249864 s`. R0 produced 47 exact
+direct providers and retained its frozen policy at `16/16`; report-only R0
+validation/regression were `16/16` and `15/16`. R1 executed 32 episodes and
+observed one unique surprise mate, which produced 11 event-driven births and
+five contradictions, but zero promotions, certified providers, AVAILABLE
+envelopes, handoffs, successor value, or mate-in-2 conversions. The successful
+trajectory was `h3f3`, `e1d1`, `f3f1#`.
+
+V21 revealed two local credit defects rather than a structural lockout. First,
+an observed mate outside current authority was recorded as no terminal reward,
+so success was trained like a horizon failure. Second, local exploitation and
+TD subtracted an unbounded generalized graph score (about `9.176` in the
+successful event), while returns are bounded to `[-1,1]`; every TD error
+therefore clipped to `-1`. Later action choice kept reading that broad alias
+instead of the exact option that received credit. The current repair gives an
+uncertified observed mate ordinary policy reward without certifying or handing
+off authority, normalizes the pre-outcome prior, and thereafter stores/reads a
+separate bounded graph-local value for each `(micropattern, actuator)` option.
 
 ## The idea in plain language
 
@@ -99,7 +125,7 @@ learned local value + bounded curiosity
                   v
       observe environmental consequence
                   |
-                  +--> exact-pattern TD/eligibility credit
+                  +--> exact-action TD/eligibility credit
                   |
                   +--> local support, contrast, budding and refinement
                   |
@@ -122,7 +148,7 @@ outcomes come from the environment. Exhaustive mate evaluation is report-only.
 | **R0 / core** | The learned native mate-in-1 competence. “R0” is a curriculum index, not a second kind of network. |
 | **R1 / boundary task** | Learning a first move whose successors are finishable after every opponent reply. In this curriculum it is mate-in-2. |
 | **Local action pattern** | The canonical before/delta/after triplet induced by a legal action. It may be shared by several actuators and contains local graph features, not FEN, epoch, stage, or an answer label. |
-| **Exact action option** | One competitor identified by `(local pattern, legal actuator)`. Shared patterns may share value, but each legal actuator owns its own exposure and formal choice option. |
+| **Exact action option** | One competitor identified by `(local pattern, legal actuator)`. Aliases may inherit one generalized prior, but after REAL experience each actuator owns its own bounded local value, exposure, and formal choice option. |
 | **Direct provider** | A frozen exact R0 action cell authorized only by its own selected REAL returns. Its capability identity is namespaced and schema-bound to that immutable authority cell. |
 | **Shell provider** | A generalized boundary child authorized only by distinct post-birth REAL certification evidence with zero contradiction. |
 | **REAL receipt** | An immutable record of an action/outcome interaction actually opened to the learner. |
@@ -139,14 +165,17 @@ outcomes come from the environment. Exhaustive mate evaluation is report-only.
 
 For every legal first move, the graph derives the same canonical local triplet
 identity used by its before-state, action/delta, and after-state machinery.
-Existing exact or shared-feature graph sources contribute their stored raw
-native value. A legal action with no source is assigned a neutral exploitation
-value only while training, so unexplored behavior remains reachable.
+Existing exact or shared-feature graph sources contribute a raw native score
+`s`. An untried exact option inherits the bounded prior
+`Q = s / (1 + |s|)`; a legal action with no source inherits neutral `Q = 0`
+while training, so unexplored behavior remains reachable. After a REAL outcome,
+the exact `(pattern, actuator)` option stores its own bounded `Q`; later choices
+read that value instead of being masked by a stronger generalized alias.
 
 The training activation is:
 
 ```text
-v / (1 + |v|)
+Q(pattern, actuator)
 + min(1, sqrt(2 log(1 + current-option exposures)
               / (1 + this-action-option exposures)))
 ```
@@ -154,9 +183,9 @@ v / (1 + |v|)
 An unseen exact action option receives novelty `1`. The second term thereafter
 is a generic bounded optimism bonus. It uses only per-actuator exposures of the
 options competing in this decision, so unrelated positions cannot inflate
-novelty indefinitely. Legal moves may share one abstract pattern and its
-learned value, but all remain separate formal options. No Python-side alias
-representative is rotated or prescribed.
+novelty indefinitely. Legal moves may share one abstract prior, but all remain
+separate formal options and acquire independent exact values after experience.
+No Python-side alias representative is rotated or prescribed.
 
 ### 2. Emit one action through a formal ReCoN choice
 
@@ -172,10 +201,25 @@ every legal move. Growth follows the one action actually emitted.
 ### 3. Observe, credit, and record exposure
 
 After the environment transition, `apply_intrinsic_td` must return the same
-triplet identity that was emitted. The TD prediction is the pre-emission raw
-native value, never the curiosity bonus. The exact action option, its pattern,
-and graph root gain one exposure only after this outcome-grounded update;
-merely asking the policy does not consume an exposure.
+triplet identity that was emitted. The TD prediction is exactly the bounded
+pre-emission `Q`, never the raw source score or curiosity bonus. The same exact
+option is updated by
+
+```text
+Q <- clip(Q + eta_m3 * TD_error, -1, 1)
+```
+
+and later exploitation reads that updated `Q`. A stale caller prediction is
+rejected before graph mutation. The exact action option, its pattern, and graph
+root gain one exposure only after this outcome-grounded update; merely asking
+the policy does not consume an exposure.
+
+If the actually executed successor action mates while no pre-outcome provider
+exists, the exploratory first move receives ordinary environmental mate reward.
+That event may be discovery evidence for a bud, but it creates no provider,
+certification, AVAILABLE envelope, handoff, or same-event successor value. If a
+grounded all-reply provider did exist before the outcome, its successor signal
+is used instead and terminal reward is not added a second time.
 
 A bounded, digest-chained action-event ledger records emitted and credited
 identities, raw value, curiosity, successor value, and TD error for replay and
@@ -208,8 +252,8 @@ already embodied as a persistent graph circuit.
 
 Persistent learned/native state includes:
 
-- graph nodes, edges, triplets, weights, shared-feature sources, and exposure
-  counts;
+- graph nodes, edges, triplets, weights, shared-feature sources, exact
+  per-actuator action values, and exposure counts;
 - formal confirmation of the selected branch;
 - competence values, eligibility/responsibility, and outcome-grounded TD
   updates;
@@ -225,13 +269,20 @@ A generic Python adapter currently:
   best source for each legal actuator;
 - computes value normalization, the local per-action UCB-like optimism term,
   and the resource cap;
-- packages those activations as anonymous choice options.
+- packages those activations as anonymous choice options;
+- projects already-certified direct/shell provider records and applies generic
+  core-before-shell precedence after the graph has emitted an action.
 
 That adapter cannot read a correct move, mate label, FEN identity, epoch,
 curriculum stage, held-out answer, or external oracle. Its rule is domain-generic
 and replayable, but it is still substrate code surrounding the persistent graph.
-The precise claim is therefore **native learned evidence with formal ReCoN
-emission**, not “the complete arbitration circuit is already inside the graph.”
+The provider bridge does not choose a chess move, read an answer, or make an
+uncertified cell authoritative; it protects the frozen mate-in-1 core from
+shell shadowing and composes already-grounded evidence. It is nevertheless
+host substrate, not yet persistent graph circuitry. The precise claim is
+therefore **native learned evidence with formal ReCoN emission**, not “the
+complete arbitration and authority-composition circuit is already inside the
+graph.”
 
 The candidate scan also has an explicit finite cap. Exact and generalized
 sources coexist; the exact local branch and the learned incumbent for every
@@ -541,12 +592,12 @@ This boundary is the answer to the “plumbing versus ReCoN” concern.
 
 | Native learned state/authority | Generic domain-independent substrate | Scientific/environment harness |
 | --- | --- | --- |
-| Graph pattern identities, weights, values, and per-action exposure | Enumerate legal affordances and derive canonical local keys | Start episodes and supply the consequence of the action actually taken |
-| Local evidence and exact-action provider eligibility | Max-pool native sources per actuator and compute local bounded UCB activation | Enumerate every legal opponent reply and execute one weakest REAL challenge |
+| Graph pattern identities, weights, bounded exact-action values, and per-action exposure | Enumerate legal affordances and derive canonical local keys | Start episodes and supply the consequence of the action actually taken |
+| Local evidence and exact-action provider eligibility | Max-pool native sources into untried priors and compute local bounded UCB activation | Enumerate every legal opponent reply and execute one weakest REAL challenge |
 | Formal anonymous exactly-one emission | Package activations and break exact ties by stable local identity | Enforce fixed phase, wall-time, memory, and active-resource ceilings |
 | TD, eligibility, responsibility, and exposure | Validate schemas, identities, parity, and replay | Invoke content-blind epoch safe points and preserve checkpoints |
 | Surprise-success budding, contrast, certification, refinement, retirement, and slot reuse | Atomically apply the already nominated structural batch | Evaluate held-out chess performance for reporting only |
-| All-reply minimum/veto, provider handoff, and successor value | Serialize exact state without becoming a second authority | Choose seeds, budgets, and independent data partitions before the run |
+| All-reply minimum/veto, provider handoff, and successor value | Project certified provider records, enforce generic core/shell precedence, and serialize exact state | Choose seeds, budgets, and independent data partitions before the run |
 
 The harness must not choose the R1 move, override authority jurisdiction,
 rescue an abstention through a fallback policy, or expose validation outcomes to
@@ -564,6 +615,9 @@ The complete R0→R1 curriculum is therefore not described as pure in-graph
 ReCoN. Generic Python substrate still enumerates legal affordances, retrieves
 local sources, max-pools them per action, computes bounded local curiosity,
 packages formal choice options, and ranks the opponent's counterexample reply.
+It also projects certified provider records and enforces generic direct-core
+precedence after action emission. Neither operation chooses a move, but neither
+is yet embodied as persistent graph circuitry.
 The precise claim is: **local/self-organized learner authority with formal
 ReCoN exactly-one emission, implemented through a generic host adapter and an
 explicit curriculum/environment harness**. It is not the stronger claim that
@@ -601,6 +655,14 @@ The implementation and focused tests are intended to establish:
 - only the emitted exact branch is materialized;
 - an outcome update credits exactly the emitted triplet and records one
   exposure;
+- an untried option inherits a bounded generalized prior; after one REAL
+  outcome, exploitation value, TD prediction, and updated exact-action value
+  are the same scalar, while curiosity remains choice-only;
+- actuator aliases may share a prior but own independent exact values and
+  exposures; stale prediction/value parity fails before mutation;
+- an environmental mate without pre-outcome authority earns ordinary policy
+  reward but cannot certify, hand off, or bootstrap the same event; a
+  provider-backed transition cannot also receive terminal reward;
 - evaluation is read-only, exploration-free, and abstains without persistent
   confirmed support;
 - adaptive evaluation cannot reach the prototype gate, host priority cascade,
@@ -644,6 +706,8 @@ The design does **not** establish:
 - IID evidence or calibrated statistical confidence;
 - bounded lifetime receipt/tombstone storage;
 - eventual discovery of every useful region;
+- minimax correctness of provisional sampled TD before all replies become
+  formally AVAILABLE;
 - a completely in-graph arbitration circuit or endogenous curriculum stage
   transition;
 - whole-event rollback spanning authority, ecology, graph/credit, exposures,
@@ -671,7 +735,8 @@ The design does **not** establish:
 | `f440ca5b` | Enforces R0 resource bounds and skips impossible legacy audits in strict execution. |
 | `7e15dc85` | Replaces aggregate R0 authority with exact selected-REAL-return direct providers. |
 | `eafcc488` | Records the local-authority repair and its pre-canary mechanism gate. |
-| current branch tip | Closes direct/shell provider credit, per-action competition, precommit actuation parity, and strict transactional checks. |
+| `fabc2b79` | Closes direct/shell provider credit, per-action competition, precommit actuation parity, and strict transactional checks. |
+| `4b3e3a04` | Makes bounded exact-action value the common exploitation, TD-prediction, and update state; restores ordinary surprise-mate policy credit. |
 
 Use [`BRANCH_LOGBOOK.md`](../../BRANCH_LOGBOOK.md) for the experiment ledger.
 The evidence motivating this repair is in
@@ -695,10 +760,12 @@ Before any fresh chess claim, run the data-free focused suites:
 At `b1a8ed1f`, the six directly affected compatibility suites passed
 `137/137`; targeted compilation and `git diff --check` were clean.
 
-At the current pre-canary branch tip, the focused provider/action/runner set
-passed `147/147`. The broader relevant regression set passed `276/276` in
-`468.62 s`. This is software and mechanism-contract evidence only; no fresh
-post-closure chess canary had run when this paragraph was written.
+At `fabc2b79`, the focused provider/action/runner set passed `147/147` and the
+broader relevant regression set passed `276/276` in `468.62 s`. The V21 canary
+then exposed the value/credit mismatch described above. At `4b3e3a04`, the two
+directly changed suites passed `64/64`; the six production-path curriculum,
+provider, action, and runner suites passed `172/172` in `95.96 s`. This remains
+software and mechanism-contract evidence until the V22 discriminator runs.
 
 The highest-value tripwires are:
 
@@ -712,6 +779,13 @@ The highest-value tripwires are:
 - R0 coverage/specificity failure is reported but does not block R1 when
   outcome-blind runtime integrity passes;
 - choice and audit do not increment exposure, while exact observed TD does;
+- large raw source scores enter TD through the bounded value used for
+  exploitation, first credit is continuous from that prior, and later choice
+  reads the updated exact value;
+- same-pattern actuators learn independent exact values, frozen action values
+  and their policy token do not mutate, and stale prediction parity is atomic;
+- a surprise mate earns policy reward without authority/certification leakage,
+  while provider-backed mate and terminal credit remain mutually exclusive;
 - fresh snapshot/resume reproduces action-event digest and authority history;
 - production batches event-driven nominations at the post-epoch safe point, so
   a new child cannot consume same-epoch pre-birth receipts as certification;
@@ -722,13 +796,15 @@ The highest-value tripwires are:
 - strict no-gate R1 snapshots fingerprint and resume exactly;
 - the empty adaptive factory cannot read any pool field and seeds no evidence.
 
-If these pass, run one tiny fresh development canary with numerical-library
-threads fixed to one and an independent output directory. Stop rather than
-extend if outcome-blind runtime integrity fails, the run does not enter R1 for
-that integrity reason, legacy routing appears, emission/credit identity
-diverges, certification leaks, replay differs, or an active cap is
-uncontrolled. A native R0 coverage/specificity failure is recorded as a
-report-only diagnostic and is not itself a stage-entry stop.
+If these pass, rerun the exact V21 seed/profile from `4b3e3a04` in a new output
+directory with numerical-library threads fixed to one. This same-seed V22 run
+is a causal discriminator for the two repaired semantics; it is not an
+independent replication. Stop rather than extend if outcome-blind runtime
+integrity fails, the run does not enter R1 for that integrity reason, legacy
+routing appears, emission/credit identity diverges, certification leaks,
+replay differs, or an active cap is uncontrolled. A native R0
+coverage/specificity failure is report-only and is not itself a stage-entry
+stop.
 
 Only after that canary behaves mechanically should several short independent
 seeds be considered. The predeclared mechanism gate requires, at minimum:
@@ -748,17 +824,20 @@ evidence and a separate explicit go decision.
 
 ## Remaining architectural questions
 
-1. Does the current local abstraction distinguish strategically different move
-   aliases, or must contradictions learn an action-relative residual split?
+1. Are independent exact actuator values sufficient to separate strategically
+   different aliases, or must the micropattern representation itself refine?
 2. Does weakest-reply experience produce enough sibling coverage for a complete
    all-reply envelope without starving alternative boundary regions?
-3. Does credited value measurably alter later local competition after the same
-   pattern is revisited?
+3. Does the V22 same-seed run show that positive environmental credit now
+   changes later local competition after a successful option is revisited?
 4. Can the host-controlled R0 maturity/freeze boundary become a local
    evidence-driven lifecycle decision without destabilizing the mate-in-1
    skeleton?
 5. Which parts of the generic Python selection adapter are scientifically
    material enough to deserve later embodiment as persistent graph circuitry?
+6. After functional learning is demonstrated, should certified-provider
+   projection and direct-core precedence migrate from generic host substrate
+   into persistent ReCoN authority composition?
 
 Those questions should be answered by the focused tests and bounded canary
 before adding more candidate types, gates, routers, or monitoring machinery.
