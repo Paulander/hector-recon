@@ -8,6 +8,7 @@ from enum import Enum
 import hashlib
 import hmac
 import json
+import math
 import pickle
 from types import MappingProxyType
 from typing import Any, Mapping, Sequence
@@ -40,6 +41,7 @@ from .native_competence_envelope import (
     wilson_lower_bound,
 )
 from .native_trace_competence_authority import TraceNativeCompetenceOrganism
+from .native_single_graph_curriculum import _triplet_id, _triplet_keys
 
 
 SCHEMA_VERSION = (
@@ -1018,6 +1020,106 @@ class ProspectiveAuthorityState:
                 self, "retirement_tombstone_digest", None
             ),
         }
+
+
+def prospective_available_provider_records(
+    states: Mapping[str, ProspectiveAuthorityState],
+    classification: EnvelopeClassification,
+) -> tuple[dict[str, Any], ...]:
+    """Project certified positive cells into grounded local value providers.
+
+    The projection reads only each cell's post-birth REAL certification
+    ledger.  Discovery evidence may create the immutable hypothesis, but it
+    contributes neither support nor value here.  Any contradiction, stale
+    summary, retirement, or malformed scalar makes that cell abstain.
+    """
+
+    if classification.state is not AvailabilityState.AVAILABLE:
+        return ()
+    records: list[dict[str, Any]] = []
+    for cell_id in classification.available_cell_ids:
+        state = states.get(str(cell_id))
+        if (
+            not isinstance(state, ProspectiveAuthorityState)
+            or bool(getattr(state, "retired", False))
+            or not state.prospectively_certified
+            or state.hypothesis.polarity is not AvailabilityState.AVAILABLE
+            or state.hypothesis.initialization_origin
+            is not InitializationOrigin.PROSPECTIVE
+        ):
+            continue
+        # These append-only ledgers and the rolling certification digest are
+        # maintained atomically by REAL consumption and fully reclosed at
+        # serialization/audit boundaries.  A VIRTUAL provider read must stay
+        # O(1) in lifetime evidence; rebuilding sets or rehashing the complete
+        # ledger here would restore the historical quadratic hot path.
+        certification_count = len(state.certification_receipt_ids)
+        success_count = len(state.support_receipt_ids)
+        contradiction_count = len(state.contradiction_receipt_ids)
+        certification_digest = str(state.certification_receipt_digest)
+        if (
+            int(state.support) != certification_count
+            or int(state.successes) != success_count
+            or int(state.contradictions) != contradiction_count
+            or certification_count != success_count + contradiction_count
+            or int(state.successes) < MIN_SUPPORT
+            or int(state.contradictions) != 0
+            or len(certification_digest) != 64
+        ):
+            continue
+        expected_lower_bound = wilson_lower_bound(
+            int(state.successes),
+            int(state.support),
+            WILSON_Z,
+        )
+        try:
+            recorded_lower_bound = float(state.success_lower_bound)
+        except (TypeError, ValueError, OverflowError):
+            continue
+        if (
+            not math.isfinite(recorded_lower_bound)
+            or not math.isclose(
+                recorded_lower_bound,
+                expected_lower_bound,
+                rel_tol=0.0,
+                abs_tol=1e-12,
+            )
+            or recorded_lower_bound < LOWER_BOUND
+            or recorded_lower_bound > 1.0
+        ):
+            continue
+        records.append({
+            "schema_version": "native_prospective_provider.v1",
+            "provider_kind": "prospective_authority_cell",
+            "cell_id": str(cell_id),
+            "authority_cell_id": str(cell_id),
+            "expected_value": recorded_lower_bound,
+            "confidence": recorded_lower_bound,
+            "uncertainty": 1.0 - recorded_lower_bound,
+            "grounding_level": 0,
+            "grounding_ancestors": (),
+            "direct_positive_evidence": int(state.successes),
+            "direct_contrast_evidence": int(state.contradictions),
+            "certification_receipt_count": certification_count,
+            "certification_receipt_digest": certification_digest,
+            "evidence_scope": "post_birth_real_certification_ledger",
+            "discovery_evidence_used": False,
+            "postbirth_real_certification": True,
+            "prospectively_certified": True,
+            "hypothesis_digest": state.hypothesis.hypothesis_digest,
+            "lineage_parent_id": state.hypothesis.lineage_parent_id,
+            "grounding_source": (
+                "prospective_postbirth_real_certification"
+            ),
+        })
+    return tuple(sorted(
+        records,
+        key=lambda item: (
+            -float(item["expected_value"]),
+            -int(item["direct_positive_evidence"]),
+            str(item["cell_id"]),
+        ),
+    ))
 
 
 @dataclass(frozen=True)
@@ -9154,6 +9256,7 @@ class NativeProspectiveAuthorityV2:
         frame: FrameContext,
         *,
         frame_session: NativeV2FrameSession | None = None,
+        expected_actuation: Mapping[str, Any] | None = None,
     ) -> tuple[PendingRealEvent, GraphSignalTrace]:
         if frame_session is not None:
             frame_session._require_open(self)
@@ -9195,6 +9298,52 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "graph emitted no REAL actuation"
             )
+        # Bind the REAL action to the preceding VIRTUAL all-reply query before
+        # installing a pending transaction.  A mismatch is therefore a pure
+        # read failure: no pending token, boundary commitment, or revision is
+        # left behind for the caller to recover.
+        if expected_actuation is not None:
+            if not isinstance(expected_actuation, Mapping):
+                raise TypeError("expected REAL actuation must be a mapping")
+            selected_move = str(actuation.move_uci)
+            selected_triplet = str(
+                getattr(
+                    actuation,
+                    "selected_triplet_id",
+                    actuation.option_identity,
+                )
+            )
+            exact_action_pattern_id = _triplet_id(*_triplet_keys(
+                board,
+                chess.Move.from_uci(selected_move),
+                key_mode=frozen_r0.graph.config.key_mode,
+            ))
+            expected = {
+                "selected_move": expected_actuation.get("selected_move"),
+                "selected_triplet": expected_actuation.get(
+                    "selected_triplet"
+                ),
+                "selected_option_identity": expected_actuation.get(
+                    "selected_option_identity"
+                ),
+                "exact_action_pattern_id": expected_actuation.get(
+                    "exact_action_pattern_id"
+                ),
+            }
+            observed = {
+                "selected_move": selected_move,
+                "selected_triplet": selected_triplet,
+                "selected_option_identity": str(actuation.option_identity),
+                "exact_action_pattern_id": exact_action_pattern_id,
+            }
+            if observed != expected:
+                raise ProspectiveV2IntegrityError(
+                    "VIRTUAL/REAL child actuation parity mismatch: "
+                    + json.dumps(
+                        {"expected": expected, "observed": observed},
+                        sort_keys=True,
+                    )
+                )
         if (
             frozen_r0_guard is not None
             and frozen_r0.inference_guard_identity() != frozen_r0_guard
@@ -13352,6 +13501,198 @@ class NativeProspectiveAuthorityV2:
         return result
 
 
+    def _native_provider_receipt_frontier_valid(self, cell_id: str) -> bool:
+        """Check the bounded ends of one append-ordered REAL evidence log."""
+
+        state = self.states.get(str(cell_id))
+        if state is None or not state.certification_receipt_ids:
+            return False
+        first_id = str(state.certification_receipt_ids[0])
+        last_id = str(state.certification_receipt_ids[-1])
+        first = self.accepted_real_references.get(first_id)
+        last = self.accepted_real_references.get(last_id)
+        return bool(
+            first is not None
+            and last is not None
+            and first.ordinal <= last.ordinal
+            and first.observed_outcome
+            and last.observed_outcome
+            and _receipt_is_post_birth(state.hypothesis, first)
+            and _receipt_is_post_birth(state.hypothesis, last)
+        )
+
+    def native_provider_records(
+        self,
+        classification: EnvelopeClassification,
+    ) -> tuple[dict[str, Any], ...]:
+        """Resolve currently live, locally certified shell providers.
+
+        This is a read-only capability projection.  It neither creates a
+        value cell nor promotes a hypothesis: the authority graph and its
+        post-birth REAL ledger have already made those decisions.
+        """
+
+        if not isinstance(classification, EnvelopeClassification):
+            raise TypeError("native provider resolution requires a classification")
+        self._validate_real_hot_path(virtual=True)
+        return tuple(
+            record
+            for record in prospective_available_provider_records(
+                self.states,
+                classification,
+            )
+            if self._native_provider_receipt_frontier_valid(
+                str(record["cell_id"])
+            )
+        )
+
+    def native_direct_provider_response(
+        self,
+        authority_cell_id: str,
+    ) -> dict[str, Any] | None:
+        """Project one frozen exact-action cell as a provider capability."""
+
+        normalized = str(authority_cell_id)
+        self._validate_real_hot_path(virtual=True)
+        r0 = self.base.r0
+        if normalized in r0.direct_provider_ids:
+            direct = r0.credit.direct_outcome_provider_response(normalized)
+            if isinstance(direct, Mapping):
+                try:
+                    expected_value = float(direct["expected_value"])
+                    confidence = float(direct["confidence"])
+                    uncertainty = float(direct["uncertainty"])
+                    positive = direct["direct_positive_evidence"]
+                    contrast = direct["direct_contrast_evidence"]
+                    grounding_level = direct["grounding_level"]
+                    grounding_ancestors = tuple(
+                        direct["grounding_ancestors"]
+                    )
+                except (
+                    KeyError,
+                    TypeError,
+                    ValueError,
+                    OverflowError,
+                ):
+                    return None
+                if (
+                    any(
+                        isinstance(value, bool)
+                        for value in (
+                            direct["expected_value"],
+                            direct["confidence"],
+                            direct["uncertainty"],
+                        )
+                    )
+                    or isinstance(positive, bool)
+                    or not isinstance(positive, int)
+                    or isinstance(contrast, bool)
+                    or not isinstance(contrast, int)
+                    or isinstance(grounding_level, bool)
+                    or not isinstance(grounding_level, int)
+                    or any(
+                        not isinstance(item, str) or not item
+                        for item in grounding_ancestors
+                    )
+                    or tuple(sorted(set(grounding_ancestors)))
+                    != grounding_ancestors
+                    or not math.isfinite(expected_value)
+                    or not 0.0 < expected_value <= 1.0
+                    or not math.isfinite(confidence)
+                    or not 0.0 < confidence <= 1.0
+                    or not math.isfinite(uncertainty)
+                    or not math.isclose(
+                        confidence + uncertainty,
+                        1.0,
+                        rel_tol=0.0,
+                        abs_tol=1e-12,
+                    )
+                    or positive < 1
+                    or contrast != 0
+                ):
+                    return None
+                hypothesis_digest = _sha({
+                    "schema_version": "native_direct_provider.v1",
+                    "cell_id": normalized,
+                    "frozen_policy_token": r0.graph.frozen_policy_token,
+                })
+                evidence_digest = _sha({
+                    "schema_version": "native_direct_provider_evidence.v1",
+                    "cell_id": normalized,
+                    "hypothesis_digest": hypothesis_digest,
+                    "expected_value": expected_value,
+                    "confidence": confidence,
+                    "uncertainty": uncertainty,
+                    "grounding_level": grounding_level,
+                    "grounding_ancestors": list(grounding_ancestors),
+                    "direct_positive_evidence": positive,
+                    "direct_contrast_evidence": contrast,
+                })
+                provider_id = "native-r0-provider:" + normalized
+                return {
+                    "schema_version": "native_direct_provider.v1",
+                    "provider_kind": "native_direct_outcome_cell",
+                    # Provider capability and plastic decision identities are
+                    # deliberately distinct.  The same canonical triplet may
+                    # appear in the R1 graph, but it cannot shadow, demature,
+                    # or circularly impersonate this frozen R0 authority.
+                    "cell_id": provider_id,
+                    "authority_cell_id": normalized,
+                    "expected_value": expected_value,
+                    "confidence": confidence,
+                    "uncertainty": uncertainty,
+                    "grounding_level": grounding_level,
+                    "grounding_ancestors": grounding_ancestors,
+                    "direct_positive_evidence": positive,
+                    "direct_contrast_evidence": contrast,
+                    # The external-provider contract calls this a
+                    # certification commitment.  For the frozen core it binds
+                    # the exact decision's direct REAL-return ledger instead
+                    # of a prospective shell ledger.
+                    "certification_receipt_count": positive,
+                    "certification_receipt_digest": evidence_digest,
+                    "evidence_scope": "exact_selected_real_return_ledger",
+                    "discovery_evidence_used": False,
+                    "postbirth_real_certification": False,
+                    "prospectively_certified": False,
+                    "direct_outcome_authorized": True,
+                    "hypothesis_digest": hypothesis_digest,
+                    "lineage_parent_id": None,
+                    "grounding_source": "exact_selected_real_returns",
+                }
+        return None
+
+    def native_provider_response(
+        self,
+        cell_id: str,
+    ) -> dict[str, Any] | None:
+        """Resolve one exact authority-owned provider for downstream TD."""
+
+        normalized = str(cell_id)
+        self._validate_real_hot_path(virtual=True)
+        direct_prefix = "native-r0-provider:"
+        if normalized.startswith(direct_prefix):
+            direct = self.native_direct_provider_response(
+                normalized[len(direct_prefix):]
+            )
+            if direct is None or direct["cell_id"] != normalized:
+                return None
+            return direct
+        classification = EnvelopeClassification(
+            state=AvailabilityState.AVAILABLE,
+            probability=1.0,
+            uncertainty=0.0,
+            available_cell_ids=(normalized,),
+            refuted_cell_ids=(),
+            formal_available=True,
+            formal_refuted=False,
+            policy_response=True,
+        )
+        records = self.native_provider_records(classification)
+        if len(records) != 1 or records[0]["cell_id"] != normalized:
+            return None
+        return records[0]
+
     def open_virtual(
         self,
         frame: FrameContext,
@@ -13374,7 +13715,11 @@ class NativeProspectiveAuthorityV2:
                 "virtual capability requires VIRTUAL frame"
             )
         if frame_session is None:
-            session = self.base.dream_session()
+            # V2 owns the competence-shell classification.  Query the frozen
+            # R0 graph directly so the uncached path is semantically identical
+            # to NativeV2FrameSession instead of passing through the obsolete
+            # trace-envelope authority a second time.
+            session = self.base.r0.dream_session()
             try:
                 raw = session.request(frame)
             finally:
@@ -13398,24 +13743,69 @@ class NativeProspectiveAuthorityV2:
                 self.states, graph
             )
         # Composition is monotone at the protected native core boundary: an
-        # already grounded local provider cannot be vetoed merely because the
-        # initially empty prospective shell has no matching hypothesis yet.
-        # Conversely, shell-only authority retains the legacy provenance
-        # requirement; a certified classification does not manufacture local
-        # grounding in the strict adaptive mode.
+        # already grounded exact provider cannot be vetoed merely because the
+        # prospective shell has no matching hypothesis yet.  A generalized
+        # match receives authority only from its own post-birth REAL ledger;
+        # the old singleton provenance remains a compatibility route for
+        # historical non-local organisms, never a prerequisite for a native
+        # prospective provider.
+        base_availability_provenance = dict(
+            raw.availability_provenance or {}
+        )
+        raw_base_local_provider = base_availability_provenance.get(
+            "local_provider"
+        )
+        if not isinstance(raw_base_local_provider, Mapping):
+            raw_base_local_provider = None
+        base_local_provider = (
+            self.native_direct_provider_response(
+                str(raw_base_local_provider.get("cell_id", ""))
+            )
+            if raw_base_local_provider is not None
+            else None
+        )
+        if (
+            not isinstance(base_local_provider, Mapping)
+            or base_local_provider.get("provider_kind")
+            != "native_direct_outcome_cell"
+        ):
+            base_local_provider = None
+        base_availability_provenance["local_provider"] = (
+            None
+            if base_local_provider is None
+            else copy.deepcopy(dict(base_local_provider))
+        )
         base_available = bool(
             raw.actuation is not None
+            and base_availability_provenance.get(
+                "local_direct_outcome_mode"
+            ) is True
+            and base_local_provider is not None
             and raw.response.available
             and raw.response.grounded is True
+            and str(raw.response.child_id)
+            == str(base_local_provider["authority_cell_id"])
         )
+        native_provider_records = self.native_provider_records(classification)
+        native_provider = (
+            native_provider_records[0]
+            if raw.actuation is not None and native_provider_records
+            else None
+        )
+        native_shell_available = native_provider is not None
         legacy_provenance = self.base.r0.provenance
-        shell_available = bool(
+        legacy_shell_available = bool(
             raw.actuation is not None
+            and not native_shell_available
             and classification.state is AvailabilityState.AVAILABLE
             and legacy_provenance.grounded is True
             and legacy_provenance.can_emit is True
         )
-        available = bool(base_available or shell_available)
+        available = bool(
+            base_available
+            or native_shell_available
+            or legacy_shell_available
+        )
         matched_certified = tuple(
             cell_id for cell_id in graph["commitment"]
             if self.states[cell_id].prospectively_certified
@@ -13445,35 +13835,67 @@ class NativeProspectiveAuthorityV2:
         }
         response = ChildResponse(
             child_id=(
-                raw.response.child_id
+                str(base_local_provider["cell_id"])
                 if base_available
-                else legacy_provenance.child_id
+                else (
+                    str(native_provider["cell_id"])
+                    if native_shell_available
+                    else legacy_provenance.child_id
+                )
             ),
             confirmed=available,
             policy_response=raw.actuation is not None,
             available=available,
             expected_value=(
-                float(raw.response.expected_value)
-                if base_available
-                else VIRTUAL_AVAILABLE_VALUE if shell_available else 0.0
-            ),
-            uncertainty=(
-                float(raw.response.uncertainty)
-                if base_available
-                else VIRTUAL_RESPONSE_UNCERTAINTY if shell_available else 1.0
-            ),
-            grounded=(
-                raw.response.grounded
-                if base_available
-                else legacy_provenance.grounded if shell_available else False
-            ),
-            grounding_source=(
-                raw.response.grounding_source
+                float(base_local_provider["expected_value"])
                 if base_available
                 else (
-                    legacy_provenance.grounding_source
-                    if shell_available
-                    else None
+                    float(native_provider["expected_value"])
+                    if native_shell_available
+                    else (
+                        VIRTUAL_AVAILABLE_VALUE
+                        if legacy_shell_available
+                        else 0.0
+                    )
+                )
+            ),
+            uncertainty=(
+                float(base_local_provider["uncertainty"])
+                if base_available
+                else (
+                    float(native_provider["uncertainty"])
+                    if native_shell_available
+                    else (
+                        VIRTUAL_RESPONSE_UNCERTAINTY
+                        if legacy_shell_available
+                        else 1.0
+                    )
+                )
+            ),
+            grounded=(
+                True
+                if base_available
+                else (
+                    True
+                    if native_shell_available
+                    else (
+                        legacy_provenance.grounded
+                        if legacy_shell_available
+                        else False
+                    )
+                )
+            ),
+            grounding_source=(
+                str(base_local_provider["grounding_source"])
+                if base_available
+                else (
+                    str(native_provider["grounding_source"])
+                    if native_shell_available
+                    else (
+                        legacy_provenance.grounding_source
+                        if legacy_shell_available
+                        else None
+                    )
                 )
             ),
         )
@@ -13493,6 +13915,14 @@ class NativeProspectiveAuthorityV2:
                 "available_cell_ids": list(graph["available"]),
                 "refuted_cell_ids": list(graph["refuted"]),
                 "certification_provenance": provenance,
+                "native_provider": (
+                    None
+                    if native_provider is None
+                    else copy.deepcopy(native_provider)
+                ),
+                "native_provider_candidate_count": len(
+                    native_provider_records
+                ),
                 "response_value": (
                     float(response.expected_value)
                 ),
@@ -13503,16 +13933,20 @@ class NativeProspectiveAuthorityV2:
                     "native_local_direct_outcome_provider"
                     if base_available
                     else (
-                        "prospectively_certified_shell"
-                        if shell_available
-                        else "abstain"
+                        "prospectively_certified_local_shell_provider"
+                        if native_shell_available
+                        else (
+                            "legacy_prospectively_certified_shell"
+                            if legacy_shell_available
+                            else "abstain"
+                        )
                     )
                 ),
                 "base_child_id": raw.response.child_id,
                 "base_grounded": raw.response.grounded,
                 "base_grounding_source": raw.response.grounding_source,
                 "base_availability_provenance": copy.deepcopy(
-                    dict(raw.availability_provenance or {})
+                    base_availability_provenance
                 ),
                 "certification_evidence_added": 0,
             },

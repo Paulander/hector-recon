@@ -29,6 +29,10 @@ boundaries and artifact identities.
 | Adaptive-boundary V14 mechanism gate | Implementation `55e940a9`; report repair `4cf1711b`; five fresh seeds, of which three passed R0 and two reached durable R1 snapshots | Bounded local turnover and positive promotion worked, but no post-birth certification, AVAILABLE envelope, handoff, successor value, or mate-in-2 conversion appeared. **NO-GO** for a longer run. |
 | Adaptive-boundary V15 mechanism follow-through | Commit `58fbd0d8`; fresh independent seeds `2026090103/0104`; one process and one numerical thread; random `8/4/4` R1; exact eight-epoch runs | `0103`: wall `4932.0426137079485 s`, R1 full/control `1920.303802/1939.51825 s`; R0 `16/16` validation and `16/16` report regression. `0104`: wall `4845.015892208088 s`, R1 full/control `1885.137376/1912.423199 s`; R0 `16/16` validation and `12/16` report regression. Only `0104` full intrinsic reached the mechanism chain; both seeds/arms were `0/4` mate-in-2. **NO-GO**. |
 | Adaptive-boundary V16 native-local closure canary | Source `8e158397`; fresh seed `2026090106`; `canary`; one numerical thread; random `8/4/4`; `7200 s`/`8192 MiB` ceilings | R0 validation `16/16`, report-only regression `14/16`; the old native admission report authorized `14/16` positives and `0/16` negatives, then stopped before R1 after exact wall `645.8366680829786 s`. No R1 or mate-in-2 claim. Repair `67414302` makes native-authority coverage/specificity report-only; after the existing R0 mastery transition, only authority runtime integrity can veto R1 entry. |
+| Adaptive-boundary V18 native-local canary | Source `0373c0cc`; seed `2026090106`; one numerical thread; random `8/4/4`; four R1 epochs | R0 retention `16/16`; three AVAILABLE envelopes, one handoff and two TD events, but every first-move pattern was seen only once, adaptive buds were zero, and mate-in-2 was `0/4`. Preserved as a negative discriminator for the old mixed-bootstrap mechanism. |
+| Adaptive-boundary V19 empty-shell local-R0 canary | Source `f68775e6`; seed `2026090107`; fixed 96-epoch R0 budget; one numerical thread | Local competition ran 4,608 episodes and reached training/validation/regression `47/48`, `15/16`, `16/16`, but an aggregate `48/48` host mastery gate discarded the core and R1 never ran. **NO-GO**; motivated exact local authority. |
+| V20 exact local-outcome authority gate | Commits `7e15dc85` and `eafcc488`; data-free/focused tests only | Exact selected actions own their REAL evidence; positive zero-contrast cells become direct providers; aggregate scores are report-only. `153/153` focused preflight tests passed. No fresh V20 chess result. |
+| V21 direct/shell provider closure gate | Current `codex/native-adaptive-organism` branch tip based on `eafcc488`; strict primary arm; data-free, synthetic, and production-path tests | Direct and post-birth shell providers are schema-bound and live-revalidated; exhaustive all-reply minimum reaches exact TD; VIRTUAL/REAL parity is precommit; legacy pickers/routers/gates fail closed. Focused `147/147` and broader `276/276` passed. **Software/mechanism evidence only; no fresh V21 chess canary yet.** |
 
 ## Purpose and validity scope
 
@@ -40,10 +44,10 @@ inference. The constructed benchmark uses one persistent black knight to stay
 materially disjoint from the protected pure-KRK corpora; its two D4 geometries
 are not representative workload samples.
 
-Current branch: `codex/adaptive-boundary-ecology`, based on
-`2f1b68c992eb6868b468148004d8e5a4746c88ab`. The final adaptive implementation
-is committed before the V14 experiments; use the exact implementation commit
-recorded in the V14 entry below as their source identity.
+Current branch: `codex/native-adaptive-organism`, currently based on
+`eafcc488c743bbea5c9e23ef7a1c11395dddbebc` plus the V21 shell-provider
+working tree. Historical experiment identities below remain unchanged; use the
+exact source commit recorded in each entry rather than the current branch tip.
 
 `reports/autogrowth/development/` is local and untracked at this snapshot.
 
@@ -1033,3 +1037,79 @@ recorded in the V14 entry below as their source identity.
   chess competence. Run one bounded canary before parallel seeds; preserve and
   stop if no local providers survive, R1 still fails to execute, exact provider
   values never reach first-move TD, or snapshot/replay integrity fails.
+
+### V21 direct/shell provider closure and strict transactional gate (pre-canary)
+
+- Branch: `codex/native-adaptive-organism`, based on exact committed tip
+  `eafcc488c743bbea5c9e23ef7a1c11395dddbebc` before this V21 working tree.
+  This entry records software/mechanism evidence only; no fresh V21 chess
+  canary had run when it was written.
+- Local action competition now creates one formal option for every exact
+  `(micropattern, legal actuator)` pair. Several actions may share learned
+  pattern value, but each owns graph-persisted actuator exposure. Local UCB
+  uses only current action-option competitors. There is no host-side alias
+  representative rotation or epoch/FEN hash move schedule. Exact activation
+  ties use only a stable hash of local option identity.
+- The strict R0 boundary remains local: the fixed interaction budget ends the
+  phase, and only exact decisions with their own repeated positive REAL
+  returns, zero contrast, and positive value become frozen direct providers.
+  The full graph is archived, but only provider triplets are in policy scope.
+  Aggregate training/validation/regression scores remain report-only.
+- Authority closure now has two explicit immutable provider schemas. Direct
+  capabilities are namespaced as `native-r0-provider:<authority-triplet>` so a
+  mutable R1 cell cannot shadow them. Generalized shell capabilities require a
+  live positive non-retired authority child, distinct post-birth REAL
+  certification, zero contradiction, and a rechecked support/Wilson gate. A
+  valid exact direct provider precedes the shell; shell abstention cannot veto
+  it or fall through to global/prototype/plastic routing.
+- Every all-reply VIRTUAL row has `outcome=None` and
+  `outcome_observed=false`, captures its exact direct/shell provider record,
+  and cannot certify or train. Different replies may use different providers;
+  the envelope is not a synthetic competence cell. All legal replies must be
+  grounded, a refutation vetoes, and the minimum provider value/confidence is
+  the only positive successor signal credited to the exploratory first move.
+- Before the selected REAL challenge opens, production verifies exact
+  VIRTUAL/REAL move, source-triplet, option, and pattern parity and performs a
+  pure provider/credit preflight. TD live-resolves every captured provider and
+  rechecks schema, identity, grounding ancestry/level, evidence progression,
+  digest, cycles, and value limits. A direct record must be unchanged; a shell
+  may advance by at most one monotone REAL receipt. The certification-producing
+  event cannot bootstrap itself.
+- Growth content remains event-driven and local, but production batches
+  nominated promotions/refinements at the post-epoch content-blind safe point.
+  Authority-owned REAL and structural journals are internally atomic and
+  replay-exact. Predictable parity/provider/credit failures are preflighted and
+  leave no pending event, boundary revision, challenge exposure, or
+  seen-predecessor mutation. No whole-event transaction spanning authority,
+  ecology, graph/credit, exposures, and curriculum is claimed after an
+  arbitrary late failure; recovery is the exact prior epoch snapshot.
+- Strict execution is one primary organism. Configuration fails closed if it
+  attempts to enable scheduled/hash R0 or R1 selection, prototype availability,
+  memoized replay moves, validation-selected transitions, a non-counterexample
+  reply policy, disabled ecology, unfrozen R0, disconnected evaluation,
+  factorial/ablation arms, or composite epoch schedules. Legacy reproduction
+  code remains in shared modules but is unreachable from the strict runner.
+- Honest purity boundary: graph values/weights/exposures, direct evidence,
+  eligibility/TD, lineages, ecology competition and certification are learned
+  state. The generic Python substrate still enumerates legal affordances,
+  derives canonical keys, max-pools graph sources per actuator, computes the
+  fixed local UCB transform, packages formal choice options, ranks the weakest
+  opponent reply, validates contracts, and invokes safe points. The scientific
+  harness fixes pools/budgets/seeds, resource ceilings, checkpoints and
+  report-only evaluation. This is local/self-organized learner authority with
+  a generic environment/transaction adapter, not a claim that every
+  arbitration operation or phase clock is persistent graph circuitry.
+- Focused provider/action/runner verification passed `147/147` in `19.82 s`.
+  The broader relevant regression set passed `276/276` in `468.62 s`. It
+  includes production direct-provider round-trip through exhaustive all-reply
+  VIRTUAL probing, selected REAL actuation and exact TD; shell birth and
+  post-birth certification; namespace/shadow/cycle/stale-provider rejection;
+  precommit actuation mismatch atomicity; discovery exclusion; strict legacy
+  reachability tripwires; and snapshot/replay tests. `git diff --check` was
+  clean before documentation updates and must be rerun before commit.
+- Next gate: commit and push the exact source/tests/docs, then run one fresh
+  bounded canary with a new seed, independent output directory, one process,
+  numerical-library threads fixed to one, and `7200 s`/`8192 MiB` ceilings.
+  Stop rather than fan out if no direct provider survives R0, R1 does not run,
+  provider value does not reach first-move TD, VIRTUAL/REAL parity or replay
+  fails, structural lockout recurs, or active growth escapes its caps.

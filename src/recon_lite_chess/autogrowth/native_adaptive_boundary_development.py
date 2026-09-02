@@ -593,6 +593,17 @@ def _validate_adaptive_mechanism_config(
         "r0_boundary_ecology_enabled": True,
         "validation_controls_stage_transitions": False,
         "r0_replay_per_r1_epoch": 0,
+        "run_r1": True,
+        "freeze_r0_parameters_for_r1": True,
+        # In strict mode this is not a training preference: it guarantees that
+        # read-only evaluation queries the same authority-owned competence
+        # shell used by training instead of silently reporting a legacy graph
+        # route with the child authority disconnected.
+        "mature_child_priority": True,
+        "run_redundant_child_ablation": False,
+        "r1_mechanistic_factorial": False,
+        "r1_composite_proposal_epochs": (),
+        "r1_composite_consolidation_epochs": (),
     }
     mismatches = {
         field: {"required": expected, "observed": getattr(config, field)}

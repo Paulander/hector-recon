@@ -167,6 +167,10 @@ class NativeLocalTrainingDecision:
     activation: float
     pattern_exposure: int
     total_current_pattern_exposures: int
+    choice_option_identity: str
+    action_option_exposure: int
+    total_current_action_option_exposures: int
+    action_option_count: int
     alias_index: int
     alias_group_size: int
     source_move_uci: str | None
@@ -731,9 +735,11 @@ class NativeReConKRKGraph:
         """Choose one R1 training action from graph-local pattern competition.
 
         The read-only audit runs before any new triplet is grown.  Every legal
-        move receives an exact local-pattern identity, including patterns with
-        no current native source (raw value zero).  A fresh anonymous choice
-        graph then emits one actuator.  Only that emitted move is materialized
+        move receives an exact anonymous action option and a local micropattern
+        identity, including actions with no current native source (raw value
+        zero).  Actions may share a micropattern/value, but none is selected as
+        a representative in Python: the fresh anonymous choice graph sees all
+        of them and emits one actuator.  Only that emitted move is materialized
         and confirmed, which keeps exploration outcome-blind and prevents a
         pre-emission ``ensure_triplet`` call from changing the competition.
         """
@@ -767,6 +773,7 @@ class NativeReConKRKGraph:
                 best_by_move[move_uci] = candidate
 
         moves_by_pattern: dict[str, list[str]] = {}
+        pattern_by_move: dict[str, str] = {}
         for move_uci, move in legal.items():
             # This is intentionally the canonical local identity used by both
             # grouping and post-emission parity checks.  It contains no FEN,
@@ -779,39 +786,57 @@ class NativeReConKRKGraph:
                 )
             )
             moves_by_pattern.setdefault(pattern_id, []).append(move_uci)
+            pattern_by_move[move_uci] = pattern_id
 
         pattern_rows: list[dict[str, Any]] = []
-        for pattern_id in sorted(moves_by_pattern):
+        for move_uci in sorted(legal):
+            pattern_id = pattern_by_move[move_uci]
             member_moves = tuple(sorted(moves_by_pattern[pattern_id]))
-            member_candidates = [
-                (best_by_move[move_uci][0], move_uci, best_by_move[move_uci][1])
-                for move_uci in member_moves
-                if move_uci in best_by_move
-            ]
-            member_candidates.sort(
-                key=lambda row: (-float(row[0]), str(row[1]), str(row[2]))
-            )
-            best_member = member_candidates[0] if member_candidates else None
+            alias_index = member_moves.index(move_uci)
+            best_member = best_by_move.get(move_uci)
             raw_value = 0.0 if best_member is None else float(best_member[0])
-            source_move_uci = None if best_member is None else str(best_member[1])
-            source_triplet_id = None if best_member is None else str(best_member[2])
+            source_triplet_id = (
+                None if best_member is None else str(best_member[1])
+            )
             pattern_exposure = self._local_pattern_exposure(
                 pattern_id,
             )
+            action_option_exposure = self._local_action_option_exposure(
+                pattern_id,
+                move_uci,
+            )
             normalized_value = raw_value / (1.0 + abs(raw_value))
-            alias_index = pattern_exposure % max(1, len(member_moves))
+            choice_option_identity = (
+                "local-action-option:"
+                + hashlib.sha256(
+                    json.dumps(
+                        {
+                            "pattern_id": pattern_id,
+                            "move_uci": move_uci,
+                        },
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    ).encode("utf-8")
+                ).hexdigest()
+            )
             pattern_rows.append({
                 "pattern_id": pattern_id,
                 "member_moves": member_moves,
-                "representative_move_uci": member_moves[alias_index],
+                "move_uci": move_uci,
+                "choice_option_identity": choice_option_identity,
                 "alias_index": alias_index,
                 "alias_group_size": len(member_moves),
                 "raw_value": raw_value,
                 "normalized_value": normalized_value,
                 "pattern_exposure": pattern_exposure,
+                "action_option_exposure": action_option_exposure,
                 "source": source_triplet_id,
-                "source_move_uci": source_move_uci,
-                "source_score_raw": None if best_member is None else raw_value,
+                "source_move_uci": (
+                    None if best_member is None else move_uci
+                ),
+                "source_score_raw": (
+                    None if best_member is None else raw_value
+                ),
             })
 
         # Exploration is local to the alternatives active in this choice.
@@ -821,13 +846,13 @@ class NativeReConKRKGraph:
         # each option reads only its own exposure and the summed exposures of
         # its present competitors.  The harness supplies no action ordering.
         total_exposures = sum(
-            int(row["pattern_exposure"]) for row in pattern_rows
+            int(row["action_option_exposure"]) for row in pattern_rows
         )
         for row in pattern_rows:
-            pattern_exposure = int(row["pattern_exposure"])
+            option_exposure = int(row["action_option_exposure"])
             if not exploration_enabled:
                 exploration_bonus = 0.0
-            elif pattern_exposure == 0:
+            elif option_exposure == 0:
                 # A never-tried local alternative has maximal bounded novelty.
                 # This also gives the formal choice graph a positive signal at
                 # a genuinely empty start without consulting a global clock.
@@ -840,7 +865,7 @@ class NativeReConKRKGraph:
                             0.0,
                             2.0
                             * math.log1p(max(0, total_exposures))
-                            / (1.0 + pattern_exposure),
+                            / (1.0 + option_exposure),
                         )
                     ),
                 )
@@ -854,14 +879,17 @@ class NativeReConKRKGraph:
             if not pattern_rows:
                 return None
 
-        # The generic genome owns exactly-one arbitration.  The deterministic
-        # order makes ties reproducible while leaving score comparison inside
-        # the formal choice primitive.
-        pattern_rows.sort(key=lambda row: (-float(row["activation"]), str(row["pattern_id"])))
+        # The generic genome owns exactly-one arbitration over every legal
+        # action option.  The deterministic order makes ties reproducible
+        # while leaving score comparison inside the formal choice primitive.
+        pattern_rows.sort(key=lambda row: (
+            -float(row["activation"]),
+            str(row["choice_option_identity"]),
+        ))
         options = tuple(
             AnonymousChoiceOption(
-                identity=str(row["pattern_id"]),
-                actuator_identity=str(row["representative_move_uci"]),
+                identity=str(row["choice_option_identity"]),
+                actuator_identity=str(row["move_uci"]),
                 activation=float(row["activation"]),
                 confirmed=True,
             )
@@ -871,11 +899,16 @@ class NativeReConKRKGraph:
             options,
             max_ticks=max(1, int(self.config.max_ticks)),
         )
-        selected_pattern_id = str(choice.option_identity)
         selected_row = next(
-            row for row in pattern_rows if row["pattern_id"] == selected_pattern_id
+            row for row in pattern_rows
+            if row["choice_option_identity"] == str(choice.option_identity)
         )
+        selected_pattern_id = str(selected_row["pattern_id"])
         selected_move_uci = str(choice.actuator_identity)
+        if selected_move_uci != str(selected_row["move_uci"]):
+            raise AssertionError(
+                "anonymous local choice option disagrees with its actuator"
+            )
         if selected_move_uci not in legal:
             raise AssertionError(
                 "anonymous local choice emitted a non-legal actuator"
@@ -944,6 +977,14 @@ class NativeReConKRKGraph:
             activation=float(selected_row["activation"]),
             pattern_exposure=int(selected_row["pattern_exposure"]),
             total_current_pattern_exposures=int(total_exposures),
+            choice_option_identity=str(
+                selected_row["choice_option_identity"]
+            ),
+            action_option_exposure=int(
+                selected_row["action_option_exposure"]
+            ),
+            total_current_action_option_exposures=int(total_exposures),
+            action_option_count=len(pattern_rows),
             alias_index=int(selected_row["alias_index"]),
             alias_group_size=int(selected_row["alias_group_size"]),
             source_move_uci=(
@@ -968,7 +1009,7 @@ class NativeReConKRKGraph:
                 materialize_emitted and not exact_triplet_preexisting
             ),
             audit_candidate_count=len(full_candidates),
-            pattern_count=len(pattern_rows),
+            pattern_count=len(moves_by_pattern),
         )
 
     def _root_request_exposures(self) -> int:
@@ -993,6 +1034,33 @@ class NativeReConKRKGraph:
             return 0
         try:
             return max(0, int(triplet_node.meta.get("request_exposures", 0)))
+        except (TypeError, ValueError):
+            return 0
+
+    def _local_action_option_exposure(
+        self,
+        pattern_id: str,
+        move_uci: str,
+    ) -> int:
+        """Return graph-owned REAL usage for one pattern/action option.
+
+        Several legal actions may share one relational micropattern.  Their
+        learned value is intentionally shared, but curiosity must not use a
+        host-side modulo picker to choose a representative.  The triplet owns
+        a small per-actuator usage map instead; the formal anonymous genome
+        sees every legal action and arbitrates their local activations.
+        """
+
+        if pattern_id not in self.triplet_ids:
+            return 0
+        triplet_node = self.graph.nodes.get(_TripletNodeIds(pattern_id).triplet)
+        if triplet_node is None:
+            return 0
+        exposures = triplet_node.meta.get("choice_exposure_by_actuator", {})
+        if not isinstance(exposures, Mapping):
+            return 0
+        try:
+            return max(0, int(exposures.get(str(move_uci), 0)))
         except (TypeError, ValueError):
             return 0
 
@@ -1822,6 +1890,28 @@ class NativeReConKRKGraph:
         # introducing a second exposure ledger.
         root = self.graph.nodes[ROOT_ID]
         root.meta["request_exposures"] = self._root_request_exposures() + 1
+        triplet_node = self.graph.nodes[_TripletNodeIds(triplet_id).triplet]
+        raw_option_exposures = triplet_node.meta.get(
+            "choice_exposure_by_actuator", {}
+        )
+        option_exposures = (
+            dict(raw_option_exposures)
+            if isinstance(raw_option_exposures, Mapping)
+            else {}
+        )
+        move_uci = move.uci()
+        try:
+            prior_option_exposure = max(
+                0,
+                int(option_exposures.get(move_uci, 0)),
+            )
+        except (TypeError, ValueError):
+            prior_option_exposure = 0
+        option_exposures[move_uci] = prior_option_exposure + 1
+        triplet_node.meta["choice_exposure_by_actuator"] = {
+            key: int(option_exposures[key])
+            for key in sorted(option_exposures)
+        }
         return triplet_id
 
     def learned_state_audit(self) -> dict[str, Any]:
@@ -2317,12 +2407,50 @@ class NativeReConKRKGraph:
             "m4_event_count": self.m4_event_count,
         }
 
-    def freeze_existing_parameters(self, *, reason: str) -> dict[str, Any]:
-        """Consolidate the current topology while leaving future growth plastic."""
+    def freeze_existing_parameters(
+        self,
+        *,
+        reason: str,
+        triplet_ids: Iterable[str] | None = None,
+    ) -> dict[str, Any]:
+        """Freeze one learned policy subgraph while leaving other growth plastic.
+
+        ``None`` retains the historical whole-graph behavior.  Supplying an
+        exact triplet set is used by the strict adaptive curriculum: only
+        action branches that earned their own clean REAL outcome authority
+        become the protected mate-in-1 skeleton.  Shared nodes reached by a
+        protected branch are frozen as part of that branch; unrelated
+        exploratory debris remains plastic and cannot silently become part of
+        the child policy merely because it existed at the phase boundary.
+        """
+
+        selected_triplets = (
+            frozenset(self.triplet_ids)
+            if triplet_ids is None
+            else frozenset(map(str, triplet_ids))
+        )
+        if not selected_triplets and triplet_ids is not None:
+            raise ValueError("frozen policy requires at least one triplet")
+        if not selected_triplets.issubset(self.triplet_ids):
+            raise ValueError("frozen policy contains an unknown triplet")
+
+        selected_nodes = {
+            node_id
+            for triplet_id in selected_triplets
+            for node_id in self.triplet_nodes.get(triplet_id, ())
+        }
+        selected_edges = {
+            id(edge)
+            for triplet_id in selected_triplets
+            for edge in self.triplet_trainable_edges.get(triplet_id, ())
+        }
 
         frozen_nodes = 0
         for node in self.graph.nodes.values():
-            if "local_weight" not in node.meta:
+            if (
+                node.nid not in selected_nodes
+                or "local_weight" not in node.meta
+            ):
                 continue
             if not node.meta.get("plasticity_frozen"):
                 frozen_nodes += 1
@@ -2330,13 +2458,16 @@ class NativeReConKRKGraph:
             node.meta["plasticity_freeze_reason"] = str(reason)
         frozen_edges = 0
         for edge in self.graph.edges:
-            if not edge.meta.get("trainable"):
+            if (
+                id(edge) not in selected_edges
+                or not edge.meta.get("trainable")
+            ):
                 continue
             if not edge.meta.get("plasticity_frozen"):
                 frozen_edges += 1
             edge.meta["plasticity_frozen"] = True
             edge.meta["plasticity_freeze_reason"] = str(reason)
-        self.frozen_policy_triplet_ids = frozenset(self.triplet_ids)
+        self.frozen_policy_triplet_ids = selected_triplets
         self.frozen_policy_token = self._compute_frozen_policy_token(
             self.frozen_policy_triplet_ids
         )
@@ -2344,6 +2475,9 @@ class NativeReConKRKGraph:
             "frozen_node_parameter_count": frozen_nodes,
             "frozen_edge_parameter_count": frozen_edges,
             "frozen_policy_triplet_count": len(self.frozen_policy_triplet_ids),
+            "unfrozen_triplet_count": len(
+                self.triplet_ids - self.frozen_policy_triplet_ids
+            ),
             "frozen_policy_token": self.frozen_policy_token,
         }
 
@@ -2807,13 +2941,21 @@ class NativeReConKRKGraph:
         self,
         keys: tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]],
         *,
+        allowed_triplets: Iterable[str] | None = None,
         _decision_cache: _LocalDecisionCache | None = None,
     ) -> tuple[str, ...]:
         decision_cache = _decision_cache or _LocalDecisionCache()
+        allowed = (
+            None
+            if allowed_triplets is None
+            else frozenset(map(str, allowed_triplets))
+        )
         active_atoms = self._shared_atom_ids_for_keys(keys)
         overlap: dict[str, int] = {}
         for atom_id in active_atoms:
             for triplet_id in self.shared_atom_triplets.get(atom_id, set()):
+                if allowed is not None and triplet_id not in allowed:
+                    continue
                 overlap[triplet_id] = overlap.get(triplet_id, 0) + 1
         self.scheduler_stats["shared_atom_retrieval_calls"] += 1
         self.scheduler_stats["shared_atom_retrieved_triplets"] += len(overlap)

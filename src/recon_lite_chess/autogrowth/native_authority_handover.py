@@ -36,6 +36,7 @@ from .native_single_graph_curriculum import (
     ROOT_ID,
     NativeReConKRKGraph,
     _TripletNodeIds,
+    _triplet_id,
     _triplet_keys,
 )
 
@@ -299,11 +300,26 @@ class NativeR0DreamSession:
         selected_triplet = (
             None if actuation is None else actuation.selected_triplet_id
         )
+        exact_selected_pattern = (
+            None
+            if actuation is None
+            else _triplet_id(
+                *_triplet_keys(
+                    board,
+                    chess.Move.from_uci(actuation.move_uci),
+                    key_mode=self.virtual_graph.config.key_mode,
+                )
+            )
+        )
         local_provider = (
             self.virtual_credit.direct_outcome_provider_response(
-                selected_triplet
+                exact_selected_pattern
             )
-            if self.organism.direct_provider_ids
+            if (
+                self.organism.direct_provider_ids
+                and exact_selected_pattern
+                in self.organism.direct_provider_ids
+            )
             else None
         )
         local_mode = bool(self.organism.direct_provider_ids)
@@ -364,6 +380,16 @@ class NativeR0DreamSession:
                 "authority": "NativeR0DreamSession",
                 "local_direct_outcome_mode": local_mode,
                 "selected_triplet_id": selected_triplet,
+                "exact_selected_pattern_id": exact_selected_pattern,
+                "exact_action_provider_id": (
+                    None
+                    if local_provider is None
+                    else exact_selected_pattern
+                ),
+                "selected_triplet_is_exact_pattern": bool(
+                    selected_triplet is not None
+                    and selected_triplet == exact_selected_pattern
+                ),
                 "local_provider": (
                     None
                     if local_provider is None
@@ -407,6 +433,21 @@ class NativeR0Organism:
     )
     schema_version: str = SCHEMA_VERSION
 
+    def _validate_policy_scope(self) -> None:
+        if not self.frozen_triplet_ids:
+            raise ValueError("R0 organism requires a non-empty frozen learned graph")
+        if not self.frozen_triplet_ids.issubset(self.graph.triplet_ids):
+            raise ValueError("R0 policy scope contains a triplet outside its graph")
+        if not self.provenance.can_emit:
+            if not self.direct_provider_ids:
+                raise ValueError(
+                    "R0 organism must have local direct-outcome providers"
+                )
+            if self.direct_provider_ids != self.frozen_triplet_ids:
+                raise ValueError(
+                    "local R0 policy scope contains a nonprovider triplet"
+                )
+
     def __post_init__(self) -> None:
         if self.schema_version != SCHEMA_VERSION:
             raise ValueError(f"unsupported organism schema: {self.schema_version}")
@@ -415,10 +456,7 @@ class NativeR0Organism:
                 self.frozen_triplet_ids
             )
         )
-        if not self.provenance.can_emit and not self.direct_provider_ids:
-            raise ValueError("R0 organism must be mature, grounded, and causally confirmed")
-        if not self.frozen_triplet_ids:
-            raise ValueError("R0 organism requires a non-empty frozen learned graph")
+        self._validate_policy_scope()
         if self.retrieval_budget_per_actuator < 1:
             raise ValueError("retrieval_budget_per_actuator must be positive")
         self.trace_state_identity()
@@ -442,6 +480,7 @@ class NativeR0Organism:
                 self.frozen_triplet_ids
             )
         )
+        self._validate_policy_scope()
         if not hasattr(self, "_trace_state_identity_cache"):
             self.trace_state_identity()
 
@@ -727,6 +766,7 @@ class NativeR0Organism:
             "sha256": hashlib.sha256(payload).hexdigest(),
             "byte_count": len(payload),
             "frozen_triplet_count": len(self.frozen_triplet_ids),
+            "archived_graph_triplet_count": len(self.graph.triplet_ids),
             "frozen_policy_token": self.graph.frozen_policy_token,
             "provenance": asdict(self.provenance),
             "trainer_object_serialized": False,
@@ -995,8 +1035,25 @@ def _formal_native_options(
     if policy.config.shared_feature_atoms:
         for move_uci, move in legal.items():
             keys = _triplet_keys(board, move, key_mode=policy.config.key_mode)
-            retrieved = policy._triplets_from_active_shared_atoms(keys)
-            for rank, triplet_id in enumerate(retrieved[: max(1, int(per_actuator_budget))]):
+            # Filter to the authority-owned policy before retrieval ranking
+            # and its finite cap.  Filtering afterward lets high-ranked
+            # exploratory nonproviders consume every slot and shadow a valid
+            # locally grounded provider.
+            retrieved = policy._triplets_from_active_shared_atoms(
+                keys,
+                allowed_triplets=allowed,
+            )
+            exact_triplet_id = _triplet_id(*keys)
+            ordered_retrieval = (
+                ((exact_triplet_id,) if exact_triplet_id in allowed else ())
+                + tuple(
+                    triplet_id for triplet_id in retrieved
+                    if triplet_id != exact_triplet_id
+                )
+            )
+            for rank, triplet_id in enumerate(
+                ordered_retrieval[: max(1, int(per_actuator_budget))]
+            ):
                 pair = (triplet_id, move_uci)
                 if triplet_id in allowed and pair not in seen:
                     seen.add(pair)

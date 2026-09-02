@@ -479,6 +479,31 @@ def test_transition_uses_exact_grounded_composed_successor_signal() -> None:
     assert state.grounding_ancestors == {"mate1"}
 
 
+def test_explicit_successor_signal_cannot_exceed_internal_provider() -> None:
+    engine = IntrinsicCreditEngine(_config())
+    provider = engine.register("provider", mature=True)
+    provider.slow_value = 0.2
+    provider.fast_value = 0.2
+    provider.terminal_evidence = 3
+    provider.causal_confirmations = 1
+    provider.grounding_level = 0
+    engine.register("recipient")
+    before = engine.snapshot()
+
+    with pytest.raises(ValueError, match="exceeds its provider envelope"):
+        engine.transition(
+            "recipient",
+            explicit_successor_signal=CompetenceSignal(
+                value=0.21,
+                confidence=0.51,
+                provider_ids=("provider",),
+                grounding_level=1,
+                grounding_ancestors=("provider",),
+            ),
+        )
+    assert engine.snapshot() == before
+
+
 def test_explicit_successor_signal_fails_closed_before_credit_mutation() -> None:
     engine = IntrinsicCreditEngine(_config())
     engine.register("mate1", mature=True)

@@ -1,4 +1,5 @@
 import copy
+import pickle
 import chess
 import pytest
 
@@ -312,7 +313,7 @@ def test_local_td_credit_changes_a_later_executed_action_relative_to_control() -
     assert revisited
 
 
-def test_local_training_choice_is_deterministic_and_alias_representative_is_exposure_indexed() -> None:
+def test_local_training_choice_is_deterministic_without_alias_representative_picker() -> None:
     config = NativeSingleGraphConfig(
         include_symmetries=False,
         key_mode="canonical",
@@ -327,10 +328,180 @@ def test_local_training_choice_is_deterministic_and_alias_representative_is_expo
     second_decision = second.choose_local_training_action(board, "local_r1")
 
     assert first_decision.to_manifest() == second_decision.to_manifest()
+    assert first_decision.action_option_count == len(tuple(board.legal_moves))
+    assert first_decision.choice_option_identity.startswith(
+        "local-action-option:"
+    )
     assert first_decision.alias_group_size >= 1
-    if first_decision.alias_group_size > 1:
-        assert first_decision.alias_index == 0
-        assert first_decision.move_uci == first_decision.source_move_uci or first_decision.source is None
+    assert 0 <= first_decision.alias_index < first_decision.alias_group_size
+
+
+def test_every_legal_action_enters_anonymous_competition_once(
+    monkeypatch,
+) -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            key_mode="canonical",
+            train_repetitions=1,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    captured = []
+    original_emit = graph_module.AnonymousChoiceGenome.emit
+
+    def capture_emit(genome, options, **kwargs):
+        captured.append(tuple(options))
+        return original_emit(genome, options, **kwargs)
+
+    monkeypatch.setattr(
+        graph_module.AnonymousChoiceGenome,
+        "emit",
+        capture_emit,
+    )
+    decision = network.choose_local_training_action(board, "all-actions")
+
+    assert len(captured) == 1
+    options = captured[0]
+    legal_uci = {move.uci() for move in board.legal_moves}
+    assert len(options) == len(legal_uci)
+    assert {item.actuator_identity for item in options} == legal_uci
+    assert len({item.identity for item in options}) == len(options)
+    assert decision.action_option_count == len(legal_uci)
+
+
+def test_alias_actions_have_graph_owned_independent_exposure_and_roundtrip(
+    monkeypatch,
+) -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            key_mode="canonical",
+            train_repetitions=1,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    aliases: dict[str, list[chess.Move]] = {}
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        pattern_id = _triplet_id(
+            *_triplet_keys(board, move, key_mode=network.config.key_mode)
+        )
+        aliases.setdefault(pattern_id, []).append(move)
+    pattern_id, moves = next(
+        (item, group)
+        for item, group in sorted(aliases.items())
+        if len(group) > 1
+    )
+    visited, unvisited = moves[:2]
+
+    credited_id = network.apply_intrinsic_td(
+        board,
+        visited,
+        td_error=0.0,
+        stage_diagnostic="alias-option-exposure",
+    )
+    assert credited_id == pattern_id
+    assert network._local_pattern_exposure(pattern_id) == 1
+    assert network._local_action_option_exposure(
+        pattern_id, visited.uci()
+    ) == 1
+    assert network._local_action_option_exposure(
+        pattern_id, unvisited.uci()
+    ) == 0
+
+    captured = []
+    original_emit = graph_module.AnonymousChoiceGenome.emit
+
+    def capture_emit(genome, options, **kwargs):
+        captured.append(tuple(options))
+        return original_emit(genome, options, **kwargs)
+
+    monkeypatch.setattr(
+        graph_module.AnonymousChoiceGenome,
+        "emit",
+        capture_emit,
+    )
+    network.choose_local_training_action(board, "alias-option-choice")
+    options_by_move = {
+        item.actuator_identity: item for item in captured[0]
+    }
+    assert (
+        options_by_move[unvisited.uci()].activation
+        > options_by_move[visited.uci()].activation
+    )
+
+    restored = pickle.loads(pickle.dumps(network, protocol=5))
+    assert restored._local_action_option_exposure(
+        pattern_id, visited.uci()
+    ) == 1
+    assert restored._local_action_option_exposure(
+        pattern_id, unvisited.uci()
+    ) == 0
+    assert (
+        restored.canonical_semantic_manifest()
+        == network.canonical_semantic_manifest()
+    )
+
+
+def test_policy_support_is_per_action_not_shared_by_pattern_alias(
+    monkeypatch,
+) -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            key_mode="canonical",
+            train_repetitions=1,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    aliases: dict[str, list[chess.Move]] = {}
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        pattern_id = _triplet_id(
+            *_triplet_keys(board, move, key_mode=network.config.key_mode)
+        )
+        aliases.setdefault(pattern_id, []).append(move)
+    _pattern_id, moves = next(
+        (item, group)
+        for item, group in sorted(aliases.items())
+        if len(group) > 1
+    )
+    supported, unsupported_alias = moves[:2]
+    source_id = network.ensure_triplet(
+        board,
+        supported,
+        stage="per-action-policy-source",
+    )
+    monkeypatch.setattr(
+        network,
+        "_full_audit_candidates",
+        lambda *_args, **_kwargs: [
+            (0.5, supported.uci(), source_id),
+        ],
+    )
+    captured = []
+    original_emit = graph_module.AnonymousChoiceGenome.emit
+
+    def capture_emit(genome, options, **kwargs):
+        captured.append(tuple(options))
+        return original_emit(genome, options, **kwargs)
+
+    monkeypatch.setattr(
+        graph_module.AnonymousChoiceGenome,
+        "emit",
+        capture_emit,
+    )
+    decision = network.choose_local_policy_action(board)
+
+    assert decision is not None
+    assert decision.move == supported
+    assert decision.source_move_uci == supported.uci()
+    assert unsupported_alias.uci() not in {
+        item.actuator_identity for item in captured[0]
+    }
+    assert len(captured[0]) == 1
 
 
 def test_local_policy_query_is_exploitation_only_and_semantically_read_only() -> None:
@@ -423,7 +594,7 @@ def test_local_full_audit_respects_shared_candidate_cap(monkeypatch) -> None:
     monkeypatch.setattr(
         network,
         "_triplets_from_active_shared_atoms",
-        lambda _keys: source_ids,
+        lambda _keys, **_kwargs: source_ids,
     )
 
     def capture_candidates(legal, triplet_ids, candidate_move_by_triplet=None):
@@ -481,6 +652,53 @@ def test_shared_retrieval_keeps_high_utility_source_below_overlap_width(monkeypa
     assert source_ids[-1] in retrieved
 
 
+def test_shared_retrieval_filters_authority_scope_before_finite_cap(
+    monkeypatch,
+) -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            shared_feature_atoms=True,
+            shared_atom_min_overlap=1,
+            max_prototype_candidates_per_move=1,
+            max_ticks=8,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))[:2]
+    provider_id, nonprovider_id = tuple(
+        network.ensure_triplet(board, move, stage="authority_scope")
+        for move in moves
+    )
+    active_atom = "synthetic_authority_scope_atom"
+    network.shared_atom_triplets = {
+        active_atom: {provider_id, nonprovider_id},
+    }
+    monkeypatch.setattr(
+        network,
+        "_shared_atom_ids_for_keys",
+        lambda _keys: {active_atom},
+    )
+    provider_edge = network.graph.get_edge(
+        "tg26o_root", provider_id, LinkType.SUB
+    )
+    nonprovider_edge = network.graph.get_edge(
+        "tg26o_root", nonprovider_id, LinkType.SUB
+    )
+    assert provider_edge is not None and nonprovider_edge is not None
+    provider_edge.w = 0.10
+    nonprovider_edge.w = 0.95
+
+    keys = _triplet_keys(board, moves[0], key_mode=network.config.key_mode)
+    assert network._triplets_from_active_shared_atoms(keys) == (
+        nonprovider_id,
+    )
+    assert network._triplets_from_active_shared_atoms(
+        keys,
+        allowed_triplets={provider_id},
+    ) == (provider_id,)
+
+
 def test_local_full_audit_keeps_exact_and_generalized_source_and_generalized_can_win(
     monkeypatch,
 ) -> None:
@@ -506,7 +724,7 @@ def test_local_full_audit_keeps_exact_and_generalized_source_and_generalized_can
     monkeypatch.setattr(
         network,
         "_triplets_from_active_shared_atoms",
-        lambda _keys: (generalized_id,),
+        lambda _keys, **_kwargs: (generalized_id,),
     )
     observed: list[tuple[str, str]] = []
 

@@ -23,6 +23,10 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _r1_reply_authority_from_local_provider,
     _r1_terminal_reply_terminal_kind,
 )
+from recon_lite_chess.autogrowth.native_single_graph_curriculum import (
+    _triplet_id,
+    _triplet_keys,
+)
 from recon_lite_chess.autogrowth.native_all_reply_envelope import (
     AvailabilityState,
     ReplyAuthority,
@@ -231,7 +235,21 @@ class _LocalProviderAuthority(_Authority):
         assert audit["provider_ids"] == ["test-r0"]
         self.credit = credit
         self.base.r0.credit = credit
-        self.base.r0.direct_provider_ids = frozenset(("test-r0",))
+        self.base.r0.graph = SimpleNamespace(
+            config=SimpleNamespace(key_mode="exact")
+        )
+        initial = chess.Board(R1_RETIRED_DEVELOPMENT_FENS[0])
+        first = _forced_mate_in_two_first_moves(initial)[0]
+        initial.push(first)
+        authority_ids: set[str] = set()
+        for reply in initial.legal_moves:
+            successor = initial.copy(stack=False)
+            successor.push(reply)
+            move = self._move(successor)
+            authority_ids.add(_triplet_id(*_triplet_keys(
+                successor, move, key_mode="exact"
+            )))
+        self.base.r0.direct_provider_ids = frozenset(authority_ids)
         self.base.r0.provenance = SimpleNamespace(
             grounded=False,
             mature=False,
@@ -242,17 +260,61 @@ class _LocalProviderAuthority(_Authority):
 
     def open_virtual(self, frame, **_kwargs):
         opened = super().open_virtual(frame, **_kwargs)
-        provider = self.credit.direct_outcome_provider_response("test-r0")
+        move = self._move(frame.values["board"])
+        authority_id = _triplet_id(*_triplet_keys(
+            frame.values["board"], move, key_mode="exact"
+        ))
+        provider = self.native_direct_provider_response(authority_id)
         assert provider is not None
         opened["query"].response = SimpleNamespace(
+            child_id=provider["cell_id"],
             available=True,
             grounded=True,
             grounding_source=provider["grounding_source"],
         )
         opened["query"].availability_provenance[
             "base_availability_provenance"
-        ] = {"local_provider": provider}
+        ] = {
+            "local_direct_outcome_mode": True,
+            "local_provider": provider,
+        }
         return opened
+
+    def native_direct_provider_response(self, authority_cell_id):
+        authority_cell_id = str(authority_cell_id)
+        if authority_cell_id not in self.base.r0.direct_provider_ids:
+            return None
+        provider_id = f"native-r0-provider:{authority_cell_id}"
+        return {
+            "schema_version": "native_direct_provider.v1",
+            "provider_kind": "native_direct_outcome_cell",
+            "cell_id": provider_id,
+            "authority_cell_id": authority_cell_id,
+            "expected_value": 0.8,
+            "confidence": 0.75,
+            "uncertainty": 0.25,
+            "grounding_level": 0,
+            "grounding_ancestors": (),
+            "direct_positive_evidence": 1,
+            "direct_contrast_evidence": 0,
+            "certification_receipt_count": 1,
+            "certification_receipt_digest": "b" * 64,
+            "evidence_scope": "exact_selected_real_return_ledger",
+            "discovery_evidence_used": False,
+            "postbirth_real_certification": False,
+            "prospectively_certified": False,
+            "direct_outcome_authorized": True,
+            "hypothesis_digest": "a" * 64,
+            "lineage_parent_id": None,
+            "grounding_source": "exact_selected_real_returns",
+        }
+
+    def native_provider_response(self, provider_id):
+        prefix = "native-r0-provider:"
+        provider_id = str(provider_id)
+        if not provider_id.startswith(prefix):
+            return None
+        return self.native_direct_provider_response(provider_id[len(prefix):])
 
 
 class _CoreGraph:
@@ -387,7 +449,12 @@ def test_unknown_shell_cannot_veto_exact_local_all_reply_providers() -> None:
         generic_seed=17,
     )
     assert probe["envelope"].state is AvailabilityState.AVAILABLE
-    assert probe["provider_ids"] == ("test-r0",)
+    assert probe["provider_ids"]
+    assert all(
+        provider_id.startswith("native-r0-provider:")
+        for provider_id in probe["provider_ids"]
+    )
+    assert set(probe["provider_records"]) == set(probe["provider_ids"])
     assert all(
         row["classification"]["state"] == "UNKNOWN"
         for row in probe["contexts"]
@@ -402,9 +469,104 @@ def test_unknown_shell_cannot_veto_exact_local_all_reply_providers() -> None:
         credit=authority.credit,
     )
     assert terminal_kind is None
-    assert successor_ids == ("test-r0",)
-    assert episode["successor_signal"].provider_ids == ("test-r0",)
+    assert successor_ids == probe["provider_ids"]
+    assert episode["successor_signal"].provider_ids == probe["provider_ids"]
     assert episode["successor_signal"].value > 0.0
+
+
+def test_strict_probe_never_uses_prototype_core_gate_as_authority() -> None:
+    class ForbiddenCore(_CoreGraph):
+        def audit_choice(self, *_args, **_kwargs):
+            raise AssertionError("strict probe consulted prototype core gate")
+
+    authority, fen, first, after_first, _counters = _fixture()
+    probe = _prospective_counterexample_reply_probe(
+        authority,
+        after_first,
+        fen=fen,
+        white_move_uci=first.uci(),
+        exposure_counts={},
+        frame_prefix="test:strict-no-core-gate",
+        frame_session=None,
+        generic_seed=17,
+        strict_adaptive=True,
+        r0_core_graph=ForbiddenCore(),
+        r0_core_gate=_CoreGate(True),
+        r0_core_triplet_ids=frozenset(("core:test",)),
+    )
+    assert probe["envelope"].state is AvailabilityState.UNKNOWN
+    assert probe["provider_ids"] == ()
+    assert all(
+        context["effective_source"] == "unknown"
+        for context in probe["contexts"]
+    )
+
+
+def test_virtual_real_actuation_mismatch_fails_before_receipt_consumption() -> None:
+    class DivergentRealAuthority(_Authority):
+        def open_real_event(self, frame, **kwargs):
+            expected = kwargs.get("expected_actuation")
+            move = self._move(frame.values["board"])
+            observed = {
+                "selected_move": move.uci(),
+                "selected_triplet": "test-r0",
+                "selected_option_identity": "different-real-source",
+                "exact_action_pattern_id": None,
+            }
+            expected_row = {
+                key: expected.get(key)
+                for key in observed
+            }
+            if observed != expected_row:
+                raise RuntimeError(
+                    "VIRTUAL/REAL child actuation parity mismatch"
+                )
+            return super().open_real_event(frame, **kwargs)
+
+    authority = DivergentRealAuthority(state="AVAILABLE")
+    fen = R1_RETIRED_DEVELOPMENT_FENS[0]
+    board = chess.Board(fen)
+    first = _forced_mate_in_two_first_moves(board)[0]
+    after_first = board.copy(stack=False)
+    after_first.push(first)
+    counters = {
+        **_r1_reply_counter_defaults(),
+        "availability_queries": 0,
+        "availability_positives": 0,
+        "virtual_frame_queries": 0,
+        "v2_duplicate_virtual_queries": 0,
+        "v2_real_observations": 0,
+        "v2_structural_transitions": 0,
+        "child_handoffs": 0,
+    }
+
+    exposures = {}
+    seen = set()
+    continuation_before = authority.continuation_digest()
+    with pytest.raises(RuntimeError, match="actuation parity mismatch"):
+        _prospective_counterexample_episode(
+            authority,
+            after_first,
+            fen=fen,
+            white_move_uci=first.uci(),
+            arm_name="strict-parity-test",
+            epoch=0,
+            position_index=0,
+            exposure_counts=exposures,
+            seen_predecessor_fens=seen,
+            frame_session=None,
+            generic_seed=17,
+            arm_bootstrap_enabled=True,
+            counters=counters,
+            strict_adaptive=True,
+        )
+    assert authority.consumed_receipts == {}
+    assert authority.accepted_real_references == {}
+    assert authority.next_expected_ordinal == 0
+    assert authority.pending_event is None
+    assert authority.continuation_digest() == continuation_before
+    assert exposures == {}
+    assert seen == set()
 
 
 @pytest.mark.parametrize(

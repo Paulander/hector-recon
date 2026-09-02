@@ -19,6 +19,8 @@ from recon_lite_hector.learning import IntrinsicCreditConfig, IntrinsicCreditEng
 from recon_lite_chess.autogrowth.native_authority_handover import (
     ChildQuery,
     FrozenCompetenceProvenance,
+    GraphActuation,
+    GraphSignalTrace,
     GraphTerminalSignal,
     NativeHandoverGenome,
     NativeR0Organism,
@@ -33,6 +35,7 @@ from recon_lite_chess.autogrowth.native_single_graph_curriculum import (
     ROOT_ID,
     NativeReConKRKGraph,
     NativeSingleGraphConfig,
+    _triplet_id,
     _triplet_keys,
 )
 
@@ -81,6 +84,73 @@ def _tiny_organism() -> NativeR0Organism:
     )
 
 
+def _local_provider_organism() -> tuple[NativeR0Organism, chess.Board, str]:
+    provider_board = chess.Board(MATE_ONE)
+    provider_moves = []
+    for move in provider_board.legal_moves:
+        successor = provider_board.copy(stack=False)
+        successor.push(move)
+        if successor.is_checkmate():
+            provider_moves.append(move)
+    assert provider_moves
+    provider_move = min(provider_moves, key=lambda item: item.uci())
+    nonprovider_board = chess.Board(
+        "8/8/8/8/4K3/8/6R1/7k w - - 0 1"
+    )
+    graph = NativeReConKRKGraph(config=NativeSingleGraphConfig(
+        include_symmetries=False,
+        key_mode="exact",
+        shared_feature_atoms=False,
+        max_ticks=80,
+    ))
+    provider_id = graph.apply_intrinsic_td(
+        provider_board,
+        provider_move,
+        td_error=1.0,
+        stage_diagnostic="local-provider",
+    )
+    nonprovider_id = graph.apply_intrinsic_td(
+        nonprovider_board,
+        sorted(nonprovider_board.legal_moves, key=lambda item: item.uci())[0],
+        td_error=1.0,
+        stage_diagnostic="local-nonprovider",
+    )
+    assert nonprovider_id != provider_id
+    graph.freeze_existing_parameters(
+        reason="local-provider-scope",
+        triplet_ids=(provider_id,),
+    )
+    credit = IntrinsicCreditEngine(
+        IntrinsicCreditConfig(min_grounding_evidence=1)
+    )
+    credit.register(provider_id)
+    credit.begin_episode()
+    credit.transition(provider_id, terminal_kind="mate")
+    assert credit.consolidate_direct_outcome_providers((provider_id,))[
+        "provider_ids"
+    ] == [provider_id]
+    provenance = FrozenCompetenceProvenance(
+        child_id=R0_COMPETENCE_ID,
+        mature=False,
+        grounded=False,
+        can_emit=False,
+        consolidated_value=0.0,
+        uncertainty=1.0,
+        terminal_evidence=0,
+        causal_confirmations=0,
+        grounding_level=None,
+        grounding_source="unused-local-provider-test",
+    )
+    organism = NativeR0Organism(
+        graph=graph,
+        credit=credit,
+        provenance=provenance,
+        frozen_triplet_ids=frozenset((provider_id,)),
+        source_manifest={"kind": "local-provider-test"},
+    )
+    return organism, nonprovider_board, nonprovider_id
+
+
 def test_trainer_free_organism_emits_formal_actuator_and_roundtrips(tmp_path: Path) -> None:
     organism = _tiny_organism()
     board = chess.Board(MATE_ONE)
@@ -97,7 +167,149 @@ def test_trainer_free_organism_emits_formal_actuator_and_roundtrips(tmp_path: Pa
     metadata = organism.save(artifact)
     restored = NativeR0Organism.load(artifact)
     assert metadata["trainer_object_serialized"] is False
+    assert metadata["archived_graph_triplet_count"] == len(
+        organism.graph.triplet_ids
+    )
     assert restored.emit_action(board) == actuation
+
+
+def test_local_policy_scope_rejects_nonprovider_and_abstains_off_provider() -> None:
+    organism, nonprovider_board, nonprovider_id = _local_provider_organism()
+    assert nonprovider_id in organism.graph.triplet_ids
+    assert nonprovider_id not in organism.frozen_triplet_ids
+
+    query = organism.request_child(FrameContext(
+        "nonprovider-only-board",
+        FrameKind.VIRTUAL,
+        {"board": nonprovider_board},
+    ))
+    assert query.actuation is None
+    assert query.response.available is False
+    assert query.response.grounded is False
+
+    with pytest.raises(ValueError, match="contains a nonprovider"):
+        NativeR0Organism(
+            graph=copy.deepcopy(organism.graph),
+            credit=copy.deepcopy(organism.credit),
+            provenance=organism.provenance,
+            frozen_triplet_ids=frozenset(
+                (*organism.frozen_triplet_ids, nonprovider_id)
+            ),
+            source_manifest={"kind": "invalid-local-provider-scope"},
+        )
+
+
+def test_exact_action_provider_survives_a_different_selected_alias(
+    monkeypatch,
+) -> None:
+    """Authority belongs to the current action pattern, not winner alias."""
+
+    board = chess.Board(MATE_ONE)
+    legal = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+    mating = []
+    for move in legal:
+        successor = board.copy(stack=False)
+        successor.push(move)
+        if successor.is_checkmate():
+            mating.append(move)
+    mating = tuple(mating)
+    assert mating and len(legal) >= 2
+    target = mating[0]
+    alias_move = next(move for move in legal if move != target)
+    graph = NativeReConKRKGraph(config=NativeSingleGraphConfig(
+        include_symmetries=False,
+        key_mode="exact",
+        shared_feature_atoms=False,
+        max_ticks=80,
+    ))
+    exact_id = graph.apply_intrinsic_td(
+        board, target, td_error=1.0, stage_diagnostic="exact-provider",
+    )
+    alias_id = graph.apply_intrinsic_td(
+        board, alias_move, td_error=1.0, stage_diagnostic="provider-alias",
+    )
+    assert alias_id != exact_id
+    graph.freeze_existing_parameters(
+        reason="exact-action-provider-alias-test",
+        triplet_ids=(exact_id, alias_id),
+    )
+    credit = IntrinsicCreditEngine(
+        IntrinsicCreditConfig(min_grounding_evidence=1)
+    )
+    for provider_id in (exact_id, alias_id):
+        credit.register(provider_id)
+        credit.begin_episode()
+        credit.transition(provider_id, terminal_kind="mate")
+    audit = credit.consolidate_direct_outcome_providers(
+        (exact_id, alias_id)
+    )
+    assert set(audit["provider_ids"]) == {exact_id, alias_id}
+    organism = NativeR0Organism(
+        graph=graph,
+        credit=credit,
+        provenance=FrozenCompetenceProvenance(
+            child_id=R0_COMPETENCE_ID,
+            mature=False,
+            grounded=False,
+            can_emit=False,
+            consolidated_value=0.0,
+            uncertainty=1.0,
+            terminal_evidence=0,
+            causal_confirmations=0,
+            grounding_level=None,
+            grounding_source="unused-local-provider-test",
+        ),
+        frozen_triplet_ids=frozenset((exact_id, alias_id)),
+        source_manifest={"kind": "exact-action-provider-alias-test"},
+    )
+    frame = FrameContext(
+        "provider-alias-selects-same-action",
+        FrameKind.VIRTUAL,
+        {"board": board},
+    )
+    actuation = GraphActuation(
+        actuator_identity=f"chess_move:{target.uci()}",
+        move_uci=target.uci(),
+        option_identity=f"{alias_id}:{target.uci()}",
+        activation=1.0,
+        candidate_count=2,
+        formal_ticks=1,
+    )
+    trace = GraphSignalTrace(
+        frame_id=frame.frame_id,
+        frame_kind=FrameKind.VIRTUAL.name,
+        source_organism_identity=organism.source_organism_identity(),
+        source_state_identity=organism.trace_state_identity(),
+        option_identity=actuation.option_identity,
+        actuation=actuation,
+        confirmed_base_terminal_node_ids=(),
+        confirmed_mature_composite_ids=(),
+        terminal_signals=(),
+    )
+    session = organism.dream_session()
+    monkeypatch.setattr(
+        session,
+        "emit_action_with_trace",
+        lambda _frame: (actuation, trace),
+    )
+    try:
+        query = session.request(frame)
+    finally:
+        session.close()
+
+    assert query.actuation is not None
+    assert query.actuation.selected_triplet_id == alias_id
+    assert query.availability_provenance[
+        "selected_triplet_is_exact_pattern"
+    ] is False
+    assert query.availability_provenance["exact_action_provider_id"] == (
+        _triplet_id(
+            *_triplet_keys(board, target, key_mode=graph.config.key_mode)
+        )
+    ) == exact_id
+    assert query.response.available is True
+    assert query.response.grounded is True
+    assert query.response.child_id == exact_id
 
 
 def test_actual_child_query_is_deep_isolated_and_does_not_verify_dream_outcome() -> None:
@@ -386,7 +598,13 @@ def test_same_move_aliases_share_formally_confirmed_trace_evidence() -> None:
 
     def run(allowed: tuple[str, ...]):
         graph._triplets_from_active_shared_atoms = (  # type: ignore[method-assign]
-            lambda keys: allowed if keys == target_keys else ()
+            lambda keys, *, allowed_triplets=None: (
+                tuple(
+                    item for item in allowed
+                    if allowed_triplets is None or item in allowed_triplets
+                )
+                if keys == target_keys else ()
+            )
         )
         return _formal_native_options(
             graph,
@@ -395,13 +613,33 @@ def test_same_move_aliases_share_formally_confirmed_trace_evidence() -> None:
             per_actuator_budget=16,
         )
 
-    single_first, _ticks, first_captures = run((first_alias,))
-    single_second, _ticks, second_captures = run((second_alias,))
-    paired_forward, _ticks, forward_captures = run(
+    single_first_all, _ticks, first_captures = run((first_alias,))
+    single_second_all, _ticks, second_captures = run((second_alias,))
+    paired_forward_all, _ticks, forward_captures = run(
         (first_alias, second_alias)
     )
-    paired_reverse, _ticks, reverse_captures = run(
+    paired_reverse_all, _ticks, reverse_captures = run(
         (second_alias, first_alias)
+    )
+    # Exact-provider reservation may legitimately expose either stored alias
+    # on its own native actuator in addition to the synthetic shared target.
+    # This test concerns only alias invariance for the target actuator.
+    target_suffix = f":{target.uci()}"
+    single_first = tuple(
+        item for item in single_first_all
+        if item.identity.endswith(target_suffix)
+    )
+    single_second = tuple(
+        item for item in single_second_all
+        if item.identity.endswith(target_suffix)
+    )
+    paired_forward = tuple(
+        item for item in paired_forward_all
+        if item.identity.endswith(target_suffix)
+    )
+    paired_reverse = tuple(
+        item for item in paired_reverse_all
+        if item.identity.endswith(target_suffix)
     )
     assert len(single_first) == len(single_second) == 1
     assert len(paired_forward) == len(paired_reverse) == 2
@@ -458,6 +696,46 @@ def test_same_move_aliases_share_formally_confirmed_trace_evidence() -> None:
         second_option,
     }
     assert paired_forward[0].activation != paired_forward[1].activation
+
+
+def test_exact_provider_is_reserved_before_per_action_retrieval_cap() -> None:
+    board = chess.Board(MATE_ONE)
+    target = chess.Move.from_uci("f2f1")
+    graph = NativeReConKRKGraph(config=NativeSingleGraphConfig(
+        include_symmetries=False,
+        max_ticks=80,
+        indexed_scheduler=True,
+        key_mode="canonical",
+        shared_feature_atoms=True,
+        shared_projection_atoms=True,
+        include_grouped_cache_terminals=False,
+        score_action_pattern_atoms=True,
+        terminal_score_normalization="sqrt",
+    ))
+    for move in board.legal_moves:
+        graph.ensure_triplet(board, move, stage="exact-cap-test")
+    target_keys = _triplet_keys(
+        board, target, key_mode=graph.config.key_mode
+    )
+    exact_id = _triplet_id(*target_keys)
+    distractors = tuple(sorted(graph.triplet_ids - {exact_id}))
+    assert distractors
+    graph._triplets_from_active_shared_atoms = (  # type: ignore[method-assign]
+        lambda keys, *, allowed_triplets=None: (
+            (*distractors, exact_id) if keys == target_keys else ()
+        )
+    )
+
+    options, _ticks, _captures = _formal_native_options(
+        graph,
+        board,
+        allowed_triplets=graph.triplet_ids,
+        per_actuator_budget=1,
+    )
+
+    assert f"{exact_id}:{target.uci()}" in {
+        option.identity for option in options
+    }
 
 
 def test_alias_evidence_union_isolated_by_exact_actuator() -> None:

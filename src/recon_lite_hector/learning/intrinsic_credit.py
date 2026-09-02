@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 import math
-from typing import Any, Iterable, Mapping, Optional, Sequence
+from typing import Any, Callable, Iterable, Mapping, Optional, Sequence
 
 from recon_lite_hector.nodes import StemCellState, StemCellTerminal
 from recon_lite_hector.plasticity.fast import (
@@ -594,6 +594,10 @@ class IntrinsicCreditEngine:
         signal: CompetenceSignal,
         *,
         recipient_id: str,
+        external_provider_records: Mapping[str, Mapping[str, Any]] | None = None,
+        external_provider_resolver: (
+            Callable[[str], Mapping[str, Any] | None] | None
+        ) = None,
     ) -> CompetenceSignal:
         """Validate a caller-composed signal against registered grounding.
 
@@ -647,24 +651,316 @@ class IntrinsicCreditEngine:
                 "explicit successor grounding level must be non-negative"
             )
 
-        providers: list[CompetenceValueState] = []
-        for provider_id in provider_ids:
-            provider = self.states.get(provider_id)
-            if provider is None or not provider.can_emit(self.config):
+        captured_records = (
+            {}
+            if external_provider_records is None
+            else dict(external_provider_records)
+        )
+        if any(
+            not isinstance(key, str) or not key
+            for key in captured_records
+        ):
+            raise ValueError("external provider record keys must be identities")
+        if not set(captured_records).issubset(provider_ids):
+            raise ValueError(
+                "external provider records are not a subset of providers"
+            )
+
+        def normalize_external(
+            provider_id: str,
+            raw: Mapping[str, Any] | None,
+        ) -> dict[str, Any]:
+            if not isinstance(raw, Mapping):
+                raise ValueError("external successor provider is unavailable")
+            try:
+                cell_id = raw["cell_id"]
+                authority_cell_id = raw["authority_cell_id"]
+                provider_kind = raw["provider_kind"]
+                hypothesis_digest = raw["hypothesis_digest"]
+                raw_expected_value = raw["expected_value"]
+                raw_confidence = raw["confidence"]
+                raw_uncertainty = raw["uncertainty"]
+                raw_positive = raw["direct_positive_evidence"]
+                raw_contrast = raw["direct_contrast_evidence"]
+                raw_receipt_count = raw[
+                    "certification_receipt_count"
+                ]
+                raw_ancestors = raw["grounding_ancestors"]
+                if any(
+                    isinstance(item, bool)
+                    for item in (
+                        raw_expected_value,
+                        raw_confidence,
+                        raw_uncertainty,
+                    )
+                ):
+                    raise TypeError("boolean provider scalar")
+                expected_value = float(raw["expected_value"])
+                provider_confidence = float(raw["confidence"])
+                uncertainty = float(raw["uncertainty"])
+                if any(
+                    isinstance(item, bool) or not isinstance(item, int)
+                    for item in (
+                        raw_positive,
+                        raw_contrast,
+                        raw_receipt_count,
+                    )
+                ):
+                    raise TypeError("non-integral provider evidence")
+                positive = raw_positive
+                contrast = raw_contrast
+                receipt_count = raw_receipt_count
+                receipt_digest = raw["certification_receipt_digest"]
+                grounding_level = raw["grounding_level"]
+                if not isinstance(raw_ancestors, (tuple, list)):
+                    raise TypeError("provider ancestors are not a sequence")
+                grounding_ancestors = tuple(raw_ancestors)
+            except (
+                KeyError,
+                TypeError,
+                ValueError,
+                OverflowError,
+            ) as exc:
                 raise ValueError(
-                    "explicit successor provider is not mature and grounded"
+                    "external successor provider record is malformed"
+                ) from exc
+            raw_support = raw.get("support")
+            raw_successes = raw.get("successes")
+            raw_contradictions = raw.get("contradictions")
+            prospective_summary_valid = bool(
+                not any(
+                    isinstance(item, bool) or not isinstance(item, int)
+                    for item in (
+                        raw_support,
+                        raw_successes,
+                        raw_contradictions,
+                    )
                 )
-            providers.append(provider)
+                and raw_support == receipt_count
+                and raw_successes == positive
+                and raw_contradictions == contrast
+            )
+            prospective_provider = bool(
+                provider_kind == "prospective_authority_cell"
+                and raw.get("schema_version")
+                == "native_prospective_provider.v1"
+                and authority_cell_id == provider_id
+                and prospective_summary_valid
+                and raw.get("prospectively_certified") is True
+                and raw.get("postbirth_real_certification") is True
+                and raw.get("discovery_evidence_used") is False
+                and raw.get("evidence_scope")
+                == "post_birth_real_certification_ledger"
+                and raw.get("grounding_source")
+                == "prospective_postbirth_real_certification"
+            )
+            direct_provider = bool(
+                provider_kind == "native_direct_outcome_cell"
+                and raw.get("schema_version")
+                == "native_direct_provider.v1"
+                and isinstance(authority_cell_id, str)
+                and bool(authority_cell_id)
+                and provider_id
+                == f"native-r0-provider:{authority_cell_id}"
+                and raw.get("direct_outcome_authorized") is True
+                and raw.get("prospectively_certified") is False
+                and raw.get("postbirth_real_certification") is False
+                and raw.get("discovery_evidence_used") is False
+                and raw.get("evidence_scope")
+                == "exact_selected_real_return_ledger"
+                and raw.get("grounding_source")
+                == "exact_selected_real_returns"
+            )
+            if (
+                not isinstance(cell_id, str)
+                or cell_id != provider_id
+                or not (prospective_provider or direct_provider)
+                or not isinstance(hypothesis_digest, str)
+                or len(hypothesis_digest) != 64
+                or any(
+                    character not in "0123456789abcdef"
+                    for character in hypothesis_digest
+                )
+                or not math.isfinite(expected_value)
+                or not 0.0 < expected_value <= 1.0
+                or not math.isfinite(provider_confidence)
+                or not 0.0 < provider_confidence <= 1.0
+                or (
+                    prospective_provider
+                    and not math.isclose(
+                        expected_value,
+                        provider_confidence,
+                        rel_tol=0.0,
+                        abs_tol=1e-12,
+                    )
+                )
+                or not math.isfinite(uncertainty)
+                or not 0.0 <= uncertainty < 1.0
+                or not math.isclose(
+                    provider_confidence + uncertainty,
+                    1.0,
+                    rel_tol=0.0,
+                    abs_tol=1e-12,
+                )
+                or positive < 1
+                or contrast != 0
+                or receipt_count != positive
+                or not isinstance(receipt_digest, str)
+                or len(receipt_digest) != 64
+                or any(
+                    character not in "0123456789abcdef"
+                    for character in receipt_digest
+                )
+                or isinstance(grounding_level, bool)
+                or not isinstance(grounding_level, int)
+                or grounding_level < 0
+                or any(
+                    not isinstance(item, str) or not item
+                    for item in grounding_ancestors
+                )
+                or tuple(sorted(set(grounding_ancestors)))
+                != grounding_ancestors
+            ):
+                raise ValueError(
+                    "external successor provider record is not grounded"
+                )
+            return {
+                "cell_id": cell_id,
+                "authority_cell_id": authority_cell_id,
+                "provider_kind": provider_kind,
+                "hypothesis_digest": hypothesis_digest,
+                "expected_value": expected_value,
+                "confidence": provider_confidence,
+                "grounding_level": grounding_level,
+                "grounding_ancestors": grounding_ancestors,
+                "direct_positive_evidence": positive,
+                "certification_receipt_count": receipt_count,
+                "certification_receipt_digest": receipt_digest,
+            }
+
+        providers: list[CompetenceValueState] = []
+        external_records: list[dict[str, Any]] = []
+        provider_value_limits: list[float] = []
+        provider_confidence_limits: list[float] = []
+        for provider_id in provider_ids:
+            if provider_id not in captured_records:
+                provider = self.states.get(provider_id)
+                if provider is None or not provider.can_emit(self.config):
+                    raise ValueError(
+                        "explicit successor provider is not mature and grounded"
+                    )
+                providers.append(provider)
+                provider_value_limits.append(float(provider.slow_value))
+                provider_confidence_limits.append(
+                    float(provider.confidence(self.config))
+                )
+                continue
+            captured = normalize_external(
+                provider_id,
+                captured_records.get(provider_id),
+            )
+            if not callable(external_provider_resolver):
+                raise ValueError(
+                    "external successor provider has no live resolver"
+                )
+            try:
+                current_raw = external_provider_resolver(provider_id)
+            except Exception as exc:
+                raise ValueError(
+                    "external successor provider resolution failed"
+                ) from exc
+            current = normalize_external(provider_id, current_raw)
+            stable_fields = (
+                "cell_id",
+                "authority_cell_id",
+                "provider_kind",
+                "hypothesis_digest",
+            )
+            if any(current[key] != captured[key] for key in stable_fields):
+                raise ValueError(
+                    "external successor provider identity changed"
+                )
+            if (
+                current["grounding_level"] != captured["grounding_level"]
+                or current["grounding_ancestors"]
+                != captured["grounding_ancestors"]
+            ):
+                raise ValueError(
+                    "external successor provider grounding changed"
+                )
+            captured_count = captured["certification_receipt_count"]
+            current_count = current["certification_receipt_count"]
+            if current_count not in {captured_count, captured_count + 1}:
+                raise ValueError(
+                    "external successor provider evidence did not advance once"
+                )
+            if (
+                captured["provider_kind"] == "native_direct_outcome_cell"
+                and current_count != captured_count
+            ):
+                raise ValueError(
+                    "frozen direct successor provider evidence changed"
+                )
+            if current_count == captured_count:
+                if (
+                    current["certification_receipt_digest"]
+                    != captured["certification_receipt_digest"]
+                    or not math.isclose(
+                        current["expected_value"],
+                        captured["expected_value"],
+                        rel_tol=0.0,
+                        abs_tol=1e-12,
+                    )
+                    or not math.isclose(
+                        current["confidence"],
+                        captured["confidence"],
+                        rel_tol=0.0,
+                        abs_tol=1e-12,
+                    )
+                ):
+                    raise ValueError(
+                        "external successor provider evidence changed in place"
+                    )
+            elif (
+                current["certification_receipt_digest"]
+                == captured["certification_receipt_digest"]
+                or current["direct_positive_evidence"]
+                != captured["direct_positive_evidence"] + 1
+                or current["expected_value"] + 1e-12
+                < captured["expected_value"]
+                or current["confidence"] + 1e-12
+                < captured["confidence"]
+            ):
+                raise ValueError(
+                    "external successor provider did not advance monotonically"
+                )
+            external_records.append(captured)
+            provider_value_limits.append(captured["expected_value"])
+            provider_confidence_limits.append(captured["confidence"])
+
+        if provider_value_limits and (
+            value > min(provider_value_limits) + 1e-12
+            or confidence > min(provider_confidence_limits) + 1e-12
+        ):
+            raise ValueError(
+                "explicit successor signal exceeds its provider envelope"
+            )
         expected_ancestors = set(provider_ids)
         for provider in providers:
             expected_ancestors.update(provider.grounding_ancestors)
+        for provider in external_records:
+            expected_ancestors.update(provider["grounding_ancestors"])
         if tuple(sorted(expected_ancestors)) != ancestors:
             raise ValueError(
                 "explicit successor grounding ancestry does not match providers"
             )
-        expected_level = 1 + max(
+        provider_levels = [
             int(provider.grounding_level or 0) for provider in providers
-        )
+        ] + [
+            int(provider["grounding_level"])
+            for provider in external_records
+        ]
+        expected_level = 1 + max(provider_levels)
         if signal.grounding_level != expected_level:
             raise ValueError(
                 "explicit successor grounding level does not match providers"
@@ -680,6 +976,12 @@ class IntrinsicCreditEngine:
         responsibilities: Optional[Sequence[Responsibility]] = None,
         successor_ids: Sequence[str] = (),
         explicit_successor_signal: Optional[CompetenceSignal] = None,
+        external_provider_records: (
+            Mapping[str, Mapping[str, Any]] | None
+        ) = None,
+        external_provider_resolver: (
+            Callable[[str], Mapping[str, Any] | None] | None
+        ) = None,
         terminal_kind: Optional[str] = None,
         terminal_value: Optional[float] = None,
         real_step: bool = True,
@@ -706,6 +1008,12 @@ class IntrinsicCreditEngine:
             explicit_successor_signal = self._validated_explicit_successor_signal(
                 explicit_successor_signal,
                 recipient_id=decision_id,
+                external_provider_records=external_provider_records,
+                external_provider_resolver=external_provider_resolver,
+            )
+        elif external_provider_records:
+            raise ValueError(
+                "external provider records require an explicit successor signal"
             )
         if responsibilities is None:
             responsibilities = (Responsibility(decision_id),)
@@ -821,6 +1129,36 @@ class IntrinsicCreditEngine:
         )
         self.events.append(event)
         return event
+
+    def preflight_explicit_successor_signal(
+        self,
+        signal: CompetenceSignal,
+        *,
+        recipient_id: str,
+        external_provider_records: (
+            Mapping[str, Mapping[str, Any]] | None
+        ) = None,
+        external_provider_resolver: (
+            Callable[[str], Mapping[str, Any] | None] | None
+        ) = None,
+    ) -> CompetenceSignal:
+        """Validate one authority-composed handoff without mutating credit.
+
+        Curriculum code uses this immediately before opening a REAL authority
+        transaction.  It closes predictable schema, liveness, envelope, and
+        cycle failures before any environmental evidence is committed; the
+        ordinary ``transition`` still repeats the same validation at use time.
+        """
+
+        normalized_recipient = str(recipient_id)
+        if not normalized_recipient:
+            raise ValueError("explicit successor recipient must be nonempty")
+        return self._validated_explicit_successor_signal(
+            signal,
+            recipient_id=normalized_recipient,
+            external_provider_records=external_provider_records,
+            external_provider_resolver=external_provider_resolver,
+        )
 
     def record_correlation(self, cell: StemCellTerminal, signal: float) -> str:
         """Record association without granting maturation XP."""

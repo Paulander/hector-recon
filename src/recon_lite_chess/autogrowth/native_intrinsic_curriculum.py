@@ -74,6 +74,8 @@ from .native_single_graph_curriculum import (
     NativeReConKRKGraph,
     NativeSingleGraphConfig,
     ROOT_ID,
+    _triplet_id,
+    _triplet_keys,
 )
 
 
@@ -768,10 +770,24 @@ def run_native_intrinsic_curriculum(
         }
 
     clone_parity = _clone_parity(graph, pools.r0_validation)
-    r0_replay_memory, r0_replay_memory_audit = _build_r0_replay_memory(
-        graph,
-        pools.r0_train,
-    )
+    if cfg.r0_replay_per_r1_epoch > 0:
+        r0_replay_memory, r0_replay_memory_audit = _build_r0_replay_memory(
+            graph,
+            pools.r0_train,
+        )
+    else:
+        # Strict adaptive runs forbid replay as a provider.  Do not even build
+        # the old memoized move cache: an unreachable host-selected move table
+        # is still needless plumbing and an avoidable future authority hazard.
+        r0_replay_memory = ()
+        r0_replay_memory_audit = {
+            "enabled": False,
+            "reason": "r0_replay_per_r1_epoch_is_zero",
+            "cache_contains_memoized_move_provider": False,
+            "experience_count": 0,
+            "teacher_solution_labels_consumed": 0,
+            "experiences": [],
+        }
     r0_child_triplet_ids = frozenset(graph.triplet_ids)
     r0_parameter_freeze: dict[str, Any] = {
         "skipped": True,
@@ -787,6 +803,12 @@ def run_native_intrinsic_curriculum(
                     if strict_local_adaptive
                     else "R0_training_outcome_mastery_consolidation"
                 )
+            ),
+            triplet_ids=(
+                tuple(local_provider_audit["provider_ids"])
+                if strict_local_adaptive
+                and local_provider_audit is not None
+                else None
             ),
         )
     r0_child_authority: Any | None = None
@@ -925,8 +947,14 @@ def run_native_intrinsic_curriculum(
             arm_specs = _mechanistic_r1_arms(cfg)
             primary_arm_name = "exact_verify_learned_value"
         else:
-            legacy_names = ["full_intrinsic", "no_bootstrap"]
-            if cfg.run_redundant_child_ablation:
+            # Strict adaptive runs are organism training, not a factorial.
+            # A cloned no-bootstrap arm is useful as a development control but
+            # cannot steer the primary learner, so running it by default only
+            # doubles cost and competes for the shared wall ceiling.
+            legacy_names = ["full_intrinsic"]
+            if not strict_local_adaptive:
+                legacy_names.append("no_bootstrap")
+            if cfg.run_redundant_child_ablation and not strict_local_adaptive:
                 legacy_names.append("child_ablation")
             arm_specs = tuple(_legacy_r1_arm(name, cfg) for name in legacy_names)
             primary_arm_name = "full_intrinsic"
@@ -986,13 +1014,23 @@ def run_native_intrinsic_curriculum(
         # adaptive mode leaves validation report-only: online local credit and
         # ecology mutation are already committed during REAL interaction.
         full_rate = arms[primary_arm_name]["validation"]["conversion_rate"]
-        no_bootstrap_rate = arms["no_bootstrap"]["validation"]["conversion_rate"]
+        no_bootstrap_arm = arms.get("no_bootstrap")
+        no_bootstrap_rate = (
+            None
+            if no_bootstrap_arm is None
+            else no_bootstrap_arm["validation"]["conversion_rate"]
+        )
         full_pass = (
             full_rate >= cfg.r1_mastery_threshold
             and arms[primary_arm_name]["r0_validation_retention"]["accuracy"]
             >= cfg.r0_mastery_threshold
         )
         if full_pass and cfg.validation_controls_stage_transitions:
+            if no_bootstrap_rate is None:
+                raise RuntimeError(
+                    "validation-selected consolidation requires its "
+                    "no-bootstrap control"
+                )
             selected_credit.set_mature(R1_COMPETENCE_ID)
             intervention = selected_credit.record_paired_intervention(
                 R1_COMPETENCE_ID,
@@ -1050,10 +1088,13 @@ def run_native_intrinsic_curriculum(
         and arms[primary_arm_name]["r0_validation_retention"]["accuracy"]
         >= cfg.r0_mastery_threshold
     )
-    development_directional_effect = bool(
-        r1_executed
-        and arms[primary_arm_name]["validation"]["conversion_rate"]
-        > arms["no_bootstrap"]["validation"]["conversion_rate"]
+    development_directional_effect = (
+        bool(
+            arms[primary_arm_name]["validation"]["conversion_rate"]
+            > arms["no_bootstrap"]["validation"]["conversion_rate"]
+        )
+        if r1_executed and "no_bootstrap" in arms
+        else None
     )
     # A single development seed cannot establish a causal positive result.
     # Preserve the old field for consumers, but require a future preregistered
@@ -1215,6 +1256,12 @@ def run_native_intrinsic_curriculum(
             "curriculum_solution_predicates_trainer_side_only": True,
             "r0_availability_mode": cfg.r0_availability_mode,
             "mechanistic_factorial_enabled": cfg.r1_mechanistic_factorial,
+            "development_control_arms_executed": sorted(
+                set(arms) - {primary_arm_name}
+            ),
+            "strict_training_runs_primary_arm_only": bool(
+                strict_local_adaptive
+            ),
             "exact_virtual_verification_is_oracle_control_not_autonomy_evidence": True,
             "prototype_gate_participates_in_current_runtime": bool(
                 r0_child_authority is None
@@ -1550,6 +1597,7 @@ def run_native_intrinsic_curriculum(
             "r1_regression_pass_report_only": r1_regression_pass_report_only,
             "primary_upper_bound_arm": primary_arm_name,
             "development_directional_effect_vs_no_bootstrap": development_directional_effect,
+            "no_bootstrap_control_executed": "no_bootstrap" in arms,
             "r1_causal_positive_vs_no_bootstrap": causal_positive,
             "causal_claim_locked_pending_preregistered_seed_replication": True,
             "advance_to_r2": False,
@@ -2635,37 +2683,142 @@ def _r1_terminal_reply_authority(
     )
 
 
-def _r1_reply_authority_from_local_provider(
+def _r1_reply_authority_from_provider(
     reply_id: str,
     provider: Mapping[str, Any],
     *,
     exposure_count: int,
 ) -> ReplyAuthority:
-    """Project one graph-selected, directly grounded R0 provider."""
+    """Project one graph-selected, locally grounded native provider."""
 
     try:
-        value = float(provider["expected_value"])
-        confidence = float(provider["confidence"])
-        uncertainty = float(provider["uncertainty"])
-        direct_positive = int(provider["direct_positive_evidence"])
-        direct_contrast = int(provider["direct_contrast_evidence"])
+        cell_id = provider["cell_id"]
+        authority_cell_id = provider["authority_cell_id"]
+        provider_kind = provider["provider_kind"]
+        schema_version = provider["schema_version"]
+        hypothesis_digest = provider["hypothesis_digest"]
+        receipt_digest = provider["certification_receipt_digest"]
+        raw_value = provider["expected_value"]
+        raw_confidence = provider["confidence"]
+        raw_uncertainty = provider["uncertainty"]
+        direct_positive = provider["direct_positive_evidence"]
+        direct_contrast = provider["direct_contrast_evidence"]
+        receipt_count = provider["certification_receipt_count"]
+        grounding_level = provider["grounding_level"]
+        raw_ancestors = provider["grounding_ancestors"]
+        if any(
+            isinstance(item, bool)
+            for item in (raw_value, raw_confidence, raw_uncertainty)
+        ) or any(
+            isinstance(item, bool) or not isinstance(item, int)
+            for item in (
+                direct_positive,
+                direct_contrast,
+                receipt_count,
+                grounding_level,
+            )
+        ):
+            raise TypeError("malformed provider scalar")
+        if not isinstance(raw_ancestors, (tuple, list)):
+            raise TypeError("malformed provider ancestry")
+        grounding_ancestors = tuple(raw_ancestors)
+        value = float(raw_value)
+        confidence = float(raw_confidence)
+        uncertainty = float(raw_uncertainty)
     except (KeyError, TypeError, ValueError, OverflowError):
         value = confidence = 0.0
         uncertainty = 1.0
         direct_positive = 0
         direct_contrast = 1
+        receipt_count = -1
+        grounding_level = -1
+        grounding_ancestors = ()
+        cell_id = authority_cell_id = provider_kind = schema_version = None
+        hypothesis_digest = receipt_digest = None
+    digest_valid = lambda value: bool(
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
     valid = bool(
-        isinstance(provider.get("cell_id"), str)
-        and provider.get("cell_id")
+        isinstance(cell_id, str)
+        and cell_id
+        and isinstance(authority_cell_id, str)
+        and authority_cell_id
+        and digest_valid(hypothesis_digest)
+        and digest_valid(receipt_digest)
         and math.isfinite(value)
         and 0.0 < value <= 1.0
         and math.isfinite(confidence)
         and 0.0 < confidence <= 1.0
         and math.isfinite(uncertainty)
         and 0.0 <= uncertainty < 1.0
+        and math.isclose(
+            confidence + uncertainty,
+            1.0,
+            rel_tol=0.0,
+            abs_tol=1e-12,
+        )
         and direct_positive > 0
         and direct_contrast == 0
+        and receipt_count == direct_positive
+        and grounding_level >= 0
+        and all(
+            isinstance(item, str) and item
+            for item in grounding_ancestors
+        )
+        and tuple(sorted(set(grounding_ancestors)))
+        == grounding_ancestors
     )
+    if provider_kind == "prospective_authority_cell":
+        raw_support = provider.get("support")
+        raw_successes = provider.get("successes")
+        raw_contradictions = provider.get("contradictions")
+        valid = bool(
+            valid
+            and schema_version == "native_prospective_provider.v1"
+            and authority_cell_id == cell_id
+            and provider.get("prospectively_certified") is True
+            and provider.get("postbirth_real_certification") is True
+            and provider.get("discovery_evidence_used") is False
+            and provider.get("evidence_scope")
+            == "post_birth_real_certification_ledger"
+            and provider.get("grounding_source")
+            == "prospective_postbirth_real_certification"
+            and math.isclose(
+                value,
+                confidence,
+                rel_tol=0.0,
+                abs_tol=1e-12,
+            )
+            and not any(
+                isinstance(item, bool) or not isinstance(item, int)
+                for item in (
+                    raw_support,
+                    raw_successes,
+                    raw_contradictions,
+                )
+            )
+            and raw_support == receipt_count
+            and raw_successes == direct_positive
+            and raw_contradictions == direct_contrast
+        )
+    elif provider_kind == "native_direct_outcome_cell":
+        valid = bool(
+            valid
+            and schema_version == "native_direct_provider.v1"
+            and cell_id == f"native-r0-provider:{authority_cell_id}"
+            and provider.get("direct_outcome_authorized") is True
+            and provider.get("prospectively_certified") is False
+            and provider.get("postbirth_real_certification") is False
+            and provider.get("discovery_evidence_used") is False
+            and provider.get("evidence_scope")
+            == "exact_selected_real_return_ledger"
+            and provider.get("grounding_source")
+            == "exact_selected_real_returns"
+        )
+    else:
+        valid = False
     return ReplyAuthority(
         reply_id=str(reply_id),
         state=(
@@ -2677,6 +2830,21 @@ def _r1_reply_authority_from_local_provider(
         value=value if valid else 0.0,
         exposure_count=int(exposure_count),
         grounded=valid,
+    )
+
+
+def _r1_reply_authority_from_local_provider(
+    reply_id: str,
+    provider: Mapping[str, Any],
+    *,
+    exposure_count: int,
+) -> ReplyAuthority:
+    """Backward-compatible name for the general native provider adapter."""
+
+    return _r1_reply_authority_from_provider(
+        reply_id,
+        provider,
+        exposure_count=exposure_count,
     )
 
 
@@ -2933,13 +3101,17 @@ def _grounded_all_reply_successor_signal(
     clean_preoutcome_evidence: bool,
     credit: IntrinsicCreditEngine | None = None,
     provider_ids: Sequence[str] = (),
+    provider_records: Mapping[str, Mapping[str, Any]] | None = None,
+    external_provider_resolver: Any | None = None,
+    strict_adaptive: bool = False,
 ) -> CompetenceSignal | None:
     """Compose the exact worst-reply value without inventing a provider.
 
     The all-reply graph has already reduced the reply set with an AND gate and
     a minimum value.  Only a clean, outcome-confirmed handoff may expose that
-    composition to TD credit.  ``R0_COMPETENCE_ID`` remains the registered,
-    grounded provider; the envelope is not registered as a synthetic cell.
+    composition to TD credit.  Exact R0 decisions resolve through the shared
+    credit graph; generalized shell cells resolve through their own authority
+    ledger.  The envelope itself is never registered as a synthetic cell.
     """
 
     if not (
@@ -2961,30 +3133,123 @@ def _grounded_all_reply_successor_signal(
     ):
         return None
     normalized_provider_ids = tuple(sorted(set(map(str, provider_ids))))
+    captured_records = (
+        {}
+        if provider_records is None
+        else {
+            str(key): dict(record)
+            for key, record in provider_records.items()
+            if isinstance(record, Mapping)
+        }
+    )
+    if set(captured_records).difference(normalized_provider_ids):
+        return None
     grounding_level = 1
     grounding_ancestors: tuple[str, ...]
     if normalized_provider_ids:
         if credit is None:
             raise ValueError("local all-reply providers require credit state")
-        providers = []
+        provider_levels: list[int] = []
+        ancestors = set(normalized_provider_ids)
         for provider_id in normalized_provider_ids:
-            state = credit.states.get(provider_id)
+            captured = captured_records.get(provider_id)
+            if captured is None:
+                # Historical/non-strict callers may still compose providers
+                # registered in this exact credit engine.  Strict adaptive
+                # training never substitutes a plastic same-ID state for the
+                # frozen authority that emitted a reply.
+                if strict_adaptive:
+                    return None
+                state = credit.states.get(provider_id)
+                local = credit.direct_outcome_provider_response(provider_id)
+                if state is None or local is None:
+                    return None
+                provider_levels.append(int(local["grounding_level"]))
+                ancestors.update(local["grounding_ancestors"])
+                if (
+                    value > float(local["expected_value"]) + 1e-12
+                    or confidence > float(local["confidence"]) + 1e-12
+                ):
+                    return None
+                continue
+            if not callable(external_provider_resolver):
+                return None
+            current = external_provider_resolver(provider_id)
+            if not isinstance(current, Mapping):
+                return None
+            captured_row = _r1_reply_authority_from_provider(
+                "captured-provider",
+                captured,
+                exposure_count=0,
+            )
+            current_row = _r1_reply_authority_from_provider(
+                "current-provider",
+                current,
+                exposure_count=0,
+            )
+            if not captured_row.grounded or not current_row.grounded:
+                return None
+            try:
+                captured_count = captured["certification_receipt_count"]
+                current_count = current["certification_receipt_count"]
+                captured_level = captured["grounding_level"]
+                captured_ancestors = tuple(
+                    captured["grounding_ancestors"]
+                )
+                current_level = current["grounding_level"]
+                current_ancestors = tuple(current["grounding_ancestors"])
+            except (KeyError, TypeError, ValueError, OverflowError):
+                return None
             if (
-                state is None
-                or credit.direct_outcome_provider_response(provider_id)
-                is None
+                current.get("cell_id") != provider_id
+                or captured.get("cell_id") != provider_id
+                or current.get("authority_cell_id")
+                != captured.get("authority_cell_id")
+                or current.get("provider_kind")
+                != captured.get("provider_kind")
+                or current.get("hypothesis_digest")
+                != captured.get("hypothesis_digest")
+                or isinstance(captured_count, bool)
+                or not isinstance(captured_count, int)
+                or isinstance(current_count, bool)
+                or not isinstance(current_count, int)
+                or current_count not in {
+                    captured_count,
+                    captured_count + 1,
+                }
+                or (
+                    captured.get("provider_kind")
+                    == "native_direct_outcome_cell"
+                    and current_count != captured_count
+                )
+                or isinstance(captured_level, bool)
+                or not isinstance(captured_level, int)
+                or captured_level < 0
+                or current_level != captured_level
+                or tuple(sorted(set(captured_ancestors)))
+                != captured_ancestors
+                or current_ancestors != captured_ancestors
+                or (
+                    current_count == captured_count
+                    and current.get("certification_receipt_digest")
+                    != captured.get("certification_receipt_digest")
+                )
+                or (
+                    current_count == captured_count + 1
+                    and current.get("certification_receipt_digest")
+                    == captured.get("certification_receipt_digest")
+                )
+                or value > float(captured["expected_value"]) + 1e-12
+                or confidence > float(captured["confidence"]) + 1e-12
             ):
                 return None
-            providers.append(state)
-        ancestors = set(normalized_provider_ids)
-        for provider in providers:
-            ancestors.update(provider.grounding_ancestors)
-        grounding_level = 1 + max(
-            int(provider.grounding_level or 0)
-            for provider in providers
-        )
+            provider_levels.append(captured_level)
+            ancestors.update(captured_ancestors)
+        grounding_level = 1 + max(provider_levels)
         grounding_ancestors = tuple(sorted(ancestors))
     else:
+        if strict_adaptive:
+            return None
         normalized_provider_ids = (R0_COMPETENCE_ID,)
         grounding_ancestors = (R0_COMPETENCE_ID,)
     return CompetenceSignal(
@@ -3006,6 +3271,7 @@ def _prospective_counterexample_reply_probe(
     frame_prefix: str,
     frame_session: Any | None,
     generic_seed: int,
+    strict_adaptive: bool = False,
     r0_core_graph: NativeReConKRKGraph | None = None,
     r0_core_gate: OutcomeCalibratedPrototypeGate | None = None,
     r0_core_triplet_ids: frozenset[str] | None = None,
@@ -3069,6 +3335,8 @@ def _prospective_counterexample_reply_probe(
             core_response: dict[str, Any] | None = None
             effective_core_response: dict[str, Any] | None = None
             local_provider: Mapping[str, Any] | None = None
+            provider: Mapping[str, Any] | None = None
+            provider_kind: str | None = None
             core_available = False
             effective_core_available = False
         else:
@@ -3081,24 +3349,37 @@ def _prospective_counterexample_reply_probe(
             classification = dict(v2_response.get("classification", {}))
             v2_grounded, v2_grounding = _v2_grounding_audit(authority)
             local_provider = v2_response.get("local_provider")
-            if isinstance(local_provider, Mapping):
-                authority_row = _r1_reply_authority_from_local_provider(
+            provider = v2_response.get("provider")
+            if not isinstance(provider, Mapping):
+                provider = None
+            provider_kind = (
+                str(v2_response.get("provider_kind"))
+                if provider is not None
+                else None
+            )
+            if isinstance(provider, Mapping):
+                authority_row = _r1_reply_authority_from_provider(
                     reply_id,
-                    local_provider,
+                    provider,
                     exposure_count=exposure_count,
                 )
-                core_available = authority_row.grounded
-                effective_core_available = authority_row.grounded
-                core_response = dict(v2_response)
+                is_direct_provider = bool(
+                    provider_kind == "native_direct_outcome_cell"
+                )
+                core_available = bool(
+                    authority_row.grounded and is_direct_provider
+                )
+                effective_core_available = core_available
+                core_response = (
+                    dict(v2_response) if is_direct_provider else None
+                )
                 effective_core_response = {
                     **dict(v2_response),
                     "available": authority_row.grounded,
                     "grounded": authority_row.grounded,
-                    "availability_source": (
-                        "native_local_direct_outcome_provider"
-                    ),
+                    "availability_source": provider_kind,
                 }
-            elif core_enabled:
+            elif core_enabled and not strict_adaptive:
                 core_available, core_response = _protected_core_r0_available(
                     r0_core_graph,
                     r0_core_gate,
@@ -3127,16 +3408,10 @@ def _prospective_counterexample_reply_probe(
                         reply_id,
                         classification,
                         exposure_count=exposure_count,
-                        grounded=v2_response.get("grounded"),
-                        provider_value=(
-                            v2_response.get("provider_value")
-                            if v2_response.get("local_provider_available") is True
-                            else None
-                        ),
-                        provider_confidence=(
-                            v2_response.get("provider_confidence")
-                            if v2_response.get("local_provider_available") is True
-                            else None
+                        grounded=(
+                            False
+                            if strict_adaptive
+                            else v2_response.get("grounded")
                         ),
                     )
             else:
@@ -3148,16 +3423,10 @@ def _prospective_counterexample_reply_probe(
                     reply_id,
                     classification,
                     exposure_count=exposure_count,
-                    grounded=v2_response.get("grounded"),
-                    provider_value=(
-                        v2_response.get("provider_value")
-                        if v2_response.get("local_provider_available") is True
-                        else None
-                    ),
-                    provider_confidence=(
-                        v2_response.get("provider_confidence")
-                        if v2_response.get("local_provider_available") is True
-                        else None
+                    grounded=(
+                        False
+                        if strict_adaptive
+                        else v2_response.get("grounded")
                     ),
                 )
             virtual_query_count += 1
@@ -3177,8 +3446,12 @@ def _prospective_counterexample_reply_probe(
             "effective_core_response": effective_core_response,
             "provider_id": (
                 None
-                if local_provider is None
-                else local_provider.get("cell_id")
+                if provider is None
+                else provider.get("cell_id")
+            ),
+            "provider_kind": provider_kind,
+            "provider_record": (
+                None if provider is None else dict(provider)
             ),
             "effective_available": bool(
                 authority_row.state is AvailabilityState.AVAILABLE
@@ -3190,16 +3463,16 @@ def _prospective_counterexample_reply_probe(
                 "terminal_refuted"
                 if terminal_kind is not None
                 else (
-                    (
-                        "native_local_direct_outcome_provider"
-                        if local_provider is not None
-                        else "frozen_r0_local_competence_gate"
-                    )
-                    if effective_core_available
+                    str(provider_kind)
+                    if provider is not None
                     else (
-                        "v2_grounded_descendant"
-                        if authority_row.grounded
-                        else "unknown"
+                        "frozen_r0_local_competence_gate"
+                        if effective_core_available
+                        else (
+                            "v2_grounded_descendant"
+                            if authority_row.grounded
+                            else "unknown"
+                        )
                     )
                 )
             ),
@@ -3227,6 +3500,28 @@ def _prospective_counterexample_reply_probe(
         and isinstance(context.get("provider_id"), str)
         and context["provider_id"]
     }))
+    provider_records: dict[str, dict[str, Any]] = {}
+    for context in contexts:
+        record = context.get("provider_record")
+        if (
+            not context["effective_available"]
+            or context.get("provider_kind") not in {
+                "native_direct_outcome_cell",
+                "prospective_authority_cell",
+            }
+            or not isinstance(record, Mapping)
+        ):
+            continue
+        provider_id = str(record.get("cell_id", ""))
+        if not provider_id:
+            raise RuntimeError("available shell provider lacks an identity")
+        normalized = dict(record)
+        prior = provider_records.get(provider_id)
+        if prior is not None and prior != normalized:
+            raise RuntimeError(
+                "shell provider changed during one read-only envelope"
+            )
+        provider_records[provider_id] = normalized
     return {
         "envelope": envelope,
         "contexts": tuple(contexts),
@@ -3236,6 +3531,7 @@ def _prospective_counterexample_reply_probe(
         "reply_ids": tuple(context["reply_id"] for context in contexts),
         "selected_exposure_key": selected["exposure_key"],
         "provider_ids": provider_ids,
+        "provider_records": provider_records,
     }
 
 
@@ -3244,6 +3540,7 @@ def _prospective_counterexample_episode(
     after_first: chess.Board,
     *,
     credit: IntrinsicCreditEngine | None = None,
+    decision_id: str | None = None,
     fen: str,
     white_move_uci: str,
     arm_name: str,
@@ -3255,6 +3552,7 @@ def _prospective_counterexample_episode(
     generic_seed: int,
     arm_bootstrap_enabled: bool,
     counters: dict[str, int | float],
+    strict_adaptive: bool = False,
     boundary_ecology: ProspectiveBoundaryCandidateEcology | None = None,
     pending_boundary_candidate_ids: set[str] | None = None,
     r0_core_graph: NativeReConKRKGraph | None = None,
@@ -3276,6 +3574,7 @@ def _prospective_counterexample_episode(
         frame_prefix=frame_prefix,
         frame_session=frame_session,
         generic_seed=generic_seed,
+        strict_adaptive=strict_adaptive,
         r0_core_graph=r0_core_graph,
         r0_core_gate=r0_core_gate,
         r0_core_triplet_ids=r0_core_triplet_ids,
@@ -3303,7 +3602,6 @@ def _prospective_counterexample_episode(
     counters["virtual_frame_queries"] += probe["virtual_query_count"]
     selected_exposure_key = probe["selected_exposure_key"]
     exposure_count = int(exposure_counts.get(selected_exposure_key, 0))
-    exposure_counts[selected_exposure_key] = exposure_count + 1
     reply_orbits = (selected_exposure_key,)
     selected_successor = selected["successor"]
     selected_terminal_kind = selected["terminal_kind"]
@@ -3320,6 +3618,7 @@ def _prospective_counterexample_episode(
     available = False
     effective_core_available = False
     effective_available = False
+    selected_provider_identity_parity = False
     core_routing: dict[str, Any] = {}
     response: dict[str, Any] = {
         "selected_move": None,
@@ -3333,6 +3632,68 @@ def _prospective_counterexample_episode(
         # must not be interpreted as a positive child event.
         terminal_kind = _r1_terminal_reply_terminal_kind(selected_terminal_kind)
     else:
+        expected_virtual = selected.get("v2_response")
+        if not isinstance(expected_virtual, Mapping):
+            raise RuntimeError(
+                "nonterminal all-reply selection omitted VIRTUAL actuation"
+            )
+        virtual_move_uci = expected_virtual.get("selected_move")
+        preflight_actual_mate = False
+        if isinstance(virtual_move_uci, str) and virtual_move_uci:
+            virtual_move = chess.Move.from_uci(virtual_move_uci)
+            if virtual_move not in selected_successor.legal_moves:
+                raise RuntimeError(
+                    "VIRTUAL child emitted an illegal selected action"
+                )
+            preflight_actual_mate = bool(
+                _execute_white_and_observe(
+                    selected_successor,
+                    virtual_move,
+                )
+                == "mate"
+            )
+        selected_provider_id = selected.get("provider_id")
+        virtual_provider_id = expected_virtual.get("provider_id")
+        preflight_provider_parity = bool(
+            isinstance(selected_provider_id, str)
+            and selected_provider_id
+            and selected_provider_id == virtual_provider_id
+        )
+        preflight_successor_signal = _grounded_all_reply_successor_signal(
+            envelope,
+            bootstrap_enabled=arm_bootstrap_enabled,
+            actual_mate=preflight_actual_mate,
+            clean_preoutcome_evidence=bool(
+                preflight_provider_parity
+                and selected.get("effective_available") is True
+            ),
+            credit=credit,
+            provider_ids=probe["provider_ids"],
+            provider_records=probe["provider_records"],
+            external_provider_resolver=getattr(
+                authority,
+                "native_provider_response",
+                None,
+            ),
+            strict_adaptive=strict_adaptive,
+        )
+        if preflight_successor_signal is not None:
+            if credit is None or decision_id is None:
+                if strict_adaptive:
+                    raise RuntimeError(
+                        "strict handoff preflight lacks its recipient credit cell"
+                    )
+            else:
+                credit.preflight_explicit_successor_signal(
+                    preflight_successor_signal,
+                    recipient_id=decision_id,
+                    external_provider_records=probe["provider_records"],
+                    external_provider_resolver=getattr(
+                        authority,
+                        "native_provider_response",
+                        None,
+                    ),
+                )
         available, response, duplicate, structural = (
             _v2_r0_observe_training_successor(
                 authority,
@@ -3340,6 +3701,7 @@ def _prospective_counterexample_episode(
                 seen_predecessor_fens=seen_predecessor_fens,
                 frame_id=f"{frame_prefix}:selected:{selected['black_move']}",
                 frame_session=frame_session,
+                expected_virtual_actuation=selected.get("v2_response"),
                 boundary_ecology=boundary_ecology,
                 pending_boundary_candidate_ids=(
                     pending_boundary_candidate_ids
@@ -3362,6 +3724,20 @@ def _prospective_counterexample_episode(
         effective_available = bool(
             core_routing.get("effective_available", available)
         )
+        selected_provider_id = selected.get("provider_id")
+        real_provider_id = response.get("provider_id")
+        selected_provider_identity_parity = bool(
+            (
+                isinstance(selected_provider_id, str)
+                and selected_provider_id
+                and selected_provider_id == real_provider_id
+            )
+            or (
+                not strict_adaptive
+                and selected_provider_id is None
+                and real_provider_id is None
+            )
+        )
         emission = response.get("certification_emission") or {}
         false_authority_ids = tuple(
             str(item)
@@ -3381,7 +3757,7 @@ def _prospective_counterexample_episode(
         # action that does not mate is an explicit horizon/draw signal.
         terminal_kind = None if actual_mate else "horizon"
         clean_preoutcome_evidence = bool(
-            (
+            selected_provider_identity_parity and (
                 (real_event or duplicate)
                 if effective_core_available
                 else (
@@ -3397,7 +3773,22 @@ def _prospective_counterexample_episode(
             clean_preoutcome_evidence=clean_preoutcome_evidence,
             credit=credit,
             provider_ids=probe["provider_ids"],
+            provider_records=probe["provider_records"],
+            external_provider_resolver=getattr(
+                authority,
+                "native_provider_response",
+                None,
+            ),
+            strict_adaptive=strict_adaptive,
         )
+        if (
+            strict_adaptive
+            and successor_signal is not None
+            and successor_signal != preflight_successor_signal
+        ):
+            raise RuntimeError(
+                "post-REAL successor signal diverged from preflight"
+            )
         if successor_signal is not None:
             counters["reply_counterexample_handoff_count"] += 1
             counters["child_handoffs"] += 1
@@ -3411,6 +3802,10 @@ def _prospective_counterexample_episode(
             successor_ids = ()
     if selected_terminal_kind is not None:
         successor_ids = ()
+    # Commit local challenge exposure only after the complete event path has
+    # returned successfully.  A precommit actuation/parity failure must be a
+    # read-only rejection, not a hidden change in future reply selection.
+    exposure_counts[selected_exposure_key] = exposure_count + 1
     if structural is not None:
         counters["v2_structural_transitions"] += 1
     event_manifest = {
@@ -3420,7 +3815,12 @@ def _prospective_counterexample_episode(
         "selected_reply_id": selected["reply_id"],
         "selected_black_move": selected["black_move"],
         "selected_terminal_kind": selected_terminal_kind,
+        "provider_ids": list(probe["provider_ids"]),
         "local_provider_ids": list(probe["provider_ids"]),
+        "external_provider_records": {
+            key: dict(value)
+            for key, value in sorted(probe["provider_records"].items())
+        },
         "envelope": envelope.audit.to_manifest(),
         "reply_context": [
             {
@@ -3436,6 +3836,8 @@ def _prospective_counterexample_episode(
                 ],
                 "effective_available": context["effective_available"],
                 "effective_source": context["effective_source"],
+                "provider_id": context["provider_id"],
+                "provider_kind": context["provider_kind"],
                 "authority_row": context["authority_row"].to_manifest(),
                 "exposure_count": context["exposure_count"],
             }
@@ -3447,6 +3849,9 @@ def _prospective_counterexample_episode(
         "raw_v2_available": bool(available),
         "effective_core_available": effective_core_available,
         "effective_reply_available": effective_available,
+        "selected_provider_identity_parity": (
+            selected_provider_identity_parity
+        ),
         "effective_source": (
             str(core_routing.get("effective_source"))
             if selected_terminal_kind is None and core_routing
@@ -3488,6 +3893,7 @@ def _prospective_counterexample_episode(
         "response": response,
         "selected_exposure_key": selected_exposure_key,
         "successor_signal": successor_signal,
+        "external_provider_records": probe["provider_records"],
     }
 
 
@@ -3752,6 +4158,7 @@ def _run_r1_arm(
     defer_regression_evaluation: bool = False,
 ) -> dict[str, Any]:
     arm = arm_spec or _legacy_r1_arm(arm_name, config)
+    strict_adaptive = _strict_local_adaptive_mode(config)
     if arm.name != arm_name:
         raise ValueError(f"arm name mismatch: {arm.name} != {arm_name}")
     # Capture the pre-R1 source before the arm graph is mutated.  Adaptive V2
@@ -4231,6 +4638,9 @@ def _run_r1_arm(
                 terminal_kind: str | None = _terminal_kind(after_first)
                 successor_ids: tuple[str, ...] = ()
                 explicit_successor_signal: CompetenceSignal | None = None
+                external_provider_records: dict[
+                    str, Mapping[str, Any]
+                ] = {}
                 if terminal_kind is None:
                     replies = tuple(sorted(after_first.legal_moves, key=lambda item: item.uci()))
                     if not replies:
@@ -4244,6 +4654,7 @@ def _run_r1_arm(
                             r0_child_authority,
                             after_first,
                             credit=credit,
+                            decision_id=triplet_id,
                             fen=fen,
                             white_move_uci=move.uci(),
                             arm_name=arm_name,
@@ -4255,6 +4666,7 @@ def _run_r1_arm(
                             generic_seed=config.seed,
                             arm_bootstrap_enabled=arm.bootstrap_enabled,
                             counters=counters,
+                            strict_adaptive=strict_adaptive,
                             boundary_ecology=boundary_ecology,
                             pending_boundary_candidate_ids=(
                                 pending_boundary_candidate_ids
@@ -4266,6 +4678,9 @@ def _run_r1_arm(
                         reply_orbits.update(reply_audit["reply_orbits"])
                         explicit_successor_signal = reply_audit.get(
                             "successor_signal"
+                        )
+                        external_provider_records = dict(
+                            reply_audit.get("external_provider_records", {})
                         )
                         reply_policy_events.append(reply_audit["manifest"])
                         if len(reply_policy_events) > 16:
@@ -4354,8 +4769,9 @@ def _run_r1_arm(
                                     or not false_authority_ids
                                 )
                             ):
-                                successor_ids = (R0_COMPETENCE_ID,)
-                                counters["child_handoffs"] += 1
+                                if not strict_adaptive:
+                                    successor_ids = (R0_COMPETENCE_ID,)
+                                    counters["child_handoffs"] += 1
                         elif terminal_kind is None and arm.bootstrap_enabled:
                             available, response, cache_hit, cache_mismatch = (
                                 _r0_available_with_dispatch_cache(
@@ -4401,7 +4817,7 @@ def _run_r1_arm(
                                 response["availability_after_shuffle"] = bool(available)
                             counters["availability_queries"] += 1
                             counters["availability_positives"] += int(available)
-                            if available:
+                            if available and not strict_adaptive:
                                 successor_ids = (R0_COMPETENCE_ID,)
                                 counters["child_handoffs"] += 1
                 credit.register(triplet_id, hierarchy_depth=1)
@@ -4418,6 +4834,20 @@ def _run_r1_arm(
                         else successor_ids
                     ),
                     explicit_successor_signal=explicit_successor_signal,
+                    external_provider_records=(
+                        external_provider_records
+                        if explicit_successor_signal is not None
+                        else None
+                    ),
+                    external_provider_resolver=(
+                        getattr(
+                            r0_child_authority,
+                            "native_provider_response",
+                            None,
+                        )
+                        if explicit_successor_signal is not None
+                        else None
+                    ),
                     terminal_kind=terminal_kind,
                     prediction_override=graph_prediction,
                 )
@@ -6637,6 +7067,22 @@ def _v2_r0_available(
             )
         )
     )
+    r0_graph = getattr(
+        getattr(getattr(authority, "base", None), "r0", None),
+        "graph",
+        None,
+    )
+    exact_action_pattern_id = (
+        None
+        if selected_move is None or r0_graph is None
+        else _triplet_id(
+            *_triplet_keys(
+                board,
+                chess.Move.from_uci(selected_move),
+                key_mode=r0_graph.config.key_mode,
+            )
+        )
+    )
     raw_grounded = getattr(query.response, "grounded", None)
     grounded = raw_grounded if type(raw_grounded) is bool else False
     authority_grounded, authority_grounding = _v2_grounding_audit(authority)
@@ -6648,10 +7094,37 @@ def _v2_r0_available(
     )
     if not isinstance(local_provider, Mapping):
         local_provider = None
+    native_provider = provenance.get("native_provider")
+    if not isinstance(native_provider, Mapping):
+        native_provider = None
+    provider = local_provider if local_provider is not None else native_provider
+    provider_kind = (
+        None if provider is None else str(provider.get("provider_kind", ""))
+    )
+    response_child_id = getattr(query.response, "child_id", None)
+    provider_valid = bool(
+        provider is not None
+        and _r1_reply_authority_from_provider(
+            "provider-validation",
+            provider,
+            exposure_count=0,
+        ).grounded
+        and isinstance(response_child_id, str)
+        and response_child_id
+        and response_child_id == str(provider.get("cell_id"))
+    )
+    local_direct_mode = bool(
+        isinstance(base_provenance, Mapping)
+        and base_provenance.get("local_direct_outcome_mode") is True
+    )
     available = bool(
         query.response.available
         and grounded
-        and authority_grounded
+        and (
+            provider_valid
+            if local_direct_mode
+            else (provider_valid or authority_grounded)
+        )
     )
     response = {
         "selected_move": selected_move,
@@ -6659,31 +7132,40 @@ def _v2_r0_available(
         "selected_option_identity": (
             None if actuation is None else str(actuation.option_identity)
         ),
-        "observed_immediate_mate": available,
+        # VIRTUAL availability is a learned capability claim, never an
+        # observed world outcome.  Only the REAL path may populate the latter.
+        "observed_immediate_mate": None,
+        "outcome_observed": False,
+        "available_capability": available,
+        "exact_action_pattern_id": exact_action_pattern_id,
         "availability_source": "v2_prospective_graph_emission",
         "availability_provenance": provenance,
         "classification": opened["classification"].to_manifest(),
         "grounded": raw_grounded,
         "grounding_source": getattr(query.response, "grounding_source", None),
         "authority_grounding": authority_grounding,
+        "local_direct_outcome_mode": local_direct_mode,
+        "provider_available": provider_valid,
+        "provider_kind": provider_kind if provider_valid else None,
+        "provider": None if not provider_valid else dict(provider),
         "local_provider_available": local_provider is not None,
         "local_provider": (
             None if local_provider is None else dict(local_provider)
         ),
         "provider_id": (
             None
-            if local_provider is None
-            else str(local_provider["cell_id"])
+            if not provider_valid
+            else str(provider["cell_id"])
         ),
         "provider_value": (
             0.0
-            if local_provider is None
-            else float(local_provider["expected_value"])
+            if not provider_valid
+            else float(provider["expected_value"])
         ),
         "provider_confidence": (
             0.0
-            if local_provider is None
-            else float(local_provider["confidence"])
+            if not provider_valid
+            else float(provider["confidence"])
         ),
         "virtual_frame_terminal_grounding_granted": False,
     }
@@ -7627,6 +8109,7 @@ def _v2_r0_observe_training_successor(
     seen_predecessor_fens: set[str],
     frame_id: str,
     frame_session: Any | None = None,
+    expected_virtual_actuation: Mapping[str, Any] | None = None,
     boundary_ecology: ProspectiveBoundaryCandidateEcology | None = None,
     pending_boundary_candidate_ids: set[str] | None = None,
     r0_core_graph: NativeReConKRKGraph | None = None,
@@ -7653,13 +8136,55 @@ def _v2_r0_observe_training_successor(
     ):
         raise ValueError("protected R0 core triplet ids are not in its graph")
 
+    def require_virtual_real_actuation_parity(
+        *,
+        selected_move: str | None,
+        selected_triplet: str | None,
+        selected_option_identity: str | None,
+        exact_action_pattern_id: str | None,
+    ) -> None:
+        if expected_virtual_actuation is None:
+            return
+        expected = {
+            "selected_move": expected_virtual_actuation.get(
+                "selected_move"
+            ),
+            "selected_triplet": expected_virtual_actuation.get(
+                "selected_triplet"
+            ),
+            "selected_option_identity": expected_virtual_actuation.get(
+                "selected_option_identity"
+            ),
+            "exact_action_pattern_id": expected_virtual_actuation.get(
+                "exact_action_pattern_id"
+            ),
+        }
+        observed = {
+            "selected_move": selected_move,
+            "selected_triplet": selected_triplet,
+            "selected_option_identity": selected_option_identity,
+            "exact_action_pattern_id": exact_action_pattern_id,
+        }
+        if observed != expected:
+            raise RuntimeError(
+                "VIRTUAL/REAL child actuation parity mismatch: "
+                + json.dumps(
+                    {"expected": expected, "observed": observed},
+                    sort_keys=True,
+                )
+            )
+
     def add_core_routing(response: dict[str, Any]) -> None:
+        provider = response.get("provider")
         local_provider = response.get("local_provider")
-        if isinstance(local_provider, Mapping):
+        if isinstance(provider, Mapping):
+            provider_kind = str(response.get("provider_kind") or "")
+            direct = bool(provider_kind == "native_direct_outcome_cell")
+            provider_available = bool(response.get("available", False))
             response["core_routing"] = {
-                "available": True,
-                "effective_available": True,
-                "local_available": True,
+                "available": bool(direct and provider_available),
+                "effective_available": provider_available,
+                "local_available": bool(direct and provider_available),
                 "response": dict(response),
                 "local_response": dict(response),
                 "v2_grounding": response.get("authority_grounding"),
@@ -7667,9 +8192,7 @@ def _v2_r0_observe_training_successor(
                 "action_parity": True,
                 "core_selected_move": response.get("selected_move"),
                 "v2_selected_move": response.get("selected_move"),
-                "effective_source": (
-                    "native_local_direct_outcome_provider"
-                ),
+                "effective_source": provider_kind,
             }
             return
         if not core_enabled:
@@ -7734,6 +8257,18 @@ def _v2_r0_observe_training_successor(
             frame_session=frame_session,
         )
         selected_move = response.get("selected_move")
+        require_virtual_real_actuation_parity(
+            selected_move=(
+                None if selected_move is None else str(selected_move)
+            ),
+            selected_triplet=response.get("selected_triplet"),
+            selected_option_identity=response.get(
+                "selected_option_identity"
+            ),
+            exact_action_pattern_id=response.get(
+                "exact_action_pattern_id"
+            ),
+        )
         actual_mate = False
         if selected_move is not None:
             move = chess.Move.from_uci(str(selected_move))
@@ -7752,13 +8287,71 @@ def _v2_r0_observe_training_successor(
         values={"board": board.copy(stack=False)},
     )
     pending, trace = (
-        authority.open_real_event(frame)
+        authority.open_real_event(
+            frame,
+            expected_actuation=expected_virtual_actuation,
+        )
         if frame_session is None
         else authority.open_real_event(
-            frame, frame_session=frame_session
+            frame,
+            frame_session=frame_session,
+            expected_actuation=expected_virtual_actuation,
         )
     )
+    # Capture shell authority before observing this outcome.  The same REAL
+    # receipt may strengthen an existing provider, but a cell first certified
+    # by this receipt cannot bootstrap the transition that certified it.
+    native_provider_records_fn = getattr(
+        authority,
+        "native_provider_records",
+        None,
+    )
+    pre_outcome_shell_records = (
+        tuple(native_provider_records_fn(pending.pre_outcome_classification))
+        if callable(native_provider_records_fn)
+        else ()
+    )
+    pre_outcome_shell_provider = (
+        copy.deepcopy(pre_outcome_shell_records[0])
+        if pre_outcome_shell_records
+        else None
+    )
     selected_move = chess.Move.from_uci(trace.actuation.move_uci)
+    r0 = getattr(authority.base, "r0", None)
+    provenance = getattr(r0, "provenance", None)
+    selected_triplet = str(
+        getattr(
+            trace.actuation,
+            "selected_triplet_id",
+            trace.actuation.option_identity,
+        )
+    )
+    direct_provider_ids = tuple(
+        getattr(r0, "direct_provider_ids", ())
+    )
+    r0_graph = getattr(r0, "graph", None)
+    exact_selected_pattern = (
+        None
+        if r0_graph is None
+        else _triplet_id(
+            *_triplet_keys(
+                board,
+                selected_move,
+                key_mode=r0_graph.config.key_mode,
+            )
+        )
+    )
+    local_provider = (
+        authority.native_direct_provider_response(exact_selected_pattern)
+        if (
+            direct_provider_ids
+            and exact_selected_pattern in direct_provider_ids
+            and callable(
+                getattr(authority, "native_direct_provider_response", None)
+            )
+        )
+        else None
+    )
     successor = board.copy(stack=False)
     successor.push(selected_move)
     receipt = authority.mint_environment_receipt(
@@ -7772,29 +8365,41 @@ def _v2_r0_observe_training_successor(
         if frame_session is None
         else authority.consume(receipt, frame_session=frame_session)
     )
-    seen_predecessor_fens.add(predecessor_fen)
     classification = pending.pre_outcome_classification.to_manifest()
-    r0 = getattr(authority.base, "r0", None)
-    provenance = getattr(r0, "provenance", None)
-    selected_triplet = str(
-        getattr(
-            trace.actuation,
-            "selected_triplet_id",
-            trace.actuation.option_identity,
+    shell_provider: Mapping[str, Any] | None = None
+    if isinstance(pre_outcome_shell_provider, Mapping):
+        provider_id = str(pre_outcome_shell_provider.get("cell_id", ""))
+        provider_resolver = getattr(
+            authority,
+            "native_provider_response",
+            None,
         )
-    )
-    direct_provider_ids = tuple(
-        getattr(r0, "direct_provider_ids", ())
-    )
-    local_provider = (
-        r0.credit.direct_outcome_provider_response(selected_triplet)
-        if direct_provider_ids
-        else None
+        current_provider = (
+            provider_resolver(provider_id)
+            if provider_id and callable(provider_resolver)
+            else None
+        )
+        if (
+            isinstance(current_provider, Mapping)
+            and current_provider.get("cell_id") == provider_id
+            and current_provider.get("hypothesis_digest")
+            == pre_outcome_shell_provider.get("hypothesis_digest")
+            and int(current_provider.get("certification_receipt_count", -1))
+            >= int(
+                pre_outcome_shell_provider.get(
+                    "certification_receipt_count", 0
+                )
+            )
+        ):
+            shell_provider = pre_outcome_shell_provider
+    provider = local_provider if local_provider is not None else shell_provider
+    provider_kind = (
+        None if provider is None else str(provider.get("provider_kind", ""))
     )
     raw_grounded = getattr(provenance, "grounded", None)
     authority_grounded, authority_grounding = _v2_grounding_audit(authority)
     grounded = bool(
-        local_provider is not None and authority_grounded
+        provider is not None and authority_grounded
         if direct_provider_ids
         else (
             type(raw_grounded) is bool
@@ -7803,13 +8408,22 @@ def _v2_r0_observe_training_successor(
         )
     )
     available = bool(
-        str(classification["state"]).lower() == "available" and grounded
+        grounded
+        and (
+            local_provider is not None
+            or str(classification["state"]).lower() == "available"
+        )
     )
     response = {
         "selected_move": selected_move.uci(),
         "selected_triplet": selected_triplet,
+        "exact_selected_pattern": exact_selected_pattern,
+        "selected_triplet_is_exact_pattern": bool(
+            selected_triplet == exact_selected_pattern
+        ),
         "selected_option_identity": str(trace.actuation.option_identity),
         "observed_immediate_mate": successor.is_checkmate(),
+        "available": available,
         "availability_source": "v2_prospective_pre_outcome_graph_emission",
         "classification": classification,
         # Preserve the provider's raw legacy value for audit while the local
@@ -7820,14 +8434,34 @@ def _v2_r0_observe_training_successor(
         ),
         "grounding_source": (
             None
-            if local_provider is None
-            else local_provider["grounding_source"]
+            if provider is None
+            else provider["grounding_source"]
         ) if direct_provider_ids else getattr(
             provenance, "grounding_source", None
         ),
         "authority_grounding": authority_grounding,
+        "provider": None if provider is None else dict(provider),
+        "provider_kind": provider_kind,
+        "provider_id": (
+            None if provider is None else str(provider["cell_id"])
+        ),
+        "provider_value": (
+            0.0
+            if provider is None
+            else float(provider["expected_value"])
+        ),
+        "provider_confidence": (
+            0.0
+            if provider is None
+            else float(provider["confidence"])
+        ),
         "local_provider": (
             None if local_provider is None else dict(local_provider)
+        ),
+        "pre_outcome_shell_provider": (
+            None
+            if pre_outcome_shell_provider is None
+            else dict(pre_outcome_shell_provider)
         ),
         "certification_emission": emission.manifest(),
         "virtual_frame_terminal_grounding_granted": False,
@@ -7850,9 +8484,9 @@ def _v2_r0_observe_training_successor(
                 # unchanged in the response and receipt.
                 effective_pre_outcome_state = AvailabilityState.UNKNOWN
         core_routing = response.get("core_routing") or {}
-        if bool(core_routing.get("available", False)):
-            # A known protected-core capability is not a surprise boundary
-            # success, even when raw V2 has not yet classified the successor.
+        if bool(core_routing.get("effective_available", False)):
+            # A known local capability is not a surprise boundary success,
+            # whether supplied by an exact R0 pattern or a certified shell.
             # Preserve the raw V2 classification in the response above; only
             # the ecology's birth trigger sees the effective local authority.
             effective_pre_outcome_state = AvailabilityState.AVAILABLE
@@ -7907,6 +8541,9 @@ def _v2_r0_observe_training_successor(
             ecology_event["active_candidate_count"] = (
                 boundary_ecology.active_sketch_count
             )
+    # Duplicate suppression is operational state, not evidence.  Commit it
+    # only after provider projection and ecology settlement have succeeded.
+    seen_predecessor_fens.add(predecessor_fen)
     return available, response, False, structural
 
 

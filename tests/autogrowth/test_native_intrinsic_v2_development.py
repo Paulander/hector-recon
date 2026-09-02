@@ -3,16 +3,26 @@ from __future__ import annotations
 from types import SimpleNamespace
 
 import chess
+import pytest
 from recon_lite import FrameContext, FrameKind
 from recon_lite_hector.learning import IntrinsicCreditConfig, IntrinsicCreditEngine
 
 from recon_lite_chess.autogrowth import native_intrinsic_v2_development as intrinsic
+from recon_lite_chess.autogrowth.foundation_curriculum import (
+    _forced_mate_in_two_first_moves,
+)
 from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     NativeIntrinsicCurriculumConfig,
     R0_COMPETENCE_ID,
+    R1_RETIRED_DEVELOPMENT_FENS,
     V2_PROSPECTIVE_AVAILABILITY,
+    _prospective_counterexample_episode,
+    _r1_reply_counter_defaults,
+    _v2_r0_available,
+    _v2_r0_observe_training_successor,
 )
 from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import (
+    ProspectiveV2IntegrityError,
     StructuralMode,
 )
 from recon_lite_chess.autogrowth.native_single_graph_curriculum import (
@@ -87,7 +97,14 @@ def test_event_driven_contradiction_settles_before_next_real_admission() -> None
         def frame_session(self):
             return _FrameSession()
 
-        def open_real_event(self, frame, *, frame_session):
+        def open_real_event(
+            self,
+            frame,
+            *,
+            frame_session,
+            expected_actuation=None,
+        ):
+            del expected_actuation
             assert frame.kind is FrameKind.REAL
             assert not self.pending_request
             self.events.append(f"open:{frame.frame_id}")
@@ -164,8 +181,33 @@ def test_empty_event_driven_factory_reads_no_pool_and_seeds_no_authority() -> No
         td_error=1.0,
         stage_diagnostic="empty_authority_test_r0",
     )
+    nonprovider_id = None
+    for candidate in sorted(board.legal_moves, key=lambda item: item.uci()):
+        successor = board.copy(stack=False)
+        successor.push(candidate)
+        if successor.is_checkmate():
+            continue
+        candidate_id = graph.ensure_triplet(
+            board,
+            candidate,
+            stage="empty_authority_test_nonprovider",
+        )
+        if candidate_id != triplet_id:
+            nonprovider_id = candidate_id
+            for _ in range(4):
+                graph.apply_intrinsic_td(
+                    board,
+                    candidate,
+                    td_error=1.0,
+                    stage_diagnostic="empty_authority_test_nonprovider",
+                )
+            break
+    assert nonprovider_id is not None
     graph.mature_existing_graph()
-    graph.freeze_existing_parameters(reason="local_provider_test")
+    graph.freeze_existing_parameters(
+        reason="local_provider_test",
+        triplet_ids=(triplet_id,),
+    )
     credit = IntrinsicCreditEngine(
         IntrinsicCreditConfig(min_grounding_evidence=1)
     )
@@ -208,6 +250,9 @@ def test_empty_event_driven_factory_reads_no_pool_and_seeds_no_authority() -> No
     assert audit["local_direct_outcome_provider_count"] == 1
     assert audit["global_r0_competence_provider_used"] is False
     assert audit["serialization_roundtrip_exact"] is True
+    assert authority.base.r0.frozen_triplet_ids == frozenset((triplet_id,))
+    assert nonprovider_id in authority.base.r0.graph.triplet_ids
+    assert nonprovider_id not in authority.base.r0.direct_provider_ids
     assert graph.canonical_semantic_manifest() == graph_before
     assert credit.snapshot() == credit_before
 
@@ -220,14 +265,20 @@ def test_empty_event_driven_factory_reads_no_pool_and_seeds_no_authority() -> No
     query = opened["query"]
     assert opened["classification"].state.value == "unknown"
     assert query.response.available is True
-    assert query.response.child_id == triplet_id
+    assert query.response.child_id.startswith("native-r0-provider:")
     assert query.response.expected_value > 0.0
     assert query.availability_provenance["availability_route"] == (
         "native_local_direct_outcome_provider"
     )
+    local_provider = query.availability_provenance[
+        "base_availability_provenance"
+    ]["local_provider"]
+    assert local_provider["cell_id"] == query.response.child_id
+    assert local_provider["authority_cell_id"] == triplet_id
+    assert local_provider["provider_kind"] == "native_direct_outcome_cell"
     assert query.availability_provenance["base_availability_provenance"][
-        "local_provider"
-    ]["cell_id"] == triplet_id
+        "selected_triplet_is_exact_pattern"
+    ] is True
     assert authority.continuation_digest() == continuation_before
 
     restored = type(authority).loads(authority.dumps())
@@ -240,3 +291,172 @@ def test_empty_event_driven_factory_reads_no_pool_and_seeds_no_authority() -> No
     assert restored_query.availability_provenance["availability_route"] == (
         "native_local_direct_outcome_provider"
     )
+
+    virtual_available, virtual_response = _v2_r0_available(
+        restored,
+        board,
+        frame_id="local-provider-real-parity-virtual",
+    )
+    assert virtual_available is True
+    tampered_actuation = {
+        **virtual_response,
+        "selected_option_identity": "tampered-virtual-option",
+    }
+    continuation_before_mismatch = restored.continuation_digest()
+    transactions_before_mismatch = dict(restored.event_transactions)
+    revision_before_mismatch = restored._hot_path_revision
+    mismatch_seen: set[str] = set()
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="actuation parity mismatch",
+    ):
+        _v2_r0_observe_training_successor(
+            restored,
+            board,
+            seen_predecessor_fens=mismatch_seen,
+            frame_id="local-provider-real-parity-mismatch",
+            expected_virtual_actuation=tampered_actuation,
+        )
+    assert restored.pending_event is None
+    assert dict(restored.event_transactions) == transactions_before_mismatch
+    assert restored._hot_path_revision == revision_before_mismatch
+    assert restored.continuation_digest() == continuation_before_mismatch
+    assert mismatch_seen == set()
+
+    real_available, real_response, duplicate, structural = (
+        _v2_r0_observe_training_successor(
+            restored,
+            board,
+            seen_predecessor_fens=set(),
+            frame_id="local-provider-real-parity-real",
+            expected_virtual_actuation=virtual_response,
+        )
+    )
+    assert duplicate is False
+    assert structural is None
+    assert real_available is True
+    assert real_response["provider_id"] == virtual_response["provider_id"]
+    assert real_response["provider"]["authority_cell_id"] == triplet_id
+
+
+def test_production_direct_providers_reach_all_reply_td_after_roundtrip() -> None:
+    """Exercise the complete strict provider handoff, not only its adapters."""
+
+    graph = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            max_ticks=80,
+            indexed_scheduler=True,
+            key_mode="canonical",
+            shared_feature_atoms=True,
+            shared_projection_atoms=True,
+            include_grouped_cache_terminals=False,
+            score_action_pattern_atoms=True,
+            terminal_score_normalization="sqrt",
+        )
+    )
+    credit = IntrinsicCreditEngine(
+        IntrinsicCreditConfig(min_grounding_evidence=1)
+    )
+    r1_board = chess.Board(R1_RETIRED_DEVELOPMENT_FENS[0])
+    first = _forced_mate_in_two_first_moves(r1_board)[0]
+    after_first = r1_board.copy(stack=False)
+    after_first.push(first)
+    provider_ids: set[str] = set()
+    for reply in sorted(after_first.legal_moves, key=lambda item: item.uci()):
+        mate_one = after_first.copy(stack=False)
+        mate_one.push(reply)
+        mating_moves = []
+        for candidate in mate_one.legal_moves:
+            after_second = mate_one.copy(stack=False)
+            after_second.push(candidate)
+            if after_second.is_checkmate():
+                mating_moves.append(candidate)
+        assert mating_moves
+        mating = min(mating_moves, key=lambda item: item.uci())
+        triplet_id = graph.apply_intrinsic_td(
+            mate_one,
+            mating,
+            td_error=1.0,
+            stage_diagnostic="all_reply_direct_provider_test",
+        )
+        provider_ids.add(triplet_id)
+        credit.register(triplet_id)
+        credit.begin_episode()
+        credit.transition(triplet_id, terminal_kind="mate")
+    graph.mature_existing_graph()
+    graph.freeze_existing_parameters(
+        reason="all_reply_direct_provider_test",
+        triplet_ids=tuple(sorted(provider_ids)),
+    )
+    local_audit = credit.consolidate_direct_outcome_providers(provider_ids)
+    assert set(local_audit["provider_ids"]) == provider_ids
+
+    class ForbiddenPools:
+        def __getattribute__(self, name):
+            raise AssertionError(f"empty boundary factory read pool field {name}")
+
+    authority, _audit = intrinsic.build_empty_event_driven_v2_r0_authority(
+        graph,
+        credit,
+        ForbiddenPools(),
+        NativeIntrinsicCurriculumConfig(
+            run_r1=True,
+            r0_availability_mode=V2_PROSPECTIVE_AVAILABILITY,
+            r0_boundary_ecology_enabled=True,
+        ),
+    )
+    authority = type(authority).loads(authority.dumps())
+    decision_id = graph.ensure_triplet(
+        r1_board,
+        first,
+        stage="all_reply_direct_provider_r1_decision",
+    )
+    counters = {
+        **_r1_reply_counter_defaults(),
+        "availability_queries": 0,
+        "availability_positives": 0,
+        "virtual_frame_queries": 0,
+        "v2_duplicate_virtual_queries": 0,
+        "v2_real_observations": 0,
+        "v2_structural_transitions": 0,
+        "child_handoffs": 0,
+    }
+    terminal_kind, successor_ids, episode = (
+        _prospective_counterexample_episode(
+            authority,
+            after_first,
+            credit=credit,
+            decision_id=decision_id,
+            fen=r1_board.fen(),
+            white_move_uci=first.uci(),
+            arm_name="production-provider-integration",
+            epoch=0,
+            position_index=0,
+            exposure_counts={},
+            seen_predecessor_fens=set(),
+            frame_session=None,
+            generic_seed=17,
+            arm_bootstrap_enabled=True,
+            counters=counters,
+            strict_adaptive=True,
+        )
+    )
+    signal = episode["successor_signal"]
+    assert terminal_kind is None
+    assert signal is not None
+    assert successor_ids == signal.provider_ids
+    assert all(
+        provider_id.startswith("native-r0-provider:")
+        for provider_id in successor_ids
+    )
+    credit.register(decision_id, hierarchy_depth=1)
+    event = credit.transition(
+        decision_id,
+        explicit_successor_signal=signal,
+        external_provider_records=episode["external_provider_records"],
+        external_provider_resolver=authority.native_provider_response,
+        prediction_override=0.0,
+    )
+    assert event.successor_value > 0.0
+    assert event.provider_ids == successor_ids

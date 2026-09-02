@@ -742,6 +742,14 @@ def build_empty_event_driven_v2_r0_authority(
         raise RuntimeError(
             "empty V2 factory requires a directly grounded local R0 provider"
         )
+    local_provider_scope = frozenset(local_provider_ids)
+    if graph.frozen_policy_triplet_ids != local_provider_scope:
+        raise RuntimeError(
+            "empty V2 factory requires the frozen R0 policy to equal its "
+            "local direct-outcome provider set"
+        )
+    if graph.frozen_child_policy_token(local_provider_scope) is None:
+        raise RuntimeError("empty V2 factory received an unbound R0 policy scope")
 
     graph_copy = copy.deepcopy(graph)
     credit_copy = copy.deepcopy(credit)
@@ -764,7 +772,11 @@ def build_empty_event_driven_v2_r0_authority(
             grounding_level=None,
             grounding_source="unused_in_local_direct_outcome_mode",
         ),
-        frozen_triplet_ids=frozenset(graph_copy.triplet_ids),
+        # Keep the full graph as immutable archived substrate, but admit only
+        # branches whose exact selected REAL returns earned local authority.
+        # This prevents an exploratory nonprovider from winning first and
+        # shadowing a valid mate-in-1 provider.
+        frozen_triplet_ids=local_provider_scope,
         source_manifest={
             "kind": DEVELOPMENT_LABEL,
             "scientific_use_permitted": False,
@@ -776,6 +788,8 @@ def build_empty_event_driven_v2_r0_authority(
             "local_direct_outcome_provider_count": len(
                 local_provider_ids
             ),
+            "authority_scope_triplet_count": len(local_provider_scope),
+            "archived_graph_triplet_count": len(graph_copy.triplet_ids),
             "global_r0_competence_provider_used": False,
         },
     )
@@ -863,6 +877,11 @@ def build_empty_event_driven_v2_r0_authority(
         "initial_state": zero_state,
         "candidate_count": 0,
         "local_direct_outcome_provider_count": len(local_provider_ids),
+        "authority_scope_triplet_count": len(local_provider_scope),
+        "archived_graph_triplet_count": len(graph_copy.triplet_ids),
+        "nonprovider_archived_triplet_count": (
+            len(graph_copy.triplet_ids) - len(local_provider_scope)
+        ),
         "global_r0_competence_provider_used": False,
         "certified_available_count": 0,
         "certified_refuted_count": 0,

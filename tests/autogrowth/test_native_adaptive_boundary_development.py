@@ -217,6 +217,13 @@ def test_profiles_preserve_frozen_r0_and_only_change_r1_work(tmp_path: Path) -> 
         {"validation_controls_stage_transitions": True},
         {"r0_replay_per_r1_epoch": 1},
         {"r0_boundary_ecology_enabled": False},
+        {"run_r1": False},
+        {"freeze_r0_parameters_for_r1": False},
+        {"mature_child_priority": False},
+        {"run_redundant_child_ablation": True},
+        {"r1_mechanistic_factorial": True},
+        {"r1_composite_proposal_epochs": (1,)},
+        {"r1_composite_consolidation_epochs": (2,)},
     ),
 )
 def test_adaptive_config_fails_closed_on_retired_host_controls(

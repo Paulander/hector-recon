@@ -3,7 +3,7 @@
 ## Status and scope
 
 This note describes the current working-tree design on branch
-`codex/adaptive-boundary-ecology` in
+`codex/native-adaptive-organism` in
 [`Paulander/hector-recon`](https://github.com/Paulander/hector-recon).
 
 - Prior architecture anchor: `52f666d3111e39c57fb6e16889678540c2fb6d62`.
@@ -12,6 +12,9 @@ This note describes the current working-tree design on branch
 - Local retrieval and selective-credit repair: `deedcb90`.
 - Retention/jurisdiction reporting repair: `58abe72d`.
 - Current empty-shell strict adaptive mechanism: `b1a8ed1f`.
+- Exact local REAL-outcome authority: `7e15dc85`.
+- Shell-provider closure and transactional hardening: the current branch tip,
+  based on `eafcc488c743bbea5c9e23ef7a1c11395dddbebc`.
 - Original audited base: `2f1b68c992eb6868b468148004d8e5a4746c88ab`.
 
 The current implementation closes the concrete V15–V18 control-loop defects:
@@ -24,11 +27,13 @@ remain for historical runners, while the adaptive entrypoint now fails closed
 if a caller tries to re-enable them.
 
 The native admission/alias repair makes R0 authority coverage/specificity
-report-only. Once the existing R0 validation-mastery curriculum transition has
-been met, only outcome-blind authority runtime integrity can veto R1 entry. An
-`UNKNOWN` authority response abstains locally, while formally confirmed trace
-evidence is unioned across aliases of one actuator without merging local option
-identity or activation/strength.
+report-only. Strict development now runs a fixed R0 budget; only exact local
+actions with repeated positive REAL returns and zero contrast become direct
+providers. A nonempty direct-provider set and outcome-blind runtime integrity
+permit the content-blind freeze boundary; validation outcomes cannot mature a
+cell or block the next stage. An `UNKNOWN` authority response abstains locally,
+while formally confirmed trace evidence is unioned across aliases of one
+actuator without merging exact action-option identity or exposure.
 
 The adaptive boundary now starts empty: no discovery tape, negative roots,
 candidate cells, scheduled frontiers, or bootstrap certification. The frozen
@@ -39,9 +44,9 @@ later distinct REAL events certify it. This removes the old mixed-polarity
 only for legacy reproduction.
 
 This is still a development architecture, not evidence of mate-in-2 learning.
-The V18 canary below predates `deedcb90`, `58abe72d`, and `b1a8ed1f`. A fresh
-bounded canary at the current commit is the next gate. No mate-in-2 result is
-claimed in this note.
+The V18 and V19 canaries below predate the complete direct-provider and
+shell-provider closure. A fresh bounded canary at the current branch tip is the
+next gate. No mate-in-2 result is claimed in this note.
 
 The fresh V16 canary bound to `8e1583972cca391fc10a0d689ebd89f86387471b`
 (`2026090106`, exact wall `645.8366680829786 s`) stopped after R0: validation
@@ -64,7 +69,7 @@ patterns were first exposures, so neither credited decision was revisited.
 The run started from legacy mixed bootstrap roots and produced zero adaptive
 buds. These facts motivated the empty-shell, local-retrieval, and selective-
 credit changes above; V18 is evidence about the old mechanism, not efficacy
-evidence for `b1a8ed1f`.
+evidence for the current direct/shell provider closure.
 
 ## The idea in plain language
 
@@ -116,7 +121,10 @@ outcomes come from the environment. Exhaustive mate evaluation is report-only.
 | --- | --- |
 | **R0 / core** | The learned native mate-in-1 competence. “R0” is a curriculum index, not a second kind of network. |
 | **R1 / boundary task** | Learning a first move whose successors are finishable after every opponent reply. In this curriculum it is mate-in-2. |
-| **Local action pattern** | The canonical before/delta/after triplet induced by one legal action. It contains local graph features, not FEN, epoch, stage, or an answer label. |
+| **Local action pattern** | The canonical before/delta/after triplet induced by a legal action. It may be shared by several actuators and contains local graph features, not FEN, epoch, stage, or an answer label. |
+| **Exact action option** | One competitor identified by `(local pattern, legal actuator)`. Shared patterns may share value, but each legal actuator owns its own exposure and formal choice option. |
+| **Direct provider** | A frozen exact R0 action cell authorized only by its own selected REAL returns. Its capability identity is namespaced and schema-bound to that immutable authority cell. |
+| **Shell provider** | A generalized boundary child authorized only by distinct post-birth REAL certification evidence with zero contradiction. |
 | **REAL receipt** | An immutable record of an action/outcome interaction actually opened to the learner. |
 | **VIRTUAL query** | A read-only authority query. It can test jurisdiction but cannot train or certify. |
 | **Bud / sketch** | A cheap tentative conjunction of locally active graph-visible signals. It has no authority. |
@@ -132,31 +140,31 @@ outcomes come from the environment. Exhaustive mate evaluation is report-only.
 For every legal first move, the graph derives the same canonical local triplet
 identity used by its before-state, action/delta, and after-state machinery.
 Existing exact or shared-feature graph sources contribute their stored raw
-native value. A legal pattern with no source is assigned a neutral exploitation
+native value. A legal action with no source is assigned a neutral exploitation
 value only while training, so unexplored behavior remains reachable.
 
 The training activation is:
 
 ```text
 v / (1 + |v|)
-+ min(1, sqrt(2 log(1 + current-competitor exposures)
-              / (1 + this-pattern exposures)))
++ min(1, sqrt(2 log(1 + current-option exposures)
+              / (1 + this-action-option exposures)))
 ```
 
-An unseen local pattern receives novelty `1`. The second term thereafter is a
-generic bounded optimism bonus. It uses only exposures belonging to the
-patterns competing in this decision, so unrelated positions cannot inflate
-novelty indefinitely. Legal moves sharing one abstract pattern form an alias
-group; exposure rotates its representative deterministically, so the same
-alias is not chosen forever.
+An unseen exact action option receives novelty `1`. The second term thereafter
+is a generic bounded optimism bonus. It uses only per-actuator exposures of the
+options competing in this decision, so unrelated positions cannot inflate
+novelty indefinitely. Legal moves may share one abstract pattern and its
+learned value, but all remain separate formal options. No Python-side alias
+representative is rotated or prescribed.
 
 ### 2. Emit one action through a formal ReCoN choice
 
-One `AnonymousChoiceOption` is created per local pattern. An
-`AnonymousChoiceGenome` performs exactly-one arbitration and emits the legal
-actuator. Only the emitted exact triplet is then materialized and formally
-confirmed. The implementation refuses to execute it if emitted identity,
-materialized triplet, and confirmation disagree.
+One `AnonymousChoiceOption` is created per exact `(pattern, legal actuator)`
+pair. An `AnonymousChoiceGenome` performs exactly-one arbitration and emits the
+legal actuator. Only the emitted exact triplet is then materialized and
+formally confirmed. The implementation refuses to execute it if option,
+actuator, materialized triplet, and confirmation disagree.
 
 This ordering matters: candidate inspection does not eagerly grow a branch for
 every legal move. Growth follows the one action actually emitted.
@@ -165,9 +173,9 @@ every legal move. Growth follows the one action actually emitted.
 
 After the environment transition, `apply_intrinsic_td` must return the same
 triplet identity that was emitted. The TD prediction is the pre-emission raw
-native value, never the curiosity bonus. The exact pattern and graph root gain
-one exposure only after this outcome-grounded update; merely asking the policy
-does not consume an exposure.
+native value, never the curiosity bonus. The exact action option, its pattern,
+and graph root gain one exposure only after this outcome-grounded update;
+merely asking the policy does not consume an exposure.
 
 A bounded, digest-chained action-event ledger records emitted and credited
 identities, raw value, curiosity, successor value, and TD error for replay and
@@ -177,9 +185,9 @@ When several formally confirmed local triplet aliases can emit the same legal
 actuator, their captured graph signals are deterministically unioned before the
 trace is recorded. Emitted-action trace evidence is therefore alias-invariant:
 the anonymous winner does not change the formally observed evidence attached to
-that actuator. Option identity and activation/strength remain local to each
-triplet alias, so this does not collapse local competition or alias-specific
-choice semantics. The union uses only formally confirmed graph captures; no
+that actuator. Exact action-option identity and exposure remain actuator-local,
+so this does not collapse local competition. The union uses only formally
+confirmed graph captures; no
 outcome, label, or board identity participates.
 
 Main implementation:
@@ -213,10 +221,10 @@ A generic Python adapter currently:
 
 - enumerates legal environmental affordances;
 - derives their canonical local triplet identities;
-- retrieves confirmed exact/shared graph sources and takes a deterministic
-  best source for each move;
-- computes value normalization, the UCB-like optimism term, the resource cap,
-  and alias rotation;
+- retrieves confirmed exact/shared graph sources and max-pools a deterministic
+  best source for each legal actuator;
+- computes value normalization, the local per-action UCB-like optimism term,
+  and the resource cap;
 - packages those activations as anonymous choice options.
 
 That adapter cannot read a correct move, mate label, FEN identity, epoch,
@@ -230,6 +238,11 @@ sources coexist; the exact local branch and the learned incumbent for every
 remaining legal action are reserved before challenger capacity is filled.
 Reports expose pair counts before and after the cap, so a run cannot silently
 present a truncated action competition as an unbounded one.
+
+Exact activation ties are ordered by a stable hash of the local
+`(pattern, actuator)` identity. That hash contains no epoch, FEN, answer, or
+outcome and is only a reproducible final tie break; it is not the retired
+epoch/FEN hash schedule that used to choose training moves.
 
 When one decision credits a branch containing many shared atoms, the TD update
 is responsibility-conserving: private/exact state receives full local credit,
@@ -269,23 +282,32 @@ This makes evaluation stricter and conceptually cleaner: a success must be
 produced by the learned first-move policy and grounded successor authority, not
 rescued by a host router.
 
-## Frozen R0 core and initially empty prospective closure
+## Frozen R0 providers and initially empty prospective closure
 
-The adaptive path no longer fits or uses `OutcomeCalibratedPrototypeGate`.
-After the fixed R0 training budget, the graph's exploration-free local policy
-is re-executed on its already experienced training environment. If that
-training-outcome probe meets the curriculum threshold, the harness commits
-maturity, consolidation, and freezing, then copies the immutable R0 organism
-into `NativeProspectiveAuthorityV2`. This is an explicit host-controlled
-curriculum boundary, not a learned move picker and not claimed to be
-endogenous ReCoN lifecycle.
+The strict adaptive path no longer fits or uses
+`OutcomeCalibratedPrototypeGate`, aggregate R0 competence, or an accuracy gate.
+During the fixed R0 interaction budget, every exact triplet records only the
+REAL returns of actions for which it was itself selected. Eligibility traces
+may update values but cannot manufacture another triplet's direct evidence. At
+the content-blind phase boundary, an exact triplet becomes a direct provider
+only if it has the required repeated positive evidence, zero contrast, and a
+positive local value. Validation, regression, and the aggregate
+training-policy score are reports only.
+
+The harness then freezes only that nonempty provider scope and archives the
+full graph for exact inference and replay. Nonprovider topology cannot answer
+by alias or fallback. This phase boundary remains host-controlled and is not
+claimed to be an endogenous ReCoN lifecycle decision, but the host does not
+decide which cells qualify: that state was accumulated locally from each
+cell's own REAL actions.
 
 The V2 boundary around that core is initially empty. Its construction is
 forbidden from reading any pool rows and asserts zero receipts, cells,
 candidates, states, accepted REAL references, discovery fingerprints,
-promotions, pending requests, and scheduled frontiers. The core may still emit
-one action on a later REAL successor; only ordinary outcome receipts can then
-grow prospective jurisdiction around successful local traces.
+promotions, pending requests, and scheduled frontiers. The direct-provider core
+may emit one action on a later successor; only the exact provider selected for
+that action can authorize it. Ordinary REAL outcome receipts can then grow
+generalized prospective jurisdiction around successful local traces.
 
 A read-only native admission audit reports initial coverage and specificity:
 
@@ -339,10 +361,14 @@ interactions occurred after birth may add certification support or
 contradiction. Promotion materializes an initially dormant authority child;
 the child still needs post-birth evidence before it can answer AVAILABLE.
 
-After each consumed REAL event, pending local growth/refinement requests are
-committed at a content-blind quiescent safe point. The safe point decides when
-mutation is atomic, never which chess content should grow. Exact receipt
-identity, physical-interaction identity, compact interval commitments,
+Each consumed REAL event may nominate local growth or refinement. Production
+batches those pending requests and commits them at the content-blind quiescent
+boundary after the training epoch; it does not currently mutate the structural
+frontier between two events in one epoch. The safe point decides when a batch
+may settle, never which chess content deserves to grow. Consequently, receipts
+from the discovery epoch remain pre-birth and cannot certify the newly
+materialized child; certification begins with later REAL experience. Exact
+receipt identity, physical-interaction identity, compact interval commitments,
 continuation digests, and dump/load replay guard discovery exclusion.
 Validation, regression, and held-out answers never enter this evidence stream.
 
@@ -360,6 +386,60 @@ Main implementation:
   - `_v2_r0_observe_training_successor` consumes REAL successor outcomes and
     connects them to the ecology and atomic safe point.
 
+## Provider closure and the credit boundary
+
+The initially useful successor authority is the set of exact direct providers
+frozen from R0. Outward growth becomes useful only when a generalized shell
+child independently earns the same right to provide value. The authority now
+exports both through one fail-closed provider interface:
+
+- a direct capability is named `native-r0-provider:<exact-triplet-id>` and is
+  cryptographically/schema-bound to that frozen triplet's own REAL-return
+  ledger;
+- a shell capability names its exact live authority cell and is emitted only
+  from distinct post-birth certification receipts, with zero contradiction and
+  the configured support/Wilson requirements;
+- malformed, retired, contradicted, schema-less, cyclic, stale, or
+  identity-mismatched providers abstain rather than falling through to mutable
+  graph state or a global competence value.
+
+For the emitted exact action, a valid direct provider takes precedence;
+otherwise a matching certified shell provider may answer. If several shell
+providers match, the authority uses its evidence-ranked local choice. An empty
+or `UNKNOWN` shell cannot veto a valid exact provider.
+
+Every all-reply VIRTUAL row captures the immutable provider record that made it
+AVAILABLE. VIRTUAL rows carry `outcome=None` and `outcome_observed=false`; they
+cannot train, certify, or fabricate success. Before a selected REAL challenge
+is opened, the authority checks exact VIRTUAL/REAL parity for move, source
+triplet, choice option, and pattern, and the credit engine performs a pure
+preflight of provider identity, grounding ancestry, evidence counts, digest,
+and acyclicity. The providers are resolved live again after the environmental
+event: a direct provider must be unchanged, while a shell evidence count may be
+unchanged or advance by exactly one monotone REAL receipt. Strict TD still
+requires the resulting minimum value/confidence successor signal to equal the
+preflight signal. Captured provider records are per-call evidence; they are not
+serialized as a shadow authority inside the credit engine.
+
+This ordering makes the known mismatch/error paths precommit: they leave no
+pending authority event, boundary revision, exposure, or seen-predecessor
+mutation. Authority settlement itself retains its atomic journal and exact
+dump/load replay. The implementation does not claim a general multi-object
+rollback for an arbitrary process failure after every mutation; recovery from
+such an unexpected failure is the exact prior epoch snapshot.
+
+Main implementation:
+
+- [`src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py`](../../src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py)
+  owns direct/shell provider responses, live lineage checks, precommit REAL
+  actuation parity, and the structural transaction journal;
+- [`src/recon_lite_hector/learning/intrinsic_credit.py`](../../src/recon_lite_hector/learning/intrinsic_credit.py)
+  validates external provider records and preflights the explicit successor
+  signal without taking ownership of the authority;
+- [`src/recon_lite_chess/autogrowth/native_authority_handover.py`](../../src/recon_lite_chess/autogrowth/native_authority_handover.py)
+  freezes the provider-only R0 policy scope while preserving the complete
+  immutable organism for inference and replay.
+
 ## All-reply adversarial value
 
 For one emitted first move, every legal opponent reply gets an authority row:
@@ -371,13 +451,18 @@ For one emitted first move, every legal opponent reply gets an authority row:
 - the weakest reply becomes the next counterexample challenge.
 
 Different certified cells may cover different reply contexts, so sibling
-composition is allowed. The envelope asks whether their union handles all
-replies; it does not require one global cell to memorize an entire position.
-Only a grounded AVAILABLE envelope can hand positive successor value back to
-the first move.
+composition is allowed, and direct and shell providers may be mixed across
+replies. Every grounded row carries the exact provider record that authorized
+it. The envelope asks whether their union handles all replies; it does not
+require one global cell to memorize an entire position and is never registered
+as a synthetic competence cell. Only a grounded AVAILABLE envelope can hand
+positive successor value back to the first move.
 
 Training performs an exhaustive **VIRTUAL** query over every legal reply, then
 executes one weakest/counterexample reply as the next REAL environmental event.
+Those VIRTUAL rows expose no observed outcome. Before REAL opens, its selected
+move, triplet, exact action option, and pattern must match the chosen VIRTUAL
+challenge, and provider validity is preflighted.
 TD receives the minimum grounded envelope value when the envelope is complete;
 it does not execute or credit every reply as a separate REAL transition. The
 opponent challenge ranker is currently host substrate code and is intentionally
@@ -450,43 +535,56 @@ Main implementation:
 - [`src/recon_lite_chess/autogrowth/native_intrinsic_curriculum.py`](../../src/recon_lite_chess/autogrowth/native_intrinsic_curriculum.py)
   connects outcome-grounded receipts to the ecology and safe-point promotion.
 
-## Learner versus scientific harness
+## Learner, generic substrate, and scientific harness
 
 This boundary is the answer to the “plumbing versus ReCoN” concern.
 
-| Inside the learning mechanism | Allowed harness responsibility |
-| --- | --- |
-| Local pattern identities and stored native values | Start episodes and enumerate legal environment actions/replies |
-| Anonymous exactly-one emission | Enforce wall-time, memory, and active-resource ceilings |
-| Outcome-grounded TD, eligibility, and exposure | Provide the outcome of the action actually taken |
-| Surprise-success budding and local contrast | Invoke a content-blind quiescent transaction boundary |
-| Prospective certification and recursive refinement | Snapshot, replay, and check invariants |
-| Worst-reply minimum/veto and handoff | Select/execute one adversarial counterexample reply from the exhaustive virtual envelope |
-| Retirement and slot reuse | Select deterministic development seeds, fixed budgets, and independent data partitions |
+| Native learned state/authority | Generic domain-independent substrate | Scientific/environment harness |
+| --- | --- | --- |
+| Graph pattern identities, weights, values, and per-action exposure | Enumerate legal affordances and derive canonical local keys | Start episodes and supply the consequence of the action actually taken |
+| Local evidence and exact-action provider eligibility | Max-pool native sources per actuator and compute local bounded UCB activation | Enumerate every legal opponent reply and execute one weakest REAL challenge |
+| Formal anonymous exactly-one emission | Package activations and break exact ties by stable local identity | Enforce fixed phase, wall-time, memory, and active-resource ceilings |
+| TD, eligibility, responsibility, and exposure | Validate schemas, identities, parity, and replay | Invoke content-blind epoch safe points and preserve checkpoints |
+| Surprise-success budding, contrast, certification, refinement, retirement, and slot reuse | Atomically apply the already nominated structural batch | Evaluate held-out chess performance for reporting only |
+| All-reply minimum/veto, provider handoff, and successor value | Serialize exact state without becoming a second authority | Choose seeds, budgets, and independent data partitions before the run |
 
 The harness must not choose the R1 move, override authority jurisdiction,
 rescue an abstention through a fallback policy, or expose validation outcomes to
 learning. The committed adaptive-local path satisfies those exclusions.
 
-The harness is not globally gate-free. R0 and R1 now use the same native local
-competition, and validation outcome mastery is report-only. After the fixed R0
-budget, however, a **training-outcome policy probe** still controls the global
-maturity/consolidation/freeze commit and entry into R1. An outcome-blind
-authority-integrity audit may also veto unsafe entry. These are outer
-curriculum/safety decisions, not runtime move pickers, but they do affect
-learned lifecycle state and must not be called endogenous.
+The harness is not lifecycle-free. R0 and R1 use the same local action
+competition and validation outcomes are report-only. After the fixed R0
+budget, a content-blind phase boundary authorizes only cells whose own local
+evidence already satisfies the direct-provider rule; a nonempty provider set
+permits R1. An outcome-blind authority-integrity audit may veto unsafe entry.
+These are outer curriculum/safety decisions, not runtime move or growth-content
+pickers, but the phase timing is not endogenous.
 
 The complete R0→R1 curriculum is therefore not described as pure in-graph
 ReCoN. Generic Python substrate still enumerates legal affordances, retrieves
-local sources, computes bounded curiosity/alias rotation, packages formal
-choice options, and ranks the opponent's counterexample reply. The precise
-claim is: **native persistent evidence and local credit, formal ReCoN
-exactly-one emission, event-driven local ecology, plus an explicit generic
-curriculum/environment adapter**.
+local sources, max-pools them per action, computes bounded local curiosity,
+packages formal choice options, and ranks the opponent's counterexample reply.
+The precise claim is: **local/self-organized learner authority with formal
+ReCoN exactly-one emission, implemented through a generic host adapter and an
+explicit curriculum/environment harness**. It is not the stronger claim that
+every arbitration operation is already embodied in the persistent graph.
 
-The `no_bootstrap` comparison arm is also named narrowly: it runs the same
-authority and ecology but suppresses successor-value handoff. It isolates value
-transfer; it is not a no-authority or no-growth organism.
+Legacy plumbing remains in shared modules solely so historical runners can be
+reproduced. The strict entrypoint rejects attempts to enable the old
+epoch/FEN-hash or scheduled move picker, prototype gate, global aggregate R0
+competence, memoized replay move provider, child/core/plastic fallback cascade,
+globally scheduled structural frontier, validation-controlled stage selection,
+non-counterexample reply policy, disconnected child evaluation, factorial or
+ablation arms, and scheduled composite mutations. Those code paths are not
+part of the strict organism and are covered by fail-closed configuration and
+reachability tests.
+
+The `no_bootstrap` comparison arm remains available only to historical and
+non-strict experiments. Strict training executes one primary organism; it does
+not run a factorial or competing shadow arm. The required legacy-named
+`mature_child_priority=true` switch means that evaluation remains connected to
+the same authority-owned shell. It does not re-enable a child/core/plastic
+priority picker in the strict path.
 
 ## Defensible invariants after the adaptive-local change
 
@@ -494,6 +592,8 @@ The implementation and focused tests are intended to establish:
 
 - adaptive R0 and R1 action choice cannot reach legacy schedules;
 - adaptive profiles cannot enable memoized R0 replay as a hidden move provider;
+- strict training executes one primary arm and does not construct the replay
+  move cache;
 - the adaptive authority starts with zero evidence, cells, candidates, states,
   promotions, pending requests, and scheduled frontiers;
 - the environment never supplies FEN/epoch/stage/oracle data to local action
@@ -506,18 +606,31 @@ The implementation and focused tests are intended to establish:
 - adaptive evaluation cannot reach the prototype gate, host priority cascade,
   or plastic fallback;
 - emitted-action trace evidence is invariant across aliases of one actuator,
-  while option identity and activation/strength remain alias-local;
-- R0 authority coverage/specificity is report-only, and after R0 mastery the
-  native-authority entry check uses only outcome-blind runtime integrity;
+  while exact action-option identity and exposure remain actuator-local;
+- nonempty exact direct-provider readiness, not aggregate mastery, controls
+  strict R0 stage entry; coverage and specificity are report-only and runtime
+  integrity remains a safety veto;
+- direct provider capabilities are namespaced and cannot be shadowed by mutable
+  R1 credit state;
+- a direct exact provider precedes the outer prospective shell, while
+  abstention cannot fall through to a prototype, global, or plastic route;
 - an `UNKNOWN` authority response abstains locally, cannot bootstrap successor
   value, and does not globally veto unrelated R1 experience;
 - discovery evidence is excluded from later certification, and certification
   physical interactions are post-birth and distinct;
 - VIRTUAL queries cannot certify or train;
 - promoted children start with zero prospective authority;
+- shell providers require positive distinct post-birth REAL certification and
+  zero contradiction; the certification-producing event cannot bootstrap its
+  own transition;
+- VIRTUAL/REAL move, source-triplet, option, and pattern parity is checked
+  before a pending REAL authority event is installed;
+- provider identity, grounding, evidence progression, ancestry, digest, value,
+  and cycles are preflighted and revalidated at TD;
 - any refuted opponent reply vetoes a first move, and positive value is the
   worst grounded reply value;
-- structural mutations are atomic and replay-exact or roll back;
+- authority-owned REAL and structural mutations are internally journaled and
+  replay-exact; predictable parity/provider/credit failures are precommit;
 - active candidate search, ecology population, and live authority occupancy
   have explicit finite caps;
 - immutable core state and unique retirement tombstones survive snapshot and
@@ -533,6 +646,8 @@ The design does **not** establish:
 - eventual discovery of every useful region;
 - a completely in-graph arbitration circuit or endogenous curriculum stage
   transition;
+- whole-event rollback spanning authority, ecology, graph/credit, exposures,
+  and curriculum state after an arbitrary late failure;
 - any chess-performance improvement before a fresh experiment measures it.
 
 ## Exact code lineage
@@ -552,6 +667,11 @@ The design does **not** establish:
 | `deedcb90` | Preserves exact/local action incumbents, localizes curiosity, and conserves TD responsibility across shared atoms. |
 | `58abe72d` | Separates frozen R0 retention from V2 shell coverage and fixes fail-closed reporting. |
 | `b1a8ed1f` | Makes both stages local, validation outcome mastery report-only, starts adaptive authority empty, and fails closed on retired controls. |
+| `545c9c64` | Moves boundary nominations out of the curriculum schedule and into the local REAL-event ecology. |
+| `f440ca5b` | Enforces R0 resource bounds and skips impossible legacy audits in strict execution. |
+| `7e15dc85` | Replaces aggregate R0 authority with exact selected-REAL-return direct providers. |
+| `eafcc488` | Records the local-authority repair and its pre-canary mechanism gate. |
+| current branch tip | Closes direct/shell provider credit, per-action competition, precommit actuation parity, and strict transactional checks. |
 
 Use [`BRANCH_LOGBOOK.md`](../../BRANCH_LOGBOOK.md) for the experiment ledger.
 The evidence motivating this repair is in
@@ -568,9 +688,17 @@ Before any fresh chess claim, run the data-free focused suites:
 - [`tests/autogrowth/test_native_prospective_boundary_candidate_ecology.py`](../../tests/autogrowth/test_native_prospective_boundary_candidate_ecology.py)
 - [`tests/autogrowth/test_native_prospective_evidence_authority_v2.py`](../../tests/autogrowth/test_native_prospective_evidence_authority_v2.py)
 - [`tests/autogrowth/test_native_intrinsic_all_reply_policy.py`](../../tests/autogrowth/test_native_intrinsic_all_reply_policy.py)
+- [`tests/autogrowth/test_native_shell_provider.py`](../../tests/autogrowth/test_native_shell_provider.py)
+- [`tests/autogrowth/test_native_authority_handover.py`](../../tests/autogrowth/test_native_authority_handover.py)
+- [`tests/test_intrinsic_credit.py`](../../tests/test_intrinsic_credit.py)
 
 At `b1a8ed1f`, the six directly affected compatibility suites passed
 `137/137`; targeted compilation and `git diff --check` were clean.
+
+At the current pre-canary branch tip, the focused provider/action/runner set
+passed `147/147`. The broader relevant regression set passed `276/276` in
+`468.62 s`. This is software and mechanism-contract evidence only; no fresh
+post-closure chess canary had run when this paragraph was written.
 
 The highest-value tripwires are:
 
@@ -585,8 +713,12 @@ The highest-value tripwires are:
   outcome-blind runtime integrity passes;
 - choice and audit do not increment exposure, while exact observed TD does;
 - fresh snapshot/resume reproduces action-event digest and authority history;
-- contradiction-driven requests settle before the next REAL certification
-  event;
+- production batches event-driven nominations at the post-epoch safe point, so
+  a new child cannot consume same-epoch pre-birth receipts as certification;
+- direct and shell provider records survive round-trip, cannot shadow one
+  another, and reach exact minimum all-reply TD only after live revalidation;
+- VIRTUAL/REAL actuation mismatch leaves authority continuation, pending state,
+  exposures, and seen-predecessor state unchanged;
 - strict no-gate R1 snapshots fingerprint and resume exactly;
 - the empty adaptive factory cannot read any pool field and seeds no evidence.
 

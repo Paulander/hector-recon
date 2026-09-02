@@ -226,7 +226,7 @@ class _FakeV2Authority:
         )
         return {"query": query, "classification": self._classification()}
 
-    def open_real_event(self, frame):
+    def open_real_event(self, frame, **_kwargs):
         if self.pending_event is not None:
             raise RuntimeError("fake V2 authority already has a pending event")
         actuation = self._actuation(frame.values["board"])
