@@ -7,7 +7,7 @@ This note describes the current working-tree design on branch
 [`Paulander/hector-recon`](https://github.com/Paulander/hector-recon).
 
 - Prior architecture anchor: `52f666d3111e39c57fb6e16889678540c2fb6d62`.
-- Current adaptive-local implementation: `444b927f07882ae1c197b6006fad1c0672ef2245`.
+- Initial adaptive-local implementation: `444b927f07882ae1c197b6006fad1c0672ef2245`.
 - Native admission/alias repair: `67414302390040bc1047ef4c43489467a2162b38`.
 - Local retrieval and selective-credit repair: `deedcb90`.
 - Retention/jurisdiction reporting repair: `58abe72d`.
@@ -17,6 +17,10 @@ This note describes the current working-tree design on branch
   `fabc2b796e2f8dcf6d8b3429b5f56fc86b5df747`.
 - Local action-value/credit closure:
   `4b3e3a04709df1a161ab7b000d646ab54918cf0c`.
+- Finite local first-contact and renewable revisit pressure:
+  `02ffc08d430bd10025a1c83a8cde3dd1602c74b7`.
+- Exact-Q generalized-audit elision:
+  `e2bdda3812f5a8350a8f5b658c3b6b923cd305de`.
 - Original audited base: `2f1b68c992eb6868b468148004d8e5a4746c88ab`.
 
 The current implementation closes the concrete V15–V21 control-loop defects:
@@ -47,10 +51,12 @@ later distinct REAL events certify it. This removes the old mixed-polarity
 only for legacy reproduction.
 
 This is still a development architecture, not evidence of mate-in-2 learning.
-The V21 canary exercised the complete provider closure but exposed a local
-action-value/credit mismatch; `4b3e3a04` repairs that mismatch. A same-seed,
-independent-output V22 discriminator is the next gate. No mate-in-2 result is
-claimed in this note.
+V22 repaired the V21 action-value/credit mismatch but exposed starvation of
+untried local actions. V23 repaired that starvation, then two independent
+two-hour canaries stopped safely inside R0 because the larger contacted graph
+made redundant generalized formal audits dominate runtime. V24 removes only
+those behaviorally irrelevant audits. No mate-in-2 result is claimed here;
+V24 still requires a bounded curriculum canary.
 
 The fresh V16 canary bound to `8e1583972cca391fc10a0d689ebd89f86387471b`
 (`2026090106`, exact wall `645.8366680829786 s`) stopped after R0: validation
@@ -172,20 +178,40 @@ while training, so unexplored behavior remains reachable. After a REAL outcome,
 the exact `(pattern, actuator)` option stores its own bounded `Q`; later choices
 read that value instead of being masked by a stronger generalized alias.
 
-The training activation is:
+The training activation is piecewise. While any current legal option has no
+REAL exposure:
 
 ```text
-Q(pattern, actuator)
-+ min(1, sqrt(2 log(1 + current-option exposures)
-              / (1 + this-action-option exposures)))
+untried option: Q(pattern, actuator) + 3
+tried option:   Q(pattern, actuator)
 ```
 
-An unseen exact action option receives novelty `1`. The second term thereafter
-is a generic bounded optimism bonus. It uses only per-actuator exposures of the
-options competing in this decision, so unrelated positions cannot inflate
-novelty indefinitely. Legal moves may share one abstract prior, but all remain
-separate formal options and acquire independent exact values after experience.
-No Python-side alias representative is rotated or prescribed.
+Because `Q` is bounded in `[-1,1]`, the untried tier `[2,4]` is strictly above
+the tried tier `[-1,1]`. Conditional on a stable finite local population of
+`K` actions and one REAL update per visit, every initially untried action is
+therefore contacted within at most `K` visits. Once all current options have
+contact, the bonus is
+
+```text
+sqrt(2 log(1 + sum_j n_j) / n_i)
+```
+
+for option exposure `n_i`. This pressure decreases when that option is used
+and can rise logarithmically as competitors are used; it is renewable, not
+monotonically decreasing in wall time. It is a finite-contact and revisit
+property, not a convergence or regret claim under the nonstationary graph and
+constant-step TD process. Legal moves may share one abstract prior, but all
+remain separate formal options and acquire independent exact values after
+experience. No Python-side alias representative is rotated or prescribed.
+
+Generalized retrieval supplies the prior only for options that lack their own
+outcome-grounded exact `Q`. In a mixed population, retrieval and the global
+candidate cap still see every legal action exactly as before; formal execution
+is then omitted only for exact-Q actions whose generalized result cannot enter
+their activation, prediction, source, or update. When all options have exact
+values, generalized audit is skipped entirely. The sole emitted exact branch
+is still formally confirmed before the environment may execute it. This is
+partial evaluation of dead computation, not a host move choice or fallback.
 
 ### 2. Emit one action through a formal ReCoN choice
 
@@ -753,6 +779,7 @@ The design does **not** establish:
 | `fabc2b79` | Closes direct/shell provider credit, per-action competition, precommit actuation parity, and strict transactional checks. |
 | `4b3e3a04` | Makes bounded exact-action value the common exploitation, TD-prediction, and update state; restores ordinary surprise-mate policy credit. |
 | `02ffc08d` | Adds graph-local first-contact priority and uncapped post-contact revisit pressure, eliminating the bounded-novelty starvation counterexample. |
+| `e2bdda38` | Preserves all-legal retrieval/cap semantics but omits generalized formal execution for exact-Q actions whose result cannot affect choice or TD. |
 
 Use [`BRANCH_LOGBOOK.md`](../../BRANCH_LOGBOOK.md) for the experiment ledger.
 The evidence motivating this repair is in
@@ -788,6 +815,12 @@ adjacent data-free ecology/development/credit suites passed `59/59` in `2.38
 s`. Historical authority fixtures remain unavailable because their archived
 source artifacts are absent from this sparse clone.
 
+At `e2bdda38`, the seven primary graph/curriculum/all-reply/provider/authority/
+runner suites passed `200/200` in `108.17 s`. A reconstructed 828-triplet
+development graph reduced a fully contacted recurrent choice from about
+`1.405 s` to `0.034 s`; this is runtime evidence only. Six unrelated
+historical cases still require absent archived fixtures.
+
 The highest-value tripwires are:
 
 - native-local training raises if any scheduled/hash selector is reached;
@@ -820,18 +853,17 @@ The highest-value tripwires are:
 - strict no-gate R1 snapshots fingerprint and resume exactly;
 - the empty adaptive factory cannot read any pool field and seeds no evidence.
 
-If these pass, run one V23 canary on the exact V21/V22 seed and one independent
-seed in separate directories, with one numerical thread per process. The
-four-epoch profile is a causal contact/diversity discriminator: require one
-distinct first action per recurrent board/epoch until local contact is
-exhausted, correct TD/value identity, positive environmental mate reward when
-observed, bounded growth, exact replay, and no certification leakage. It is
-too short to demand post-contact certification on boards with roughly 17--20
-legal actions.
+The V23 canaries stopped inside R0; the V24 runtime-only repair is now the
+current gate. Run exact comparison seed `2026090108` first, then one independent
+seed only if R0 completes, using separate directories and one numerical thread
+per process. The four-epoch profile is a causal runtime/contact discriminator:
+require completed R0, a finite triplet plateau, R1 entry, correct TD/value
+identity, broad first contact, exact replay and no certification leakage. It is
+too short to demand a mate, promotion or post-contact certification on boards
+with roughly 17--20 legal actions.
 
-Proceed to the existing longer checkpointed profile only if at least one short
-seed produces multiple independent positive trajectories and an early enough
-bud for a later positive match. Diagnose the next failure by its earliest
+Proceed to the existing longer checkpointed profile if V24 restores bounded
+runtime and R1 reachability. Diagnose the next functional failure by its earliest
 unreached lifecycle boundary: no repeated cross-trajectory candidate match
 after at least four positives implicates representation specificity; four
 clean candidate supports without promotion implicate the ecology bridge; a
@@ -860,8 +892,9 @@ evidence and a separate explicit go decision.
    different aliases, or must the micropattern representation itself refine?
 2. Does weakest-reply experience produce enough sibling coverage for a complete
    all-reply envelope without starving alternative boundary regions?
-3. Does V23 produce enough distinct positive trajectories, early enough, to
-   test cross-trajectory candidate matching rather than only candidate birth?
+3. Does a longer V24 run produce enough distinct positive trajectories, early
+   enough, to test cross-trajectory candidate matching rather than only
+   candidate birth?
 4. Can the host-controlled R0 maturity/freeze boundary become a local
    evidence-driven lifecycle decision without destabilizing the mate-in-1
    skeleton?

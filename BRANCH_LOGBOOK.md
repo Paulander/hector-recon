@@ -33,7 +33,9 @@ boundaries and artifact identities.
 | Adaptive-boundary V19 empty-shell local-R0 canary | Source `f68775e6`; seed `2026090107`; fixed 96-epoch R0 budget; one numerical thread | Local competition ran 4,608 episodes and reached training/validation/regression `47/48`, `15/16`, `16/16`, but an aggregate `48/48` host mastery gate discarded the core and R1 never ran. **NO-GO**; motivated exact local authority. |
 | V20 exact local-outcome authority gate | Commits `7e15dc85` and `eafcc488`; data-free/focused tests only | Exact selected actions own their REAL evidence; positive zero-contrast cells become direct providers; aggregate scores are report-only. `153/153` focused preflight tests passed. No fresh V20 chess result. |
 | V21 direct/shell provider canary | Source `fabc2b79`; seed `2026090108`; strict primary arm; 8/4/4 R1 pools, four epochs, one numerical thread | Clean `5323.803301249864 s` completion; R0 retention `16/16`, 47 direct providers; 32 R1 episodes, one unique surprise mate, 11 births, but zero promotion/certification/AVAILABLE/handoff/value and `0/4` mate-in-2. Raw graph prediction near `9.176` forced every TD error to `-1`, and the observed mate received no terminal reward. **NO-GO unchanged.** |
-| V22 local action-value/credit repair | Source `4b3e3a04`; data-free and production-path tests | Untried options inherit bounded generalized priors; experienced `(pattern, actuator)` options own the exploitation value used as TD prediction and update. Surprise mate is ordinary policy reward only, with no certification/handoff leakage. Focused `64/64`; broader `172/172`. Same-seed V22 discriminator is next. |
+| V22 local action-value/credit canary | Source `93d66f7c`; seed `2026090108`; 96 R0 + four R1 epochs; one numerical thread | Credit/value identity worked, including `+1` TD on the sole surprise mate, but only 10/32 R1 actions were distinct; no promotion/handoff/value/mate-in-2. **NO-GO:** bounded novelty starved untried actions. |
+| V23 first-contact canaries | Source `158f2ee3`; seeds `2026090108/09`; two parallel processes, one numerical thread each; `7200 s` ceiling | Safe complete-epoch stops in R0 at epochs 76/74; no R1 claim. Broad contact exposed redundant generalized formal audits: 64 formal pairs made an 828-triplet choice about `1.4 s`. |
+| V24 exact-Q audit elision | Source `e2bdda38`; data-free tests and reconstructed 828-triplet development microprofile | Exact-Q options retain local choice/TD and final exact confirmation while irrelevant generalized execution is omitted. Fully contacted choice `1.405 -> 0.034 s`; primary suites `200/200`. Curriculum canary is next. |
 
 ## Purpose and validity scope
 
@@ -45,8 +47,8 @@ inference. The constructed benchmark uses one persistent black knight to stay
 materially disjoint from the protected pure-KRK corpora; its two D4 geometries
 are not representative workload samples.
 
-Current branch: `codex/native-adaptive-organism`; current implementation commit
-`4b3e3a04709df1a161ab7b000d646ab54918cf0c`. Historical experiment identities
+Current branch: `codex/native-adaptive-organism`; current behavior commit
+`e2bdda3812f5a8350a8f5b658c3b6b923cd305de`. Historical experiment identities
 below remain unchanged; use the exact source commit recorded in each entry
 rather than the current branch tip.
 
@@ -1243,13 +1245,16 @@ rather than the current branch tip.
   Once every currently represented option has contact, the same anonymous
   formal competition uses uncapped `sqrt(2 log(1+N)/n_i)` revisit pressure.
   Curiosity remains excluded from TD prediction and frozen-policy value.
-- This is not an epoch sweep, hash picker, action label, or new gate. Every
-  legal action still enters one anonymous formal choice; the generic adapter
-  supplies no order and executes only the emitted actuator. Conditional on a
-  stable recurrent finite population of `K` represented options and one REAL
-  outcome per visit, every initially untried option is contacted within at
-  most `K` visits. Per-choice work remains linear in the legal action count;
-  at most the emitted option is materialized.
+- This is not an epoch sweep, scheduled/hash action picker, action label, or
+  new gate. Every legal action still enters one anonymous formal choice; a
+  stable content-blind hash resolves exact activation ties, and only the
+  emitted actuator executes. Conditional on a stable recurrent finite
+  population of `K` represented options and one REAL outcome per visit, every
+  initially untried option is contacted within at most `K` visits. Formal
+  option construction is linear in the legal action count, but total choice
+  cost also includes shared-source retrieval and formal candidate execution
+  over the stored graph; V23 did not yet bound that front half by `K`. At most
+  the emitted option is materialized.
 - Exact tests cover a maximal learned incumbent versus a nearly `-1` untried
   prior, exhaust-once contact of every local option, post-contact renewable
   revisit pressure, independent aliases and pickle parity, evaluation
@@ -1266,3 +1271,69 @@ rather than the current branch tip.
   run can test contact diversity, but with roughly 17--20 legal actions per
   recurrent board it is normally too short to test post-contact certification.
   Use it only as a stop/go discriminator before a longer fixed profile.
+
+### V23 two-seed canary outcome and runtime localization
+
+- Exact source `158f2ee3745a2be3a3e58ddfa966a0924c0c3536`; seeds
+  `2026090108` and `2026090109`; `canary` profile; one process and one
+  numerical thread per seed; independent output directories; `7200 s` wall
+  and `8192 MiB` RSS ceilings. Both attempts preserved clean source identity
+  and stopped normally at complete R0 epoch boundaries with exit `2`.
+- Seed `0108` reached exact R0 epoch 76 in `7268.79515999998 s`; seed `0109`
+  reached epoch 74 in `7212.374645166798 s`. Neither completed R0, entered R1,
+  produced a result, or created an R1-resumable snapshot. Mate-in-2 learning,
+  ecology, promotion, certification, handoff, and successor value are all
+  **not adjudicated**, not zero-result failures.
+- The 48-epoch gate was cancelled. A development-only reconstruction of the
+  exact seed-`0108` R0 action population found 828 canonical triplets, 4,465
+  nodes, 207,108 edges and 20 legal actions in the profiled choice. Retrieval
+  produced 320 source/action pairs in about `0.068 s`, but the capped full
+  audit formally executed 64 pairs and took about `1.34--1.41 s`. Profiling
+  attributed the majority to 64 formal runs/1,664 ticks, especially repeated
+  high-fanout message scans; retrieval itself was not the main cost.
+- V23 therefore answered the exploration theorem but exposed redundant
+  computation. Broad first contact materialized the finite action population;
+  every later recurrent choice still re-ran generalized formal candidates
+  even though an outcome-grounded exact action `Q` already overrode every one
+  of those scores. This is a healthy bounded topology with an avoidable hot
+  path, not evidence against first contact and not evidence about R1 ecology.
+
+### V24 exact-Q generalized-audit elision (pre-canary)
+
+- Exact implementation commit
+  `e2bdda3812f5a8350a8f5b658c3b6b923cd305de`. The selector first reads each
+  legal `(pattern, actuator)` option's persistent exact `Q`. Generalized
+  retrieval remains necessary only for options without such a value.
+- In mixed populations, retrieval and the global 64-pair cap still operate on
+  the complete legal population before formal execution is filtered. Thus
+  exact-Q options cannot change which generalized sources survive for an
+  untried option relative to V23. When every option has exact `Q`, generalized
+  retrieval/audit is bypassed entirely. All legal options still enter the
+  anonymous formal choice, and the sole emitted exact branch still must pass
+  `confirm_candidate` before execution.
+- This removes dead diagnostics, not learner computation: exact `Q`, local
+  exposure, first-contact/UCB activation, emitted action, TD prediction and TD
+  update are unchanged. The old tried-action generalized `raw_value` fields
+  are now zero/absent because their audit no longer runs; the report-only
+  revisit check correctly compares the actual bounded `prediction` instead.
+- At the same reconstructed 828-triplet graph, a fully contacted choice fell
+  from about `1.405 s` to `0.034 s` (`audit_candidate_count=0`) while retaining
+  36 ticks for anonymous emission plus exact post-emission confirmation. This
+  microprofile is causal performance evidence, not a curriculum result.
+- Tests cover full-contact bypass with exactly one final confirmation,
+  all-legal cap preservation in mixed populations, low-value/low-count
+  post-contact UCB revisit, the `K-1 -> K -> UCB` pickle boundary, prediction
+  and TD-update identity, and report-only revisit semantics. Seven primary
+  graph/curriculum/all-reply/provider/authority/runner suites passed `200/200`
+  in `108.17 s`; 56 adjacent data-free tests passed. Six unrelated historical
+  cases remain unavailable because this sparse checkout lacks their archived
+  result fixtures.
+- Next gate: run seed `2026090108` under the unchanged two-hour ceiling. Go to
+  one independent seed only if R0 completes, the finite triplet population
+  plateaus, R1 executes, fully contacted choices show zero generalized audit
+  candidates, exact confirmation/replay remains sound, and there is no
+  evidence leakage. Four R1 epochs test reachability and contact diversity,
+  not promotion/certification efficacy. If V24 still ceilings, profile the
+  remaining single confirmation before considering a separately proven
+  induced-edge engine optimization; do not alter exploration or ecology in
+  the same discriminator.
