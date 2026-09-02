@@ -936,6 +936,53 @@ One development run can pass its mechanism checks, but it cannot make the
 scientific gate pass. A real curriculum run requires replicated independent
 evidence and a separate explicit go decision.
 
+## V25 paired development evidence — 2026-09-02
+
+Exact experiment source: `e11ad9c2ee939cc16550ad1cb6b01ab4dbc119ca`.
+Both two-hour-budget runs ended cleanly at exact snapshots: seed `2026090108`
+at epoch 19 (7449.157 total wall seconds), seed `2026090109` at epoch 22
+(7279.319 seconds). The small overshoot includes completing an epoch and
+writing its snapshot. Conditions and full structural counters are in
+`BRANCH_LOGBOOK.md`; no final-regression outcomes were opened.
+
+The actual learning streams now demonstrate several previously missing links:
+
+- `0108` has six certified roots, with discovery excluded from post-birth
+  evidence. One new root supplied two grounded all-reply handoffs and a
+  successor-value sum of `1.245404874`. Several certificates share the same
+  successful receipts; they are competing hypotheses, not independent wins.
+  Preserved history records one actual two-white-move training win covering
+  every legal reply (there was only one). Neither new-shell-credited exact
+  move was subsequently selected in this saved stream; generalization and
+  new-shell-credit re-selection are still separate unanswered questions.
+- Both streams generated genuine depth-one specialization children (eight
+  and five), while ecology capacity replacement kept both live sketch
+  populations at 32. No specialization child is certified yet, and authority
+  slot retirement was not exercised. Structural depth is not chess depth.
+- `0109` supplied two frozen-core handoffs and subsequently selected an exact
+  action using the value changed by its earlier positive successor TD.
+  Thus stored learning actually reaches subsequent competition. This does
+  not prove that it changed the winner against an untrained counterfactual.
+- Positive successor value can yield negative TD when it is below an
+  optimistic prior. Both `0108` new-root handoffs did so; they must not be
+  described as positive TD updates or assumed to raise the move's ranking.
+
+The last measured exhaustive M2 validation remains `0/4` in each seed;
+frozen-core retention remained `16/16` and the pre-existing `15/16` baseline.
+The ceiling epochs themselves skipped evaluation. Only 3 and 24 post-contact
+choices completed, below the declared 80-decision recurrence window. This is
+mechanism progress, not generalization, convergence, or full-curriculum
+qualification. Actual interrupted/resumed parity also remains unexercised
+by these particular streams, despite passing focused exact-resume tests.
+
+The next bounded discriminator, if authorized, should preserve these exact
+source/checkpoint identities and reach the existing recurrence horizon with
+unchanged learner parameters. Measure whether new-shell credit changes later
+selected values and whether separately supported patterns cover the remaining
+legal replies. Do not lower certification thresholds or add an external move
+selector merely to produce a passing short run. Both runs are preserved and
+stopped; no continuation or new full curriculum was launched.
+
 ## Remaining architectural questions
 
 1. Are independent exact actuator values sufficient to separate strategically

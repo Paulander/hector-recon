@@ -1469,3 +1469,94 @@ rather than the current branch tip.
   not a qualifying full-curriculum seed. Do not automatically extend either
   run beyond its ceiling or launch a real curriculum; inspect the measured
   post-contact and post-birth signals first.
+
+### V25 paired follow-through outcome — 2026-09-02
+
+- Exact run source `e11ad9c2ee939cc16550ad1cb6b01ab4dbc119ca`; implementation
+  `9671c8fc3c03d631d283a4f0dbea18ded8ab366f`. Both independent development
+  processes ended with exit `2`, `CEILING_REACHED_AT_EXACT_EPOCH_SNAPSHOT`.
+  No run was interrupted, resumed, extended, or tuned. Source stayed clean
+  until both processes ended. Artifacts remain untracked in
+  `reports/autogrowth/development/native_event_local_v25_seed_2026090108_e11ad9c2_follow_through/`
+  and the corresponding `2026090109` directory.
+- Conditions: 96 R0 epochs/48 training positions; planned 32 R1 epochs on
+  eight recurrent random training positions, four validation positions and
+  four final-regression positions; validation/snapshots every four epochs;
+  one process and one numerical-library thread per seed; `7200 s` total-wall
+  and `8192 MiB` RSS ceilings. Safe-epoch wall checks triggered at
+  `7426.749 s` / `7260.097 s`; final snapshot writing finished at the wall
+  durations below. Actual peak RSS was not persisted. No protected outcomes,
+  external chess oracle, solution labels, or final-regression answers were
+  opened or used.
+
+| Saved result | Seed 2026090108 | Seed 2026090109 |
+| --- | ---: | ---: |
+| Exact stopping epoch / decisions | 19 / 152 | 22 / 176 |
+| Total wall seconds | 7449.157 | 7279.319 |
+| R1 snapshot duration seconds | 6200.688 | 6030.144 |
+| First-contact / post-contact choices | 149 / 3 | 152 / 24 |
+| Exact-Q selections / positive-credit option revisits | 3 / 3 | 24 / 13 |
+| Unique REAL observations / duplicate VIRTUAL events | 148 / 0 | 145 / 16 |
+| Surprise mating outcomes | 14 | 28 |
+| Authority roots / depth-one specialization children | 27 / 8 | 22 / 5 |
+| Currently certified roots / retired authority cells | 6 / 0 | 0 / 0 |
+| Lifetime ecology births / live sketches (cap 32) | 192 / 32 | 288 / 32 |
+| Archived sketch identities / capacity replacements | 160 / 127 | 256 / 224 |
+| Graph nodes / edges / triplets | 5217 / 243390 / 973 | 5271 / 245882 / 983 |
+| AVAILABLE all-reply envelopes / handoffs | 2 / 2 | 4 / 2 |
+| Successor-value sum | 1.245404874 | 1.676164828 |
+| Last measured M2 validation | 0/4 at epoch 16 | 0/4 at epoch 20 |
+| Last measured frozen R0 retention | 16/16 | 15/16 (initial baseline) |
+
+- New-shell functionality is real in `0108`: cell suffix `8feeb84268cf`,
+  born at REAL frontier 48, certified from later successes 52, 67, 68, 75;
+  discovery remained excluded. It supplied the two successor-valued
+  handoffs. The first five certified roots share much of their evidence;
+  six certificates are not six independent competence discoveries. The
+  depth-one children in both seeds are genuine recursive specialization,
+  but none is certified: no second mature competence shell is established.
+  The preserved epoch-16 history also records one auditable all-reply
+  training conversion: `f6f7`, the sole legal reply `h8h7`, then the native
+  R0 action `a5h5` with an observed mate at REAL ordinal 109. This is a
+  two-white-move training win in a one-reply case, not held-out M2 mastery.
+  Neither of the two new-shell-credited exact moves was subsequently
+  selected in the saved `0108` stream.
+- Positive successor value is not necessarily positive TD. The `0108`
+  handoffs produced values `0.596521375` and `0.648883499`, but TD errors
+  `-0.372223936` and `-0.316870015`: confidence-weighted bootstrap targets
+  were below optimistic initial predictions. Conversely, `0109`'s first
+  frozen-core handoff gave TD `+0.024851255`; its exact `f7c7` action was
+  later selected at epoch 21 using prediction `0.937136845`, equal to its
+  prior `0.935148745 + 0.08 * TD`, and again produced an observed mate.
+  Its second frozen-core handoff had negative TD and was also later
+  selected using its reduced learned value. This establishes actual
+  successor-credit feedback into later competition, not a counterfactual
+  proof that credit changed the winning move. Neither `0109` handoff came
+  from a newly certified authority cell.
+- Resource turnover remained local and bounded: dormant/dead identities
+  are the tombstone view, not a second population to add to lifetime births.
+  Ecology slot replacement was exercised; authority-cell slot retirement
+  was not: successor occupancy was only `35/192` and `27/192`, using the
+  authority's separate `DORMANT_SPECIALIZATION_CHILD_CAPACITY`, not the
+  ecological sketch cap of 32. No confirmation, false-authority,
+  pending-event, or observed certification-separation failure was found.
+  Exact snapshots were saved;
+  an interrupted/resumed execution was not exercised in these runs, so the
+  earlier exact-resume tests must not be relabeled as experimental parity.
+- The stopping epochs skipped evaluation; the table reports the most recent
+  measured validation, not invented epoch-19/22 scores. Final regression was
+  withheld, and ceiling-report gate booleans are not measured learning
+  failures. With only 3 and 24 post-contact decisions against the prescribed
+  80-decision window, recurrence efficacy remains timing-inconclusive.
+  Both runs exceeded candidate support one, so the specified recurrence
+  lockout condition did not occur.
+- Decision: preserve both snapshots; **no-go for a full curriculum**. The
+  repairs now support local refinement, certification, new-shell handoff,
+  bounded replacement and learned-value re-selection, but M2 validation is
+  still zero and those mechanisms have not jointly matured in both seeds.
+  If separately authorized, the next discriminator is a bounded continuation
+  to the already declared recurrence horizon, preserving exact source
+  identity `e11ad9c2` and unchanged learner parameters—not another picker,
+  gate, or monitoring framework. Authority slot reuse, exact resumed-stream
+  parity, new-shell-credit re-selection and reply coverage remain explicit
+  questions. No continuation was started by this result report.
