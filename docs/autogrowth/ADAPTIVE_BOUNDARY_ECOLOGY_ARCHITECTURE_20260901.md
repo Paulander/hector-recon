@@ -593,7 +593,7 @@ This boundary is the answer to the “plumbing versus ReCoN” concern.
 | Native learned state/authority | Generic domain-independent substrate | Scientific/environment harness |
 | --- | --- | --- |
 | Graph pattern identities, weights, bounded exact-action values, and per-action exposure | Enumerate legal affordances and derive canonical local keys | Start episodes and supply the consequence of the action actually taken |
-| Local evidence and exact-action provider eligibility | Max-pool native sources into untried priors and compute local bounded UCB activation | Enumerate every legal opponent reply and execute one weakest REAL challenge |
+| Local evidence and exact-action provider eligibility | Max-pool native sources into untried priors and compute local first-contact/revisit activation | Enumerate every legal opponent reply and execute one weakest REAL challenge |
 | Formal anonymous exactly-one emission | Package activations and break exact ties by stable local identity | Enforce fixed phase, wall-time, memory, and active-resource ceilings |
 | TD, eligibility, responsibility, and exposure | Validate schemas, identities, parity, and replay | Invoke content-blind epoch safe points and preserve checkpoints |
 | Surprise-success budding, contrast, certification, refinement, retirement, and slot reuse | Atomically apply the already nominated structural batch | Evaluate held-out chess performance for reporting only |
@@ -611,9 +611,20 @@ permits R1. An outcome-blind authority-integrity audit may veto unsafe entry.
 These are outer curriculum/safety decisions, not runtime move or growth-content
 pickers, but the phase timing is not endogenous.
 
+Local exploration has two graph-owned phases. If any currently represented
+legal option has zero REAL exposure, every untried option occupies a disjoint
+first-contact activation tier. Its learned generalized prior orders it against
+other untried options, but no tried incumbent can prevent one environmental
+contact. After all current options have contact, logarithmic local UCB pressure
+supports later revisits while its fraction can diminish relative to learned
+exploitation. A VIRTUAL query, evaluation query, or mere choice cannot spend
+first-contact status; only the observed outcome update can do so. This is a
+local lifecycle rule applied identically in R0 and R1, not a curriculum move
+schedule.
+
 The complete R0→R1 curriculum is therefore not described as pure in-graph
 ReCoN. Generic Python substrate still enumerates legal affordances, retrieves
-local sources, max-pools them per action, computes bounded local curiosity,
+local sources, max-pools them per action, computes local lifecycle activation,
 packages formal choice options, and ranks the opponent's counterexample reply.
 It also projects certified provider records and enforces generic direct-core
 precedence after action emission. Neither operation chooses a move, but neither
@@ -658,6 +669,10 @@ The implementation and focused tests are intended to establish:
 - an untried option inherits a bounded generalized prior; after one REAL
   outcome, exploitation value, TD prediction, and updated exact-action value
   are the same scalar, while curiosity remains choice-only;
+- if a stable recurrent local context has `K` finite represented actions and
+  each visit receives one REAL outcome, every initially untried action receives
+  first contact within at most `K` visits; neither audit nor VIRTUAL queries can
+  consume that status;
 - actuator aliases may share a prior but own independent exact values and
   exposures; stale prediction/value parity fails before mutation;
 - an environmental mate without pre-outcome authority earns ordinary policy
@@ -737,6 +752,7 @@ The design does **not** establish:
 | `eafcc488` | Records the local-authority repair and its pre-canary mechanism gate. |
 | `fabc2b79` | Closes direct/shell provider credit, per-action competition, precommit actuation parity, and strict transactional checks. |
 | `4b3e3a04` | Makes bounded exact-action value the common exploitation, TD-prediction, and update state; restores ordinary surprise-mate policy credit. |
+| `02ffc08d` | Adds graph-local first-contact priority and uncapped post-contact revisit pressure, eliminating the bounded-novelty starvation counterexample. |
 
 Use [`BRANCH_LOGBOOK.md`](../../BRANCH_LOGBOOK.md) for the experiment ledger.
 The evidence motivating this repair is in
@@ -764,8 +780,13 @@ At `fabc2b79`, the focused provider/action/runner set passed `147/147` and the
 broader relevant regression set passed `276/276` in `468.62 s`. The V21 canary
 then exposed the value/credit mismatch described above. At `4b3e3a04`, the two
 directly changed suites passed `64/64`; the six production-path curriculum,
-provider, action, and runner suites passed `172/172` in `95.96 s`. This remains
-software and mechanism-contract evidence until the V22 discriminator runs.
+provider, action, and runner suites passed `172/172` in `95.96 s`. The V22
+same-seed discriminator repaired value identity and mate reward, then exposed
+the local starvation counterexample recorded in the logbook. At `02ffc08d`,
+the six primary production-path suites passed `188/188` in `110.59 s` and the
+adjacent data-free ecology/development/credit suites passed `59/59` in `2.38
+s`. Historical authority fixtures remain unavailable because their archived
+source artifacts are absent from this sparse clone.
 
 The highest-value tripwires are:
 
@@ -779,6 +800,9 @@ The highest-value tripwires are:
 - R0 coverage/specificity failure is reported but does not block R1 when
   outcome-blind runtime integrity passes;
 - choice and audit do not increment exposure, while exact observed TD does;
+- a maximal learned incumbent cannot starve an untried bounded option; a
+  recurrent finite local population receives complete first contact before
+  ordinary post-contact revisit competition;
 - large raw source scores enter TD through the bounded value used for
   exploitation, first credit is continuous from that prior, and later choice
   reads the updated exact value;
@@ -796,18 +820,26 @@ The highest-value tripwires are:
 - strict no-gate R1 snapshots fingerprint and resume exactly;
 - the empty adaptive factory cannot read any pool field and seeds no evidence.
 
-If these pass, rerun the exact V21 seed/profile from `4b3e3a04` in a new output
-directory with numerical-library threads fixed to one. This same-seed V22 run
-is a causal discriminator for the two repaired semantics; it is not an
-independent replication. Stop rather than extend if outcome-blind runtime
-integrity fails, the run does not enter R1 for that integrity reason, legacy
-routing appears, emission/credit identity diverges, certification leaks,
-replay differs, or an active cap is uncontrolled. A native R0
-coverage/specificity failure is report-only and is not itself a stage-entry
-stop.
+If these pass, run one V23 canary on the exact V21/V22 seed and one independent
+seed in separate directories, with one numerical thread per process. The
+four-epoch profile is a causal contact/diversity discriminator: require one
+distinct first action per recurrent board/epoch until local contact is
+exhausted, correct TD/value identity, positive environmental mate reward when
+observed, bounded growth, exact replay, and no certification leakage. It is
+too short to demand post-contact certification on boards with roughly 17--20
+legal actions.
 
-Only after that canary behaves mechanically should several short independent
-seeds be considered. The predeclared mechanism gate requires, at minimum:
+Proceed to the existing longer checkpointed profile only if at least one short
+seed produces multiple independent positive trajectories and an early enough
+bud for a later positive match. Diagnose the next failure by its earliest
+unreached lifecycle boundary: no repeated cross-trajectory candidate match
+after at least four positives implicates representation specificity; four
+clean candidate supports without promotion implicate the ecology bridge; a
+promoted cell with four later matching supports but no certification
+implicates authority. Do not lower evidence thresholds merely to fit four
+epochs.
+
+The eventual mechanism gate requires, at minimum:
 
 - R0 retention;
 - a surviving positive promoted lineage with disjoint post-birth
@@ -828,8 +860,8 @@ evidence and a separate explicit go decision.
    different aliases, or must the micropattern representation itself refine?
 2. Does weakest-reply experience produce enough sibling coverage for a complete
    all-reply envelope without starving alternative boundary regions?
-3. Does the V22 same-seed run show that positive environmental credit now
-   changes later local competition after a successful option is revisited?
+3. Does V23 produce enough distinct positive trajectories, early enough, to
+   test cross-trajectory candidate matching rather than only candidate birth?
 4. Can the host-controlled R0 maturity/freeze boundary become a local
    evidence-driven lifecycle decision without destabilizing the mate-in-1
    skeleton?

@@ -1186,3 +1186,83 @@ rather than the current branch tip.
   authority leakage, bounded/replay-exact state, and unchanged frozen-core
   retention. Preserve and stop if those fail; only then consider a broader
   diversity canary for distinct post-birth evidence.
+
+### V22 same-seed canary outcome and local-starvation forensics
+
+- Exact source `93d66f7c1ec0dd66c7178bd1f8406e81958297a4`, seed
+  `2026090108`, `canary` profile, one process and one numerical thread,
+  independent directory
+  `native_action_value_v22_seed_2026090108_93d66f7c_canary`. The run exited
+  cleanly after `5283.950514832977 s` with
+  `COMPLETED_R1_GATE_FAILED`; its final and per-epoch snapshots are intact.
+- V22 repaired both intended semantics. Every R1 TD prediction was the same
+  bounded local value used by exploitation, and later visits read the updated
+  exact action value. The sole observed mate, the final event `g5h6`,
+  `...g8h8`, `f4f8#`, received ordinary retrospective environmental reward
+  and clipped TD `+1.0` from prior `-0.881338`; it created three positive
+  ecology buds without producing authority, handoff, or same-event successor
+  value.
+- R0 used 4,608 episodes over 96 epochs, produced 44 direct providers, and
+  scored `45/48`, `15/16`, and `14/16` on the training-policy, validation, and
+  report-only regression probes. The isolated frozen core remained `15/16`
+  through R1, proving the validation loss was pre-R1 policy generalization,
+  not forgetting or a shell-routing veto.
+- R1 used 32 episodes over four epochs but only ten distinct REAL first
+  actions. It produced ten unique REAL observations, 15 duplicate virtual
+  queries, one positive outcome, nine negative authority receipts, three
+  ACTIVE buds, and zero promotion, AVAILABLE envelope, handoff, successor
+  value, or exhaustive mate-in-2 conversion. The buds were born on the final
+  event and therefore had no possible post-birth evidence. Candidate
+  specificity, sibling reply composition, and authority certification were
+  not exercised and cannot be blamed from this run.
+- The demonstrated defect was local action starvation. An untried option was
+  scored as bounded prior plus at most one novelty unit, while a tried option
+  could retain a higher bounded value forever. V22 therefore repeatedly chose
+  one incumbent on several recurrent boards despite 15--19 untried legal
+  alternatives. The three direct providers lost relative to V21 each found
+  mate once, then never revisited it and correctly failed the three-positive
+  evidence threshold. The missed R0 validation/regression rankings were
+  generalized graph-value differences of only about `0.004--0.007`, not
+  admission or routing disagreement.
+- Decision: V22 is a successful causal mechanism repair but a functional
+  no-go. Preserve it. Do not lower evidence thresholds or change ecology from
+  this evidence; first repair graph-local contact and revisit metabolism.
+
+### V23 graph-local first-contact and renewable revisit (pre-canary)
+
+- Exact implementation commit
+  `02ffc08d430bd10025a1c83a8cde3dd1602c74b7`. For a current finite local
+  action population, graph-owned REAL exposure is now a lifecycle state. If
+  any option is untried, every untried option receives a `+3` ordinal
+  first-contact offset and every tried option receives zero curiosity. Because
+  policy values are bounded in `[-1, 1]`, the untried tier `[2, 4]` is strictly
+  above the tried tier `[-1, 1]`; learned generalized value still orders the
+  untried cohort.
+- Only an observed `apply_intrinsic_td` event consumes first-contact status.
+  Choice, audit, VIRTUAL probing, and read-only evaluation cannot consume it.
+  Once every currently represented option has contact, the same anonymous
+  formal competition uses uncapped `sqrt(2 log(1+N)/n_i)` revisit pressure.
+  Curiosity remains excluded from TD prediction and frozen-policy value.
+- This is not an epoch sweep, hash picker, action label, or new gate. Every
+  legal action still enters one anonymous formal choice; the generic adapter
+  supplies no order and executes only the emitted actuator. Conditional on a
+  stable recurrent finite population of `K` represented options and one REAL
+  outcome per visit, every initially untried option is contacted within at
+  most `K` visits. Per-choice work remains linear in the legal action count;
+  at most the emitted option is materialized.
+- Exact tests cover a maximal learned incumbent versus a nearly `-1` untried
+  prior, exhaust-once contact of every local option, post-contact renewable
+  revisit pressure, independent aliases and pickle parity, evaluation
+  non-consumption, and an outcome-only mate-in-1 canary that contacts every
+  legal action, revisits mate at least three times, and learns to emit it.
+  The six primary production-path suites passed `188/188` in `110.59 s`; the
+  adjacent data-free ecology/development/credit suites passed `59/59` in
+  `2.38 s`. Historical authority tests requiring archived artifacts remain
+  unavailable in this sparse clone and fail only on their missing source
+  files.
+- The claim is deliberately conditional, not convergence. Changing contexts,
+  coarse aliases, constant-step TD, nonstationary graph weights, and incomplete
+  adversarial reply coverage remain possible failure modes. A four-epoch R1
+  run can test contact diversity, but with roughly 17--20 legal actions per
+  recurrent board it is normally too short to test post-contact certification.
+  Use it only as a stop/go discriminator before a longer fixed profile.
