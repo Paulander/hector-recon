@@ -39,6 +39,30 @@ from recon_lite_hector.learning import (
 )
 
 
+def test_environment_reply_is_not_overridden_by_learner_challenge():
+    authority, fen, first, after_first, _counters = _fixture(state="UNKNOWN")
+    # The forced-mate fixture has only one reply. Choose a legal first move
+    # with multiple replies for this selection-independence test.
+    board = chess.Board(fen)
+    for first in board.legal_moves:
+        after_first = board.copy(stack=False)
+        after_first.push(first)
+        if len(tuple(after_first.legal_moves)) > 1:
+            break
+    kwargs = dict(fen=fen, white_move_uci=first.uci(), exposure_counts={},
+        frame_prefix="environment-reply", frame_session=None, generic_seed=17)
+    ordinary = _prospective_counterexample_reply_probe(authority, after_first, **kwargs)
+    environment_reply = next(move for move in after_first.legal_moves
+        if move.uci() != ordinary["selected"]["black_move"])
+    actual = _prospective_counterexample_reply_probe(authority, after_first,
+        environment_reply=environment_reply, **kwargs)
+    assert actual["selected"]["black_move"] == environment_reply.uci()
+    assert actual["envelope"].counterexample_reply_id == ordinary["envelope"].counterexample_reply_id
+    assert actual["selected"]["reply_id"] != actual["envelope"].counterexample_reply_id
+    assert kwargs["exposure_counts"] == {}
+    assert authority.next_expected_ordinal == 0
+
+
 class _Authority:
     """Small V2-shaped test double; no learner labels enter the policy."""
 

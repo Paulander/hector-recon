@@ -2139,16 +2139,17 @@ def test_local_action_lifetime_evidence_is_exact_and_resume_safe() -> None:
 
 
 @pytest.mark.parametrize(
-    ("v2_enabled", "selection_mode"),
+    ("v2_enabled", "selection_mode", "v27"),
     (
-        (False, "scheduled"),
-        (True, "scheduled"),
-        (True, R1_ACTION_SELECTION_LOCAL_RECON),
+        (False, "scheduled", False),
+        (True, "scheduled", False),
+        (True, R1_ACTION_SELECTION_LOCAL_RECON, False),
+        (True, R1_ACTION_SELECTION_LOCAL_RECON, True),
     ),
-    ids=("legacy", "v2-scheduled", "v2-native-local"),
+    ids=("legacy", "v2-scheduled", "v2-native-local", "v27-environment-local"),
 )
 def test_r1_interval_snapshot_resume_matches_uninterrupted(
-    tmp_path, monkeypatch, v2_enabled, selection_mode
+    tmp_path, monkeypatch, v2_enabled, selection_mode, v27
 ) -> None:
     base_graph = _graph()
     base_credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
@@ -2197,6 +2198,10 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
         r1_mastery_threshold=2.0,
         mature_child_priority=False,
         r1_action_selection_mode=selection_mode,
+        r1_local_exploration_mode=("finite_local_ucb_v1" if v27 else "first_contact_then_ucb_v1"),
+        r1_black_policy=("exact_mate_horizon_v1" if v27 else "learner_counterexample"),
+        r1_reply_policy=("prospective_counterexample" if v27 else "sampled_round_robin"),
+        r1_require_certified_finisher_for_action=not v27,
         max_samples=0,
     )
     if selection_mode == R1_ACTION_SELECTION_LOCAL_RECON:

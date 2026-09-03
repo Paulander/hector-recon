@@ -71,6 +71,8 @@ from .native_prospective_evidence_authority_v2 import (
     _compact_set_commitment,
 )
 from .native_single_graph_curriculum import (
+    LOCAL_EXPLORATION_FIRST_CONTACT,
+    LOCAL_EXPLORATION_MODES,
     NativeReConKRKGraph,
     NativeSingleGraphConfig,
     ROOT_ID,
@@ -88,6 +90,8 @@ R1_REPLY_POLICIES = (
     R1_REPLY_POLICY_SAMPLED_ROUND_ROBIN,
     R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
 )
+R1_BLACK_LEARNER_CHALLENGE = "learner_counterexample"
+R1_BLACK_TASK_PERFECT = "exact_mate_horizon_v1"
 R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC = "lexicographic_round_robin"
 R1_ACTION_ORDER_STABLE_HASH_PERMUTATION = "stable_hash_permutation"
 R1_ACTION_SELECTION_SCHEDULED = "scheduled"
@@ -226,6 +230,9 @@ class NativeIntrinsicCurriculumConfig:
     r0_action_selection_mode: str = R0_ACTION_SELECTION_SCHEDULED
     r1_reply_policy: str = R1_REPLY_POLICY_SAMPLED_ROUND_ROBIN
     r1_action_selection_mode: str = R1_ACTION_SELECTION_SCHEDULED
+    r1_local_exploration_mode: str = LOCAL_EXPLORATION_FIRST_CONTACT
+    r1_black_policy: str = R1_BLACK_LEARNER_CHALLENGE
+    r1_require_certified_finisher_for_action: bool = True
     r1_action_order: str = R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC
     r0_boundary_ecology_enabled: bool = False
     r0_boundary_continuous_evidence: bool = False
@@ -252,6 +259,12 @@ class NativeIntrinsicCurriculumConfig:
     max_samples: int = 12
 
     def __post_init__(self) -> None:
+        if self.r1_local_exploration_mode not in LOCAL_EXPLORATION_MODES:
+            raise ValueError("unsupported R1 local exploration mode")
+        if self.r1_black_policy not in (R1_BLACK_LEARNER_CHALLENGE, R1_BLACK_TASK_PERFECT):
+            raise ValueError("unsupported R1 Black policy")
+        if type(self.r1_require_certified_finisher_for_action) is not bool:
+            raise ValueError("finisher action admission must be an explicit boolean")
         if not isinstance(self.r0_boundary_continuous_evidence, bool):
             raise ValueError("continuous boundary evidence must be boolean")
         if self.r0_boundary_continuous_evidence and not self.r0_boundary_ecology_enabled:
@@ -302,6 +315,11 @@ class NativeIntrinsicCurriculumConfig:
                 "stable_hash_permutation"
             )
         object.__setattr__(self, "r1_action_order", action_order)
+        if self.r1_black_policy == R1_BLACK_TASK_PERFECT and (
+            self.r1_reply_policy != R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE
+            or self.r1_action_selection_mode != R1_ACTION_SELECTION_LOCAL_RECON
+        ):
+            raise ValueError("task-perfect Black requires the local prospective R1 path")
 
 
 @dataclass(frozen=True)
@@ -1387,6 +1405,9 @@ def run_native_intrinsic_curriculum(
                 else "not_applicable"
             ),
             "r1_real_reply_challenge_schedule": (
+                "environment_exact_mate_horizon_learner_independent"
+                if cfg.r1_black_policy == R1_BLACK_TASK_PERFECT
+                else
                 "worst_authority_state_then_confidence_then_selected_exposure"
                 if cfg.r1_reply_policy
                 == R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE
@@ -1394,6 +1415,11 @@ def run_native_intrinsic_curriculum(
             ),
             "r1_action_order": cfg.r1_action_order,
             "r1_action_selection_mode": cfg.r1_action_selection_mode,
+            "r1_local_exploration_mode": cfg.r1_local_exploration_mode,
+            "r1_black_policy": cfg.r1_black_policy,
+            "r1_finisher_action_requires_certification": cfg.r1_require_certified_finisher_for_action,
+            "opponent_search_labels_visible_to_learner": False,
+            "opponent_perfect_for_unrestricted_chess_claimed": False,
             "r1_action_order_key": (
                 "not_used_graph_local_anonymous_competition"
                 if cfg.r1_action_selection_mode
@@ -2509,6 +2535,8 @@ def _effective_r1_reply_policy(
     """Resolve the requested policy without allowing it to bypass V2 authority."""
 
     requested = str(config.r1_reply_policy).strip().lower()
+    if config.r1_black_policy == R1_BLACK_TASK_PERFECT and r0_child_authority is None:
+        raise ValueError("task-perfect Black cannot silently fall back without authority")
     if requested not in R1_REPLY_POLICIES:
         raise ValueError(f"unsupported R1 reply policy: {requested}")
     if (
@@ -2607,6 +2635,12 @@ def _r1_reply_policy_manifest(
         "schema_version": "native_intrinsic_r1_reply_policy.v1",
         "requested_policy": config.r1_reply_policy,
         "effective_policy": effective_policy,
+        "actual_black_policy": config.r1_black_policy,
+        "black_policy_reads_learner_state": (
+            config.r1_black_policy == R1_BLACK_LEARNER_CHALLENGE
+            and effective_policy == R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE
+        ),
+        "black_solution_labels_returned_to_learner": False,
         "active": effective_policy == R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
         "authority_required": True,
         "event_count": int(counters["reply_envelope_count"]),
@@ -3330,6 +3364,7 @@ def _prospective_counterexample_reply_probe(
     r0_core_graph: NativeReConKRKGraph | None = None,
     r0_core_gate: OutcomeCalibratedPrototypeGate | None = None,
     r0_core_triplet_ids: frozenset[str] | None = None,
+    environment_reply: chess.Move | None = None,
 ) -> dict[str, Any]:
     """Probe every black reply virtually and settle one formal challenge.
 
@@ -3341,6 +3376,8 @@ def _prospective_counterexample_reply_probe(
     replies = tuple(sorted(after_first.legal_moves, key=lambda item: item.uci()))
     if not replies:
         raise ValueError("all-reply probe requires at least one black reply")
+    if environment_reply is not None and environment_reply not in replies:
+        raise ValueError("environment opponent supplied an illegal reply")
     core_supplied = bool(
         r0_core_graph is not None
         or r0_core_gate is not None
@@ -3541,7 +3578,11 @@ def _prospective_counterexample_reply_probe(
         envelope_id=envelope_id,
         generic_seed=int(generic_seed),
     )
-    selected_id = envelope.counterexample_reply_id
+    selected_id = (
+        envelope.counterexample_reply_id
+        if environment_reply is None
+        else _r1_reply_id(fen, white_move_uci, environment_reply.uci())
+    )
     selected = next(
         (context for context in contexts if context["reply_id"] == selected_id),
         None,
@@ -3613,6 +3654,7 @@ def _prospective_counterexample_episode(
     r0_core_graph: NativeReConKRKGraph | None = None,
     r0_core_gate: OutcomeCalibratedPrototypeGate | None = None,
     r0_core_triplet_ids: frozenset[str] | None = None,
+    environment_reply: chess.Move | None = None,
 ) -> tuple[str | None, tuple[str, ...], dict[str, Any]]:
     """Run the one selected REAL successor after an all-reply VIRTUAL probe."""
 
@@ -3661,6 +3703,7 @@ def _prospective_counterexample_episode(
         r0_core_graph=r0_core_graph,
         r0_core_gate=r0_core_gate,
         r0_core_triplet_ids=r0_core_triplet_ids,
+        environment_reply=environment_reply,
     )
     envelope = probe["envelope"]
     selected = probe["selected"]
@@ -3898,6 +3941,11 @@ def _prospective_counterexample_episode(
     if structural is not None:
         counters["v2_structural_transitions"] += 1
     event_manifest = {
+        "actual_reply_source": (
+            "learner_counterexample" if environment_reply is None
+            else "environment_opponent"
+        ),
+        "envelope_counterexample_reply_id": envelope.counterexample_reply_id,
         "fen": str(fen),
         "white_move": str(white_move_uci),
         "reply_ids": list(probe["reply_ids"]),
@@ -4147,6 +4195,7 @@ def _attach_terminal_r1_regression_report(
         final_regression = _evaluate_r1(
             graph,
             pools.r1_regression,
+            require_certified_finisher=config.r1_require_certified_finisher_for_action,
             strata=pools.r1_regression_strata,
             max_samples=config.max_samples,
             r0_child_triplet_ids=context["r0_child_triplet_ids"],
@@ -4263,6 +4312,7 @@ def _run_r1_arm(
     graph.config = replace(
         graph.config,
         score_hierarchy_edge_weights=arm.hierarchy_edge_scoring,
+        local_exploration_mode=config.r1_local_exploration_mode,
     )
     # Keep an explicitly supplied core copy for legacy/non-V2 callers.  A V2
     # arm instead reuses the immutable R0 source inside its cloned authority;
@@ -4769,6 +4819,14 @@ def _run_r1_arm(
                     if not replies:
                         terminal_kind = "failure"
                     elif effective_reply_policy == R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE:
+                        environment_reply = None
+                        if config.r1_black_policy == R1_BLACK_TASK_PERFECT:
+                            # Black acts only after the native graph has
+                            # emitted White's move. Its search results never
+                            # enter White's activation, TD or evidence payload.
+                            from .mate_horizon_opponent import choose_mate_horizon_reply
+
+                            environment_reply = choose_mate_horizon_reply(after_first)
                         (
                             terminal_kind,
                             successor_ids,
@@ -4797,6 +4855,7 @@ def _run_r1_arm(
                             r0_core_graph=r0_core_graph,
                             r0_core_gate=r0_core_gate,
                             r0_core_triplet_ids=r0_core_triplet_ids,
+                            environment_reply=environment_reply,
                         )
                         reply_orbits.update(reply_audit["reply_orbits"])
                         explicit_successor_signal = reply_audit.get(
@@ -5325,6 +5384,7 @@ def _run_r1_arm(
                 metrics = _evaluate_r1(
                     graph,
                     pools.r1_validation,
+                    require_certified_finisher=config.r1_require_certified_finisher_for_action,
                     strata=pools.r1_validation_strata,
                     max_samples=0,
                     stop_after_first_failure=True,
@@ -5483,6 +5543,7 @@ def _run_r1_arm(
     final_validation = _evaluate_r1(
         graph,
         pools.r1_validation,
+        require_certified_finisher=config.r1_require_certified_finisher_for_action,
         strata=pools.r1_validation_strata,
         max_samples=config.max_samples,
         r0_child_triplet_ids=evaluation_child_triplet_ids,
@@ -5499,6 +5560,7 @@ def _run_r1_arm(
         final_regression = _evaluate_r1(
             graph,
             pools.r1_regression,
+            require_certified_finisher=config.r1_require_certified_finisher_for_action,
             strata=pools.r1_regression_strata,
             max_samples=config.max_samples,
             r0_child_triplet_ids=evaluation_child_triplet_ids,
@@ -5657,6 +5719,7 @@ def _run_r1_arm(
             "validation": _evaluate_r1(
                 graph,
                 pools.r1_validation,
+                require_certified_finisher=config.r1_require_certified_finisher_for_action,
                 strata=pools.r1_validation_strata,
                 max_samples=0,
                 r0_child_triplet_ids=alternate_ids,
@@ -5879,6 +5942,9 @@ def _run_r1_arm(
             "r0_child_dispatch_cache_certified_hit_count": counters["child_dispatch_cache_certified_hits"],
             "r0_child_cache_validation_mode": config.r0_child_cache_validation_mode,
             "r1_reply_policy_requested": config.r1_reply_policy,
+            "r1_black_policy": config.r1_black_policy,
+            "r1_local_exploration_mode": config.r1_local_exploration_mode,
+            "r1_finisher_action_requires_certification": config.r1_require_certified_finisher_for_action,
             "r1_reply_policy": effective_reply_policy,
             "r1_reply_policy_active": (
                 effective_reply_policy
@@ -6031,6 +6097,9 @@ def _run_r1_arm(
                 )
             ),
             "reply_schedule": (
+                "environment_exact_mate_horizon_learner_independent"
+                if config.r1_black_policy == R1_BLACK_TASK_PERFECT
+                else
                 "worst_authority_state_then_confidence_then_selected_exposure"
                 if effective_reply_policy
                 == R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE
@@ -6983,7 +7052,10 @@ def _evaluate_r1(
     r0_core_gate: OutcomeCalibratedPrototypeGate | None = None,
     r0_core_triplet_ids: frozenset[str] | None = None,
     action_selection_mode: str = R1_ACTION_SELECTION_SCHEDULED,
+    require_certified_finisher: bool = True,
 ) -> dict[str, Any]:
+    if type(require_certified_finisher) is not bool:
+        raise ValueError("finisher action admission must be an explicit boolean")
     if (
         r0_child_authority is not None
         and r0_core_graph is None
@@ -6999,6 +7071,7 @@ def _evaluate_r1(
             r0_core_triplet_ids = frozenset(authority_triplets)
     rows: list[dict[str, Any]] = []
     converted = null = illegal = reply_total = reply_mated = 0
+    uncertified_attempts = uncertified_mates = 0
     if strata is not None and len(strata) != len(fens):
         raise ValueError("R1 evaluation FEN and stratum sequences must align")
     stratum_conversion: dict[str, dict[str, int | float]] = {}
@@ -7035,6 +7108,7 @@ def _evaluate_r1(
             replies = tuple(sorted(after_first.legal_moves, key=lambda item: item.uci()))
             all_replies_mated = bool(replies)
             for reply in replies:
+                finisher_certified: bool | None = None
                 before_second = after_first.copy(stack=False)
                 before_second.push(reply)
                 if action_selection_mode == R1_ACTION_SELECTION_LOCAL_RECON:
@@ -7054,8 +7128,11 @@ def _evaluate_r1(
                                 ).hexdigest()
                             ),
                         )
+                        finisher_certified = bool(available)
                         selected_uci = (
-                            response.get("selected_move") if available else None
+                            response.get("selected_move")
+                            if available or not require_certified_finisher
+                            else None
                         )
                         candidate = (
                             None
@@ -7091,6 +7168,11 @@ def _evaluate_r1(
                     else _execute_white_and_observe(before_second, second)
                 )
                 ok = terminal_kind == "mate"
+                uncertified_attempt = bool(
+                    second is not None and finisher_certified is False
+                )
+                uncertified_attempts += int(uncertified_attempt)
+                uncertified_mates += int(uncertified_attempt and ok)
                 reply_total += 1
                 reply_mated += int(ok)
                 all_replies_mated = all_replies_mated and ok
@@ -7101,6 +7183,7 @@ def _evaluate_r1(
                             "second": None if second is None else second.uci(),
                             "observed_terminal": terminal_kind,
                             "mated": ok,
+                            "finisher_certified": finisher_certified,
                         }
                     )
                 if stop_after_first_failure and not ok:
@@ -7154,6 +7237,9 @@ def _evaluate_r1(
         "certified_successor_authority_enabled": bool(
             r0_child_authority is not None
         ),
+        "finisher_action_requires_certification": require_certified_finisher,
+        "uncertified_finisher_attempt_count": uncertified_attempts,
+        "uncertified_finisher_mate_count": uncertified_mates,
         "action_selection_mode": action_selection_mode,
         "adaptive_host_priority_cascade_used": bool(
             action_selection_mode != R1_ACTION_SELECTION_LOCAL_RECON

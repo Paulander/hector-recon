@@ -32,6 +32,7 @@ from recon_lite import (
     NodeType,
 )
 from recon_lite_hector.nodes.stem_cell import StemCellState, StemCellTerminal
+from recon_lite.choice_genome import finite_local_uncertainty
 
 from .curated_replay_curriculum import _mate2_buckets
 from .curated_terminal_curriculum import curated_stage_entries
@@ -49,6 +50,12 @@ _LOCAL_ACTION_VALUE_META_KEY = "local_action_value_by_actuator"
 # lifecycle separation derived from the known value span, not a reward-scale
 # tuning parameter.
 _LOCAL_FIRST_CONTACT_PRIORITY = 3.0
+LOCAL_EXPLORATION_FIRST_CONTACT = "first_contact_then_ucb_v1"
+LOCAL_EXPLORATION_FINITE_UCB = "finite_local_ucb_v1"
+LOCAL_EXPLORATION_MODES = (
+    LOCAL_EXPLORATION_FIRST_CONTACT,
+    LOCAL_EXPLORATION_FINITE_UCB,
+)
 _TRANSIENT_NODE_META_KEYS = frozenset({
     "activation_count",
     "choice_selected",
@@ -88,6 +95,11 @@ class NativeSingleGraphConfig:
     terminal_score_normalization: str = "mean"
     max_mate1_positions: int | None = None
     max_mate2_positions: int | None = None
+    local_exploration_mode: str = LOCAL_EXPLORATION_FIRST_CONTACT
+
+    def __post_init__(self) -> None:
+        if self.local_exploration_mode not in LOCAL_EXPLORATION_MODES:
+            raise ValueError("unsupported local exploration mode")
 
     @classmethod
     def from_tg26n(cls, config: SingleGraphCurriculumConfig) -> "NativeSingleGraphConfig":
@@ -919,6 +931,14 @@ class NativeReConKRKGraph:
             option_exposure = int(row["action_option_exposure"])
             if not exploration_enabled:
                 exploration_bonus = 0.0
+            elif self.config.local_exploration_mode == LOCAL_EXPLORATION_FINITE_UCB:
+                # Value and uncertainty compete in one activation range from
+                # the start. An experienced success need not wait for every
+                # alternative to receive contact. Counts are read, never
+                # incremented, by this prospective decision.
+                exploration_bonus = finite_local_uncertainty(
+                    option_exposure, total_exposures
+                )
             elif has_untried_option:
                 exploration_bonus = (
                     _LOCAL_FIRST_CONTACT_PRIORITY

@@ -1856,3 +1856,31 @@ exact-version environment was used without bypassing saved fingerprints.
   M4 events. The next separately governed investigation should target action-
   value reuse/generalization and missing slow consolidation, not another evidence
   reset tweak or longer blind run. No automatic learner change/run is authorized.
+
+### V27 local-interaction repair — 2026-09-03
+
+- User authorized investigation and bounded implementation. New branch
+  `codex/v27-local-interaction`, from `17e5cad6`. No old run was resumed and no
+  protected outcomes were opened.
+- Corrected the previous diagnosis: the matched V26 frontier contained **126
+  first-contact choices /128**, not evidence of a disconnected Q update. Its
+  zero legacy M4 count coexisted with **48 nonzero R0 slow values**. Scheduled
+  graph-wide M4 is disabled; blindly enabling it is not the next repair.
+- Added an opt-in `--local-interaction` contract: finite local R1 uncertainty
+  instead of mandatory first-contact precedence; exact environment-only Black
+  defence for the mate-in-two horizon; and legal finisher attempts independent
+  of certification. Bootstrap value still requires the same grounded all-reply
+  evidence. Old mode, rewards, numerical rates, R0 training and evidence rules
+  remain unchanged. This is a bundle, not a one-factor performance comparison.
+- Verification: seven-module suite **229 passed in279.85s**; added full V27
+  interrupted/resumed episode parity **1 passed in5.92s**. Latest focused
+  opponent/choice/admission suite **47 passed in0.78s** (overlapping tests).
+  Opponent checks cover every legal first move in four already-viewed dev
+  positions; they are test-side specifications, not learner answer injection.
+- Architectural limits are explicit: lag primitives exist but are not wired as
+  REAL-turn memory here; POR/RET currently links within a move, not first-move
+  to finishing competence. The finisher policy remains protected; adaptive
+  sketches are not yet native temporal branches. See
+  `docs/autogrowth/V27_LOCAL_INTERACTION.md` for the next mechanism contract.
+- No V27 curriculum-performance claim yet. A tiny pretrained-R0 development
+  canary is the next verification; no overnight campaign is started.

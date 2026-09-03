@@ -25,13 +25,19 @@ from .native_intrinsic_curriculum import (
     R1DevelopmentCeilingReached,
     R1_ACTION_SELECTION_LOCAL_RECON,
     R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
+    R1_BLACK_LEARNER_CHALLENGE,
+    R1_BLACK_TASK_PERFECT,
     _Pools,
 )
 from .native_prospective_evidence_authority_v2 import (
     NativeProspectiveAuthorityV2,
     StructuralMode,
 )
-from .native_single_graph_curriculum import NativeReConKRKGraph
+from .native_single_graph_curriculum import (
+    NativeReConKRKGraph,
+    LOCAL_EXPLORATION_FIRST_CONTACT,
+    LOCAL_EXPLORATION_FINITE_UCB,
+)
 from recon_lite_hector.learning import IntrinsicCreditEngine
 
 
@@ -577,10 +583,13 @@ def development_config(
     max_wall_seconds: float = DEFAULT_MAX_WALL_SECONDS,
     max_peak_rss_mib: float = DEFAULT_MAX_PEAK_RSS_MIB,
     continuous_hypothesis_evidence: bool = False,
+    local_interaction: bool = False,
 ) -> NativeIntrinsicCurriculumConfig:
     """Return a bounded work plan with frozen learner settings."""
 
     normalized = _normalize_profile(profile)
+    if type(local_interaction) is not bool:
+        raise ValueError("local_interaction must be an explicit boolean")
     base = _intrinsic.development_config(
         output_dir=Path(output_dir),
         max_wall_seconds=float(max_wall_seconds),
@@ -592,6 +601,14 @@ def development_config(
         r0_action_selection_mode=R0_ACTION_SELECTION_LOCAL_RECON,
         r1_reply_policy=R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
         r1_action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
+        r1_local_exploration_mode=(
+            LOCAL_EXPLORATION_FINITE_UCB if local_interaction
+            else LOCAL_EXPLORATION_FIRST_CONTACT
+        ),
+        r1_black_policy=(
+            R1_BLACK_TASK_PERFECT if local_interaction else R1_BLACK_LEARNER_CHALLENGE
+        ),
+        r1_require_certified_finisher_for_action=not local_interaction,
         r0_boundary_ecology_enabled=True,
         r0_boundary_continuous_evidence=continuous_hypothesis_evidence,
         validation_controls_stage_transitions=False,
@@ -662,6 +679,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument(
+        "--local-interaction", action="store_true",
+        help=(
+            "V27: finite local R1 exploration, environment-only exact mate-horizon "
+            "Black, and attempted finisher actions without certification veto; "
+            "trusted bootstrap value still requires certification"
+        ),
+    )
+    parser.add_argument(
         "--continuous-hypothesis-evidence",
         action=argparse.BooleanOptionalAction,
         default=False,
@@ -689,6 +714,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         max_wall_seconds=args.max_wall_seconds,
         max_peak_rss_mib=args.max_peak_rss_mib,
         continuous_hypothesis_evidence=args.continuous_hypothesis_evidence,
+        local_interaction=args.local_interaction,
     )
     started = perf_counter()
     attempt_path = output_dir / "attempt.json"

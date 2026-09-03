@@ -2,10 +2,30 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 from typing import Iterable
 
 from .formal_engine import FormalReConEngine
 from .graph import Graph, Node, NodeState, NodeType
+
+
+def finite_local_uncertainty(exposures: int, population_exposures: int) -> float:
+    """A finite, renewable uncertainty activation from local REAL counts.
+
+    The one-count denominator regularizes an untried alternative; it is not
+    a fabricated outcome or certification receipt. Unlike an infinite/ordinal
+    first-contact tier, this signal can lose to an experienced good option.
+    No epoch, board identity, reward label, or global activity enters it.
+    This is a UCB-style exploration heuristic, not a calibrated confidence
+    interval for a changing graph policy.
+    """
+
+    for value in (exposures, population_exposures):
+        if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+            raise ValueError("local exposure counts must be nonnegative integers")
+    if exposures > population_exposures:
+        raise ValueError("option exposure exceeds its local population")
+    return math.sqrt(2.0 * math.log1p(population_exposures) / (1 + exposures))
 
 
 @dataclass(frozen=True)
