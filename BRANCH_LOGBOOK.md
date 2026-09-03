@@ -1756,3 +1756,33 @@ exact-version environment was used without bypassing saved fingerprints.
   8-versus-5-observation canary, not a demonstrated M2 generalization improvement.
   Local exact deletion/retention manifest, receipts and restore instructions:
   `reports/autogrowth/development/STALE_NETWORK_PRUNE_20260903{_plan.json,.jsonl,.md}`.
+
+### V26 retry durability repair — 2026-09-03
+
+- The user's separate machine-cleanup task and released swap subsequently
+  restored over60 GiB of free space. This resolves the earlier disk blocker;
+  do not attribute that gain to this task's810-MiB ReCoN prune.
+- New branch **`codex/v26-pre-evaluation-checkpoint`** preserves each observed
+  R1 training epoch before expensive evaluation, including epoch1. A pending
+  record is explicitly unscored; resume redoes its evaluation before any new
+  experience. Off-cadence pending evaluations cannot be skipped. Temporary
+  composite disabling is restored on exceptions. Only finalized checkpoints
+  enter immutable history; failed atomic writes preserve the prior snapshot.
+- **249 distinct focused test cases passed:** the eight-module suite passed
+  248 cases in452.31s; the subsequently added off-cadence interruption case
+  passed separately in19.92s. Six fault-injection cases interrupt each of the
+  three checkpoint evaluations in both evidence modes, then verify exact graph,
+  credit, authority/ecology, event, metric and resumption parity. Synthetic disk
+  failure preserves the old checkpoint. Existing mastery/resume tests and the
+  production-stream chess canary also pass. These are not new M2 results.
+- Static AST comparison against `10dc4c54` verifies the extracted training
+  epoch and every evaluation call/argument are identical. No learner setting,
+  action rule, reward, evidence predicate or curriculum has changed. Extra
+  checkpoint writes can affect runtime; compare learning at receipt frontiers.
+- The authorized retry remains one development baseline/repair pair, seed
+  **2026090110**, unchanged follow-through, **7,200s /4,096MiB per process**,
+  now sequential (repair first). Independent fresh directories and frozen
+  source; no automatic extensions or additional seeds. Preserve and stop on
+  integrity/memory failure, the1.5-GiB disk floor, or a check observing more
+  than3h for one worker. Exact updated protocol:
+  `docs/autogrowth/V26_CONTINUOUS_EVIDENCE_GATE.md`.

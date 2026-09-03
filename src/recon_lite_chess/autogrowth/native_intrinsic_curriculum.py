@@ -4037,6 +4037,7 @@ def _write_live_r1_progress(
             "r0_v2_shell_coverage_accuracy"
         ),
         "regression_withheld_until_final": True,
+        "evaluation_pending": bool(checkpoint.get("evaluation_pending", False)),
         "child_handoff_count": checkpoint.get("child_handoff_count", 0),
         "snapshot_path": str(snapshot_path),
         "resumed_from_snapshot": bool(resumed),
@@ -4701,12 +4702,10 @@ def _run_r1_arm(
             **shuffled_schedule_audit,
         }
 
-    epoch_iterator = (
-        ()
-        if resumed_from_mastered_snapshot
-        else range(start_epoch, epoch_budget)
-    )
-    for epoch in epoch_iterator:
+    # Training settles one complete epoch before its checkpoint. A pending
+    # evaluation resumes after this function, never replaying its REAL events.
+    def train_epoch(epoch: int) -> None:
+        nonlocal reply_policy_event_digest, local_action_event_digest
         r0_frame_session = (
             None
             if (
@@ -5145,6 +5144,139 @@ def _run_r1_arm(
                     ),
                 }
             )
+
+    def save_epoch_snapshot(
+        epoch_number: int,
+        *,
+        evaluation_pending: bool,
+        checkpoint: Mapping[str, Any],
+    ) -> None:
+        nonlocal snapshot_writes, history_snapshot_paths
+        latest_checkpoint = checkpoint
+        elapsed = duration_before_resume + (perf_counter() - started)
+        if r0_child_authority is not None:
+            authoritative_seen = _v2_authoritative_predecessor_fens(
+                r0_child_authority
+            )
+            if frozenset(v2_seen_predecessor_fens) != authoritative_seen:
+                raise RuntimeError(
+                    "V2 duplicate index differs from authority history"
+                )
+        if boundary_ecology is not None:
+            _verify_boundary_ecology_alignment(
+                r0_child_authority,
+                boundary_ecology,
+                roundtrip=True,
+            )
+        authority_payload = (
+            None
+            if r0_child_authority is None
+            else r0_child_authority.dumps()
+        )
+        history_path = _r1_history_snapshot_path(
+            config, pools, arm_name, epoch_number
+        )
+        next_history_paths = list(history_snapshot_paths)
+        if (
+            config.r1_keep_checkpoint_history
+            and not evaluation_pending
+            and str(history_path) not in next_history_paths
+        ):
+            next_history_paths.append(str(history_path))
+        state = {
+            "schema_version": "native_intrinsic_r1_arm_snapshot.v1",
+            "fingerprint": fingerprint,
+            "arm_name": arm_name,
+            "arm_spec": asdict(arm),
+            "source_identity": _source_identity(),
+            "r0_core_routing": protected_core_identity,
+            "epoch_budget": epoch_budget,
+            "next_epoch": epoch_number,
+            "pending_evaluation_epoch": (
+                epoch_number if evaluation_pending else None
+            ),
+            "graph": graph,
+            "credit": credit,
+            "counters": counters,
+            "reply_orbits": reply_orbits,
+            "reply_exposure_counts": reply_exposure_counts,
+            "reply_exposure_counts_by_reply": reply_exposure_counts_by_reply,
+            "child_dispatch_cache": child_dispatch_cache,
+            "shuffled_schedule": shuffled_schedule,
+            "shuffled_schedule_audit": shuffled_schedule_audit,
+            "checkpoints": checkpoints,
+            "composition_events": composition_events,
+            "composition_consolidation_events": composition_consolidation_events,
+            "v2_structural_events": v2_structural_events,
+            "reply_policy": effective_reply_policy,
+            "reply_policy_events": reply_policy_events,
+            "reply_policy_event_digest": reply_policy_event_digest,
+            "local_action_events": local_action_events,
+            "local_action_positive_credit_options": tuple(
+                sorted(local_action_positive_credit_options)
+            ),
+            "local_action_event_digest": local_action_event_digest,
+            "r0_child_authority_payload": authority_payload,
+            "boundary_ecology_manifest": (
+                None
+                if boundary_ecology is None
+                else boundary_ecology.manifest()
+            ),
+            "v2_seen_predecessor_fens": tuple(
+                sorted(v2_seen_predecessor_fens)
+            ),
+            "stopped_epoch": stopped_epoch,
+            "joint_mastery": joint_mastery,
+            "duration_seconds": elapsed,
+            "snapshot_writes": snapshot_writes + int(not evaluation_pending),
+            "history_snapshot_paths": next_history_paths,
+        }
+        _atomic_pickle(snapshot_path, state)
+        if config.r1_keep_checkpoint_history and not evaluation_pending:
+            if history_path.exists():
+                existing = _load_r1_snapshot(
+                    history_path, expected_fingerprint=fingerprint
+                )
+                if int(existing["next_epoch"]) != epoch_number:
+                    raise RuntimeError("immutable history snapshot epoch mismatch")
+            else:
+                _atomic_pickle(history_path, state)
+            history_snapshot_paths = next_history_paths
+        snapshot_writes += int(not evaluation_pending)
+        if latest_checkpoint is None:
+            raise RuntimeError("R1 snapshot requires a current validation checkpoint")
+        _write_live_r1_progress(
+            config,
+            arm_name=arm_name,
+            epoch=epoch_number,
+            checkpoint=latest_checkpoint,
+            snapshot_path=snapshot_path,
+            resumed=resumed_from_snapshot,
+        )
+
+    pending_evaluation_epoch = (
+        None if restored is None else restored.get("pending_evaluation_epoch")
+    )
+    if pending_evaluation_epoch is not None and (
+        type(pending_evaluation_epoch) is not int
+        or pending_evaluation_epoch != start_epoch
+        or not 1 <= pending_evaluation_epoch <= epoch_budget
+        or joint_mastery
+        or any(row["epoch"] >= pending_evaluation_epoch for row in checkpoints)
+    ):
+        raise ValueError("invalid pending R1 evaluation frontier")
+    epoch_iterator = (
+        ()
+        if resumed_from_mastered_snapshot
+        else range(
+            start_epoch - int(pending_evaluation_epoch is not None),
+            epoch_budget,
+        )
+    )
+    for epoch in epoch_iterator:
+        epoch_number = epoch + 1
+        if epoch_number != pending_evaluation_epoch:
+            train_epoch(epoch)
         ceiling_reason = (
             None
             if run_started is None
@@ -5155,7 +5287,8 @@ def _run_r1_arm(
         )
         force_stop = diagnostic_stop or ceiling_reason is not None
         should_observe = (
-            epoch == 0
+            epoch_number == 1
+            or epoch_number == pending_evaluation_epoch
             or epoch_number == epoch_budget
             or epoch_number % config.r1_validation_interval == 0
             or epoch_number % config.r1_snapshot_interval == 0
@@ -5172,132 +5305,146 @@ def _run_r1_arm(
             }
             checkpoints.append(latest_checkpoint)
         elif should_observe:
+            # Persist the settled learner before report-only graph audits.
+            # A pending checkpoint contains no verdict and cannot skip the
+            # unfinished validation/stop decision when it is restored.
+            save_epoch_snapshot(
+                epoch_number,
+                evaluation_pending=True,
+                checkpoint={
+                    "epoch": epoch_number,
+                    "evaluation_pending": True,
+                    "child_handoff_count": counters["child_handoffs"],
+                },
+            )
             heldout_disabled_state = _disable_nonmature_composites(
                 graph,
                 enabled=config.r1_heldout_mature_composites_only,
             )
-            metrics = _evaluate_r1(
-                graph,
-                pools.r1_validation,
-                strata=pools.r1_validation_strata,
-                max_samples=0,
-                stop_after_first_failure=True,
-                r0_child_triplet_ids=evaluation_child_triplet_ids,
-                child_dispatch_cache=evaluation_child_dispatch_cache,
-                r0_child_authority=evaluation_child_authority,
-                r0_core_graph=r0_core_graph,
-                r0_core_gate=r0_core_gate,
-                r0_core_triplet_ids=r0_core_triplet_ids,
-                action_selection_mode=config.r1_action_selection_mode,
-            )
-            # R1 checkpoint selection retains the core against the independent
-            # validation split only.  Never query R0 regression while an arm
-            # is still running.
-            validation_retention = _evaluate_r0(
-                graph,
-                pools.r0_validation,
-                max_samples=0,
-                r0_child_triplet_ids=evaluation_child_triplet_ids,
-                child_dispatch_cache=evaluation_child_dispatch_cache,
-                r0_child_authority=evaluation_child_authority,
-                r0_core_graph=r0_core_graph,
-                r0_core_gate=r0_core_gate,
-                r0_core_triplet_ids=r0_core_triplet_ids,
-                allow_frozen_core=(
-                    r0_core_graph is not None and r0_core_gate is not None
-                ),
-                action_selection_mode=config.r1_action_selection_mode,
-            )
-            v2_shell_coverage_active = bool(
-                r0_child_authority is not None
-                and config.r1_action_selection_mode
-                == R1_ACTION_SELECTION_LOCAL_RECON
-            )
-            validation_retention = _annotate_r0_metric(
-                validation_retention,
-                metric_name=(
-                    "r0_v2_shell_coverage"
-                    if v2_shell_coverage_active
-                    else "r0_validation_retention"
-                ),
-                metric_semantics=(
-                    "native_v2_shell_available_mate_coverage;"
-                    "not_frozen_graph_retention"
-                    if v2_shell_coverage_active
-                    else "validation_retention_for_current_legacy_routing"
-                ),
-                source=(
-                    "native_v2_authority_graph_emission"
-                    if v2_shell_coverage_active
-                    else "current_r1_routing"
-                ),
-                compatibility_key="r0_validation_retention",
-            )
-            frozen_native_policy_retention = (
-                _evaluate_frozen_native_r0_policy(
-                    frozen_native_policy_graph,
+            try:
+                metrics = _evaluate_r1(
+                    graph,
+                    pools.r1_validation,
+                    strata=pools.r1_validation_strata,
+                    max_samples=0,
+                    stop_after_first_failure=True,
+                    r0_child_triplet_ids=evaluation_child_triplet_ids,
+                    child_dispatch_cache=evaluation_child_dispatch_cache,
+                    r0_child_authority=evaluation_child_authority,
+                    r0_core_graph=r0_core_graph,
+                    r0_core_gate=r0_core_gate,
+                    r0_core_triplet_ids=r0_core_triplet_ids,
+                    action_selection_mode=config.r1_action_selection_mode,
+                )
+                # R1 checkpoint selection retains the core against the independent
+                # validation split only.  Never query R0 regression while an arm
+                # is still running.
+                validation_retention = _evaluate_r0(
+                    graph,
                     pools.r0_validation,
                     max_samples=0,
-                    source=(
-                        "authority.base.r0.graph"
-                        if r0_child_authority is not None
-                        else "isolated_post_r0_graph"
+                    r0_child_triplet_ids=evaluation_child_triplet_ids,
+                    child_dispatch_cache=evaluation_child_dispatch_cache,
+                    r0_child_authority=evaluation_child_authority,
+                    r0_core_graph=r0_core_graph,
+                    r0_core_gate=r0_core_gate,
+                    r0_core_triplet_ids=r0_core_triplet_ids,
+                    allow_frozen_core=(
+                        r0_core_graph is not None and r0_core_gate is not None
                     ),
+                    action_selection_mode=config.r1_action_selection_mode,
                 )
-            )
-            latest_checkpoint = {
-                "epoch": epoch_number,
-                "validation_conversion_rate": metrics["conversion_rate"],
-                "validation_stratum_conversion": metrics["stratum_conversion"],
-                "child_handoff_count": counters["child_handoffs"],
-                # Keep the historical key for consumers, but make its
-                # semantics explicit: in adaptive V2 this compatibility key
-                # reports shell coverage, not frozen-graph forgetting.
-                "r0_retention_accuracy": validation_retention["accuracy"],
-                "r0_validation_retention_accuracy": validation_retention[
-                    "accuracy"
-                ],
-                "r0_validation_retention_metric": validation_retention[
-                    "metric_name"
-                ],
-                "r0_validation_retention_semantics": validation_retention[
-                    "metric_semantics"
-                ],
-                "r0_frozen_native_policy_retention_accuracy": (
-                    None
-                    if frozen_native_policy_retention is None
-                    else frozen_native_policy_retention["accuracy"]
-                ),
-                "r0_v2_shell_coverage_accuracy": (
-                    validation_retention["accuracy"]
-                    if v2_shell_coverage_active
-                    else None
-                ),
-            }
-            validation_mastery = bool(
-                arm.bootstrap_enabled
-                and metrics["conversion_rate"] >= config.r1_mastery_threshold
-                and validation_retention["accuracy"] >= config.r0_mastery_threshold
-            )
-            latest_checkpoint["validation_mastery"] = validation_mastery
-            # The historical snapshot field is retained for exact resume
-            # compatibility, but it now means validation-selected stop.  The
-            # regression split is withheld until the one final evaluation.
-            joint_mastery = bool(
-                validation_mastery
-                and config.validation_controls_stage_transitions
-            )
-            latest_checkpoint["validation_controls_stage_transitions"] = (
-                config.validation_controls_stage_transitions
-            )
-            latest_checkpoint["validation_report_only"] = not bool(
-                config.validation_controls_stage_transitions
-            )
-            latest_checkpoint["joint_mastery"] = joint_mastery
-            latest_checkpoint["regression_withheld_from_selection"] = True
-            if joint_mastery:
-                stopped_epoch = epoch_number
-            _restore_disabled_composites(graph, heldout_disabled_state)
+                v2_shell_coverage_active = bool(
+                    r0_child_authority is not None
+                    and config.r1_action_selection_mode
+                    == R1_ACTION_SELECTION_LOCAL_RECON
+                )
+                validation_retention = _annotate_r0_metric(
+                    validation_retention,
+                    metric_name=(
+                        "r0_v2_shell_coverage"
+                        if v2_shell_coverage_active
+                        else "r0_validation_retention"
+                    ),
+                    metric_semantics=(
+                        "native_v2_shell_available_mate_coverage;"
+                        "not_frozen_graph_retention"
+                        if v2_shell_coverage_active
+                        else "validation_retention_for_current_legacy_routing"
+                    ),
+                    source=(
+                        "native_v2_authority_graph_emission"
+                        if v2_shell_coverage_active
+                        else "current_r1_routing"
+                    ),
+                    compatibility_key="r0_validation_retention",
+                )
+                frozen_native_policy_retention = (
+                    _evaluate_frozen_native_r0_policy(
+                        frozen_native_policy_graph,
+                        pools.r0_validation,
+                        max_samples=0,
+                        source=(
+                            "authority.base.r0.graph"
+                            if r0_child_authority is not None
+                            else "isolated_post_r0_graph"
+                        ),
+                    )
+                )
+                latest_checkpoint = {
+                    "epoch": epoch_number,
+                    "validation_conversion_rate": metrics["conversion_rate"],
+                    "validation_stratum_conversion": metrics["stratum_conversion"],
+                    "child_handoff_count": counters["child_handoffs"],
+                    # Keep the historical key for consumers, but make its
+                    # semantics explicit: in adaptive V2 this compatibility key
+                    # reports shell coverage, not frozen-graph forgetting.
+                    "r0_retention_accuracy": validation_retention["accuracy"],
+                    "r0_validation_retention_accuracy": validation_retention[
+                        "accuracy"
+                    ],
+                    "r0_validation_retention_metric": validation_retention[
+                        "metric_name"
+                    ],
+                    "r0_validation_retention_semantics": validation_retention[
+                        "metric_semantics"
+                    ],
+                    "r0_frozen_native_policy_retention_accuracy": (
+                        None
+                        if frozen_native_policy_retention is None
+                        else frozen_native_policy_retention["accuracy"]
+                    ),
+                    "r0_v2_shell_coverage_accuracy": (
+                        validation_retention["accuracy"]
+                        if v2_shell_coverage_active
+                        else None
+                    ),
+                }
+                validation_mastery = bool(
+                    arm.bootstrap_enabled
+                    and metrics["conversion_rate"] >= config.r1_mastery_threshold
+                    and validation_retention["accuracy"] >= config.r0_mastery_threshold
+                )
+                latest_checkpoint["validation_mastery"] = validation_mastery
+                # The historical snapshot field is retained for exact resume
+                # compatibility, but it now means validation-selected stop.  The
+                # regression split is withheld until the one final evaluation.
+                joint_mastery = bool(
+                    validation_mastery
+                    and config.validation_controls_stage_transitions
+                )
+                latest_checkpoint["validation_controls_stage_transitions"] = (
+                    config.validation_controls_stage_transitions
+                )
+                latest_checkpoint["validation_report_only"] = not bool(
+                    config.validation_controls_stage_transitions
+                )
+                latest_checkpoint["joint_mastery"] = joint_mastery
+                latest_checkpoint["regression_withheld_from_selection"] = True
+                if joint_mastery:
+                    stopped_epoch = epoch_number
+            finally:
+                _restore_disabled_composites(graph, heldout_disabled_state)
             checkpoints.append(latest_checkpoint)
 
         should_snapshot = (
@@ -5306,102 +5453,13 @@ def _run_r1_arm(
             or joint_mastery
             or force_stop
         )
-        if should_snapshot:
-            elapsed = duration_before_resume + (perf_counter() - started)
-            if r0_child_authority is not None:
-                authoritative_seen = _v2_authoritative_predecessor_fens(
-                    r0_child_authority
-                )
-                if frozenset(v2_seen_predecessor_fens) != authoritative_seen:
-                    raise RuntimeError(
-                        "V2 duplicate index differs from authority history"
-                    )
-            if boundary_ecology is not None:
-                _verify_boundary_ecology_alignment(
-                    r0_child_authority,
-                    boundary_ecology,
-                    roundtrip=True,
-                )
-            authority_payload = (
-                None
-                if r0_child_authority is None
-                else r0_child_authority.dumps()
-            )
-            history_path = _r1_history_snapshot_path(
-                config, pools, arm_name, epoch_number
-            )
-            next_history_paths = list(history_snapshot_paths)
-            if (
-                config.r1_keep_checkpoint_history
-                and str(history_path) not in next_history_paths
-            ):
-                next_history_paths.append(str(history_path))
-            state = {
-                "schema_version": "native_intrinsic_r1_arm_snapshot.v1",
-                "fingerprint": fingerprint,
-                "arm_name": arm_name,
-                "arm_spec": asdict(arm),
-                "source_identity": _source_identity(),
-                "r0_core_routing": protected_core_identity,
-                "epoch_budget": epoch_budget,
-                "next_epoch": epoch_number,
-                "graph": graph,
-                "credit": credit,
-                "counters": counters,
-                "reply_orbits": reply_orbits,
-                "reply_exposure_counts": reply_exposure_counts,
-                "reply_exposure_counts_by_reply": reply_exposure_counts_by_reply,
-                "child_dispatch_cache": child_dispatch_cache,
-                "shuffled_schedule": shuffled_schedule,
-                "shuffled_schedule_audit": shuffled_schedule_audit,
-                "checkpoints": checkpoints,
-                "composition_events": composition_events,
-                "composition_consolidation_events": composition_consolidation_events,
-                "v2_structural_events": v2_structural_events,
-                "reply_policy": effective_reply_policy,
-                "reply_policy_events": reply_policy_events,
-                "reply_policy_event_digest": reply_policy_event_digest,
-                "local_action_events": local_action_events,
-                "local_action_positive_credit_options": tuple(
-                    sorted(local_action_positive_credit_options)
-                ),
-                "local_action_event_digest": local_action_event_digest,
-                "r0_child_authority_payload": authority_payload,
-                "boundary_ecology_manifest": (
-                    None
-                    if boundary_ecology is None
-                    else boundary_ecology.manifest()
-                ),
-                "v2_seen_predecessor_fens": tuple(
-                    sorted(v2_seen_predecessor_fens)
-                ),
-                "stopped_epoch": stopped_epoch,
-                "joint_mastery": joint_mastery,
-                "duration_seconds": elapsed,
-                "snapshot_writes": snapshot_writes + 1,
-                "history_snapshot_paths": next_history_paths,
-            }
-            _atomic_pickle(snapshot_path, state)
-            if config.r1_keep_checkpoint_history:
-                if history_path.exists():
-                    existing = _load_r1_snapshot(
-                        history_path, expected_fingerprint=fingerprint
-                    )
-                    if int(existing["next_epoch"]) != epoch_number:
-                        raise RuntimeError("immutable history snapshot epoch mismatch")
-                else:
-                    _atomic_pickle(history_path, state)
-                history_snapshot_paths = next_history_paths
-            snapshot_writes += 1
+        if should_snapshot or should_observe:
             if latest_checkpoint is None:
                 raise RuntimeError("R1 snapshot requires a current validation checkpoint")
-            _write_live_r1_progress(
-                config,
-                arm_name=arm_name,
-                epoch=epoch_number,
+            save_epoch_snapshot(
+                epoch_number,
+                evaluation_pending=False,
                 checkpoint=latest_checkpoint,
-                snapshot_path=snapshot_path,
-                resumed=resumed_from_snapshot,
             )
         if force_stop:
             if ceiling_reason is not None:

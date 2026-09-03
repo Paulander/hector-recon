@@ -2610,6 +2610,7 @@ def _real_ecology_run(
     config: NativeIntrinsicCurriculumConfig,
     gate: _AlwaysAbstainCoreGate,
     stop_after_epoch: int | None = None,
+    max_epochs: int = 2,
 ) -> dict[str, object]:
     arm = R1MechanisticArm(
         name="test_v2_ecology",
@@ -2627,7 +2628,7 @@ def _real_ecology_run(
         pools,
         r0_replay_memory=(),
         r0_child_triplet_ids=child_triplet_ids,
-        max_epochs=2,
+        max_epochs=max_epochs,
         config=config,
         arm_spec=arm,
         r0_child_authority=authority,
@@ -2768,6 +2769,212 @@ def test_real_v2_boundary_ecology_snapshot_resume_matches_uninterrupted(
     assert resumed["v2_child_authority"]["full_history_boundary_exact"] is True
     assert resumed["v2_child_authority"]["certification_discovery_leak_count"] == 0
     assert resumed["training"]["resumed_from_snapshot"] is True
+
+
+@pytest.mark.parametrize("continuous_evidence", [False, True])
+@pytest.mark.parametrize(
+    "evaluation_function",
+    ["_evaluate_r1", "_evaluate_r0", "_evaluate_frozen_native_r0_policy"],
+)
+def test_pending_evaluation_snapshot_resume_does_not_retrain_or_skip_verdict(
+    tmp_path, monkeypatch, continuous_evidence, evaluation_function,
+) -> None:
+    """An unscheduled epoch-one evaluation cannot strand the settled organism."""
+    authority, child_triplet_ids = _real_ecology_authority()
+    pools = _real_ecology_pools()
+    gate = _AlwaysAbstainCoreGate()
+
+    def config_for(directory, *, resume):
+        return replace(
+            _real_ecology_config(
+                directory, resume=resume, continuous_evidence=continuous_evidence,
+            ),
+            r1_validation_interval=4,
+            r1_snapshot_interval=4,
+        )
+
+    def run(config):
+        return _real_ecology_run(
+            authority=authority,
+            child_triplet_ids=child_triplet_ids,
+            pools=pools,
+            config=config,
+            gate=gate,
+        )
+
+    uninterrupted = run(config_for(tmp_path / "uninterrupted", resume=False))
+    interrupted_config = config_for(tmp_path / "resumed", resume=True)
+    restored_composites = []
+    original_restore = curriculum_module._restore_disabled_composites
+
+    def record_restore(graph, disabled_state):
+        original_restore(graph, disabled_state)
+        restored_composites.append(True)
+
+    def interrupt_evaluation(*_args, **_kwargs):
+        progress = json.loads(Path(interrupted_config.progress_path).read_text())
+        active = progress["active_r1_arm"]
+        assert active["epoch"] == 1
+        assert active["evaluation_pending"] is True
+        assert active["validation_conversion_rate"] is None
+        assert Path(active["snapshot_path"]).is_file()
+        raise KeyboardInterrupt("synthetic interruption inside evaluation")
+
+    with monkeypatch.context() as patch:
+        patch.setattr(curriculum_module, evaluation_function, interrupt_evaluation)
+        patch.setattr(curriculum_module, "_restore_disabled_composites", record_restore)
+        with pytest.raises(KeyboardInterrupt, match="synthetic interruption"):
+            run(interrupted_config)
+    assert restored_composites == [True]
+
+    progress = json.loads(Path(interrupted_config.progress_path).read_text())
+    snapshot_path = Path(progress["active_r1_arm"]["snapshot_path"])
+    pending = pickle.loads(snapshot_path.read_bytes())
+    assert pending["next_epoch"] == pending["pending_evaluation_epoch"] == 1
+    assert pending["counters"]["episodes"] == 1
+    assert pending["checkpoints"] == []
+    assert pending["history_snapshot_paths"] == []
+    assert pending["joint_mastery"] is False
+    assert pending["boundary_ecology_manifest"]["observations"]
+    assert NativeProspectiveAuthorityV2.loads(
+        pending["r0_child_authority_payload"]
+    ).pending_event is None
+
+    trained_epochs = []
+    resumed_evaluations = []
+    original_select = curriculum_module._select_r1_training_action
+    original_evaluate = getattr(curriculum_module, evaluation_function)
+
+    def select_once(*args, **kwargs):
+        # Epochs here are zero-based. The completed first epoch must not rerun.
+        assert kwargs["epoch"] == 1
+        trained_epochs.append(kwargs["epoch"])
+        return original_select(*args, **kwargs)
+
+    def record_evaluation(*args, **kwargs):
+        resumed_evaluations.append(len(trained_epochs))
+        return original_evaluate(*args, **kwargs)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(curriculum_module, "_select_r1_training_action", select_once)
+        patch.setattr(curriculum_module, evaluation_function, record_evaluation)
+        resumed = run(interrupted_config)
+    assert trained_epochs == [1]
+    assert resumed_evaluations[0] == 0  # Pending verdict precedes new experience.
+
+    baseline_state = pickle.loads(
+        Path(uninterrupted["training"]["snapshot_path"]).read_bytes()
+    )
+    resumed_state = pickle.loads(snapshot_path.read_bytes())
+    assert resumed_state["pending_evaluation_epoch"] is None
+    assert resumed_state["next_epoch"] == baseline_state["next_epoch"] == 2
+    assert resumed_state["graph"].canonical_semantic_manifest() == (
+        baseline_state["graph"].canonical_semantic_manifest()
+    )
+    assert resumed_state["credit"].snapshot() == baseline_state["credit"].snapshot()
+    for key in (
+        "checkpoints", "v2_seen_predecessor_fens", "boundary_ecology_manifest",
+        "reply_policy_event_digest", "local_action_event_digest",
+    ):
+        assert resumed_state[key] == baseline_state[key]
+    assert NativeProspectiveAuthorityV2.loads(
+        resumed_state["r0_child_authority_payload"]
+    ).continuation_manifest() == NativeProspectiveAuthorityV2.loads(
+        baseline_state["r0_child_authority_payload"]
+    ).continuation_manifest()
+    ignored_training_keys = {
+        "duration_seconds", "resumed_from_snapshot", "snapshot_path",
+        "snapshot_write_count", "history_snapshot_paths",
+    }
+    assert {
+        key: value for key, value in resumed["training"].items()
+        if key not in ignored_training_keys
+    } == {
+        key: value for key, value in uninterrupted["training"].items()
+        if key not in ignored_training_keys
+    }
+    for key in ("validation", "regression", "r0_retention"):
+        assert resumed[key] == uninterrupted[key]
+    assert len(resumed_state["history_snapshot_paths"]) == 2
+    assert all(Path(path).is_file() for path in resumed_state["history_snapshot_paths"])
+    final_progress = json.loads(Path(interrupted_config.progress_path).read_text())
+    assert final_progress["active_r1_arm"]["evaluation_pending"] is False
+
+
+def test_off_cadence_pending_evaluation_is_not_skipped_on_resume(tmp_path, monkeypatch):
+    authority, child_triplet_ids = _real_ecology_authority()
+    config = replace(
+        _real_ecology_config(tmp_path, resume=True, continuous_evidence=True),
+        r1_validation_interval=4,
+        r1_snapshot_interval=4,
+    )
+
+    def run(*, stop_after_epoch=None):
+        return _real_ecology_run(
+            authority=authority, child_triplet_ids=child_triplet_ids,
+            pools=_real_ecology_pools(), config=config,
+            gate=_AlwaysAbstainCoreGate(), max_epochs=3,
+            stop_after_epoch=stop_after_epoch,
+        )
+
+    original_evaluate = curriculum_module._evaluate_r1
+
+    def interrupt_second_epoch(*args, **kwargs):
+        active = json.loads(Path(config.progress_path).read_text())["active_r1_arm"]
+        if active["epoch"] == 2:
+            raise KeyboardInterrupt("off-cadence pending evaluation")
+        return original_evaluate(*args, **kwargs)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(curriculum_module, "_evaluate_r1", interrupt_second_epoch)
+        with pytest.raises(KeyboardInterrupt, match="off-cadence"):
+            run(stop_after_epoch=2)
+    progress = json.loads(Path(config.progress_path).read_text())
+    snapshot_path = Path(progress["active_r1_arm"]["snapshot_path"])
+    pending = pickle.loads(snapshot_path.read_bytes())
+    assert pending["next_epoch"] == pending["pending_evaluation_epoch"] == 2
+    assert [row["epoch"] for row in pending["checkpoints"]] == [1]
+
+    trained_epochs = []
+    evaluation_order = []
+    original_select = curriculum_module._select_r1_training_action
+
+    def record_select(*args, **kwargs):
+        trained_epochs.append(kwargs["epoch"])
+        return original_select(*args, **kwargs)
+
+    def record_evaluate(*args, **kwargs):
+        active = json.loads(Path(config.progress_path).read_text())["active_r1_arm"]
+        evaluation_order.append((active["epoch"], len(trained_epochs)))
+        return original_evaluate(*args, **kwargs)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(curriculum_module, "_select_r1_training_action", record_select)
+        patch.setattr(curriculum_module, "_evaluate_r1", record_evaluate)
+        resumed = run()  # No longer requesting the diagnostic epoch-two stop.
+    assert evaluation_order[0] == (2, 0)
+    assert trained_epochs == [2]
+    assert resumed["training"]["episodes"] == 3
+    assert [
+        row["epoch"] for row in resumed["training"]["validation_checkpoints"]
+    ] == [1, 2, 3]
+
+
+def test_atomic_epoch_snapshot_failure_preserves_prior_checkpoint(tmp_path, monkeypatch):
+    path = tmp_path / "organism.pkl"
+    previous = {"next_epoch": 1, "pending_evaluation_epoch": None}
+    curriculum_module._atomic_pickle(path, previous)
+    previous_bytes = path.read_bytes()
+
+    def failed_dump(_payload, handle, **_kwargs):
+        handle.write(b"partial pickle")
+        raise OSError("synthetic disk write failure")
+
+    monkeypatch.setattr(curriculum_module.pickle, "dump", failed_dump)
+    with pytest.raises(OSError, match="synthetic disk write failure"):
+        curriculum_module._atomic_pickle(path, {"next_epoch": 2})
+    assert path.read_bytes() == previous_bytes
+    assert pickle.loads(path.read_bytes()) == previous
 
 
 def test_r1_production_uses_event_local_structural_settlement(

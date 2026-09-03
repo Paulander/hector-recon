@@ -118,3 +118,49 @@ replay, protected-core identity and uninterrupted/resumed training parity.
 Baseline incarnation/ranking fixtures remain unchanged. A malformed-receipt
 compatibility failure found by the broader suite was repaired by validating
 reference existence before chronological sorting.
+
+## Authorized resource-recovery retry — 2026-09-03
+
+The first pair was interrupted at the disk floor before its first saved R1
+checkpoint; its learning result is inconclusive. The user authorized stale-file
+cleanup and a retry. Branch `codex/v26-pre-evaluation-checkpoint` adds one
+operational repair before repeating this same development comparison:
+
+- Save the settled epoch **before** checkpoint evaluation, including the
+  otherwise unsaved epoch1. The latest snapshot marks `pending_evaluation_epoch`;
+  live progress says evaluation is pending and leaves its scores unknown.
+- Resume that pending evaluation before any new training, including an
+  off-cadence diagnostic frontier. Do not replay the completed epoch, skip a
+  verdict, or infer mastery from a pending record. Failed evaluations restore
+  temporary composite-disable state through `finally`.
+- Only finalized checkpoints (completed evaluations or explicit budget-stop
+  records) enter immutable history; a pending snapshot must not advertise a
+  history file that has not been written. The existing
+  snapshot-write counter counts completed checkpoint commits, excluding the
+  preparatory write. Atomic replacement preserves the prior snapshot if writing
+  its replacement fails. R0 remains non-resumable; interruption before the first
+  successful R1 save can still lose work.
+
+No learner change accompanies this retry. Static AST comparison against
+`10dc4c54c857dfba664543e7a68caeb10a79dc87` verifies the extracted training-epoch
+body and every evaluation call/argument are identical. The only modified
+production functions are R1 checkpoint/control flow and live progress. The
+strong operational null is that added persistence or resumption changes the
+organism, evidence, credit, or validation decision; fault-injection parity tests
+must reject that null before launch. The scientific hypothesis/null above remain
+unchanged, and both arms use the same newly frozen code.
+
+Retry seed **2026090110**, unchanged `follow-through`, R0 **96×48**, R1 **32×8**,
+validation4/final-regression4; **7,200s / 4,096MiB per process** at complete-epoch
+boundaries. Run **repair then baseline, sequentially**, one process and one
+numerical-library thread each, in new independent output directories. Compare
+matched receipt/epoch frontiers; this is not a runtime-speed benchmark.
+
+Keep the 1.5-GiB disk floor. As an additional operational backstop, interrupt only
+the verified retry worker if a scheduled check finds more than 3h elapsed; this
+is a safety cutoff, not a completion-time estimate. Preserve all artifacts.
+Start the second arm only after the first exits and its status is understood:
+normal completion or an intended R1 wall-budget boundary may proceed; integrity,
+memory-ceiling, disk-floor, R0-incomplete or unexpected failures stop the pair.
+No extensions, repeat attempts, new seeds or full campaign are authorized by this
+retry protocol. All original evidence/purity and no-go conditions still apply.
