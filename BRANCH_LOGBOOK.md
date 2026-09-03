@@ -1729,3 +1729,30 @@ exact-version environment was used without bypassing saved fingerprints.
   review of durable checkpoint ordering before report-only work, not an
   automatic longer run or a new monitoring framework. Conditions, evidence
   limits and file hashes: `reports/autogrowth/development/V26_PAIRED_GATE_20260903.md`.
+
+### Stale-network prune; retry still resource-blocked — 2026-09-03
+
+- User authorized aggressive stale-artifact deletion and a retry. Removed
+  **139 obsolete compressed-checkpoint filenames plus four old benchmark
+  caches/checkpoints** using a hashed, exact-path inventory. These were not
+  Git-tracked or backed up on GitHub: their exact old states are discarded,
+  while all small reports/logs remain. No protected fresh outcomes were opened.
+- Retained five useful states in verified lossless gzip form: V25 seed 0108
+  epoch 19/32, seed 0109 epoch 22/32, and intrinsic-V2 epoch 35. Latest/history
+  aliases remain hardlinked with `.gz` appended. Original SHA256/size verified
+  by full decompression before each raw copy was removed; the two V25 final
+  hashes still match the prior audit. Retained networks are local, not on GitHub.
+- This pass reclaimed about **810 MiB**; the entire reports tree is now only
+  **106 MiB**. Post-cleanup disk free: **2.14 GiB**. Subsequent machine-wide swap:
+  **12.16 GiB used**. No process attribution is claimed. Only about 0.64 GiB
+  remains above the prior 1.5-GiB disk stop floor; no ReCoN trainer is running.
+- **No retry launched:** more non-project storage/memory headroom is required.
+  The previous V26 pair remains inconclusive and non-resumable. A retry should
+  use fresh independent directories, preferably sequential arms, without a
+  learner change. Durable checkpoint ordering before expensive evaluation
+  remains an explicit, unimplemented prerequisite to review/test.
+- Learner source remains `10dc4c54c857dfba664543e7a68caeb10a79dc87`; no new
+  mechanism or training result. V26 still has 241 passing focused tests and the
+  8-versus-5-observation canary, not a demonstrated M2 generalization improvement.
+  Local exact deletion/retention manifest, receipts and restore instructions:
+  `reports/autogrowth/development/STALE_NETWORK_PRUNE_20260903{_plan.json,.jsonl,.md}`.
