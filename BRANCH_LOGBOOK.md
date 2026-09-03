@@ -1829,3 +1829,30 @@ exact-version environment was used without bypassing saved fingerprints.
   evidence off, numerical threads1,7200s/4096MiB, independent directory.
   Repair is not resumed. Compare matched frontiers after baseline exits;
   no additional attempts or learner changes are authorized.
+
+### V26 paired result: mechanism works, mate-in-2 does not — 2026-09-03
+
+- Baseline stopped at exact epoch20 under its intended wall budget, observed
+  exit2, with an intact66,274,329-byte snapshot. Repair stopped at epoch18 with
+  its intact65,702,098-byte snapshot. Both source identities are clean frozen
+  **48dd21a6**; no worker remains and no final regression was opened.
+- At matched epoch16/128 episodes/123 REAL observations, both graphs had exactly
+  5,179 nodes,241,886 edges,967 triplets and593,182 M3 updates; frozen R0 was
+  **15/16**, V2 shell coverage12/16, and development M2 conversion **0/4** in
+  both. The all-reply criterion was used, with early exit after a failed reply.
+- **Mechanism pass:** repair's two continuous lineages each transferred four
+  legitimate post-birth/pre-materialization receipts; both certified AVAILABLE,
+  all17 certification receipts were post-birth/discovery-disjoint, and leak
+  count was zero. Reply provenance proves continuous-shell participation in the
+  aggregate6 handoffs,7 AVAILABLE envelopes and value4.0022, but does not assign
+  every handoff to that shell; baseline totals were5,6 and3.2550.
+- **Functional no-go:** baseline still certified three legacy cells through11
+  promoted lineages/12 authority cells, while repair used2/2. Repair reduced
+  structural churn (2 transitions versus12) but did not improve M2, had fewer
+  successor mates (14 versus16), and only1 versus2 positive-credit revisits.
+  Evidence continuity repairs a real delay, but this seed supports the frozen
+  null that the dominant competence bottleneck is downstream.
+- Both arms made only2 learned exact-Q choices in128 matched decisions and zero
+  M4 events. The next separately governed investigation should target action-
+  value reuse/generalization and missing slow consolidation, not another evidence
+  reset tweak or longer blind run. No automatic learner change/run is authorized.

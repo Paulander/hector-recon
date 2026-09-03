@@ -112,3 +112,76 @@ exit status and observed results. Never substitute missing counters with zeros.
 - Baseline is the last authorized attempt. Safety check cutoff is elapsed
   **over3h**, i.e. after **19:06:41 UTC**; runner wall ceiling remains7200s at
   complete epochs. No further arm, restart, resume, extension or seed is allowed.
+
+## Final paired adjudication — 2026-09-03
+
+Both arms used clean frozen source
+`48dd21a68f283a9c5da87c99f8a9b943af1aa2aa`. No learner oracle, protected
+outcome access, or parameter tuning was reported. Both ended at an exact-epoch
+checkpoint under the intended wall ceiling, not an integrity or memory failure:
+
+- repair: epoch18, runner **7225.500555s**, R1 snapshot **5698.350394s**;
+  process exit unavailable after session detachment;
+- baseline: epoch20, runner **7426.150179s**, R1 snapshot **6222.624540s**;
+  observed process exit **2**, the runner's expected ceiling status.
+
+The checkpoints load and round-trip their V2 authorities. Repair snapshot:
+65,702,098 bytes, SHA256
+`f7c900558e128cbf3c4ee131c1b85503b8f0123ea722190eaed41bd997a65ee9`.
+Baseline snapshot:66,274,329 bytes, SHA256
+`8fd25487c2aff98a2748bd0346218b0e2c4a302eba3b018deb24e8af62480751`.
+These are transport hashes, not semantic organism equality.
+
+### Matched epoch/receipt frontier: epoch16,128 episodes,123 REAL observations
+
+Both arms had exactly5,179 graph nodes,241,886 edges,967 triplets,593,182 M3
+updates, zero pruned graph triplets, zero composite cells and zero M4 events.
+Both retained the frozen R0 policy at **15/16**, with V2 shell coverage **12/16**.
+Both scored **0/4** development M2 conversions under the all-reply criterion.
+Each position was evaluated, but reply enumeration stops at its first failure;
+this is not an exhaustive count of every legal reply. Regression stayed sealed
+because neither arm reached final reporting.
+
+| Metric at epoch16 | continuous repair | baseline |
+|---|---:|---:|
+| promoted lineages / authority cells | 2 / 2 | 11 / 12 |
+| certified AVAILABLE cells | 2 | 3 |
+| post-birth certification receipts | 17 | 43 |
+| legitimate pre-materialization receipts transferred | 8 | 0 |
+| certification leaks | 0 | 0 |
+| structural transitions | 2 | 12 |
+| AVAILABLE all-reply envelopes | 7 | 6 |
+| handoffs | 6 | 5 |
+| successor-value sum | 4.0022339349 | 3.2549575323 |
+| exact-Q selections / positive-credit revisits | 2 / 1 | 2 / 2 |
+| observed successor mates / surprise successes | 14 / 7 | 16 / 10 |
+
+The intervention therefore **passes its natural-stream mechanism gate**. The
+repair produced exactly two continuous-sketch lineages; each transferred four
+legitimate post-birth/pre-materialization receipts, both certified, all17 later
+certification receipts were post-birth and discovery-disjoint. The bounded reply
+audit records these prospective-authority cells in AVAILABLE decisions; because
+they are the repair's only adaptive authority cells, the continuous shell
+participated in the handoff/nonzero-value path. The aggregate count does not say
+that every handoff came from that shell. The candidate ecology remained actively
+bounded at32 while lifetime births and pruning continued.
+
+It does **not** pass the functional curriculum gate. At the matched frontier the
+repair's one additional handoff and0.7472769 additional accumulated successor
+value did not alter held-out M2 conversion; it also had fewer observed successor
+mates and fewer positive-credit revisits. Baseline independently certified three
+legacy cells through more structural churn. Thus evidence reset was a real and
+now-repaired mechanism delay, but this one-seed development pair supports the
+strong null that it was not the dominant mate-in-2 bottleneck. No expanded run.
+
+Latest unequal endpoints agree: repair epoch18 had144 episodes, two certified
+continuous cells,7 handoffs,8 AVAILABLE envelopes and value4.7711004156;
+baseline epoch20 had160 episodes, three certified legacy cells,6 handoffs,
+9 AVAILABLE envelopes and value4.0022339349. Neither endpoint received a final
+evaluation. Missing final performance is unavailable, not zero.
+
+The next bounded question is downstream of budding/certification: why only2 of
+128 matched first-move decisions used learned exact-Q values, why credited
+options were rarely revisited, and why zero M4 consolidation events occurred.
+That requires a separately frozen investigation; this negative package does not
+authorize an automatic learner change or another run.
