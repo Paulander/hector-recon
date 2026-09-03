@@ -2052,13 +2052,26 @@ def test_new_boundary_ecology_mirrors_only_existing_prospective_history() -> Non
         consumed_receipts={"missing": object()},
         accepted_real_references={},
     )
-    with pytest.raises(
-        RuntimeError,
-        match="lacks an accepted REAL reference",
-    ):
+    for continuous_evidence in (False, True):
+        with pytest.raises(
+            RuntimeError,
+            match="lacks an accepted REAL reference",
+        ):
+            _new_boundary_ecology_from_authority_history(
+                missing_reference,
+                genome_seed=23,
+                continuous_evidence=continuous_evidence,
+            )
+    missing_base_reference = SimpleNamespace(
+        base=SimpleNamespace(receipts={"missing-base": object()}),
+        consumed_receipts={},
+        accepted_real_references={},
+    )
+    with pytest.raises(RuntimeError, match="lacks an accepted REAL reference"):
         _new_boundary_ecology_from_authority_history(
-            missing_reference,
+            missing_base_reference,
             genome_seed=23,
+            continuous_evidence=True,
         )
 
     malformed = reference("malformed", 12, observed=True)
@@ -2570,7 +2583,7 @@ def _real_ecology_pools() -> _Pools:
 
 
 def _real_ecology_config(
-    tmp_path: Path, *, resume: bool
+    tmp_path: Path, *, resume: bool, continuous_evidence: bool = False
 ) -> NativeIntrinsicCurriculumConfig:
     return NativeIntrinsicCurriculumConfig(
         progress_path=str(tmp_path / "progress.json"),
@@ -2585,6 +2598,7 @@ def _real_ecology_config(
         r0_availability_mode=V2_PROSPECTIVE_AVAILABILITY,
         r1_reply_policy=R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
         r0_boundary_ecology_enabled=True,
+        r0_boundary_continuous_evidence=continuous_evidence,
     )
 
 
@@ -2624,8 +2638,9 @@ def _real_ecology_run(
     )
 
 
+@pytest.mark.parametrize("continuous_evidence", [False, True])
 def test_real_v2_boundary_ecology_snapshot_resume_matches_uninterrupted(
-    tmp_path,
+    tmp_path, continuous_evidence,
 ) -> None:
     """Exercise the actual event-driven V2/ecology state across a resume."""
 
@@ -2636,7 +2651,10 @@ def test_real_v2_boundary_ecology_snapshot_resume_matches_uninterrupted(
         authority=authority,
         child_triplet_ids=child_triplet_ids,
         pools=pools,
-        config=_real_ecology_config(tmp_path / "uninterrupted", resume=False),
+        config=_real_ecology_config(
+            tmp_path / "uninterrupted", resume=False,
+            continuous_evidence=continuous_evidence,
+        ),
         gate=gate,
     )
     with pytest.raises(R1CheckpointInterrupt) as interrupted:
@@ -2644,7 +2662,10 @@ def test_real_v2_boundary_ecology_snapshot_resume_matches_uninterrupted(
             authority=authority,
             child_triplet_ids=child_triplet_ids,
             pools=pools,
-            config=_real_ecology_config(tmp_path / "resumed", resume=True),
+            config=_real_ecology_config(
+                tmp_path / "resumed", resume=True,
+                continuous_evidence=continuous_evidence,
+            ),
             gate=gate,
             stop_after_epoch=1,
         )
@@ -2661,7 +2682,10 @@ def test_real_v2_boundary_ecology_snapshot_resume_matches_uninterrupted(
         authority=authority,
         child_triplet_ids=child_triplet_ids,
         pools=pools,
-        config=_real_ecology_config(tmp_path / "resumed", resume=True),
+        config=_real_ecology_config(
+            tmp_path / "resumed", resume=True,
+            continuous_evidence=continuous_evidence,
+        ),
         gate=gate,
     )
     ignored_training_keys = {
@@ -2926,13 +2950,24 @@ def test_strict_reply_frame_identity_ignores_epoch_and_position_labels():
     assert first[-1][3]["observations"]
 
 
-def test_production_real_stream_promotes_before_postbirth_certification():
-    """A four-support bud commits first, then certifies on later REAL events."""
+@pytest.mark.parametrize("continuous_evidence", [False, True])
+def test_production_real_stream_promotes_before_postbirth_certification(
+    continuous_evidence,
+):
+    """Physical promotion must preserve exactly the opted-in evidence clock.
+
+    This is a code-defined mechanism fixture, not evidence of generalization:
+    it repeats a tiny geometry with distinct physical interaction identities.
+    """
 
     authority, _child_triplet_ids = _real_ecology_authority(
         seed_discovery=False
     )
-    ecology = ProspectiveBoundaryCandidateEcology()
+    ecology = curriculum_module._new_boundary_ecology_from_authority_history(
+        authority,
+        genome_seed=curriculum_module.BoundaryEcologyConfig().genome_seed,
+        continuous_evidence=continuous_evidence,
+    )
     seen: set[str] = set()
     exposures: dict[tuple[str, str, str], int] = {}
     counters = {
@@ -2951,7 +2986,9 @@ def test_production_real_stream_promotes_before_postbirth_certification():
     birth_exclusion_ids: tuple[str, ...] = ()
     birth_exclusion_digest: str | None = None
     birth_exclusion_frontier: int | None = None
-    for index in range(8):
+    certification_event_count = 5 if continuous_evidence else 8
+    semantic_birth = 0 if continuous_evidence else 3
+    for index in range(certification_event_count):
         board = base.copy(stack=False)
         board.fullmove_number = 300 + index
         move = min(board.legal_moves, key=lambda item: item.uci())
@@ -2981,7 +3018,31 @@ def test_production_real_stream_promotes_before_postbirth_certification():
         assert successor_ids == ()
         assert audit["successor_signal"] is None
         structural = audit["structural"]
-        if index < 3:
+        if continuous_evidence:
+            if index < 4:
+                assert structural is None
+            else:
+                assert structural is not None
+                assert len(structural["child_ids"]) == 1
+                child_id = structural["child_ids"][0]
+                child = authority.states[child_id]
+                assert child.hypothesis.birth_frontier == 0
+                assert child.hypothesis.materialization_frontier == 4
+                assert child.support == 4
+                assert child.prospectively_certified is True
+                exclusion = child.hypothesis.discovery_exclusion_commitment
+                assert exclusion is not None
+                assert exclusion.count == 1
+                assert exclusion.exclusive_frontier == 1
+                birth_exclusion_ids = exclusion.witness_ids
+                birth_exclusion_digest = exclusion.digest
+                birth_exclusion_frontier = exclusion.exclusive_frontier
+                assert len(child.certification_receipt_ids) == 4
+                assert all(
+                    authority.accepted_real_references[item].ordinal > 0
+                    for item in child.certification_receipt_ids
+                )
+        elif index < 3:
             assert structural is None
         elif index == 3:
             assert structural is not None
@@ -3034,11 +3095,22 @@ def test_production_real_stream_promotes_before_postbirth_certification():
     assert certification_ids
     assert set(certification_ids).isdisjoint(birth_exclusion_ids)
     assert all(
-        authority.accepted_real_references[item].ordinal > 3
+        authority.accepted_real_references[item].ordinal > semantic_birth
         for item in certification_ids
     )
     assert birth_exclusion_digest is not None
-    assert birth_exclusion_frontier == 4
+    assert birth_exclusion_frontier == semantic_birth + 1
+    # This verifies both chronological replay paths, including the distinct
+    # semantic-birth and graph-materialization frontiers in continuous mode.
+    authority.verify_full_history_boundary("continuous_evidence_chess_canary")
+    restored_authority = NativeProspectiveAuthorityV2.loads(authority.dumps())
+    assert restored_authority.continuation_manifest() == authority.continuation_manifest()
+    curriculum_module._verify_boundary_ecology_alignment(
+        authority, ecology, roundtrip=True
+    )
+    lineage = curriculum_module._adaptive_positive_lineage_audit(authority, ecology)
+    assert lineage["certification_leak_count"] == 0
+    assert lineage["certified_node_count"] == 1
 
     # The ninth unique REAL interaction is the first one allowed to expose
     # the now-certified shell.  It is deliberately outside the four-event
@@ -3047,7 +3119,7 @@ def test_production_real_stream_promotes_before_postbirth_certification():
     decision_id = "r1:ninth-postbirth-decision"
     credit.register(decision_id, hierarchy_depth=1)
     board = base.copy(stack=False)
-    board.fullmove_number = 308
+    board.fullmove_number = 300 + certification_event_count
     move = min(board.legal_moves, key=lambda item: item.uci())
     after_first = board.copy(stack=False)
     after_first.push(move)
@@ -3072,9 +3144,9 @@ def test_production_real_stream_promotes_before_postbirth_certification():
             boundary_ecology=ecology,
         )
     )
-    assert counters["episodes"] == 8
+    assert counters["episodes"] == certification_event_count
     assert ninth_audit["manifest"]["real_event"] is True
-    assert authority.next_expected_ordinal == 9
+    assert authority.next_expected_ordinal == certification_event_count + 1
 
     # This fixture has one legal opponent reply.  Its already-certified shell
     # must close the actual strict envelope and carry value to the first move;
@@ -3123,7 +3195,7 @@ def test_production_real_stream_promotes_before_postbirth_certification():
     )
     assert provenance["certification_evidence_added"] == 0
     assert all(
-        authority.accepted_real_references[item].ordinal > 3
+        authority.accepted_real_references[item].ordinal > semantic_birth
         for item in certification_ids
     )
 
@@ -3883,6 +3955,29 @@ def test_available_protected_core_precedes_v2_descendant() -> None:
         r0_core_triplet_ids=frozenset(frozen_core.triplet_ids),
     )
     assert selected == mating_move
+
+
+def test_continuous_evidence_requires_ecology_and_changes_resume_identity() -> None:
+    with pytest.raises(ValueError, match="requires boundary ecology"):
+        NativeIntrinsicCurriculumConfig(r0_boundary_continuous_evidence=True)
+    with pytest.raises(ValueError, match="must be boolean"):
+        NativeIntrinsicCurriculumConfig(r0_boundary_continuous_evidence=1)
+    config = NativeIntrinsicCurriculumConfig(r0_boundary_ecology_enabled=True)
+    credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
+    graph = _graph()
+    arm = R1MechanisticArm(name="test", bootstrap_enabled=True)
+
+    def fingerprint(cfg):
+        return _r1_snapshot_fingerprint(
+            graph, credit, None, _real_ecology_pools(),
+            arm_name=arm.name, arm_spec=arm,
+            r0_child_triplet_ids=frozenset(),
+            r0_child_authority_digest=None, config=cfg,
+        )
+
+    assert fingerprint(config) != fingerprint(replace(
+        config, r0_boundary_continuous_evidence=True
+    ))
 
 
 def test_protected_core_identity_is_bound_into_r1_resume_fingerprint() -> None:

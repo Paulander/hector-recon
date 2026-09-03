@@ -9,7 +9,7 @@ choose among the ecology's candidates.
 from __future__ import annotations
 
 from bisect import bisect_left
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import Enum
 import hashlib
 from itertools import combinations
@@ -18,8 +18,8 @@ from types import MappingProxyType
 from typing import Any, Iterable, Mapping, Sequence
 
 
-SCHEMA_VERSION = "native_prospective_boundary_candidate_ecology.v8"
-IMPLEMENTATION_IDENTITY = "content_blind_positive_shell_residual_incarnations.v8"
+SCHEMA_VERSION = "native_prospective_boundary_candidate_ecology.v9"
+IMPLEMENTATION_IDENTITY = "content_blind_positive_shell_residual_incarnations.v9"
 REAL_RECEIPT_KIND = "REAL"
 DEFAULT_SIGNAL_ROLE = "graph_visible_signal"
 PERMITTED_CANDIDATE_ROLES = frozenset({
@@ -62,11 +62,22 @@ MAX_RETAINED_READ_RECEIPTS = (
 MAX_RETAINED_RESIDUAL_IDS = (
     MAX_REFINEMENT_CHILD_CAP * MAX_REFINEMENT_EVENT_CAP
 )
+# Continuous-evidence discovery reads are bounded by the local proposal
+# window.  Inherited negative IDs remain a small witness cache; the exact
+# count is stored separately so a long negative history never enlarges an
+# active sketch.
+MAX_RETAINED_DISCOVERY_RECEIPTS = MAX_LOCAL_OBSERVATION_CAP
+MAX_RETAINED_INHERITED_NEGATIVE_RECEIPTS = MAX_RETAINED_CONTRADICTION_RECEIPTS
 # Keep a fixed exploration share in every staged width.  It prevents a
 # reliable-looking narrow beam from completely suppressing wider residuals,
 # without making exploration another tunable scientific parameter.
 EXPLORATION_QUOTA_DIVISOR = 8
 WILSON_Z = 1.6448536269514722
+# This matcher version is part of every continuous hypothesis identity.  A
+# future semantic change must bump it and therefore fail closed on continuity.
+MATCHING_SEMANTICS_VERSION = (
+    "members_subset_exact_typed_roles_exact_source_identity_real_v1"
+)
 
 
 def _json(value: Any) -> bytes:
@@ -125,6 +136,16 @@ def _text(value: Any, name: str) -> str:
     return value
 
 
+def _optional_text(value: Any, name: str) -> str:
+    """Validate an optional opaque string while preserving empty legacy IDs."""
+
+    if value is None:
+        return ""
+    if not isinstance(value, str):
+        raise ValueError(f"{name} must be a string")
+    return value
+
+
 def _ordinal(value: Any) -> int:
     if isinstance(value, bool) or not isinstance(value, int) or value < 0:
         raise ValueError("ordinal must be a non-negative integer")
@@ -155,6 +176,37 @@ def _signals(
     return tuple(sorted((_text(key, "signal_id"), _text(value, "signal_role")) for key, value in by_id.items()))
 
 
+def boundary_candidate_semantic_identity(
+    members: Sequence[str],
+    member_signal_roles: Mapping[str, str] | Sequence[Sequence[str]] | None = None,
+    source_identity: str = "",
+    matching_semantics: str = MATCHING_SEMANTICS_VERSION,
+) -> str:
+    """Return the immutable identity of one continuous boundary hypothesis.
+
+    The helper is public so authority can bind the exact same digest when it
+    precommits a candidate birth.  It accepts only generic ecology fields:
+    members, their exact typed roles, the opaque source-policy identity, and
+    the matcher version.  No outcome or domain selector can influence it.
+    """
+
+    canonical_members = tuple(sorted(_text(item, "sketch member") for item in members))
+    if not canonical_members or len(canonical_members) > MAX_WIDTH:
+        raise ValueError("semantic identity members must be between 1 and 3")
+    if len(set(canonical_members)) != len(canonical_members):
+        raise ValueError("semantic identity members must be unique")
+    canonical_roles = _signals(canonical_members, member_signal_roles)
+    source = _optional_text(source_identity, "source_identity")
+    matcher = _text(matching_semantics, "matching_semantics")
+    return _digest({
+        "members": canonical_members,
+        "member_signal_roles": canonical_roles,
+        "source_identity": source,
+        "matching_semantics": matcher,
+        "polarity": True,
+    })
+
+
 @dataclass(frozen=True)
 class BoundaryObservation:
     """Immutable grounded REAL input; no domain/semantic selector fields."""
@@ -165,6 +217,10 @@ class BoundaryObservation:
     signal_ids: tuple[str, ...]
     observed: bool
     signal_roles: tuple[tuple[str, str], ...] = ()
+    # An opaque source-policy/projection identity.  Empty is retained for
+    # legacy synthetic observations and deliberately carries no selector
+    # semantics by itself.
+    source_identity: str = ""
 
     def __post_init__(self) -> None:
         _ordinal(self.ordinal)
@@ -172,16 +228,18 @@ class BoundaryObservation:
         _text(self.physical_id, "physical_id")
         if not isinstance(self.observed, bool):
             raise ValueError("observed must be Boolean")
+        source = _optional_text(self.source_identity, "source_identity")
         pairs = _signals(self.signal_ids, self.signal_roles)
         object.__setattr__(self, "signal_ids", tuple(item[0] for item in pairs))
         object.__setattr__(self, "signal_roles", pairs)
+        object.__setattr__(self, "source_identity", source)
 
     @property
     def receipt_kind(self) -> str:
         return REAL_RECEIPT_KIND
 
     def to_manifest(self) -> dict[str, Any]:
-        return {
+        result = {
             "ordinal": self.ordinal,
             "receipt_id": self.receipt_id,
             "physical_id": self.physical_id,
@@ -190,6 +248,11 @@ class BoundaryObservation:
             "observed": self.observed,
             "receipt_kind": REAL_RECEIPT_KIND,
         }
+        # Keep old synthetic manifests byte-compatible where possible; a
+        # populated source identity is explicit and therefore serialized.
+        if self.source_identity:
+            result["source_identity"] = self.source_identity
+        return result
 
     @classmethod
     def from_manifest(cls, value: Mapping[str, Any]) -> "BoundaryObservation":
@@ -202,6 +265,7 @@ class BoundaryObservation:
             signal_ids=tuple(value.get("signal_ids", ())),
             signal_roles=tuple(tuple(item) for item in value.get("signal_roles", ())),
             observed=value["observed"],
+            source_identity=value.get("source_identity", ""),
         )
 
 
@@ -287,6 +351,19 @@ class BoundarySketch:
     lifetime_support_count: int = 0
     lifetime_contradiction_count: int = 0
     evidence_digest: str = ""
+    # Continuous-evidence identity/provenance.  These fields remain empty for
+    # legacy candidates and are emitted only in true-mode manifests.
+    member_signal_roles: tuple[tuple[str, str], ...] = ()
+    source_identity: str = ""
+    semantic_identity: str = ""
+    birth_frontier_ordinal: int | None = None
+    matching_semantics: str = ""
+    discovery_exclusion_receipt_ids: tuple[str, ...] = ()
+    inherited_negative_receipt_ids: tuple[str, ...] = ()
+    inherited_negative_count: int = 0
+    prospective_match_count: int = 0
+    prospective_support_count: int = 0
+    prospective_contradiction_count: int = 0
 
     def __post_init__(self) -> None:
         if not self.sketch_id or not 1 <= len(self.members) <= MAX_WIDTH:
@@ -302,6 +379,88 @@ class BoundarySketch:
         for member in self.members:
             _text(member, "sketch member")
         object.__setattr__(self, "state", SketchLifecycle(self.state))
+        source = _optional_text(self.source_identity, "source_identity")
+        member_roles = self.member_signal_roles
+        if member_roles in (None, ()):
+            member_roles = ()
+        else:
+            member_roles = _signals(self.members, member_roles)
+        semantic = self.semantic_identity
+        if not isinstance(semantic, str):
+            raise ValueError("semantic_identity must be a string")
+        matcher = self.matching_semantics
+        if matcher is None:
+            matcher = ""
+        if not isinstance(matcher, str):
+            raise ValueError("matching_semantics must be a string")
+        if semantic:
+            if self.birth_frontier_ordinal is None:
+                raise ValueError("continuous sketch lacks birth frontier")
+            _ordinal(self.birth_frontier_ordinal)
+            if self.birth_frontier_ordinal < self.birth_ordinal:
+                raise ValueError("birth frontier precedes sketch birth")
+            if not member_roles:
+                raise ValueError("continuous sketch lacks typed member roles")
+            if matcher != MATCHING_SEMANTICS_VERSION:
+                raise ValueError("unknown continuous matching semantics")
+            expected_identity = boundary_candidate_semantic_identity(
+                self.members,
+                member_roles,
+                source,
+                matcher,
+            )
+            if semantic != expected_identity:
+                raise ValueError("semantic identity disagrees with frozen fields")
+        else:
+            if self.birth_frontier_ordinal is not None:
+                raise ValueError("legacy sketch carries a birth frontier")
+            if matcher:
+                raise ValueError("legacy sketch carries matching semantics")
+            if member_roles:
+                raise ValueError("legacy sketch carries typed member roles")
+            if source:
+                raise ValueError("legacy sketch carries source identity")
+        discovery_exclusions = tuple(sorted(set(self.discovery_exclusion_receipt_ids)))
+        inherited_negatives = tuple(sorted(set(self.inherited_negative_receipt_ids)))
+        if any(not isinstance(item, str) or not item for item in discovery_exclusions):
+            raise ValueError("discovery exclusion receipt IDs must be non-empty strings")
+        if any(not isinstance(item, str) or not item for item in inherited_negatives):
+            raise ValueError("inherited negative receipt IDs must be non-empty strings")
+        if len(discovery_exclusions) > MAX_RETAINED_DISCOVERY_RECEIPTS:
+            raise ValueError("discovery exclusion receipt cache exceeds its bound")
+        if len(inherited_negatives) > MAX_RETAINED_INHERITED_NEGATIVE_RECEIPTS:
+            raise ValueError("inherited negative receipt cache exceeds its bound")
+        continuous_values = (
+            self.inherited_negative_count,
+            self.prospective_match_count,
+            self.prospective_support_count,
+            self.prospective_contradiction_count,
+        )
+        if any(
+            isinstance(value, bool) or not isinstance(value, int) or value < 0
+            for value in continuous_values
+        ):
+            raise ValueError("invalid continuous evidence counters")
+        if self.inherited_negative_count < len(inherited_negatives):
+            raise ValueError("inherited negative cache exceeds its scalar count")
+        if (
+            self.prospective_match_count
+            != self.prospective_support_count
+            + self.prospective_contradiction_count
+        ):
+            raise ValueError("invalid prospective evidence counters")
+        if not semantic and any(continuous_values):
+            raise ValueError("legacy sketch carries continuous evidence")
+        if not semantic and (discovery_exclusions or inherited_negatives):
+            raise ValueError("legacy sketch carries continuous evidence")
+        object.__setattr__(self, "source_identity", source)
+        object.__setattr__(self, "member_signal_roles", member_roles)
+        object.__setattr__(self, "semantic_identity", semantic)
+        object.__setattr__(self, "matching_semantics", matcher)
+        object.__setattr__(self, "discovery_exclusion_receipt_ids", discovery_exclusions)
+        object.__setattr__(self, "inherited_negative_receipt_ids", inherited_negatives)
+        if self.last_observation_ordinal is not None:
+            _ordinal(self.last_observation_ordinal)
         positives = tuple(sorted(set(self.positive_receipt_ids)))
         negatives = tuple(sorted(set(self.negative_receipt_ids)))
         reads = tuple(sorted(set(self.read_receipt_ids)))
@@ -374,6 +533,13 @@ class BoundarySketch:
             _text(self.refinement_source_receipt_id, "refinement_source_receipt_id")
         if any(not isinstance(item, str) or not item for item in residuals):
             raise ValueError("residual sketch IDs must be non-empty strings")
+        if semantic:
+            if (
+                lifetime_match != self.prospective_match_count
+                or lifetime_support != self.prospective_support_count
+                or lifetime_contradiction != self.prospective_contradiction_count
+            ):
+                raise ValueError("continuous lifetime counters disagree with prospective counters")
         object.__setattr__(self, "positive_receipt_ids", positives)
         object.__setattr__(self, "negative_receipt_ids", negatives)
         object.__setattr__(self, "read_receipt_ids", reads)
@@ -395,11 +561,11 @@ class BoundarySketch:
 
     @property
     def positive_count(self) -> int:
-        return self.lifetime_support_count
+        return self.support_count
 
     @property
     def negative_count(self) -> int:
-        return self.lifetime_contradiction_count
+        return self.contradiction_count
 
     @property
     def support(self) -> int:
@@ -419,11 +585,63 @@ class BoundarySketch:
 
     @property
     def support_count(self) -> int:
+        if self.semantic_identity:
+            return self.prospective_support_count
         return self.lifetime_support_count
 
     @property
     def contradiction_count(self) -> int:
+        if self.semantic_identity:
+            return self.prospective_contradiction_count
         return self.lifetime_contradiction_count
+
+    @property
+    def continuous_evidence(self) -> bool:
+        return bool(self.semantic_identity)
+
+    @property
+    def birth_frontier(self) -> int:
+        """Canonical birth frontier exposed to authority and replay code."""
+
+        return (
+            self.birth_frontier_ordinal
+            if self.birth_frontier_ordinal is not None
+            else self.birth_ordinal
+        )
+
+    @property
+    def roles(self) -> tuple[tuple[str, str], ...]:
+        """Alias for the frozen typed member roles."""
+
+        return self.member_signal_roles
+
+    @property
+    def member_roles(self) -> tuple[tuple[str, str], ...]:
+        return self.member_signal_roles
+
+    @property
+    def typed_signal_roles(self) -> tuple[tuple[str, str], ...]:
+        return self.member_signal_roles
+
+    @property
+    def source_policy_identity(self) -> str:
+        return self.source_identity
+
+    @property
+    def prospective_support(self) -> int:
+        return self.support_count
+
+    @property
+    def prospective_contradiction(self) -> int:
+        return self.contradiction_count
+
+    @property
+    def known_negative_receipt_ids(self) -> tuple[str, ...]:
+        return self.inherited_negative_receipt_ids
+
+    @property
+    def known_negative_count(self) -> int:
+        return self.inherited_negative_count
 
     @property
     def supporting_receipt_ids(self) -> tuple[str, ...]:
@@ -437,7 +655,7 @@ class BoundarySketch:
         return wilson_lower_bound(self.support_count, self.support_count + self.contradiction_count, z)
 
     def to_manifest(self) -> dict[str, Any]:
-        return {
+        result = {
             "sketch_id": self.sketch_id,
             "members": list(self.members),
             "birth_ordinal": self.birth_ordinal,
@@ -459,6 +677,25 @@ class BoundarySketch:
             "lifetime_contradiction_count": self.lifetime_contradiction_count,
             "evidence_digest": self.evidence_digest,
         }
+        if self.semantic_identity:
+            result.update({
+                "member_signal_roles": [list(item) for item in self.member_signal_roles],
+                "source_identity": self.source_identity,
+                "semantic_identity": self.semantic_identity,
+                "birth_frontier_ordinal": self.birth_frontier_ordinal,
+                "matching_semantics": self.matching_semantics,
+                "discovery_exclusion_receipt_ids": list(
+                    self.discovery_exclusion_receipt_ids
+                ),
+                "inherited_negative_receipt_ids": list(
+                    self.inherited_negative_receipt_ids
+                ),
+                "inherited_negative_count": self.inherited_negative_count,
+                "prospective_match_count": self.prospective_match_count,
+                "prospective_support_count": self.prospective_support_count,
+                "prospective_contradiction_count": self.prospective_contradiction_count,
+            })
+        return result
 
     @classmethod
     def from_manifest(cls, value: Mapping[str, Any]) -> "BoundarySketch":
@@ -486,6 +723,26 @@ class BoundarySketch:
                 0,
             ),
             evidence_digest=value.get("evidence_digest", ""),
+            member_signal_roles=tuple(
+                tuple(item) for item in value.get("member_signal_roles", ())
+            ),
+            source_identity=value.get("source_identity", ""),
+            semantic_identity=value.get("semantic_identity", ""),
+            birth_frontier_ordinal=value.get("birth_frontier_ordinal"),
+            matching_semantics=value.get("matching_semantics", ""),
+            discovery_exclusion_receipt_ids=tuple(
+                value.get("discovery_exclusion_receipt_ids", ())
+            ),
+            inherited_negative_receipt_ids=tuple(
+                value.get("inherited_negative_receipt_ids", ())
+            ),
+            inherited_negative_count=value.get("inherited_negative_count", 0),
+            prospective_match_count=value.get("prospective_match_count", 0),
+            prospective_support_count=value.get("prospective_support_count", 0),
+            prospective_contradiction_count=value.get(
+                "prospective_contradiction_count",
+                0,
+            ),
         )
 
 
@@ -509,6 +766,18 @@ class PromotionDecision:
     ranked_candidate_ids: tuple[str, ...]
     reason: str
     inspected_ordinal_interval: tuple[int, int] | None = None
+    # Continuous-evidence audit fields.  They are omitted from legacy
+    # manifests and remain defaults for false-mode decisions.
+    semantic_identity: str = ""
+    birth_frontier_ordinal: int | None = None
+    member_signal_roles: tuple[tuple[str, str], ...] = ()
+    source_identity: str = ""
+    prospective_support_receipt_ids: tuple[str, ...] = ()
+    prospective_contradiction_receipt_ids: tuple[str, ...] = ()
+    historical_support_receipt_ids: tuple[str, ...] = ()
+    historical_contradiction_receipt_ids: tuple[str, ...] = ()
+    inherited_negative_receipt_ids: tuple[str, ...] = ()
+    inherited_negative_count: int = 0
 
     @property
     def promotion_eligible(self) -> bool:
@@ -518,8 +787,28 @@ class PromotionDecision:
     def supporting_real_receipt_ids(self) -> tuple[str, ...]:
         return self.supporting_receipt_ids
 
+    @property
+    def continuous_evidence(self) -> bool:
+        return bool(self.semantic_identity)
+
+    @property
+    def birth_frontier(self) -> int | None:
+        return self.birth_frontier_ordinal
+
+    @property
+    def historical_contrast_receipt_ids(self) -> tuple[str, ...]:
+        return self.historical_contradiction_receipt_ids
+
+    @property
+    def applicable_historical_contradiction_receipt_ids(self) -> tuple[str, ...]:
+        return self.historical_contradiction_receipt_ids
+
+    @property
+    def known_negative_count(self) -> int:
+        return self.inherited_negative_count
+
     def to_manifest(self) -> dict[str, Any]:
-        return {
+        result = {
             "candidate_id": self.candidate_id,
             "members": list(self.members),
             "triggering_receipt_id": self.triggering_receipt_id,
@@ -540,6 +829,30 @@ class PromotionDecision:
             ),
             "receipt_kind": REAL_RECEIPT_KIND,
         }
+        if self.semantic_identity:
+            result.update({
+                "semantic_identity": self.semantic_identity,
+                "birth_frontier_ordinal": self.birth_frontier_ordinal,
+                "member_signal_roles": [list(item) for item in self.member_signal_roles],
+                "source_identity": self.source_identity,
+                "prospective_support_receipt_ids": list(
+                    self.prospective_support_receipt_ids
+                ),
+                "prospective_contradiction_receipt_ids": list(
+                    self.prospective_contradiction_receipt_ids
+                ),
+                "historical_support_receipt_ids": list(
+                    self.historical_support_receipt_ids
+                ),
+                "historical_contradiction_receipt_ids": list(
+                    self.historical_contradiction_receipt_ids
+                ),
+                "inherited_negative_receipt_ids": list(
+                    self.inherited_negative_receipt_ids
+                ),
+                "inherited_negative_count": self.inherited_negative_count,
+            })
+        return result
 
 
 @dataclass(frozen=True)
@@ -624,8 +937,11 @@ class BoundaryEcologyConfig:
     wilson_z: float = WILSON_Z
     refinement_child_cap: int = DEFAULT_REFINEMENT_CHILD_CAP
     refinement_event_cap: int = DEFAULT_REFINEMENT_EVENT_CAP
+    continuous_evidence: bool = False
 
     def __post_init__(self) -> None:
+        if type(self.continuous_evidence) is not bool:
+            raise ValueError("continuous_evidence must be Boolean")
         if not 1 <= self.max_candidates_per_demand <= MAX_WIDTH:
             raise ValueError("max_candidates_per_demand must be between 1 and 3")
         if self.active_sketch_cap < 1:
@@ -683,7 +999,7 @@ class BoundaryEcologyConfig:
             )
 
     def to_manifest(self) -> dict[str, Any]:
-        return {
+        result = {
             "genome_seed": self.genome_seed,
             "max_candidates_per_demand": self.max_candidates_per_demand,
             "active_sketch_cap": self.active_sketch_cap,
@@ -696,10 +1012,50 @@ class BoundaryEcologyConfig:
             "refinement_child_cap": self.refinement_child_cap,
             "refinement_event_cap": self.refinement_event_cap,
         }
+        # Omit the default so a false-mode config preserves the V25 manifest
+        # shape; true mode is explicit and therefore records the protocol.
+        if self.continuous_evidence:
+            result["continuous_evidence"] = True
+        return result
 
 
 class DuplicatePhysicalReceiptError(ValueError):
     """Receipt or physical interaction identity was already consumed."""
+
+
+@dataclass(frozen=True)
+class BoundaryPromotionAudit:
+    """Complete candidate reclosure with historical contrast kept distinct.
+
+    The object remains iterable as the legacy ``(support, contrast,
+    inspected)`` triple.  In continuous mode ``support`` is *strictly after*
+    the semantic birth frontier, while ``historical_contradiction`` records
+    applicable matching negatives at or before that frontier.  Keeping both
+    views on one immutable result lets old callers continue to unpack the
+    audit while authority can verify the inherited constraint separately.
+    """
+
+    support: tuple[str, ...]
+    contrast: tuple[str, ...]
+    inspected: tuple[str, ...]
+    historical_support: tuple[str, ...] = ()
+    historical_contradiction: tuple[str, ...] = ()
+    prospective_support: tuple[str, ...] = ()
+    prospective_contradiction: tuple[str, ...] = ()
+
+    def __iter__(self):
+        # Preserve the private API's historical unpacking contract.
+        yield self.support
+        yield self.contrast
+        yield self.inspected
+
+    @property
+    def historical_contrast(self) -> tuple[str, ...]:
+        return self.historical_contradiction
+
+    @property
+    def applicable_historical_contradiction(self) -> tuple[str, ...]:
+        return self.historical_contradiction
 
 
 class ProspectiveBoundaryCandidateEcology:
@@ -713,12 +1069,20 @@ class ProspectiveBoundaryCandidateEcology:
         # ``_sketches`` for replay but recurring birth/refinement decisions
         # must never scan them.
         self._live_pattern_index: dict[tuple[str, ...], set[str]] = {}
+        # In continuous mode the same member pattern under a changed source
+        # or typed role is a new hypothesis, not a continuation of the old
+        # one.  This semantic index is derived and bounded by the live cap.
+        self._live_semantic_index: dict[str, set[str]] = {}
         self._live_residual_index: dict[str, set[str]] = {}
         self._demand_birth_ids: dict[int, tuple[str, ...]] = {}
         self._tombstones: dict[str, BoundarySketch] = {}
         self._observations: dict[str, BoundaryObservation] = {}
         self._physical: dict[str, str] = {}
         self._ordinals: dict[int, str] = {}
+        # Negative observations are indexed at ingestion by source identity,
+        # signal and exact role.  Birth/promotion may intersect these sets;
+        # recurring observe() never scans the lifetime ledger for history.
+        self._negative_index: dict[tuple[str, str, str], set[str]] = {}
         self._observation_ordinals: list[int] = []
         self._observation_receipt_order: list[str] = []
         # A deterministic, bounded view of the accepted REAL ledger used only
@@ -754,6 +1118,10 @@ class ProspectiveBoundaryCandidateEcology:
             self._live_pattern_index.setdefault(
                 candidate.members, set()
             ).add(candidate.sketch_id)
+        if candidate.semantic_identity:
+            self._live_semantic_index.setdefault(
+                candidate.semantic_identity, set()
+            ).add(candidate.sketch_id)
         if candidate.parent_sketch_id is not None:
             self._live_residual_index.setdefault(
                 candidate.parent_sketch_id, set()
@@ -766,6 +1134,17 @@ class ProspectiveBoundaryCandidateEcology:
             pattern_ids.discard(candidate.sketch_id)
             if not pattern_ids:
                 self._live_pattern_index.pop(candidate.members, None)
+        if candidate.semantic_identity:
+            semantic_ids = self._live_semantic_index.get(
+                candidate.semantic_identity
+            )
+            if semantic_ids is not None:
+                semantic_ids.discard(candidate.sketch_id)
+                if not semantic_ids:
+                    self._live_semantic_index.pop(
+                        candidate.semantic_identity,
+                        None,
+                    )
         if candidate.parent_sketch_id is not None:
             residual_ids = self._live_residual_index.get(
                 candidate.parent_sketch_id
@@ -803,7 +1182,17 @@ class ProspectiveBoundaryCandidateEcology:
         ]
         self._active_ids = set()
         self._live_pattern_index = {}
+        self._live_semantic_index = {}
         self._live_residual_index = {}
+        self._negative_index = {}
+        for observation in self._observations.values():
+            if observation.observed is not False:
+                continue
+            for signal_id, role in observation.signal_roles:
+                self._negative_index.setdefault(
+                    (observation.source_identity, signal_id, role),
+                    set(),
+                ).add(observation.receipt_id)
         demand_births: dict[int, list[str]] = {
             ordinal: [] for ordinal in self._demands
         }
@@ -832,6 +1221,7 @@ class ProspectiveBoundaryCandidateEcology:
             if self._is_live(candidate)
         }
         expected_patterns: dict[tuple[str, ...], set[str]] = {}
+        expected_semantics: dict[str, set[str]] = {}
         expected_residuals: dict[str, set[str]] = {}
         demand_births: dict[int, list[str]] = {
             ordinal: [] for ordinal in self._demands
@@ -840,10 +1230,22 @@ class ProspectiveBoundaryCandidateEcology:
             if not self._is_live(candidate):
                 pass
             else:
+                if (
+                    self.config.continuous_evidence
+                    and candidate.last_observation_ordinal != self._frontier
+                ):
+                    raise ValueError(
+                        "continuous active sketch cutoff differs from ecology frontier"
+                    )
                 if candidate.polarity is True:
                     expected_patterns.setdefault(candidate.members, set()).add(
                         candidate.sketch_id
                     )
+                if candidate.semantic_identity:
+                    expected_semantics.setdefault(
+                        candidate.semantic_identity,
+                        set(),
+                    ).add(candidate.sketch_id)
                 if candidate.parent_sketch_id is not None:
                     expected_residuals.setdefault(
                         candidate.parent_sketch_id, set()
@@ -866,6 +1268,15 @@ class ProspectiveBoundaryCandidateEcology:
             self._observations.values(),
             key=lambda item: (item.ordinal, item.receipt_id),
         ))
+        expected_negative_index: dict[tuple[str, str, str], set[str]] = {}
+        for observation in self._observations.values():
+            if observation.observed is not False:
+                continue
+            for signal_id, role in observation.signal_roles:
+                expected_negative_index.setdefault(
+                    (observation.source_identity, signal_id, role),
+                    set(),
+                ).add(observation.receipt_id)
         if (
             self._observation_ordinals != [
                 item.ordinal for item in expected_observations
@@ -875,8 +1286,10 @@ class ProspectiveBoundaryCandidateEcology:
             ]
             or self._active_ids != expected_active
             or self._live_pattern_index != expected_patterns
+            or self._live_semantic_index != expected_semantics
             or self._live_residual_index != expected_residuals
             or self._demand_birth_ids != expected_demands
+            or self._negative_index != expected_negative_index
         ):
             raise ValueError("boundary ecology live indexes are inconsistent")
 
@@ -1043,6 +1456,15 @@ class ProspectiveBoundaryCandidateEcology:
         roles = dict(demand.signal_roles or trigger.signal_roles)
         if any(trigger_roles[item] != roles[item] for item in demand.signal_ids):
             raise ValueError("EXPAND signal roles differ from its trigger")
+        discovery_rows = self._discovery_rows_for_trigger(trigger)
+        # ``_frontier`` is the highest accepted event, not merely the trigger
+        # ordinal.  Taking its maximum prevents an out-of-order demand from
+        # backdating a true-mode hypothesis behind already-read observations.
+        birth_frontier = max(
+            self._frontier,
+            demand.ordinal,
+            *(item.ordinal for item in discovery_rows),
+        )
         # Only reusable graph-visible micropatterns may seed competence.  In
         # particular, the universal internal policy-response marker is not a
         # candidate: admitting it would create a tautological hypothesis.
@@ -1059,39 +1481,103 @@ class ProspectiveBoundaryCandidateEcology:
         )
         born: list[BoundarySketch] = []
         for members in proposals:
-            if members in [item.members for item in born]:
+            member_roles = tuple(
+                (item, roles.get(item, DEFAULT_SIGNAL_ROLE))
+                for item in members
+            )
+            source_identity = trigger.source_identity
+            semantic_identity = self._semantic_identity_for(
+                members,
+                member_roles,
+                source_identity,
+            )
+            if semantic_identity:
+                duplicate_birth = any(
+                    item.semantic_identity == semantic_identity
+                    for item in born
+                )
+            else:
+                duplicate_birth = members in [item.members for item in born]
+            if duplicate_birth:
                 continue
-            member_roles = tuple((item, roles.get(item, DEFAULT_SIGNAL_ROLE)) for item in members)
             sketch_id = self._incarnation_id(
                 members=members,
                 roles=member_roles,
                 birth_kind="surprise_positive",
                 trigger_receipt_id=demand.triggering_receipt_id,
                 birth_ordinal=demand.ordinal,
+                source_identity=source_identity,
+                semantic_identity=semantic_identity,
             )
-            if self._has_live_pattern(members):
+            if self._has_live_pattern(
+                members,
+                source_identity=source_identity,
+                member_signal_roles=member_roles,
+            ):
                 continue
             if sketch_id in self._sketches:
                 raise ValueError("boundary sketch incarnation identity collision")
             if self.active_sketch_count >= self.config.active_sketch_cap:
                 self._evict_for_capacity()
+            continuous = bool(self.config.continuous_evidence)
+            inherited_negative_ids: tuple[str, ...] = ()
+            inherited_negative_count = 0
+            if continuous:
+                all_inherited = self._negative_receipt_ids_for_semantics(
+                    members=members,
+                    roles=member_roles,
+                    source_identity=source_identity,
+                )
+                inherited_negative_count = len(all_inherited)
+                inherited_negative_ids = all_inherited[
+                    :MAX_RETAINED_INHERITED_NEGATIVE_RECEIPTS
+                ]
+            discovery_ids = tuple(sorted({
+                item.receipt_id for item in discovery_rows
+            })) if continuous else ()
+            candidate_kwargs: dict[str, Any] = {}
+            if continuous:
+                candidate_kwargs = {
+                    "member_signal_roles": member_roles,
+                    "source_identity": source_identity,
+                    "semantic_identity": semantic_identity,
+                    "birth_frontier_ordinal": birth_frontier,
+                    "matching_semantics": MATCHING_SEMANTICS_VERSION,
+                    "discovery_exclusion_receipt_ids": discovery_ids,
+                    "inherited_negative_receipt_ids": inherited_negative_ids,
+                    "inherited_negative_count": inherited_negative_count,
+                    "prospective_match_count": 0,
+                    "prospective_support_count": 0,
+                    "prospective_contradiction_count": 0,
+                }
             candidate = BoundarySketch(
                 sketch_id,
                 members,
                 demand.ordinal,
                 demand.triggering_receipt_id,
                 demand.polarity,
-                positive_receipt_ids=(demand.triggering_receipt_id,) if demand.polarity else (),
-                negative_receipt_ids=(demand.triggering_receipt_id,) if not demand.polarity else (),
+                positive_receipt_ids=(
+                    () if self.config.continuous_evidence
+                    else (demand.triggering_receipt_id,)
+                ) if demand.polarity else (),
+                negative_receipt_ids=(),
                 read_receipt_ids=(demand.triggering_receipt_id,),
-                last_observation_ordinal=trigger.ordinal,
-                lifetime_match_count=1,
-                lifetime_support_count=1,
-                lifetime_contradiction_count=0,
-                evidence_digest=_mix_evidence_digest(
-                    "0" * 64,
-                    trigger,
+                last_observation_ordinal=(
+                    birth_frontier if continuous else trigger.ordinal
                 ),
+                # The trigger is construction/discovery evidence only in
+                # continuous mode.  Prospective counters therefore start at
+                # zero; the trigger remains in the read set for provenance.
+                lifetime_match_count=(0 if continuous else 1),
+                lifetime_support_count=(0 if continuous else 1),
+                lifetime_contradiction_count=0,
+                evidence_digest=(
+                    "" if continuous else _mix_evidence_digest(
+                        "0" * 64,
+                        trigger,
+                    )
+                ),
+                **candidate_kwargs,
             )
             self._store_sketch(candidate)
             self._births += 1
@@ -1101,9 +1587,22 @@ class ProspectiveBoundaryCandidateEcology:
         ))
         return tuple(born)
 
-    def _has_live_pattern(self, members: Sequence[str]) -> bool:
-        """Return whether this positive micropattern already has a live bud."""
+    def _has_live_pattern(
+        self,
+        members: Sequence[str],
+        *,
+        source_identity: str = "",
+        member_signal_roles: Sequence[tuple[str, str]] = (),
+    ) -> bool:
+        """Return whether this exact positive semantics has a live bud."""
 
+        if self.config.continuous_evidence:
+            semantic = self._semantic_identity_for(
+                members,
+                member_signal_roles,
+                source_identity,
+            )
+            return bool(self._live_semantic_index.get(semantic, ()))
         return bool(self._live_pattern_ids(members))
 
     def _live_pattern_ids(self, members: Sequence[str]) -> tuple[str, ...]:
@@ -1126,6 +1625,8 @@ class ProspectiveBoundaryCandidateEcology:
         birth_ordinal: int,
         parent_sketch_id: str | None = None,
         refinement_source_receipt_id: str | None = None,
+        source_identity: str = "",
+        semantic_identity: str = "",
     ) -> str:
         """Derive a deterministic, never-reused birth incarnation ID.
 
@@ -1135,7 +1636,7 @@ class ProspectiveBoundaryCandidateEcology:
         a fresh ID without reviving its tombstone.
         """
 
-        return _digest({
+        identity_payload: dict[str, Any] = {
             "seed": self.config.genome_seed,
             "birth_kind": birth_kind,
             "birth_ordinal": int(birth_ordinal),
@@ -1145,7 +1646,128 @@ class ProspectiveBoundaryCandidateEcology:
             "members": tuple(sorted(members)),
             "roles": tuple(sorted(roles)),
             "polarity": True,
-        })[:32]
+        }
+        if self.config.continuous_evidence:
+            identity_payload.update({
+                "source_identity": source_identity,
+                "semantic_identity": semantic_identity,
+                "matching_semantics": MATCHING_SEMANTICS_VERSION,
+            })
+        return _digest(identity_payload)[:32]
+
+    def _semantic_identity_for(
+        self,
+        members: Sequence[str],
+        roles: Sequence[tuple[str, str]],
+        source_identity: str,
+    ) -> str:
+        if not self.config.continuous_evidence:
+            return ""
+        return boundary_candidate_semantic_identity(
+            members,
+            roles,
+            source_identity,
+            MATCHING_SEMANTICS_VERSION,
+        )
+
+    def _candidate_matches(
+        self,
+        candidate: BoundarySketch,
+        observation: BoundaryObservation,
+    ) -> bool:
+        """Return whether one REAL receipt has the candidate's exact meaning."""
+
+        if not set(candidate.members).issubset(observation.signal_ids):
+            return False
+        if not candidate.semantic_identity:
+            # Legacy V25 matching intentionally ignored source/role metadata.
+            return True
+        if observation.source_identity != candidate.source_identity:
+            return False
+        observed_roles = dict(observation.signal_roles)
+        return all(
+            observed_roles.get(signal_id) == role
+            for signal_id, role in candidate.member_signal_roles
+        )
+
+    @staticmethod
+    def _candidate_members_match_roles(
+        observation: BoundaryObservation,
+        members: Sequence[str],
+        base_roles: Sequence[tuple[str, str]],
+        source_identity: str,
+    ) -> bool:
+        if observation.source_identity != source_identity:
+            return False
+        if not set(members).issubset(observation.signal_ids):
+            return False
+        observed_roles = dict(observation.signal_roles)
+        expected_roles = dict(base_roles)
+        return all(
+            observed_roles.get(member) == expected_roles.get(member)
+            for member in members
+        )
+
+    def _negative_receipt_ids_for_semantics(
+        self,
+        *,
+        members: Sequence[str],
+        roles: Sequence[tuple[str, str]],
+        source_identity: str,
+    ) -> tuple[str, ...]:
+        """Intersect indexed negative witnesses for one frozen semantics."""
+
+        if not members:
+            return ()
+        role_by_signal = dict(roles)
+        buckets = [
+            self._negative_index.get(
+                (source_identity, signal_id, role_by_signal[signal_id]),
+                set(),
+            )
+            for signal_id in members
+        ]
+        if any(not bucket for bucket in buckets):
+            return ()
+        # Start with the smallest posting list.  This keeps the lookup out of
+        # the ordinary observation hot path; its rare birth/refinement cost is
+        # still proportional to the smallest indexed history bucket (not to
+        # the number of returned intersection witnesses).
+        matching = set(min(buckets, key=len))
+        for bucket in buckets:
+            matching.intersection_update(bucket)
+            if not matching:
+                return ()
+        return tuple(sorted(matching, key=lambda receipt_id: (
+            self._observations[receipt_id].ordinal,
+            receipt_id,
+        )))
+
+    def _discovery_rows_for_trigger(
+        self,
+        trigger: BoundaryObservation,
+    ) -> tuple[BoundaryObservation, ...]:
+        """Mirror proposal reads, including an out-of-order trigger safely."""
+
+        local = self._local_observations(through_ordinal=trigger.ordinal)
+        if trigger.receipt_id not in {item.receipt_id for item in local}:
+            local = (*local, trigger)
+            local = tuple(sorted(
+                local,
+                key=lambda item: (item.ordinal, item.receipt_id),
+            ))
+            if len(local) > self.config.local_observation_cap:
+                prior = tuple(
+                    item for item in local
+                    if item.receipt_id != trigger.receipt_id
+                )
+                keep_count = max(0, self.config.local_observation_cap - 1)
+                kept_prior = prior[-keep_count:] if keep_count else ()
+                local = tuple(sorted(
+                    (*kept_prior, trigger),
+                    key=lambda item: (item.ordinal, item.receipt_id),
+                ))
+        return local
 
     def _local_rows_for_candidate(
         self,
@@ -1162,7 +1784,7 @@ class ProspectiveBoundaryCandidateEcology:
             row
             for row in self._local_observations(through_ordinal=limit)
             if row.ordinal >= candidate.birth_ordinal
-            and set(candidate.members).issubset(row.signal_ids)
+            and self._candidate_matches(candidate, row)
         )
 
     def _residual_specs(
@@ -1250,7 +1872,24 @@ class ProspectiveBoundaryCandidateEcology:
                 contrast_rows = tuple(
                     row
                     for row in rows
-                    if row.observed is False and member_set.issubset(row.signal_ids)
+                    if row.observed is False
+                    and (
+                        member_set.issubset(row.signal_ids)
+                        if not candidate.semantic_identity
+                        else self._candidate_members_match_roles(
+                            row,
+                            members,
+                            tuple(
+                                (*candidate.member_signal_roles,)
+                                + tuple(
+                                    (member, role_by_signal[member])
+                                    for member in members
+                                    if member not in dict(candidate.member_signal_roles)
+                                )
+                            ),
+                            candidate.source_identity,
+                        )
+                    )
                 )
                 if not support_rows:
                     continue
@@ -1258,8 +1897,15 @@ class ProspectiveBoundaryCandidateEcology:
                     support_rows,
                     key=lambda row: (row.ordinal, row.receipt_id),
                 )
+                candidate_roles = dict(candidate.member_signal_roles)
                 roles = tuple(
-                    (member, role_by_signal.get(member, DEFAULT_SIGNAL_ROLE))
+                    (
+                        member,
+                        candidate_roles.get(
+                            member,
+                            role_by_signal.get(member, DEFAULT_SIGNAL_ROLE),
+                        ),
+                    )
                     for member in members
                 )
                 priority = _priority(
@@ -1322,6 +1968,15 @@ class ProspectiveBoundaryCandidateEcology:
                 birth_ordinal=source.ordinal,
                 parent_sketch_id=candidate.sketch_id,
                 refinement_source_receipt_id=contradiction.receipt_id,
+                source_identity=(
+                    candidate.source_identity
+                    if candidate.semantic_identity else ""
+                ),
+                semantic_identity=self._semantic_identity_for(
+                    members,
+                    roles,
+                    candidate.source_identity,
+                ),
             )
             existing = self._sketches.get(sketch_id)
             if existing is not None:
@@ -1330,7 +1985,21 @@ class ProspectiveBoundaryCandidateEcology:
                 # A same-source replay must resolve to the same incarnation;
                 # a tombstoned incarnation is never revived.
                 continue
-            live_pattern_ids = self._live_pattern_ids(members)
+            child_source_identity = (
+                candidate.source_identity
+                if candidate.semantic_identity else ""
+            )
+            child_semantic_identity = self._semantic_identity_for(
+                members,
+                roles,
+                child_source_identity,
+            )
+            if self.config.continuous_evidence:
+                live_pattern_ids = tuple(sorted(
+                    self._live_semantic_index.get(child_semantic_identity, ())
+                ))
+            else:
+                live_pattern_ids = self._live_pattern_ids(members)
             if live_pattern_ids:
                 # The initial beam may already have discovered exactly this
                 # strict residual before its parent sees the contrast.  Reuse
@@ -1352,27 +2021,82 @@ class ProspectiveBoundaryCandidateEcology:
                 self._evict_for_capacity(exclude_ids={candidate.sketch_id})
             if self.active_sketch_count >= self.config.active_sketch_cap:
                 break
+            continuous = bool(self.config.continuous_evidence)
+            discovery_rows = self._local_rows_for_candidate(
+                candidate,
+                through_ordinal=contradiction.ordinal,
+            )
+            child_birth_frontier = max(
+                self._frontier,
+                contradiction.ordinal,
+                *(item.ordinal for item in discovery_rows),
+            )
+            inherited_negative_ids: tuple[str, ...] = ()
+            inherited_negative_count = 0
+            if continuous:
+                all_inherited = self._negative_receipt_ids_for_semantics(
+                    members=members,
+                    roles=roles,
+                    source_identity=child_source_identity,
+                )
+                inherited_negative_count = len(all_inherited)
+                inherited_negative_ids = all_inherited[
+                    :MAX_RETAINED_INHERITED_NEGATIVE_RECEIPTS
+                ]
+            child_discovery_ids = tuple(sorted({
+                item.receipt_id for item in (*discovery_rows, contradiction)
+            })) if continuous else ()
+            child_kwargs: dict[str, Any] = {}
+            if continuous:
+                child_kwargs = {
+                    "member_signal_roles": roles,
+                    "source_identity": child_source_identity,
+                    "semantic_identity": child_semantic_identity,
+                    "birth_frontier_ordinal": child_birth_frontier,
+                    "matching_semantics": MATCHING_SEMANTICS_VERSION,
+                    "discovery_exclusion_receipt_ids": child_discovery_ids,
+                    "inherited_negative_receipt_ids": inherited_negative_ids,
+                    "inherited_negative_count": inherited_negative_count,
+                    "prospective_match_count": 0,
+                    "prospective_support_count": 0,
+                    "prospective_contradiction_count": 0,
+                }
             child = BoundarySketch(
                 sketch_id=sketch_id,
                 members=members,
-                birth_ordinal=source.ordinal,
+                # In true mode the child is born at the contradiction/latest
+                # discovery read, while the positive source remains only a
+                # construction witness and never prospective support.
+                birth_ordinal=(
+                    child_birth_frontier if continuous else source.ordinal
+                ),
                 triggering_receipt_id=source.receipt_id,
                 polarity=True,
                 state=SketchLifecycle.ACTIVE,
-                positive_receipt_ids=(source.receipt_id,),
+                positive_receipt_ids=(
+                    () if continuous else (source.receipt_id,)
+                ),
                 negative_receipt_ids=(),
                 read_receipt_ids=(source.receipt_id,),
-                last_observation_ordinal=contradiction.ordinal,
+                last_observation_ordinal=(
+                    child_birth_frontier if continuous else contradiction.ordinal
+                ),
                 retirement_reason=None,
                 parent_sketch_id=candidate.sketch_id,
                 refinement_source_receipt_id=contradiction.receipt_id,
-                lifetime_match_count=1,
-                lifetime_support_count=1,
+                # A residual child is a fresh hypothesis.  Its source and
+                # the parent contradiction explain construction, but neither
+                # is post-birth prospective support.
+                lifetime_match_count=(0 if continuous else 1),
+                lifetime_support_count=(0 if continuous else 1),
                 lifetime_contradiction_count=0,
-                evidence_digest=_mix_evidence_digest(
-                    "0" * 64,
-                    source,
+                evidence_digest=(
+                    "" if continuous else _mix_evidence_digest(
+                        "0" * 64,
+                        source,
+                    )
                 ),
+                **child_kwargs,
             )
             self._store_sketch(child)
             self._births += 1
@@ -1417,23 +2141,7 @@ class ProspectiveBoundaryCandidateEcology:
         if not pool or candidate_width < 1:
             return ()
         maximum_width = min(int(candidate_width), MAX_WIDTH, len(pool))
-        local = self._local_observations(through_ordinal=trigger.ordinal)
-        if trigger.receipt_id not in {item.receipt_id for item in local}:
-            local = (*local, trigger)
-            local = tuple(sorted(local, key=lambda item: (item.ordinal, item.receipt_id)))
-            if len(local) > self.config.local_observation_cap:
-                # Preserve the trigger while keeping the explicit local-row
-                # bound even for a caller that supplies an out-of-order event.
-                prior = tuple(
-                    item for item in local
-                    if item.receipt_id != trigger.receipt_id
-                )
-                keep_count = max(0, self.config.local_observation_cap - 1)
-                kept_prior = prior[-keep_count:] if keep_count else ()
-                local = tuple(sorted(
-                    (*kept_prior, trigger),
-                    key=lambda item: (item.ordinal, item.receipt_id),
-                ))
+        local = self._discovery_rows_for_trigger(trigger)
 
         # The current trigger is the only source of the newborn polarity.  All
         # other rows are merely opaque contrastive evidence for proposal rank.
@@ -1624,6 +2332,12 @@ class ProspectiveBoundaryCandidateEcology:
         if len(self._local_receipt_ids) > self.config.local_observation_cap:
             del self._local_receipt_ids[: -self.config.local_observation_cap]
         self._frontier = max(self._frontier, observation.ordinal)
+        if observation.observed is False:
+            for signal_id, role in observation.signal_roles:
+                self._negative_index.setdefault(
+                    (observation.source_identity, signal_id, role),
+                    set(),
+                ).add(observation.receipt_id)
         self._last_refinement_ids = ()
         active = set(observation.signal_ids)
         for sketch_id in tuple(sorted(self._active_ids)):
@@ -1632,16 +2346,71 @@ class ProspectiveBoundaryCandidateEcology:
                 self._deindex_live_sketch(candidate)
                 continue
             reads = set(candidate.read_receipt_ids)
-            matches = all(
-                member in active for member in candidate.members
-            )
+            matches = self._candidate_matches(candidate, observation)
             positive = set(candidate.positive_receipt_ids)
             negative = set(candidate.negative_receipt_ids)
             lifetime_match = candidate.lifetime_match_count
             lifetime_support = candidate.lifetime_support_count
             lifetime_contradiction = candidate.lifetime_contradiction_count
             evidence_digest = candidate.evidence_digest
-            if matches:
+            inherited_negative_count = candidate.inherited_negative_count
+            inherited_negative_ids = set(
+                candidate.inherited_negative_receipt_ids
+            )
+            prospective_match = candidate.prospective_match_count
+            prospective_support = candidate.prospective_support_count
+            prospective_contradiction = candidate.prospective_contradiction_count
+            continuous = bool(candidate.semantic_identity)
+            # A true-mode event is prospective only when its ordinal is
+            # strictly after the immutable semantic birth frontier.  A late
+            # out-of-order negative at/before that frontier is still a known
+            # constraint, but it must never bootstrap support or refinement.
+            prospective_event = (
+                not continuous
+                or observation.ordinal > candidate.birth_frontier
+            )
+            if matches and continuous and not prospective_event:
+                if observation.observed is False:
+                    inherited_negative_count += 1
+                    if len(inherited_negative_ids) < MAX_RETAINED_INHERITED_NEGATIVE_RECEIPTS:
+                        inherited_negative_ids.add(observation.receipt_id)
+            elif matches and continuous and prospective_event:
+                is_support = observation.observed is candidate.polarity
+                prospective_match += 1
+                lifetime_match = prospective_match
+                evidence_digest = _mix_evidence_digest(
+                    evidence_digest,
+                    observation,
+                )
+                if is_support:
+                    prospective_support += 1
+                else:
+                    prospective_contradiction += 1
+                lifetime_support = prospective_support
+                lifetime_contradiction = prospective_contradiction
+                # Keep a bounded local evidence cache.  Exact prospective
+                # totals live in scalar counters; inherited negatives are
+                # intentionally kept in a separate cache above.
+                if (
+                    is_support
+                    and prospective_support <= self.config.minimum_support
+                    and len(positive) < MAX_RETAINED_SUPPORT_RECEIPTS
+                ):
+                    positive.add(observation.receipt_id)
+                    reads.add(observation.receipt_id)
+                elif (
+                    not is_support
+                    and prospective_contradiction < max(
+                        MIN_CONTRADICTIONS_BEFORE_DEATH,
+                        self.config.refinement_child_cap,
+                    )
+                    and len(negative) < MAX_RETAINED_CONTRADICTION_RECEIPTS
+                ):
+                    negative.add(observation.receipt_id)
+                    reads.add(observation.receipt_id)
+            elif matches:
+                # Legacy V25 behavior, including its trigger-inclusive
+                # lifetime counters, remains byte/manifest compatible.
                 is_support = observation.observed is candidate.polarity
                 lifetime_match += 1
                 evidence_digest = _mix_evidence_digest(
@@ -1652,9 +2421,6 @@ class ProspectiveBoundaryCandidateEcology:
                     lifetime_support += 1
                 else:
                     lifetime_contradiction += 1
-                # Keep a bounded local evidence cache.  Exact support and
-                # contradiction totals live in scalar counters; only the
-                # receipts needed for a local gate are retained here.
                 if (
                     is_support
                     and candidate.support_count < self.config.minimum_support
@@ -1672,7 +2438,11 @@ class ProspectiveBoundaryCandidateEcology:
                 ):
                     negative.add(observation.receipt_id)
                     reads.add(observation.receipt_id)
-            contradiction = candidate.polarity is not observation.observed and matches
+            contradiction = bool(
+                matches
+                and prospective_event
+                and candidate.polarity is not observation.observed
+            )
             state = candidate.state
             reason = candidate.retirement_reason
             abstained = set(candidate.abstained_receipt_ids)
@@ -1757,6 +2527,21 @@ class ProspectiveBoundaryCandidateEcology:
                 lifetime_support_count=lifetime_support,
                 lifetime_contradiction_count=lifetime_contradiction,
                 evidence_digest=evidence_digest,
+                member_signal_roles=candidate.member_signal_roles,
+                source_identity=candidate.source_identity,
+                semantic_identity=candidate.semantic_identity,
+                birth_frontier_ordinal=candidate.birth_frontier_ordinal,
+                matching_semantics=candidate.matching_semantics,
+                discovery_exclusion_receipt_ids=(
+                    candidate.discovery_exclusion_receipt_ids
+                ),
+                inherited_negative_receipt_ids=tuple(sorted(
+                    inherited_negative_ids
+                )),
+                inherited_negative_count=inherited_negative_count,
+                prospective_match_count=prospective_match,
+                prospective_support_count=prospective_support,
+                prospective_contradiction_count=prospective_contradiction,
             )
             self._store_sketch(updated)
         return True
@@ -1842,27 +2627,10 @@ class ProspectiveBoundaryCandidateEcology:
                 reason = "exhausted_refinement_utility"
             else:
                 continue
-            updated = BoundarySketch(
-                sketch_id=candidate.sketch_id,
-                members=candidate.members,
-                birth_ordinal=candidate.birth_ordinal,
-                triggering_receipt_id=candidate.triggering_receipt_id,
-                polarity=True,
+            updated = replace(
+                candidate,
                 state=state,
-                positive_receipt_ids=candidate.positive_receipt_ids,
-                negative_receipt_ids=candidate.negative_receipt_ids,
-                read_receipt_ids=candidate.read_receipt_ids,
-                last_observation_ordinal=candidate.last_observation_ordinal,
                 retirement_reason=reason,
-                parent_sketch_id=candidate.parent_sketch_id,
-                refinement_source_receipt_id=candidate.refinement_source_receipt_id,
-                abstained_receipt_ids=candidate.abstained_receipt_ids,
-                refinement_receipt_ids=candidate.refinement_receipt_ids,
-                residual_sketch_ids=candidate.residual_sketch_ids,
-                lifetime_match_count=candidate.lifetime_match_count,
-                lifetime_support_count=candidate.lifetime_support_count,
-                lifetime_contradiction_count=candidate.lifetime_contradiction_count,
-                evidence_digest=candidate.evidence_digest,
             )
             self._store_sketch(updated)
             changed.append(updated)
@@ -1879,6 +2647,10 @@ class ProspectiveBoundaryCandidateEcology:
         victim = min(
             active,
             key=lambda item: (
+                # A candidate with an inherited known negative is blocked
+                # from promotion.  It must not protect its slot merely by
+                # accumulating unrelated prospective positives.
+                0 if item.inherited_negative_count else 1,
                 item.lower_bound(self.config.wilson_z),
                 item.support_count,
                 -item.contradiction_count,
@@ -1886,27 +2658,10 @@ class ProspectiveBoundaryCandidateEcology:
                 item.sketch_id,
             ),
         )
-        updated = BoundarySketch(
-            victim.sketch_id,
-            victim.members,
-            victim.birth_ordinal,
-            victim.triggering_receipt_id,
-            victim.polarity,
-            SketchLifecycle.DORMANT,
-            victim.positive_receipt_ids,
-            victim.negative_receipt_ids,
-            victim.read_receipt_ids,
-            victim.last_observation_ordinal,
-            "capacity_pressure",
-            victim.parent_sketch_id,
-            victim.refinement_source_receipt_id,
-            victim.abstained_receipt_ids,
-            victim.refinement_receipt_ids,
-            victim.residual_sketch_ids,
-            lifetime_match_count=victim.lifetime_match_count,
-            lifetime_support_count=victim.lifetime_support_count,
-            lifetime_contradiction_count=victim.lifetime_contradiction_count,
-            evidence_digest=victim.evidence_digest,
+        updated = replace(
+            victim,
+            state=SketchLifecycle.DORMANT,
+            retirement_reason="capacity_pressure",
         )
         self._store_sketch(updated)
         self._prune_counts["capacity"] += 1
@@ -1921,6 +2676,10 @@ class ProspectiveBoundaryCandidateEcology:
                 if item.state is SketchLifecycle.ACTIVE
             ),
             key=lambda item: (
+                # Keep clean candidates ahead of locally blocked candidates;
+                # inherited negatives are a semantic eligibility constraint,
+                # not prospective contradiction evidence.
+                0 if item.inherited_negative_count == 0 else 1,
                 -item.lower_bound(self.config.wilson_z),
                 -item.support_count,
                 item.contradiction_count,
@@ -1944,27 +2703,10 @@ class ProspectiveBoundaryCandidateEcology:
         decision = self.promotion_decision(candidate.sketch_id)
         if not decision.eligible:
             raise ValueError("ineligible candidate cannot be promoted")
-        promoted = BoundarySketch(
-            candidate.sketch_id,
-            candidate.members,
-            candidate.birth_ordinal,
-            candidate.triggering_receipt_id,
-            candidate.polarity,
-            SketchLifecycle.DORMANT,
-            candidate.positive_receipt_ids,
-            candidate.negative_receipt_ids,
-            candidate.read_receipt_ids,
-            candidate.last_observation_ordinal,
-            "promoted",
-            candidate.parent_sketch_id,
-            candidate.refinement_source_receipt_id,
-            candidate.abstained_receipt_ids,
-            candidate.refinement_receipt_ids,
-            candidate.residual_sketch_ids,
-            lifetime_match_count=candidate.lifetime_match_count,
-            lifetime_support_count=candidate.lifetime_support_count,
-            lifetime_contradiction_count=candidate.lifetime_contradiction_count,
-            evidence_digest=candidate.evidence_digest,
+        promoted = replace(
+            candidate,
+            state=SketchLifecycle.DORMANT,
+            retirement_reason="promoted",
         )
         self._store_sketch(promoted)
         return promoted
@@ -1977,27 +2719,10 @@ class ProspectiveBoundaryCandidateEcology:
             raise ValueError("unknown redundant candidate")
         if candidate.state is not SketchLifecycle.ACTIVE:
             raise ValueError("only an active candidate can be retired")
-        retired = BoundarySketch(
-            candidate.sketch_id,
-            candidate.members,
-            candidate.birth_ordinal,
-            candidate.triggering_receipt_id,
-            candidate.polarity,
-            SketchLifecycle.DORMANT,
-            candidate.positive_receipt_ids,
-            candidate.negative_receipt_ids,
-            candidate.read_receipt_ids,
-            candidate.last_observation_ordinal,
-            "redundant_authority_pattern",
-            candidate.parent_sketch_id,
-            candidate.refinement_source_receipt_id,
-            candidate.abstained_receipt_ids,
-            candidate.refinement_receipt_ids,
-            candidate.residual_sketch_ids,
-            lifetime_match_count=candidate.lifetime_match_count,
-            lifetime_support_count=candidate.lifetime_support_count,
-            lifetime_contradiction_count=candidate.lifetime_contradiction_count,
-            evidence_digest=candidate.evidence_digest,
+        retired = replace(
+            candidate,
+            state=SketchLifecycle.DORMANT,
+            retirement_reason="redundant_authority_pattern",
         )
         self._store_sketch(retired)
         self._prune_counts["redundant_authority_pattern"] += 1
@@ -2006,7 +2731,7 @@ class ProspectiveBoundaryCandidateEcology:
     def _full_promotion_audit(
         self,
         candidate: BoundarySketch,
-    ) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+    ) -> BoundaryPromotionAudit:
         """Reclose one candidate against the complete REAL ledger.
 
         This intentionally remains an explicit, authority-bound operation.
@@ -2015,28 +2740,177 @@ class ProspectiveBoundaryCandidateEcology:
         full audit before submitting an authority request.
         """
 
-        members = set(candidate.members)
-        matching: list[BoundaryObservation] = []
-        inspected: list[str] = []
-        start = bisect_left(
-            self._observation_ordinals, candidate.birth_ordinal
-        )
-        for receipt_id in self._observation_receipt_order[start:]:
+        if not candidate.semantic_identity:
+            members = set(candidate.members)
+            matching: list[BoundaryObservation] = []
+            inspected: list[str] = []
+            start = bisect_left(
+                self._observation_ordinals, candidate.birth_ordinal
+            )
+            for receipt_id in self._observation_receipt_order[start:]:
+                item = self._observations[receipt_id]
+                inspected.append(item.receipt_id)
+                if members.issubset(item.signal_ids):
+                    matching.append(item)
+            support = tuple(
+                item.receipt_id
+                for item in matching
+                if item.observed is candidate.polarity
+            )
+            contrast = tuple(
+                item.receipt_id
+                for item in matching
+                if item.observed is not candidate.polarity
+            )
+            return BoundaryPromotionAudit(
+                support=support,
+                contrast=contrast,
+                inspected=tuple(inspected),
+                prospective_support=support,
+                prospective_contradiction=contrast,
+            )
+
+        # Continuous mode has one immutable semantic birth frontier.  Every
+        # accepted row strictly after it is inspected (matching or not), while
+        # only exact source/typed-role matches can become support/contrast.
+        frontier = candidate.birth_frontier
+        start = bisect_left(self._observation_ordinals, frontier + 1)
+        inspected = tuple(self._observation_receipt_order[start:])
+        post_matching: list[BoundaryObservation] = []
+        historical_support: list[BoundaryObservation] = []
+        for receipt_id in self._observation_receipt_order:
             item = self._observations[receipt_id]
-            inspected.append(item.receipt_id)
-            if members.issubset(item.signal_ids):
-                matching.append(item)
-        support = tuple(
+            if not self._candidate_matches(candidate, item):
+                continue
+            if item.ordinal > frontier:
+                # The interval is already represented by ``inspected``; this
+                # list only drives exact prospective outcome classification.
+                post_matching.append(item)
+            elif item.observed is True:
+                historical_support.append(item)
+
+        indexed_historical_negative_ids = self._negative_receipt_ids_for_semantics(
+            members=candidate.members,
+            roles=candidate.member_signal_roles,
+            source_identity=candidate.source_identity,
+        )
+        historical_contradiction = tuple(
+            receipt_id
+            for receipt_id in indexed_historical_negative_ids
+            if self._observations[receipt_id].ordinal <= frontier
+        )
+        prospective_support = tuple(
             item.receipt_id
-            for item in matching
+            for item in post_matching
             if item.observed is candidate.polarity
         )
-        contrast = tuple(
+        prospective_contradiction = tuple(
             item.receipt_id
-            for item in matching
+            for item in post_matching
             if item.observed is not candidate.polarity
         )
-        return support, contrast, tuple(inspected)
+        historical_support_ids = tuple(
+            item.receipt_id for item in historical_support
+        )
+        # ``contrast`` is the complete applicable negative set in
+        # chronological order for legacy reconciliation; the two component
+        # fields above keep prebirth constraints distinct for authority.
+        all_contrast = tuple(sorted(
+            (*historical_contradiction, *prospective_contradiction),
+            key=lambda receipt_id: (
+                self._observations[receipt_id].ordinal,
+                receipt_id,
+            ),
+        ))
+        return BoundaryPromotionAudit(
+            support=prospective_support,
+            contrast=all_contrast,
+            inspected=inspected,
+            historical_support=historical_support_ids,
+            historical_contradiction=historical_contradiction,
+            prospective_support=prospective_support,
+            prospective_contradiction=prospective_contradiction,
+        )
+
+    def _reclose_continuous_counters(
+        self,
+        candidate: BoundarySketch,
+    ) -> None:
+        """Validate a restored true-mode counter against its accepted prefix.
+
+        This is a restoration-boundary integrity check, not an event-time
+        operation.  Prospective rows are truncated at the candidate's last
+        observed ordinal so an archived candidate is not retroactively
+        updated by later observations.  Historical negatives are always
+        checked through the immutable semantic birth frontier because they
+        are inherited constraints rather than prospective evidence.
+        """
+
+        if not candidate.semantic_identity:
+            return
+        cutoff = candidate.last_observation_ordinal
+        if cutoff is None:
+            raise ValueError(
+                "continuous sketch lacks a last-observation cutoff"
+            )
+        _ordinal(cutoff)
+        frontier = candidate.birth_frontier
+        historical_negative_ids: list[str] = []
+        prospective_support_ids: list[str] = []
+        prospective_contradiction_ids: list[str] = []
+        for receipt_id in self._observation_receipt_order:
+            observation = self._observations[receipt_id]
+            if not self._candidate_matches(candidate, observation):
+                continue
+            if observation.ordinal <= frontier:
+                if observation.observed is False:
+                    historical_negative_ids.append(receipt_id)
+            elif observation.ordinal <= cutoff:
+                if observation.observed is candidate.polarity:
+                    prospective_support_ids.append(receipt_id)
+                else:
+                    prospective_contradiction_ids.append(receipt_id)
+
+        expected_support = len(prospective_support_ids)
+        expected_contradiction = len(prospective_contradiction_ids)
+        expected_match = expected_support + expected_contradiction
+        if (
+            candidate.inherited_negative_count != len(historical_negative_ids)
+            or candidate.prospective_match_count != expected_match
+            or candidate.prospective_support_count != expected_support
+            or candidate.prospective_contradiction_count != expected_contradiction
+            or candidate.lifetime_match_count != expected_match
+            or candidate.lifetime_support_count != expected_support
+            or candidate.lifetime_contradiction_count != expected_contradiction
+        ):
+            raise ValueError(
+                "continuous sketch counters disagree with accepted REAL history"
+            )
+        historical_set = set(historical_negative_ids)
+        if not set(candidate.inherited_negative_receipt_ids) <= historical_set:
+            raise ValueError(
+                "continuous sketch inherited-negative cache is not grounded"
+            )
+        support_set = set(prospective_support_ids)
+        contradiction_set = set(prospective_contradiction_ids)
+        if not set(candidate.positive_receipt_ids) <= support_set:
+            raise ValueError(
+                "continuous sketch support cache is not post-birth evidence"
+            )
+        if not set(candidate.negative_receipt_ids) <= contradiction_set:
+            raise ValueError(
+                "continuous sketch contradiction cache is not post-birth evidence"
+            )
+        expected_digest = ""
+        for receipt_id in (*prospective_support_ids, *prospective_contradiction_ids):
+            expected_digest = _mix_evidence_digest(
+                expected_digest,
+                self._observations[receipt_id],
+            )
+        if candidate.evidence_digest != expected_digest:
+            raise ValueError(
+                "continuous sketch evidence digest disagrees with accepted REAL history"
+            )
 
     def promotion_decision(
         self,
@@ -2057,9 +2931,20 @@ class ProspectiveBoundaryCandidateEcology:
         ranked_ids = tuple(item.sketch_id for item in ranked)
         if candidate is None:
             return PromotionDecision(None, (), None, False, None, None, 0, 0, 0.0, (), (), (), (), ranked_ids, "no_candidate")
+        historical_support: tuple[str, ...] = ()
+        historical_contradiction: tuple[str, ...] = ()
+        prospective_support: tuple[str, ...]
+        prospective_contradiction: tuple[str, ...]
         if full_audit:
-            support, contrast, inspected = self._full_promotion_audit(candidate)
-            support_count = len(support)
+            audit = self._full_promotion_audit(candidate)
+            support = audit.support
+            contrast = audit.contrast
+            inspected = audit.inspected
+            prospective_support = audit.prospective_support or audit.support
+            prospective_contradiction = audit.prospective_contradiction
+            historical_support = audit.historical_support
+            historical_contradiction = audit.historical_contradiction
+            support_count = len(prospective_support)
             contradiction_count = len(contrast)
         else:
             support = candidate.supporting_receipt_ids
@@ -2067,6 +2952,10 @@ class ProspectiveBoundaryCandidateEcology:
             inspected = candidate.read_receipt_ids
             support_count = candidate.support_count
             contradiction_count = candidate.contradiction_count
+            prospective_support = tuple(support)
+            prospective_contradiction = tuple(contrast)
+            if candidate.semantic_identity:
+                historical_contradiction = candidate.inherited_negative_receipt_ids
         lower = wilson_lower_bound(
             support_count,
             support_count + contradiction_count,
@@ -2077,6 +2966,10 @@ class ProspectiveBoundaryCandidateEcology:
             and candidate.polarity is True
             and support_count >= self.config.minimum_support
             and contradiction_count == 0
+            and (
+                not candidate.semantic_identity
+                or candidate.inherited_negative_count == 0
+            )
             and lower >= self.config.lower_bound_threshold
         )
         if candidate.state is not SketchLifecycle.ACTIVE:
@@ -2085,6 +2978,8 @@ class ProspectiveBoundaryCandidateEcology:
             reason = "insufficient_support"
         elif contradiction_count:
             reason = "contradiction"
+        elif candidate.semantic_identity and candidate.inherited_negative_count:
+            reason = "known_negative"
         elif lower < 0.55:
             reason = "wilson_lower_bound_below_threshold"
         else:
@@ -2107,6 +3002,11 @@ class ProspectiveBoundaryCandidateEcology:
                 self._observations[inspected[0]].ordinal,
                 self._observations[inspected[-1]].ordinal,
             )
+        decision_discovery_exclusions = (
+            inspected
+            if not candidate.semantic_identity
+            else candidate.discovery_exclusion_receipt_ids
+        )
         return PromotionDecision(
             candidate.sketch_id,
             candidate.members,
@@ -2120,10 +3020,65 @@ class ProspectiveBoundaryCandidateEcology:
             support_for_decision,
             contrast_for_decision,
             inspected,
-            inspected,
+            decision_discovery_exclusions,
             ranked_ids,
             reason,
             interval,
+            semantic_identity=candidate.semantic_identity,
+            birth_frontier_ordinal=(
+                candidate.birth_frontier_ordinal
+                if candidate.semantic_identity else None
+            ),
+            member_signal_roles=candidate.member_signal_roles,
+            source_identity=candidate.source_identity,
+            prospective_support_receipt_ids=(
+                support_for_decision
+                if candidate.semantic_identity else ()
+            ),
+            prospective_contradiction_receipt_ids=(
+                tuple(
+                    sorted(
+                        prospective_contradiction,
+                        key=lambda key: (
+                            self._observations[key].ordinal,
+                            key,
+                        ),
+                    )
+                )
+                if candidate.semantic_identity else ()
+            ),
+            historical_support_receipt_ids=(
+                tuple(
+                    sorted(
+                        historical_support,
+                        key=lambda key: (
+                            self._observations[key].ordinal,
+                            key,
+                        ),
+                    )
+                )
+                if candidate.semantic_identity else ()
+            ),
+            historical_contradiction_receipt_ids=(
+                tuple(
+                    sorted(
+                        historical_contradiction,
+                        key=lambda key: (
+                            self._observations[key].ordinal,
+                            key,
+                        ),
+                    )
+                )
+                if candidate.semantic_identity else ()
+            ),
+            inherited_negative_receipt_ids=(
+                candidate.inherited_negative_receipt_ids
+                if candidate.semantic_identity else ()
+            ),
+            inherited_negative_count=(
+                candidate.inherited_negative_count
+                if candidate.semantic_identity else 0
+            ),
         )
 
     def _reconcile_failed_full_audit(
@@ -2149,6 +3104,8 @@ class ProspectiveBoundaryCandidateEcology:
             raise ValueError("failed audit candidate is not active")
         if decision.eligible:
             raise ValueError("eligible audit cannot be reconciled as failure")
+        if candidate.semantic_identity:
+            return self._reconcile_failed_continuous_audit(candidate, decision)
         if (
             not decision.inspected_receipt_ids
             or decision.inspected_ordinal_interval is None
@@ -2295,6 +3252,168 @@ class ProspectiveBoundaryCandidateEcology:
         self._store_sketch(updated)
         return updated
 
+    def _reconcile_failed_continuous_audit(
+        self,
+        candidate: BoundarySketch,
+        decision: PromotionDecision,
+    ) -> BoundarySketch:
+        """Reconcile a true-mode audit without reclassifying construction data."""
+
+        frontier = candidate.birth_frontier
+        expected_inspected = tuple(
+            receipt_id
+            for receipt_id in self._observation_receipt_order
+            if self._observations[receipt_id].ordinal > frontier
+        )
+        if tuple(decision.inspected_receipt_ids) != expected_inspected:
+            raise ValueError("continuous audit is not current and complete")
+
+        support_ids = tuple(decision.prospective_support_receipt_ids)
+        prospective_contradiction_ids = tuple(
+            decision.prospective_contradiction_receipt_ids
+        )
+        historical_contradiction_ids = tuple(
+            decision.historical_contradiction_receipt_ids
+        )
+        matching_post_ids = tuple((*support_ids, *prospective_contradiction_ids))
+        if (
+            len(set(matching_post_ids)) != len(matching_post_ids)
+            or set(matching_post_ids) - set(expected_inspected)
+            or decision.support_count != len(support_ids)
+            or decision.contradiction_count
+            != len(historical_contradiction_ids)
+            + len(prospective_contradiction_ids)
+        ):
+            raise ValueError("continuous audit evidence is not self-consistent")
+        for receipt_id in matching_post_ids:
+            observation = self._observations.get(receipt_id)
+            if (
+                observation is None
+                or not self._candidate_matches(candidate, observation)
+                or observation.observed is not (
+                    receipt_id in set(support_ids)
+                )
+            ):
+                raise ValueError("continuous audit evidence is not grounded")
+        historical_set = set(historical_contradiction_ids)
+        for receipt_id in historical_set:
+            observation = self._observations.get(receipt_id)
+            if (
+                observation is None
+                or observation.ordinal > frontier
+                or observation.observed is not False
+                or not self._candidate_matches(candidate, observation)
+            ):
+                raise ValueError("continuous historical contrast is not grounded")
+
+        def bounded(receipt_ids: Sequence[str], limit: int) -> tuple[str, ...]:
+            return tuple(sorted(
+                set(receipt_ids),
+                key=lambda receipt_id: (
+                    self._observations[receipt_id].ordinal,
+                    receipt_id,
+                ),
+            )[:limit])
+
+        positives = bounded(support_ids, MAX_RETAINED_SUPPORT_RECEIPTS)
+        negatives = bounded(
+            prospective_contradiction_ids,
+            MAX_RETAINED_CONTRADICTION_RECEIPTS,
+        )
+        inherited = bounded(
+            historical_contradiction_ids,
+            MAX_RETAINED_INHERITED_NEGATIVE_RECEIPTS,
+        )
+        abstained = set(candidate.abstained_receipt_ids)
+        refinement_receipts = set(candidate.refinement_receipt_ids)
+        residual_ids = set(candidate.residual_sketch_ids)
+        refinement_ids: tuple[str, ...] = ()
+        if prospective_contradiction_ids:
+            contradiction_id = min(
+                prospective_contradiction_ids,
+                key=lambda receipt_id: (
+                    self._observations[receipt_id].ordinal,
+                    receipt_id,
+                ),
+            )
+            if (
+                contradiction_id not in refinement_receipts
+                and len(refinement_receipts) < self.config.refinement_event_cap
+            ):
+                contradiction = self._observations[contradiction_id]
+                abstained.add(contradiction_id)
+                refinement_receipts.add(contradiction_id)
+                refinement_ids = self._spawn_residual_refinements(
+                    candidate,
+                    contradiction,
+                )
+                residual_ids.update(refinement_ids)
+                self._last_refinement_ids = tuple(sorted({
+                    *self._last_refinement_ids,
+                    *refinement_ids,
+                }))
+                self._prune_counts["contradiction"] += 1
+            state = SketchLifecycle.REFINING
+            reason = "exact_audit_contrast_requires_residual_refinement"
+            terminal = self._exhausted_refinement_state(
+                candidate.sketch_id,
+                len(refinement_receipts),
+            )
+            if terminal is not None:
+                state, reason = terminal
+        elif historical_contradiction_ids:
+            # Keep a semantically blocked bud visible to local competition;
+            # the inherited-negative rank penalty prevents it from protecting
+            # a slot or displacing a clean newborn.
+            state = SketchLifecycle.ACTIVE
+            reason = "exact_audit_known_negative"
+        else:
+            state = SketchLifecycle.ACTIVE
+            reason = "exact_audit_ineligible"
+
+        evidence_digest = ""
+        for receipt_id in matching_post_ids:
+            evidence_digest = _mix_evidence_digest(
+                evidence_digest,
+                self._observations[receipt_id],
+            )
+        reads = set(candidate.read_receipt_ids)
+        reads.update(positives)
+        reads.update(negatives)
+        reads.update(abstained)
+        if len(reads) > MAX_RETAINED_READ_RECEIPTS:
+            # The candidate's existing read cache is already bounded; retain
+            # the trigger and deterministic local witnesses only.
+            reads = set((candidate.triggering_receipt_id, *positives, *negatives))
+            reads.update(abstained)
+        if len(reads) > MAX_RETAINED_READ_RECEIPTS:
+            raise ValueError("continuous audit reconciliation exceeds read bound")
+        updated = replace(
+            candidate,
+            state=state,
+            positive_receipt_ids=positives,
+            negative_receipt_ids=negatives,
+            read_receipt_ids=tuple(sorted(reads)),
+            last_observation_ordinal=self._frontier,
+            retirement_reason=reason,
+            abstained_receipt_ids=tuple(sorted(abstained)),
+            refinement_receipt_ids=tuple(sorted(refinement_receipts)),
+            residual_sketch_ids=tuple(sorted(residual_ids))[
+                :MAX_RETAINED_RESIDUAL_IDS
+            ],
+            lifetime_match_count=len(matching_post_ids),
+            lifetime_support_count=len(support_ids),
+            lifetime_contradiction_count=len(prospective_contradiction_ids),
+            evidence_digest=evidence_digest,
+            inherited_negative_receipt_ids=inherited,
+            inherited_negative_count=len(historical_contradiction_ids),
+            prospective_match_count=len(matching_post_ids),
+            prospective_support_count=len(support_ids),
+            prospective_contradiction_count=len(prospective_contradiction_ids),
+        )
+        self._store_sketch(updated)
+        return updated
+
     def audit_promotion_at_safe_point(
         self,
         candidate_id: str,
@@ -2352,8 +3471,12 @@ class ProspectiveBoundaryCandidateEcology:
         if value.get("schema_version") != SCHEMA_VERSION or value.get("implementation_identity") != IMPLEMENTATION_IDENTITY:
             raise ValueError("unsupported boundary ecology manifest")
         ecology = cls(BoundaryEcologyConfig(**value.get("config", {})))
+        seen_demand_ordinals: set[int] = set()
         for item in value.get("demands", ()):
             demand = BoundaryExpandDemand.from_manifest(item)
+            if demand.ordinal in seen_demand_ordinals:
+                raise ValueError("duplicate EXPAND demand in manifest")
+            seen_demand_ordinals.add(demand.ordinal)
             ecology._demands[demand.ordinal] = demand
         for item in value.get("observations", ()):
             observation = BoundaryObservation.from_manifest(item)
@@ -2369,13 +3492,21 @@ class ProspectiveBoundaryCandidateEcology:
                 key=lambda item: (item.ordinal, item.receipt_id),
             )[-ecology.config.local_observation_cap :]
         ]
+        seen_sketch_ids: set[str] = set()
         for item in value.get("sketches", ()):
             candidate = BoundarySketch.from_manifest(item)
+            if candidate.sketch_id in seen_sketch_ids:
+                raise ValueError("duplicate sketch in manifest")
+            seen_sketch_ids.add(candidate.sketch_id)
             ecology._sketches[candidate.sketch_id] = candidate
             if ecology._is_live(candidate):
                 ecology._active_ids.add(candidate.sketch_id)
+        seen_tombstone_ids: set[str] = set()
         for item in value.get("tombstones", ()):
             candidate = BoundarySketch.from_manifest(item)
+            if candidate.sketch_id in seen_tombstone_ids:
+                raise ValueError("duplicate tombstone in manifest")
+            seen_tombstone_ids.add(candidate.sketch_id)
             existing = ecology._sketches.get(candidate.sketch_id)
             if existing is not None and existing != candidate:
                 raise ValueError("tombstone differs from sketch")
@@ -2405,7 +3536,30 @@ class ProspectiveBoundaryCandidateEcology:
             trigger = ecology._observations.get(
                 candidate.triggering_receipt_id
             )
-            if (
+            if candidate.semantic_identity:
+                trigger_roles = {} if trigger is None else dict(trigger.signal_roles)
+                if (
+                    trigger is None
+                    or trigger.ordinal > candidate.birth_frontier
+                    or trigger.observed is not True
+                    or candidate.polarity is not True
+                    or trigger.source_identity != candidate.source_identity
+                    or not set(candidate.members).issubset(trigger.signal_ids)
+                    or any(
+                        trigger_roles.get(signal_id) != role
+                        for signal_id, role in candidate.member_signal_roles
+                    )
+                    or boundary_candidate_semantic_identity(
+                        candidate.members,
+                        candidate.member_signal_roles,
+                        candidate.source_identity,
+                        candidate.matching_semantics,
+                    ) != candidate.semantic_identity
+                ):
+                    raise ValueError(
+                        "manifest contains an invalid continuous boundary sketch"
+                    )
+            elif (
                 trigger is None
                 or trigger.ordinal != candidate.birth_ordinal
                 or trigger.observed is not True
@@ -2443,6 +3597,7 @@ class ProspectiveBoundaryCandidateEcology:
                 raise ValueError(
                     "manifest contains an exhausted refining candidate"
                 )
+            ecology._reclose_continuous_counters(candidate)
         inactive_ids = {
             item.sketch_id for item in ecology._sketches.values()
             if not ecology._is_live(item)
@@ -2456,6 +3611,14 @@ class ProspectiveBoundaryCandidateEcology:
         )
         if ecology._frontier != expected_frontier:
             raise ValueError("manifest frontier differs from accepted events")
+        if ecology.config.continuous_evidence and any(
+            ecology._is_live(candidate)
+            and candidate.last_observation_ordinal != ecology._frontier
+            for candidate in ecology._sketches.values()
+        ):
+            raise ValueError(
+                "continuous active sketch cutoff differs from ecology frontier"
+            )
         if ecology._births != len(ecology._sketches):
             raise ValueError("manifest lifetime birth count is inconsistent")
         if ecology.active_sketch_count > ecology.config.active_sketch_cap:
@@ -2473,10 +3636,12 @@ __all__ = [
     "MAX_REFINEMENT_EVENT_CAP", "MIN_CONTRADICTIONS_BEFORE_DEATH",
     "MAX_RETAINED_SUPPORT_RECEIPTS", "MAX_RETAINED_CONTRADICTION_RECEIPTS",
     "MAX_RETAINED_REFINEMENT_RECEIPTS", "MAX_RETAINED_READ_RECEIPTS",
-    "MAX_RETAINED_RESIDUAL_IDS",
+    "MAX_RETAINED_RESIDUAL_IDS", "MAX_RETAINED_DISCOVERY_RECEIPTS",
+    "MAX_RETAINED_INHERITED_NEGATIVE_RECEIPTS", "MATCHING_SEMANTICS_VERSION",
+    "boundary_candidate_semantic_identity",
     "BoundaryObservation", "GroundedBoundaryObservation", "BoundaryExpandDemand",
     "SketchLifecycle", "BoundarySketch", "PromotionDecision",
-    "BoundaryReaction",
+    "BoundaryReaction", "BoundaryPromotionAudit",
     "BoundaryEcologyConfig", "DuplicatePhysicalReceiptError",
     "ProspectiveBoundaryCandidateEcology", "wilson_lower_bound",
 ]

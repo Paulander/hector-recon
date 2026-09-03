@@ -228,6 +228,7 @@ class NativeIntrinsicCurriculumConfig:
     r1_action_selection_mode: str = R1_ACTION_SELECTION_SCHEDULED
     r1_action_order: str = R1_ACTION_ORDER_LEGACY_LEXICOGRAPHIC
     r0_boundary_ecology_enabled: bool = False
+    r0_boundary_continuous_evidence: bool = False
     validation_controls_stage_transitions: bool = True
     r1_mechanistic_factorial: bool = False
     r1_placebo_child_value: float = 0.5
@@ -251,6 +252,10 @@ class NativeIntrinsicCurriculumConfig:
     max_samples: int = 12
 
     def __post_init__(self) -> None:
+        if not isinstance(self.r0_boundary_continuous_evidence, bool):
+            raise ValueError("continuous boundary evidence must be boolean")
+        if self.r0_boundary_continuous_evidence and not self.r0_boundary_ecology_enabled:
+            raise ValueError("continuous boundary evidence requires boundary ecology")
         policy = str(self.r1_reply_policy).strip().lower()
         if policy not in R1_REPLY_POLICIES:
             raise ValueError(
@@ -2419,6 +2424,10 @@ def _r1_snapshot_fingerprint(
     r0_core_triplet_ids: frozenset[str] | None = None,
 ) -> str:
     behavior_config = asdict(config)
+    # Absence is the legacy protocol, not an invitation to reinterpret saved
+    # candidates.  The opt-in participates in identity only when enabled.
+    if not config.r0_boundary_continuous_evidence:
+        behavior_config.pop("r0_boundary_continuous_evidence", None)
     for key in (
         "output_path",
         "progress_path",
@@ -4349,6 +4358,7 @@ def _run_r1_arm(
         boundary_ecology = _new_boundary_ecology_from_authority_history(
             r0_child_authority,
             genome_seed=int(config.seed),
+            continuous_evidence=config.r0_boundary_continuous_evidence,
         )
     effective_reply_policy = _effective_r1_reply_policy(
         config, r0_child_authority
@@ -4562,6 +4572,10 @@ def _run_r1_arm(
                         ecology_manifest
                     )
                 )
+                if boundary_ecology.config.continuous_evidence != (
+                    config.r0_boundary_continuous_evidence
+                ):
+                    raise RuntimeError("boundary evidence protocol differs from snapshot")
                 _verify_boundary_ecology_alignment(
                     r0_child_authority,
                     boundary_ecology,
@@ -7647,7 +7661,13 @@ def _boundary_ecology_step(
     """Commit only the ecology's learner-owned reaction for one REAL event."""
 
     reference = authority.accepted_real_references[receipt_id]
-    observation = _boundary_observation_from_v2_reference(reference)
+    observation = _boundary_observation_from_v2_reference(
+        reference,
+        source_identity=(
+            authority.source_policy_identity_for_receipt(receipt_id)
+            if ecology.config.continuous_evidence else ""
+        ),
+    )
     if (
         not isinstance(receipt_id, str)
         or observation.receipt_id != receipt_id
@@ -7672,6 +7692,29 @@ def _boundary_ecology_step(
         ),
         excluded_candidate_ids=excluded_candidate_ids,
     )
+    if ecology.config.continuous_evidence:
+        # This records immutable hypotheses, not graph authority.  No bud can
+        # receive a later REAL receipt before its semantic birth is committed.
+        for candidate_id in sorted(set(
+            reaction.born_candidate_ids + reaction.refinement_candidate_ids
+        )):
+            candidate = ecology.sketches[candidate_id]
+            existing = authority.boundary_hypothesis_births.get(candidate_id)
+            if existing is not None:
+                # Refinement can reuse an already-live residual.  Reuse is
+                # not a new birth and must not reset its evidence frontier.
+                if not _boundary_birth_matches_candidate(existing, candidate):
+                    raise RuntimeError("reused boundary hypothesis changed its semantics")
+                continue
+            authority.register_boundary_hypothesis_birth(
+                candidate_id=candidate.sketch_id,
+                members=candidate.members,
+                member_signal_roles=candidate.member_signal_roles,
+                source_identity=candidate.source_identity,
+                birth_frontier_ordinal=candidate.birth_frontier_ordinal,
+                semantic_identity=candidate.semantic_identity,
+                triggering_receipt_id=candidate.triggering_receipt_id,
+            )
     promotion = (
         None
         if reaction.promotion_candidate_id is None
@@ -7704,8 +7747,22 @@ def _boundary_ecology_step(
     return (() if promotion is None else (promotion,)), event
 
 
+def _boundary_birth_matches_candidate(birth: Any, candidate: Any) -> bool:
+    return bool(
+        birth.candidate_id == candidate.sketch_id
+        and birth.members == candidate.members
+        and birth.member_signal_roles == candidate.member_signal_roles
+        and birth.source_identity == candidate.source_identity
+        and birth.semantic_identity == candidate.semantic_identity
+        and birth.birth_frontier_ordinal == candidate.birth_frontier_ordinal
+        and birth.triggering_receipt_id == candidate.triggering_receipt_id
+    )
+
+
 def _boundary_observation_from_v2_reference(
     reference: Any,
+    *,
+    source_identity: str = "",
 ) -> BoundaryObservation:
     """Project one accepted V2 REAL reference into the local ecology."""
 
@@ -7716,6 +7773,7 @@ def _boundary_observation_from_v2_reference(
         signal_ids=tuple(reference.ordered_signal_identities),
         signal_roles=tuple(reference.typed_signal_roles),
         observed=reference.observed_outcome,
+        source_identity=source_identity,
     )
 
 
@@ -7723,30 +7781,49 @@ def _new_boundary_ecology_from_authority_history(
     authority: Any,
     *,
     genome_seed: int,
+    continuous_evidence: bool = False,
 ) -> ProspectiveBoundaryCandidateEcology:
     """Start ecology at the authority's prospective REAL frontier.
 
     The same-run R0 closure has already consumed a disjoint certification
     tape before R1 begins.  Those accepted prospective receipts belong to the
-    lifetime REAL ledger, whereas discovery receipts in ``base.receipts`` do
-    not.  Mirroring the prospective prefix while no sketches exist cannot
-    bud, refine, or promote anything.  The mirrored prefix lies before every
-    later bud's birth frontier, so it may provide remembered proposal context
-    but cannot contribute support or certification to that later bud.
+    lifetime prospective REAL ledger.  Continuous mode additionally remembers
+    base discovery *failures* as constraints, so its local ecology cannot
+    nominate a rule that the authority already knows is contradicted.  Base
+    positives are not imported.  Mirroring while no sketches exist cannot
+    bud, refine, or promote anything.  The prefix precedes every later birth
+    and cannot contribute positive certification to that later bud.
     """
 
     ecology = ProspectiveBoundaryCandidateEcology(
-        BoundaryEcologyConfig(genome_seed=int(genome_seed))
+        BoundaryEcologyConfig(
+            genome_seed=int(genome_seed), continuous_evidence=continuous_evidence
+        )
     )
     references = authority.accepted_real_references
     observations: list[BoundaryObservation] = []
-    for receipt_id in authority.consumed_receipts:
-        reference = references.get(receipt_id)
-        if reference is None:
-            raise RuntimeError(
-                "prospective V2 receipt lacks an accepted REAL reference"
-            )
-        observation = _boundary_observation_from_v2_reference(reference)
+    receipt_ids = set(authority.consumed_receipts)
+    if continuous_evidence:
+        receipt_ids.update(authority.base.receipts)
+    if any(references.get(receipt_id) is None for receipt_id in receipt_ids):
+        raise RuntimeError(
+            "prospective V2 receipt lacks an accepted REAL reference"
+        )
+    if continuous_evidence:
+        receipt_ids = {
+            receipt_id for receipt_id in receipt_ids
+            if receipt_id in authority.consumed_receipts
+            or not references[receipt_id].observed_outcome
+        }
+    for receipt_id in sorted(receipt_ids, key=lambda item: references[item].ordinal):
+        reference = references[receipt_id]
+        observation = _boundary_observation_from_v2_reference(
+            reference,
+            source_identity=(
+                authority.source_policy_identity_for_receipt(receipt_id)
+                if continuous_evidence else ""
+            ),
+        )
         if (
             not isinstance(receipt_id, str)
             or observation.receipt_id != receipt_id
@@ -7816,6 +7893,10 @@ def _boundary_promotion_request_from_candidate(
         provenance_schema_version=PROVENANCE_COMMITMENT_V4,
         supporting_receipt_commitment=supporting_commitment,
         inspected_receipt_commitment=inspected_commitment,
+        hypothesis_birth_digest=(
+            authority.boundary_hypothesis_births[candidate.sketch_id].birth_digest
+            if ecology.config.continuous_evidence else None
+        ),
     )
 
 
@@ -7882,7 +7963,13 @@ def _verify_boundary_ecology_alignment(
 ) -> None:
     """Require exact ecology/V2 REAL-ledger identity at resumable boundaries."""
 
-    if set(ecology.observations) != set(authority.consumed_receipts):
+    expected_receipt_ids = set(authority.consumed_receipts)
+    if ecology.config.continuous_evidence:
+        expected_receipt_ids.update(
+            receipt_id for receipt_id in authority.base.receipts
+            if not authority.accepted_real_references[receipt_id].observed_outcome
+        )
+    if set(ecology.observations) != expected_receipt_ids:
         raise RuntimeError("boundary ecology ledger differs from V2 REAL history")
     for receipt_id, observation in ecology.observations.items():
         reference = authority.accepted_real_references.get(receipt_id)
@@ -7895,10 +7982,23 @@ def _verify_boundary_ecology_alignment(
             or observation.signal_roles
             != tuple(sorted(reference.typed_signal_roles))
             or observation.observed is not reference.observed_outcome
+            or (
+                ecology.config.continuous_evidence
+                and observation.source_identity
+                != authority.source_policy_identity_for_receipt(receipt_id)
+            )
         ):
             raise RuntimeError(
                 "boundary ecology observation differs from V2 REAL reference"
             )
+    if ecology.config.continuous_evidence:
+        births = authority.boundary_hypothesis_births
+        if set(births) != set(ecology.sketches):
+            raise RuntimeError("boundary candidate births differ from authority commitments")
+        for candidate_id, candidate in ecology.sketches.items():
+            birth = births[candidate_id]
+            if not _boundary_birth_matches_candidate(birth, candidate):
+                raise RuntimeError("boundary candidate semantic birth differs from authority")
     if roundtrip:
         restored = ProspectiveBoundaryCandidateEcology.loads(ecology.dumps())
         if restored.manifest() != ecology.manifest():
@@ -8101,7 +8201,18 @@ def _adaptive_positive_lineage_audit(
             raise RuntimeError(
                 f"adaptive lineage promotion {candidate_id} lacks a positive REAL trigger"
             )
-        if candidate.birth_ordinal != trigger_observation.ordinal:
+        continuous_promotion = request.hypothesis_birth_digest is not None
+        if continuous_promotion:
+            birth = authority.boundary_hypothesis_births.get(candidate_id)
+            if (
+                birth is None
+                or birth.birth_digest != request.hypothesis_birth_digest
+                or birth.semantic_identity != candidate.semantic_identity
+                or birth.birth_frontier_ordinal != candidate.birth_frontier_ordinal
+                or trigger_observation.ordinal > birth.birth_frontier_ordinal
+            ):
+                raise RuntimeError("adaptive lineage lacks its precommitted semantic birth")
+        elif candidate.birth_ordinal != trigger_observation.ordinal:
             raise RuntimeError(
                 f"adaptive lineage promotion {candidate_id} birth ordinal differs from trigger"
             )
@@ -8117,19 +8228,22 @@ def _adaptive_positive_lineage_audit(
                 )
             trigger_reference = references[request.triggering_receipt_id]
             frontier = int(inspected_commitment.exclusive_frontier)
+            inspected_start = (
+                int(birth.birth_frontier_ordinal) + 1
+                if continuous_promotion else int(trigger_reference.ordinal)
+            )
             committed_interval = tuple(
                 reference
                 for reference in ordered_references
-                if int(trigger_reference.ordinal)
-                <= int(reference.ordinal)
-                < frontier
+                if inspected_start <= int(reference.ordinal) < frontier
             )
             committed_inspected_ids = tuple(
                 str(reference.receipt_id)
                 for reference in committed_interval
             )
             if (
-                request.triggering_receipt_id not in committed_inspected_ids
+                (not continuous_promotion and
+                 request.triggering_receipt_id not in committed_inspected_ids)
                 or _compact_set_commitment(
                     committed_inspected_ids,
                     exclusive_frontier=frontier,
@@ -8146,9 +8260,21 @@ def _adaptive_positive_lineage_audit(
                 and set(request.members).issubset(
                     reference.ordered_signal_identities
                 )
+                and (
+                    not continuous_promotion
+                    or (
+                        set(birth.member_signal_roles).issubset(
+                            reference.typed_signal_roles
+                        )
+                        and authority.source_policy_identity_for_receipt(
+                            reference.receipt_id
+                        ) == birth.source_identity
+                    )
+                )
             )
             if (
-                request.triggering_receipt_id not in committed_support_ids
+                (not continuous_promotion and
+                 request.triggering_receipt_id not in committed_support_ids)
                 or _compact_set_commitment(
                     committed_support_ids,
                     exclusive_frontier=frontier,
@@ -8289,6 +8415,20 @@ def _adaptive_positive_lineage_audit(
                     f"{cell_id}.contradiction",
                 )),
                 "birth_frontier": birth_frontier,
+                "evidence_protocol": (
+                    "continuous_sketch"
+                    if getattr(hypothesis, "hypothesis_birth_digest", None)
+                    else "source_bound_new_predicate"
+                    if getattr(hypothesis, "semantic_source_identity", "")
+                    else "legacy"
+                ),
+                **({
+                    "materialization_frontier": hypothesis.materialization_frontier,
+                    "transferred_certification_receipt_ids": [
+                        receipt_id for receipt_id in certification_ids
+                        if ref_ordinals[receipt_id] <= hypothesis.materialization_frontier
+                    ],
+                } if getattr(hypothesis, "materialization_frontier", None) is not None else {}),
                 "discovery_exclusion_receipt_ids": list(discovery_ids),
                 "certification_receipt_ids": list(certification_ids),
                 "postbirth_certification_receipt_ids": list(postbirth_ids),
@@ -8307,6 +8447,11 @@ def _adaptive_positive_lineage_audit(
             ),
             "ecology_triggering_receipt_id": candidate.triggering_receipt_id,
             "ecology_birth_ordinal": int(candidate.birth_ordinal),
+            **({
+                "semantic_birth_frontier": candidate.birth_frontier_ordinal,
+                "semantic_identity": candidate.semantic_identity,
+                "hypothesis_birth_digest": request.hypothesis_birth_digest,
+            } if continuous_promotion else {}),
             "ecology_supporting_receipt_ids": list(ecology_supporting),
             "ecology_inspected_receipt_ids": list(ecology_inspected),
             "authority_supporting_receipt_ids": list(authority_supporting),

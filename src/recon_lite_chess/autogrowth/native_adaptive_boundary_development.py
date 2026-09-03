@@ -576,6 +576,7 @@ def development_config(
     seed: int = DEFAULT_SEED,
     max_wall_seconds: float = DEFAULT_MAX_WALL_SECONDS,
     max_peak_rss_mib: float = DEFAULT_MAX_PEAK_RSS_MIB,
+    continuous_hypothesis_evidence: bool = False,
 ) -> NativeIntrinsicCurriculumConfig:
     """Return a bounded work plan with frozen learner settings."""
 
@@ -592,6 +593,7 @@ def development_config(
         r1_reply_policy=R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
         r1_action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
         r0_boundary_ecology_enabled=True,
+        r0_boundary_continuous_evidence=continuous_hypothesis_evidence,
         validation_controls_stage_transitions=False,
         development_fen_fullmove_base=DEVELOPMENT_FEN_FULLMOVE_BASE,
         **_PROFILE_WORK[normalized],
@@ -660,6 +662,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument(
+        "--continuous-hypothesis-evidence",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help=(
+            "preserve prospective hypothesis evidence across graph promotion; "
+            "disabled by default for the baseline lifecycle"
+        ),
+    )
+    parser.add_argument(
         "--max-wall-seconds",
         type=float,
         default=DEFAULT_MAX_WALL_SECONDS,
@@ -677,6 +688,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         seed=args.seed,
         max_wall_seconds=args.max_wall_seconds,
         max_peak_rss_mib=args.max_peak_rss_mib,
+        continuous_hypothesis_evidence=args.continuous_hypothesis_evidence,
     )
     started = perf_counter()
     attempt_path = output_dir / "attempt.json"

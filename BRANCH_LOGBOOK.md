@@ -1560,3 +1560,108 @@ rather than the current branch tip.
   gate, or monitoring framework. Authority slot reuse, exact resumed-stream
   parity, new-shell-credit re-selection and reply coverage remain explicit
   questions. No continuation was started by this result report.
+
+### V25 authorized overnight continuation — 2026-09-02
+
+**NO-GO for extension/full curriculum.** Both seeds completed 32 training epochs
+without M2 validation improvement. Original and new checkpoints are preserved.
+Exact source `e11ad9c2ee939cc16550ad1cb6b01ab4dbc119ca`, clean detached sibling
+checkout `v25-overnight-e11ad9c2`; no learner changes or protected-outcome access.
+Two parallel processes, one numerical thread each; unchanged `follow-through`
+profile, 8/4/4 R1 train/validation/final-regression pools, 21,600-second and
+8,192-MiB per-invocation safe-epoch ceilings. Python 3.12.13, NumPy 2.2.6,
+python-chess 1.999; exact preflight plus three focused resume tests passed
+(`37.31 s`). The old generic Python path had changed to 3.12.14, so a separate
+exact-version environment was used without bypassing saved fingerprints.
+
+| Final saved result | Seed 2026090108 | Seed 2026090109 |
+| --- | ---: | ---: |
+| Copied start → final training epoch | 19 → 32 | 22 → 32 |
+| New invocation wall seconds | 6414.18, interrupted in final reporting | 5316.125472, normal runner completion |
+| Cumulative R1 duration seconds | 10689.787968, snapshot | 9067.087416, final report |
+| Decisions / post-contact exact-Q selections | 256 / 98 | 256 / 104 |
+| Authority cells / certified / greatest depth | 42 / 6 / 1 | 41 / 0 / 2 |
+| Live ecology / lifetime births / capacity replacements | 31 of 32 / 227 / 144 | 31 of 32 / 344 / 273 |
+| AVAILABLE envelopes / handoffs / successor-value sum | 11 / 3 / 1.934620893 | 4 / 2 / 1.676164828 |
+| Graph nodes / edges / triplets | 5263 / 245640 / 982 | 5271 / 245882 / 983 |
+| Exhaustive M2 validation / final regression | 0/4 / unavailable | 0/4 / 0/4 |
+| Frozen R0 validation, initial → final | 16/16 → 16/16 | 15/16 → 15/16 |
+
+- Mechanism progress: all three 0108 handoffs used one new certified root.
+  Its previously credited actions were subsequently selected with the stored
+  TD-updated values and mated; explicit exact-Q routing is retained for recent
+  examples. This establishes later use, not a counterfactual ranking change or
+  generalization. Recent preserved successful cases had one legal opponent
+  reply. 0109 grew three depth-two refinements, but none certified; its two
+  handoffs used the original core. Both met the 80-post-contact observation
+  horizon. No further handoff occurred after 0108 epoch22.
+- Final checkpoint audits found no discovery/certification leakage in 274/275
+  receipt memberships respectively, no pending event, and no reported false
+  authority or formal-confirmation failure. Live ecology stayed bounded;
+  authority retirement/slot reuse remains unexercised. Actual restore and
+  advancement occurred; these audits are not paired uninterrupted/resumed
+  trajectory parity or a general proof of safety.
+- At the 23:10 UTC inspection, free disk fell below the declared 1.5-GiB stop
+  threshold to about 0.8 GiB. 0109 had completed with
+  `COMPLETED_R1_GATE_FAILED`; only verified new worker 0108 was interrupted,
+  after saving exact epoch32, during final R0-shell regression evaluation.
+  Its final M2 regression score was not persisted and is unavailable. Both
+  workers exited; no artifacts were deleted or other workers touched. Disk
+  depletion's cause is unestablished. A whole-graph dream-runtime copy appears
+  in the interruption stack, but this is not a runtime/disk attribution study.
+- Both wrapper exit files contain 1: 0108 received the intentional interrupt;
+  0109's nonzero outer status comes only from `time -l`'s sandbox-denied resource
+  query after normal learner completion. Actual peak RSS was not measured.
+- Active TD, exact-action Q, node/edge learning coexist with structural growth,
+  but legacy continuous M3/M4 fast-delta/slow-baseline consolidation is **not
+  wired into R1**. R0 provider consolidation occurs at the pretraining boundary.
+  This limitation was disclosed before launch and was not silently changed.
+- No additional seeds/full run launched. The completed scheduled follow-up
+  was deleted. Conditions, timeline, hashes, and evidence caveats are retained
+  in `reports/autogrowth/development/V25_OVERNIGHT_20260902.md` (local artifact;
+  no artifact commit). Reclaim disk with user approval before more experiments;
+  next scientific work must explain failed generalization, not extend V25 blindly.
+
+### V25 read-only failure investigation and network archival — 2026-09-03
+
+- Audited exact `e11ad9c2ee939cc16550ad1cb6b01ab4dbc119ca`; source unchanged.
+  Three independent audits, existing epoch32 development receipts, seven focused
+  unit tests (`5 passed in 1.80 s`, `2 passed in 0.77 s`), and two data-free counterexamples. No new
+  chess evaluation, training run, external oracle, or protected-outcome access.
+- 0109 had **25** distinct positive REAL outcomes versus 0108's **18**. Three
+  late refinements separate 23/25 recorded positives from all 164 negatives,
+  but each has only three post-authority-birth supports. Retrospective fit is
+  not certification or held-out generalization. The exact three-feature root
+  `...cbc851e972da` was fixed at121, saw positives122/124/135, was promoted at135
+  with support reset, then saw143: four post-sketch-birth witnesses become only
+  one post-materialization witness under the old contract.
+- Five early 0108 certificates share their first four witnesses and fully match
+  known negative REAL11 from before birth, under the same source identities.
+  Old-negative exclusion prevents certification leakage but does not constrain
+  applicability. Actual ecology reproduced this blind spot on a five-observation
+  data-free stream. This is not a newly observed false runtime handoff.
+- First recommended repair: one prospective ledger anchored at immutable
+  hypothesis/discovery completion, with local known-negative constraints;
+  graph materialization alone must not reset it. Predicate/source/actuator
+  changes require new evidence. Keep thresholds and TD unchanged; do not
+  retroactively certify old runs. Full protocol and implementation/test order:
+  `docs/autogrowth/V25_GENERALIZATION_CONSOLIDATION_AUDIT_20260903.md`.
+- Continuous consolidation is second priority, not a drop-in fix. Actual
+  data-free engine check: selected Q converged to +0.65 while separate credit
+  `fast_value` reached -0.2175 from the same errors. The latter is a correction
+  accumulator in this path, not Q. Existing exact-Q selection bypasses shared
+  priors after experience; simply enabling legacy M4 cannot fix that transfer.
+- Game/value qualifications: exact Q retains raw-UCI binding, restricting
+  transfer to equivalent local roles at other coordinates. Grounded handoffs
+  use the all-reply minimum, but the same first-action Q also gets terminal
+  reward for a single successful challenge while the envelope is UNKNOWN.
+  It is not a purely worst-reply estimator. Cross-context/alias and mixed-reply
+  credit tests are required before a full run; do not suppress local reward or
+  add oracle-selected moves as a shortcut.
+- User-authorized archival: 125 older development network files compressed
+  losslessly (4,288,765,370 → 405,028,016 bytes), reclaiming **3,883,737,354 bytes**.
+  Every archive decompressed and SHA256/size verified before removing its
+  uncompressed copy. All V25 files, epoch35 reference, reports and tracked files
+  preserved; both final snapshot hashes unchanged. About7.4 GiB free afterward.
+  Restore instructions: `reports/autogrowth/development/NETWORK_ARCHIVE_20260903.md`;
+  per-file checksums/removal receipts: sibling `.jsonl`. No network data discarded.

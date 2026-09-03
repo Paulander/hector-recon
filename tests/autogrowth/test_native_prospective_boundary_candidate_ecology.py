@@ -8,6 +8,7 @@ from recon_lite_chess.autogrowth.native_prospective_boundary_candidate_ecology i
     BoundaryEcologyConfig,
     BoundaryExpandDemand,
     BoundaryObservation,
+    MATCHING_SEMANTICS_VERSION,
     DuplicatePhysicalReceiptError,
     MAX_RETAINED_CONTRADICTION_RECEIPTS,
     MAX_RETAINED_READ_RECEIPTS,
@@ -15,6 +16,7 @@ from recon_lite_chess.autogrowth.native_prospective_boundary_candidate_ecology i
     MAX_RETAINED_SUPPORT_RECEIPTS,
     ProspectiveBoundaryCandidateEcology,
     SketchLifecycle,
+    boundary_candidate_semantic_identity,
 )
 
 
@@ -25,6 +27,27 @@ def _observation(index: int, members, observed: bool = True, physical: Optional[
         physical_id=physical or f"physical-{index}",
         signal_ids=tuple(sorted(set(members))),
         observed=observed,
+    )
+
+
+def _continuous_observation(
+    index: int,
+    members,
+    observed: bool = True,
+    *,
+    source: str = "source-A",
+    roles=None,
+):
+    signal_ids = tuple(sorted(set(members)))
+    role_map = roles or {item: "BASE_TERMINAL" for item in signal_ids}
+    return BoundaryObservation(
+        ordinal=index,
+        receipt_id=f"continuous-receipt-{index}",
+        physical_id=f"continuous-physical-{index}",
+        signal_ids=signal_ids,
+        signal_roles=tuple(sorted(role_map.items())),
+        observed=observed,
+        source_identity=source,
     )
 
 
@@ -1066,3 +1089,217 @@ def test_sequential_promotion_audits_are_bounded_by_live_tenure() -> None:
 
     assert total_inspected == total_tenure == 24 * 4
     assert total_inspected <= config.active_sketch_cap * accepted_events
+
+
+def _continuous_single_candidate(ecology, *, trigger_index=0, member="signal"):
+    trigger = _continuous_observation(trigger_index, (member,))
+    ecology.observe(trigger)
+    candidate = ecology.expand(BoundaryExpandDemand(
+        ordinal=trigger.ordinal,
+        signal_ids=trigger.signal_ids,
+        signal_roles=trigger.signal_roles,
+        candidate_width=1,
+        triggering_receipt_id=trigger.receipt_id,
+        polarity=True,
+    ))[0]
+    return trigger, candidate
+
+
+def test_continuous_trigger_and_three_later_matches_are_not_promotable():
+    ecology = ProspectiveBoundaryCandidateEcology(
+        BoundaryEcologyConfig(continuous_evidence=True),
+    )
+    trigger, candidate = _continuous_single_candidate(ecology)
+
+    assert candidate.birth_frontier_ordinal == trigger.ordinal
+    assert candidate.semantic_identity == boundary_candidate_semantic_identity(
+        candidate.members,
+        candidate.member_signal_roles,
+        candidate.source_identity,
+    )
+    assert candidate.matching_semantics == MATCHING_SEMANTICS_VERSION
+    assert candidate.support_count == 0
+    for ordinal in range(1, 4):
+        ecology.observe(_continuous_observation(ordinal, candidate.members))
+
+    local = ecology.promotion_decision(candidate.sketch_id)
+    audited = ecology.promotion_decision(candidate.sketch_id, full_audit=True)
+    assert local.eligible is False
+    assert audited.eligible is False
+    assert audited.support_count == 3
+    assert audited.contradiction_count == 0
+    assert audited.supporting_receipt_ids == tuple(
+        f"continuous-receipt-{index}" for index in range(1, 4)
+    )
+    assert trigger.receipt_id not in audited.supporting_receipt_ids
+    assert audited.inspected_receipt_ids == tuple(
+        f"continuous-receipt-{index}" for index in range(1, 4)
+    )
+
+    ecology.observe(_continuous_observation(4, candidate.members))
+    final = ecology.promotion_decision(candidate.sketch_id, full_audit=True)
+    assert final.eligible is True
+    assert final.support_count == 4
+    assert final.contradiction_count == 0
+    assert final.prospective_support_receipt_ids == tuple(
+        f"continuous-receipt-{index}" for index in range(1, 5)
+    )
+
+
+def test_continuous_known_negative_blocks_same_semantics_before_birth():
+    ecology = ProspectiveBoundaryCandidateEcology(
+        BoundaryEcologyConfig(continuous_evidence=True),
+    )
+    negative = _continuous_observation(0, ("signal",), False)
+    ecology.observe(negative)
+    trigger, candidate = _continuous_single_candidate(ecology, trigger_index=1)
+    assert trigger.receipt_id not in candidate.positive_receipt_ids
+    assert candidate.inherited_negative_count == 1
+    assert candidate.inherited_negative_receipt_ids == (negative.receipt_id,)
+
+    for ordinal in range(2, 6):
+        ecology.observe(_continuous_observation(ordinal, candidate.members))
+    local = ecology.promotion_decision(candidate.sketch_id)
+    audited = ecology.promotion_decision(candidate.sketch_id, full_audit=True)
+    assert local.eligible is False
+    assert local.reason == "known_negative"
+    assert audited.eligible is False
+    assert audited.support_count == 4
+    assert audited.contradiction_count == 1
+    assert audited.historical_contradiction_receipt_ids == (negative.receipt_id,)
+    assert audited.prospective_contradiction_receipt_ids == ()
+
+
+def test_continuous_source_and_member_roles_are_frozen_for_support():
+    ecology = ProspectiveBoundaryCandidateEcology(
+        BoundaryEcologyConfig(continuous_evidence=True),
+    )
+    trigger, candidate = _continuous_single_candidate(ecology)
+    ecology.observe(_continuous_observation(1, candidate.members, source="source-B"))
+    ecology.observe(_continuous_observation(
+        2,
+        candidate.members,
+        roles={candidate.members[0]: "MATURE_COMPOSITE"},
+    ))
+    assert ecology.sketches[candidate.sketch_id].support_count == 0
+    ecology.observe(_continuous_observation(3, candidate.members))
+    assert ecology.sketches[candidate.sketch_id].support_count == 1
+    assert ecology.sketches[candidate.sketch_id].positive_receipt_ids == (
+        "continuous-receipt-3",
+    )
+
+
+def test_continuous_residual_is_fresh_and_excludes_discovery_evidence():
+    ecology = ProspectiveBoundaryCandidateEcology(
+        BoundaryEcologyConfig(continuous_evidence=True),
+    )
+    trigger = _continuous_observation(0, ("anchor", "good"))
+    ecology.observe(trigger)
+    parent = ecology.expand(BoundaryExpandDemand(
+        ordinal=0,
+        signal_ids=("anchor",),
+        signal_roles=(
+            ("anchor", "BASE_TERMINAL"),
+        ),
+        candidate_width=1,
+        triggering_receipt_id=trigger.receipt_id,
+        polarity=True,
+    ))[0]
+    contradiction = _continuous_observation(1, ("anchor", "bad"), False)
+    ecology.observe(contradiction)
+    residual_id = ecology.last_refinement_ids[0]
+    residual = ecology.sketches[residual_id]
+    assert residual.parent_sketch_id == parent.sketch_id
+    assert residual.birth_frontier_ordinal == 1
+    assert residual.birth_ordinal == 1
+    assert residual.triggering_receipt_id == trigger.receipt_id
+    assert residual.discovery_exclusion_receipt_ids == tuple(sorted(
+        (contradiction.receipt_id, trigger.receipt_id),
+    ))
+    assert residual.support_count == 0
+    assert residual.positive_receipt_ids == ()
+    for ordinal in range(2, 5):
+        ecology.observe(_continuous_observation(ordinal, residual.members))
+    assert ecology.promotion_decision(residual_id).eligible is False
+    ecology.observe(_continuous_observation(5, residual.members))
+    assert ecology.promotion_decision(residual_id, full_audit=True).eligible is True
+
+
+def test_continuous_reincarnation_reloads_negative_constraint_and_ranks_blocked_low():
+    ecology = ProspectiveBoundaryCandidateEcology(
+        BoundaryEcologyConfig(continuous_evidence=True, active_sketch_cap=2),
+    )
+    _, first = _continuous_single_candidate(ecology, member="old")
+    for ordinal in range(1, 5):
+        ecology.observe(_continuous_observation(ordinal, first.members))
+    assert ecology.promotion_decision(first.sketch_id).eligible is True
+    ecology.mark_promoted(first.sketch_id)
+    ecology.observe(_continuous_observation(5, first.members, observed=False))
+    _, reborn = _continuous_single_candidate(ecology, trigger_index=6, member="old")
+    assert reborn.sketch_id != first.sketch_id
+    assert reborn.semantic_identity == first.semantic_identity
+    assert reborn.inherited_negative_count == 1
+    for ordinal in range(7, 11):
+        ecology.observe(_continuous_observation(ordinal, reborn.members))
+    assert ecology.promotion_decision(reborn.sketch_id).eligible is False
+    _, clean = _continuous_single_candidate(
+        ecology,
+        trigger_index=11,
+        member="clean",
+    )
+    assert ecology.rank_candidates()[0].sketch_id == clean.sketch_id
+    _, another_clean = _continuous_single_candidate(
+        ecology, trigger_index=12, member="another-clean"
+    )
+    active_ids = {item.sketch_id for item in ecology.active_sketches}
+    assert active_ids == {clean.sketch_id, another_clean.sketch_id}
+    assert reborn.sketch_id not in active_ids
+
+
+def test_continuous_manifest_roundtrip_preserves_identity_and_audit_shape():
+    ecology = ProspectiveBoundaryCandidateEcology(
+        BoundaryEcologyConfig(continuous_evidence=True),
+    )
+    _, candidate = _continuous_single_candidate(ecology)
+    for ordinal in range(1, 5):
+        ecology.observe(_continuous_observation(ordinal, candidate.members))
+    restored = ProspectiveBoundaryCandidateEcology.loads(ecology.dumps())
+    assert restored.manifest() == ecology.manifest()
+    decision = restored.promotion_decision(candidate.sketch_id, full_audit=True)
+    assert decision.eligible is True
+    assert decision.birth_frontier_ordinal == 0
+    assert decision.semantic_identity == candidate.semantic_identity
+    assert decision.inspected_receipt_ids == tuple(
+        f"continuous-receipt-{index}" for index in range(1, 5)
+    )
+
+
+def test_continuous_manifest_rejects_tampered_counters_and_duplicate_tombstones():
+    ecology = ProspectiveBoundaryCandidateEcology(
+        BoundaryEcologyConfig(continuous_evidence=True),
+    )
+    _, candidate = _continuous_single_candidate(ecology)
+    for ordinal in range(1, 5):
+        ecology.observe(_continuous_observation(ordinal, candidate.members))
+    payload = ecology.manifest()
+    payload["sketches"][0]["prospective_support_count"] = 3
+    with pytest.raises(ValueError, match="(invalid prospective evidence|counters disagree)"):
+        ProspectiveBoundaryCandidateEcology.from_manifest(payload)
+
+    payload = ecology.manifest()
+    payload["sketches"][0]["last_observation_ordinal"] = 0
+    payload["sketches"][0]["prospective_match_count"] = 0
+    payload["sketches"][0]["prospective_support_count"] = 0
+    payload["sketches"][0]["lifetime_match_count"] = 0
+    payload["sketches"][0]["lifetime_support_count"] = 0
+    payload["sketches"][0]["positive_receipt_ids"] = []
+    payload["sketches"][0]["read_receipt_ids"] = [candidate.triggering_receipt_id]
+    payload["sketches"][0]["evidence_digest"] = ""
+    with pytest.raises(ValueError, match="(active sketch cutoff|counters disagree)"):
+        ProspectiveBoundaryCandidateEcology.from_manifest(payload)
+
+    ecology.mark_promoted(candidate.sketch_id)
+    payload = ecology.manifest()
+    payload["tombstones"].append(payload["tombstones"][0])
+    with pytest.raises(ValueError, match="duplicate tombstone"):
+        ProspectiveBoundaryCandidateEcology.from_manifest(payload)

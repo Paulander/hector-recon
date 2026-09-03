@@ -79,6 +79,7 @@ DORMANT_SPECIALIZATION_CHILD_CAPACITY = 192
 SPECIALIZATION_CANDIDATE_BEAM_WIDTH = 64
 BOUNDARY_PROMOTION_REQUEST_SCHEMA = "native_v2_boundary_promotion_request.v1"
 BOUNDARY_PROMOTION_GATE_STATE = "ELIGIBLE"
+BOUNDARY_HYPOTHESIS_BIRTH_SCHEMA = "native_v2_continuous_hypothesis_birth.v1"
 RETIREMENT_TOMBSTONE_SCHEMA = "native_v2_adaptive_retirement_tombstone.v1"
 DEFAULT_RETIREMENT_REASON = "resource_rent"
 # Generation-boundary ``prior_continuation_digest`` used to be the flat
@@ -530,6 +531,12 @@ class FrozenHypothesis:
     nomination_read_commitments: tuple[
         tuple[str, ProvenanceCommitment], ...
     ] = ()
+    # Only the opt-in continuous protocol separates logical birth from graph
+    # allocation.  Absent fields preserve every legacy hypothesis digest.
+    hypothesis_birth_digest: str | None = None
+    materialization_frontier: int | None = None
+    semantic_source_identity: str | None = None
+    semantic_member_roles: tuple[tuple[str, str], ...] = ()
 
     def __setstate__(self, state: Mapping[str, Any]) -> None:
         # FrozenHypothesis predates compact provenance.  Supply defaults but
@@ -542,6 +549,10 @@ class FrozenHypothesis:
             "discovery_read_commitment": None,
             "discovery_exclusion_commitment": None,
             "nomination_read_commitments": (),
+            "hypothesis_birth_digest": None,
+            "materialization_frontier": None,
+            "semantic_source_identity": None,
+            "semantic_member_roles": (),
         }
         for key, value in defaults.items():
             if not hasattr(self, key):
@@ -568,6 +579,28 @@ class FrozenHypothesis:
             raise ProspectiveV2IntegrityError(
                 "birth frontier differs from certification frontier"
             )
+        if self.hypothesis_birth_digest is not None:
+            if (
+                len(self.hypothesis_birth_digest) != 64
+                or not isinstance(self.materialization_frontier, int)
+                or isinstance(self.materialization_frontier, bool)
+                or self.materialization_frontier < self.birth_frontier
+                or not self.semantic_source_identity
+                or tuple(key for key, _role in self.semantic_member_roles)
+                != self.members
+            ):
+                raise ProspectiveV2IntegrityError("invalid continuous hypothesis identity")
+        elif any((self.materialization_frontier is not None,
+                  self.semantic_source_identity, self.semantic_member_roles)):
+            # A newly selected deferred residual is born at allocation, not
+            # at its ancestor's earlier semantic birth.  Its flattened typed
+            # predicate is nevertheless frozen under the opted-in contract.
+            if (self.materialization_frontier is not None
+                or self.nomination_operation != "specialization"
+                or not self.lineage_parent_id or not self.semantic_source_identity
+                or not self.semantic_member_roles
+                or tuple(sorted(set(self.semantic_member_roles))) != self.semantic_member_roles):
+                raise ProspectiveV2IntegrityError("unbound continuous hypothesis fields")
         if self.nomination_read_frontier > self.certification_frontier:
             raise ProspectiveV2IntegrityError(
                 "nomination frontier exceeds certification frontier"
@@ -862,6 +895,14 @@ class FrozenHypothesis:
                     for name, commitment in self.nomination_read_commitments
                 },
             })
+        if self.semantic_source_identity is not None:
+            result.update({
+                "semantic_source_identity": self.semantic_source_identity,
+                "semantic_member_roles": [list(item) for item in self.semantic_member_roles],
+            })
+        if self.hypothesis_birth_digest is not None:
+            result.update({"hypothesis_birth_digest": self.hypothesis_birth_digest,
+                           "materialization_frontier": self.materialization_frontier})
         return result
 
     def manifest(self) -> dict[str, Any]:
@@ -1712,6 +1753,64 @@ def _boundary_promotion_gate_manifest(
 
 
 @dataclass(frozen=True)
+class BoundaryHypothesisBirth:
+    """Outcome-blind fixed predicate committed before any certification read."""
+
+    candidate_id: str
+    members: tuple[str, ...]
+    member_signal_roles: tuple[tuple[str, str], ...]
+    source_identity: str
+    semantic_identity: str
+    birth_frontier_ordinal: int
+    triggering_receipt_id: str
+    source_generation: int
+    sequence: int
+    discovery_exclusion_commitment: ProvenanceCommitment
+    birth_digest: str = ""
+
+    def __post_init__(self) -> None:
+        from .native_prospective_boundary_candidate_ecology import (
+            boundary_candidate_semantic_identity,
+        )
+        if (
+            not self.candidate_id or not self.source_identity
+            or self.members != tuple(sorted(set(self.members)))
+            or tuple(key for key, _ in self.member_signal_roles) != self.members
+            or self.semantic_identity != boundary_candidate_semantic_identity(
+                self.members, self.member_signal_roles, self.source_identity
+            )
+            or isinstance(self.birth_frontier_ordinal, bool)
+            or self.birth_frontier_ordinal < 0
+            or self.sequence < 0 or self.source_generation < 0
+            or self.discovery_exclusion_commitment.exclusive_frontier
+            != self.birth_frontier_ordinal + 1
+        ):
+            raise ProspectiveV2IntegrityError("invalid precommitted boundary hypothesis")
+        expected = _sha(self.identity_manifest())
+        if self.birth_digest and self.birth_digest != expected:
+            raise ProspectiveV2IntegrityError("boundary hypothesis birth digest mismatch")
+        object.__setattr__(self, "birth_digest", expected)
+
+    def identity_manifest(self) -> dict[str, Any]:
+        return {
+            "schema_version": BOUNDARY_HYPOTHESIS_BIRTH_SCHEMA,
+            "candidate_id": self.candidate_id,
+            "members": list(self.members),
+            "member_signal_roles": [list(item) for item in self.member_signal_roles],
+            "source_identity": self.source_identity,
+            "semantic_identity": self.semantic_identity,
+            "birth_frontier_ordinal": self.birth_frontier_ordinal,
+            "triggering_receipt_id": self.triggering_receipt_id,
+            "source_generation": self.source_generation,
+            "sequence": self.sequence,
+            "discovery_exclusion_commitment": self.discovery_exclusion_commitment.manifest(),
+        }
+
+    def manifest(self) -> dict[str, Any]:
+        return {**self.identity_manifest(), "birth_digest": self.birth_digest}
+
+
+@dataclass(frozen=True)
 class BoundaryPromotionRequest:
     """Immutable authority input for one promoted ordinary boundary sketch."""
 
@@ -1727,6 +1826,7 @@ class BoundaryPromotionRequest:
     provenance_schema_version: str | None = None
     supporting_receipt_commitment: ProvenanceCommitment | None = None
     inspected_receipt_commitment: ProvenanceCommitment | None = None
+    hypothesis_birth_digest: str | None = None
 
     def __setstate__(self, state: Mapping[str, Any]) -> None:
         for key, value in state.items():
@@ -1735,12 +1835,18 @@ class BoundaryPromotionRequest:
             "provenance_schema_version": None,
             "supporting_receipt_commitment": None,
             "inspected_receipt_commitment": None,
+            "hypothesis_birth_digest": None,
         }.items():
             if not hasattr(self, key):
                 object.__setattr__(self, key, value)
         self.__post_init__()
 
     def __post_init__(self) -> None:
+        if self.hypothesis_birth_digest is not None and (
+            not isinstance(self.hypothesis_birth_digest, str)
+            or len(self.hypothesis_birth_digest) != 64
+        ):
+            raise ProspectiveV2IntegrityError("invalid boundary hypothesis birth link")
         if not isinstance(self.candidate_id, str) or not self.candidate_id:
             raise ProspectiveV2IntegrityError(
                 "boundary promotion candidate identity is required"
@@ -1874,6 +1980,8 @@ class BoundaryPromotionRequest:
                 self.inspected_receipt_commitment.manifest()
                 if self.inspected_receipt_commitment is not None else None
             )
+        if self.hypothesis_birth_digest is not None:
+            result["hypothesis_birth_digest"] = self.hypothesis_birth_digest
         return result
 
     def identity_manifest(self) -> dict[str, Any]:
@@ -1931,6 +2039,7 @@ class BoundaryPromotionRequest:
                     value.get("inspected_receipt_commitment")
                 )
             ),
+            hypothesis_birth_digest=value.get("hypothesis_birth_digest"),
         )
         if value.get("request_digest") not in {None, item.request_digest}:
             raise ProspectiveV2IntegrityError(
@@ -2263,6 +2372,11 @@ def _receipt_supports(
     )
 
 
+def _trace_source_policy_identity(trace: GraphSignalTrace) -> str:
+    return _sha({"source_organism_identity": trace.source_organism_identity,
+                 "source_state_identity": trace.source_state_identity})
+
+
 def _specialization_request_basis(
     state: ProspectiveAuthorityState,
     *,
@@ -2526,6 +2640,16 @@ class _AuthorityTerminalEvaluationCache:
         # immutable conversion (those paths are not the REAL hot path).
         if not isinstance(requested, (set, frozenset)):
             requested = frozenset(requested)
+        descriptors = _structural_match_descriptors(states)
+        trace_roles = {item.identity: item.role for item in snapshot.trace.terminal_signals}
+        trace_source = _trace_source_policy_identity(snapshot.trace)
+        # Removing an inapplicable descriptor also removes its context from
+        # recursive descendants through the same canonical matcher.
+        descriptors = {key: descriptor for key, descriptor in descriptors.items()
+                       if states[key].hypothesis.semantic_source_identity is None
+                       or (states[key].hypothesis.semantic_source_identity == trace_source
+                           and all(trace_roles.get(member) == role for member, role
+                                   in states[key].hypothesis.semantic_member_roles))}
         return cls(
             snapshot=snapshot,
             states=states,
@@ -2534,7 +2658,7 @@ class _AuthorityTerminalEvaluationCache:
             )),
             lifetime_requested_parent_ids=requested,
             structural_matches=_StructuralPatternMatchCache(
-                descriptors=_structural_match_descriptors(states),
+                descriptors=descriptors,
                 active_signal_ids=frozenset(
                     snapshot.trace.ordered_signal_identities
                 ),
@@ -2553,6 +2677,11 @@ class _AuthorityTerminalEvaluationCache:
                     "authority cell state is unavailable"
                 )
             matched = self.structural_matches.match(cell_id)
+            if state.hypothesis.semantic_source_identity is not None:
+                roles = {item.identity: item.role for item in self.snapshot.trace.terminal_signals}
+                matched = bool(matched
+                    and _trace_source_policy_identity(self.snapshot.trace) == state.hypothesis.semantic_source_identity
+                    and all(roles.get(key) == role for key, role in state.hypothesis.semantic_member_roles))
             receipt = self.snapshot.grounded_receipt
             post_frontier = bool(
                 receipt is not None
@@ -2712,6 +2841,7 @@ def _v2_specialization_eligibility_terminal(
         node.meta["role_permitted"]
         and not node.meta["recursively_implied_by_parent"]
         and int(node.meta["supporting_occurrence_count"]) >= MIN_SUPPORT
+        and int(node.meta.get("known_contradiction_count", 0)) == 0
         and (
             mode is SpecializationMode.COUNTEREXAMPLE_BLIND
             or (
@@ -3486,6 +3616,8 @@ class NativeProspectiveAuthorityV2:
     # the former belong to the frozen discovery ledger, while the latter are
     # authority-local live-slot reclamations after prospective birth.
     retired_tombstones: dict[str, dict[str, Any]] = field(default_factory=dict)
+    boundary_hypothesis_births: dict[str, BoundaryHypothesisBirth] = field(default_factory=dict)
+    _boundary_hypothesis_birth_digest: str = ""
     specialization_mode: SpecializationMode = SpecializationMode.DISCONNECTED
     structural_epoch_schedule: tuple[int, ...] = ()
     current_generation: int = 0
@@ -3783,6 +3915,8 @@ class NativeProspectiveAuthorityV2:
         # Pickles produced before the explicit structural-mode field are
         # still scheduled authorities, preserving their old semantics.
         self.__dict__.update(state)
+        self.boundary_hypothesis_births = dict(getattr(self, "boundary_hypothesis_births", {}))
+        self._boundary_hypothesis_birth_digest = str(getattr(self, "_boundary_hypothesis_birth_digest", ""))
         self.structural_mode = StructuralMode(
             getattr(self, "structural_mode", StructuralMode.SCHEDULED)
         )
@@ -5007,6 +5141,8 @@ class NativeProspectiveAuthorityV2:
                 None if self.pending_event is None
                 else self.pending_event.pending_token
             ),
+            **({"boundary_hypothesis_birth_digest": self._boundary_hypothesis_birth_digest}
+               if self.boundary_hypothesis_births else {}),
             "live_lifecycle": lifecycle,
         })
 
@@ -5447,6 +5583,7 @@ class NativeProspectiveAuthorityV2:
         request_queue_digest: str | None = None,
         requested_parent_digest: str | None = None,
         boundary_promotion_digest: str | None = None,
+        hypothesis_birth_digest: str = "",
     ) -> str:
         active = (
             states
@@ -5500,7 +5637,7 @@ class NativeProspectiveAuthorityV2:
                         in active
                     )
                 })
-        return _sha({
+        result = {
             "schema_version": INCREMENTAL_HISTORY_SCHEMA,
             "history": history.manifest(),
             "generation": generation,
@@ -5526,7 +5663,10 @@ class NativeProspectiveAuthorityV2:
                 lifetime_requested_parent_ids
             ),
             "adaptive_boundary_promotions_digest": boundary_promotion_digest,
-        })
+        }
+        if hypothesis_birth_digest:
+            result["boundary_hypothesis_birth_digest"] = hypothesis_birth_digest
+        return _sha(result)
 
     def _incremental_predecessor_continuation_digest(
         self,
@@ -5553,6 +5693,7 @@ class NativeProspectiveAuthorityV2:
             boundary_promotion_digest=(
                 self._hot_boundary_promotion_digest
             ),
+            hypothesis_birth_digest=self._boundary_hypothesis_birth_digest,
         )
 
     @staticmethod
@@ -6548,7 +6689,8 @@ class NativeProspectiveAuthorityV2:
                         or hypothesis.discovery_exclusion_receipt_ids
                         != escrow.discovery_exclusion_receipt_ids
                         or hypothesis.discovery_support_receipt_ids
-                        != request.supporting_receipt_ids
+                        != (request.supporting_receipt_ids if request.hypothesis_birth_digest is None
+                            else (request.triggering_receipt_id,))
                         or hypothesis.provenance_schema_version
                         != (
                             PROVENANCE_COMMITMENT_V4
@@ -7164,6 +7306,8 @@ class NativeProspectiveAuthorityV2:
         replay.deferred_child_births = {}
         replay.deferred_child_escrows = {}
         replay.boundary_promotion_requests = {}
+        replay.boundary_hypothesis_births = {}
+        replay._boundary_hypothesis_birth_digest = ""
         replay.adaptive_boundary_escrows = {}
         replay.generation_boundaries = _AppendOnlyLedger()
         replay.sealed_request_ids = ()
@@ -7446,6 +7590,16 @@ class NativeProspectiveAuthorityV2:
                 raise ProspectiveV2IntegrityError(
                     "boundary settlement names an unknown request"
                 )
+            if replay.boundary_hypothesis_births:
+                expected_plan = replay._deferred_request_plan(
+                    request_id, attempt_ordinal=consumption.attempt_ordinal,
+                    target_generation=generation,
+                    reserved_members=set(replay._reserved_member_pairs),
+                ).consumption
+                expected_consumption = (replace(expected_plan, disposition="MATERIALIZED")
+                                        if consumption.disposition == "MATERIALIZED" else expected_plan)
+                if expected_consumption != consumption:
+                    raise ProspectiveV2IntegrityError("continuous residual eligibility differs from safe-point replay")
             replay.request_consumptions[request_id] = consumption
             replay._pending_request_index.discard(request_id)
             try:
@@ -7568,6 +7722,11 @@ class NativeProspectiveAuthorityV2:
                 PROVENANCE_COMMITMENT_V4
             ):
                 expected_birth_frontier = replay.next_expected_ordinal - 1
+                if request.hypothesis_birth_digest is not None:
+                    semantic_birth = replay._continuous_birth_for_request(request)
+                    if hypothesis.materialization_frontier != expected_birth_frontier:
+                        raise ProspectiveV2IntegrityError("continuous graph allocation differs from safe point")
+                    expected_birth_frontier = semantic_birth.birth_frontier_ordinal
                 if (
                     hypothesis.birth_frontier != expected_birth_frontier
                     or hypothesis.certification_frontier
@@ -7585,6 +7744,8 @@ class NativeProspectiveAuthorityV2:
                 prospectively_certified=False,
             )
             self._boundary_replay_reset_state(state)
+            if request.hypothesis_birth_digest is not None:
+                replay._transfer_continuous_boundary_evidence(state, request)
             replay.states[child_id] = state
             replay.structural_invariants[child_id] = invariant
             replay.boundary_promotion_requests[candidate_id] = request
@@ -7704,6 +7865,24 @@ class NativeProspectiveAuthorityV2:
         ))
         receipt_index = 0
         boundary_index = 0
+        births = tuple(sorted(self.boundary_hypothesis_births.values(), key=lambda item: item.sequence))
+        birth_index = 0
+
+        def apply_semantic_births() -> None:
+            nonlocal birth_index
+            while birth_index < len(births) and births[birth_index].birth_frontier_ordinal < replay.next_expected_ordinal:
+                birth = births[birth_index]
+                if birth.source_generation != replay.current_generation:
+                    raise ProspectiveV2IntegrityError("semantic birth generation differs from replay chronology")
+                digest = replay.register_boundary_hypothesis_birth(
+                    candidate_id=birth.candidate_id, members=birth.members,
+                    member_signal_roles=birth.member_signal_roles, source_identity=birth.source_identity,
+                    semantic_identity=birth.semantic_identity, birth_frontier_ordinal=birth.birth_frontier_ordinal,
+                    triggering_receipt_id=birth.triggering_receipt_id,
+                )
+                if digest != birth.birth_digest:
+                    raise ProspectiveV2IntegrityError("semantic birth differs from its causal precommitment")
+                birth_index += 1
 
         def consume_receipt(receipt: V2GroundedReceipt) -> None:
             transaction = self.event_transactions.get(receipt.pending_token)
@@ -7935,6 +8114,7 @@ class NativeProspectiveAuthorityV2:
             boundary_index += 1
 
         while receipt_index < len(ordered) or boundary_index < len(boundaries):
+            apply_semantic_births()
             next_frontier = (
                 boundaries[boundary_index].event_frontier
                 if boundary_index < len(boundaries)
@@ -7965,6 +8145,9 @@ class NativeProspectiveAuthorityV2:
                 consume_receipt(receipt)
                 receipt_index += 1
 
+        apply_semantic_births()
+        if birth_index != len(births):
+            raise ProspectiveV2IntegrityError("unreplayed semantic hypothesis births")
         # A scheduled structural safe point is intentionally resumable: the
         # boundary is recorded before its one-at-a-time compatibility API
         # consumes/materializes the sealed queue, and the prospective boundary
@@ -8098,6 +8281,14 @@ class NativeProspectiveAuthorityV2:
             ):
                 birth_generation = birth_generations[next_birth_generation]
                 for cell_id, state in births_by_generation[birth_generation]:
+                    if state.hypothesis.hypothesis_birth_digest is not None:
+                        candidate_request = self.boundary_promotion_requests.get(
+                            next((key for key, item in self.boundary_promotion_requests.items()
+                                  if self._adaptive_boundary_child_id(item) == cell_id), "")
+                        )
+                        if candidate_request is None:
+                            raise ProspectiveV2IntegrityError("continuous replay child lacks promotion request")
+                        self._transfer_continuous_boundary_evidence(state, candidate_request)
                     if not state.retired:
                         active_derived[cell_id] = state
                         promotion = promotion_by_child.get(cell_id)
@@ -8182,6 +8373,9 @@ class NativeProspectiveAuthorityV2:
             else None
         )
         replay_generation = -1
+        semantic_births = tuple(sorted(self.boundary_hypothesis_births.values(), key=lambda item: item.sequence))
+        semantic_cursor = 0
+        semantic_digest = ""
         for offset, receipt in enumerate(ordered):
             if receipt.ordinal != expected_start + offset:
                 raise ProspectiveV2IntegrityError(
@@ -8197,6 +8391,13 @@ class NativeProspectiveAuthorityV2:
                     "accepted REAL source generation is not monotone"
                 )
             replay_generation = reference.source_generation
+            while semantic_cursor < len(semantic_births) and semantic_births[semantic_cursor].birth_frontier_ordinal < receipt.ordinal:
+                birth = semantic_births[semantic_cursor]
+                semantic_cursor += 1
+                semantic_digest = _next_hot_append_digest(
+                    semantic_digest or _empty_hot_append_digest("hypothesis_birth"),
+                    "hypothesis_birth", birth.manifest(), semantic_cursor,
+                )
             activate_births_through(replay_generation)
             # A retirement is committed at ``next_expected_ordinal``.  It is
             # therefore visible to the predecessor graph of a receipt at the
@@ -8244,6 +8445,7 @@ class NativeProspectiveAuthorityV2:
                     boundary_promotion_digest=_sha(
                         active_promotion_manifests
                     ),
+                    hypothesis_birth_digest=semantic_digest,
                 )
             )
             if transaction.get(
@@ -8441,6 +8643,7 @@ class NativeProspectiveAuthorityV2:
                 reference=reference,
                 emission=expected_emissions[receipt.receipt_id],
             )
+        activate_births_through(self.current_generation)
         apply_retirements_through(expected_start + len(ordered))
         replay_retirements = self._retirement_state_projection(derived)
         if self._boundary_retirement_projection(
@@ -8783,8 +8986,8 @@ class NativeProspectiveAuthorityV2:
                 f"{label} compact exclusion commitment mismatch"
             )
 
-    @staticmethod
     def _validate_compact_ordinary_birth_contract(
+        self,
         request: BoundaryPromotionRequest,
         escrow: NominationEscrow,
         hypothesis: FrozenHypothesis,
@@ -8792,10 +8995,19 @@ class NativeProspectiveAuthorityV2:
         """Re-derive every V4 ordinary birth edge from its exact request."""
 
         frontier = escrow.birth_frontier + 1
+        continuous = request.hypothesis_birth_digest is not None
+        if continuous:
+            birth = self._continuous_birth_for_request(request)
+            if (hypothesis.hypothesis_birth_digest != birth.birth_digest
+                or hypothesis.birth_frontier != birth.birth_frontier_ordinal
+                or hypothesis.semantic_source_identity != birth.source_identity
+                or hypothesis.semantic_member_roles != birth.member_signal_roles
+                or escrow.discovery_exclusion_commitment != birth.discovery_exclusion_commitment):
+                raise ProspectiveV2IntegrityError("continuous birth escrow differs from precommitment")
         consensus = tuple(sorted(
             set(request.inspected_receipt_ids)
             - {request.triggering_receipt_id}
-        ))
+        )) if not continuous else ()
         expected_categories = (
             ("direct", (request.triggering_receipt_id,)),
             ("parent_support", ()),
@@ -8821,7 +9033,7 @@ class NativeProspectiveAuthorityV2:
             ("contradiction_trigger", _compact_set_commitment(
                 (), exclusive_frontier=frontier
             )),
-            ("consensus_reads", request.inspected_receipt_commitment),
+            ("consensus_reads", request.inspected_receipt_commitment if not continuous else _compact_set_commitment((), exclusive_frontier=frontier)),
         )
         if any(
             not isinstance(commitment, ProvenanceCommitment)
@@ -8852,15 +9064,15 @@ class NativeProspectiveAuthorityV2:
             != expected_discovery.witness_ids
             or hypothesis.discovery_support_receipt_ids
             != _bounded_provenance_witnesses(
-                request.supporting_receipt_ids
+                request.supporting_receipt_ids if not continuous else (request.triggering_receipt_id,)
             )
         ):
             raise ProspectiveV2IntegrityError(
                 "compact ordinary birth diverges from promotion request"
             )
 
-    @staticmethod
     def _validate_compact_deferred_birth_contract(
+        self,
         request: DeferredSpecializationRequest,
         birth: DeferredChildBirth,
         escrow: NominationEscrow,
@@ -8869,6 +9081,17 @@ class NativeProspectiveAuthorityV2:
         """Re-derive every V4 specialization edge from request/candidate."""
 
         selected_identity = birth.members[1]
+        semantic_contract = self._continuous_deferred_contract(
+            request, selected_identity, frontier=hypothesis.birth_frontier
+        )
+        if semantic_contract is not None:
+            source, roles, support, contradictions = semantic_contract
+            if (hypothesis.semantic_source_identity != source
+                or hypothesis.semantic_member_roles != roles
+                or support < MIN_SUPPORT or contradictions):
+                raise ProspectiveV2IntegrityError("deferred residual erased its typed/source/known-negative contract")
+        elif hypothesis.semantic_source_identity is not None:
+            raise ProspectiveV2IntegrityError("deferred semantic binding predates protocol activation")
         try:
             candidate = next(
                 item for item in request.candidate_terminals
@@ -10399,6 +10622,68 @@ class NativeProspectiveAuthorityV2:
                 "request queue capacity exceeded"
             )
 
+    def _continuous_deferred_contract(
+        self, request: DeferredSpecializationRequest, identity: str, *, frontier: int,
+    ) -> tuple[str, tuple[tuple[str, str], ...], int, int] | None:
+        """Bind a genuinely new residual without reusing discovery as proof."""
+
+        if not any(birth.birth_frontier_ordinal <= frontier for birth in self.boundary_hypothesis_births.values()):
+            return None
+        candidate = next(item for item in request.candidate_terminals if item.identity == identity)
+        members = tuple(sorted(_recursively_implied_signal_ids(request.parent_cell_id, self.states) | {identity}))
+        source = self.source_policy_identity_for_receipt(request.request_emission_receipt_id)
+        references = [self.accepted_real_references[key] for key in candidate.supporting_receipt_ids]
+        references.sort(key=lambda item: (item.ordinal, item.receipt_id))
+        expected_outcome = request.fixed_polarity is AvailabilityState.AVAILABLE
+        first = next((row for row in references if set(members).issubset(row.ordered_signal_identities)
+                      and self.source_policy_identity_for_receipt(row.receipt_id) == source), None)
+        if first is None:
+            return source, (), 0, 0
+        first_roles = dict(first.typed_signal_roles)
+        roles = tuple((member, first_roles.get(member, "")) for member in members)
+        parent = self.states[request.parent_cell_id].hypothesis
+        if (any(not role for _, role in roles)
+            or parent.semantic_source_identity not in {None, source}
+            or not set(parent.semantic_member_roles).issubset(roles)):
+            return source, (), 0, 0
+
+        def matches(row: AcceptedRealReference) -> bool:
+            return bool(set(members).issubset(row.ordered_signal_identities)
+                        and set(roles).issubset(row.typed_signal_roles)
+                        and self.source_policy_identity_for_receipt(row.receipt_id) == source)
+
+        # Bounded explicit proposal witnesses establish the unchanged minimum
+        # support threshold.  All known matching failures (including arrivals
+        # after the original request) constrain allocation, never certification.
+        support = sum(row.observed_outcome is expected_outcome and matches(row) for row in references)
+        contradictions = sum(row.observed_outcome is not expected_outcome and matches(row)
+                             for row in self.accepted_real_references.values() if row.ordinal <= frontier)
+        return source, roles, support, contradictions
+
+    def _continuous_deferred_eligible_ids(
+        self, request: DeferredSpecializationRequest, *, frontier: int,
+    ) -> tuple[str, ...]:
+        eligible = request.eligible_base_ids
+        if not eligible or not any(birth.birth_frontier_ordinal <= frontier for birth in self.boundary_hypothesis_births.values()):
+            return eligible
+        graph = Graph()
+        root_id = ROLE_ROOTS["specialization_eligibility"]
+        graph.add_node(Node(root_id, NodeType.SCRIPT, meta={"confirm_policy": "or"}))
+        for identity in eligible:
+            contract = self._continuous_deferred_contract(request, identity, frontier=frontier)
+            assert contract is not None
+            _source, roles, support, contradictions = contract
+            graph.add_node(Node(identity, NodeType.TERMINAL, predicate=_v2_specialization_eligibility_terminal, meta={
+                "specialization_mode": request.specialization_mode.value,
+                "role_permitted": bool(roles), "recursively_implied_by_parent": False,
+                "supporting_occurrence_count": support,
+                "present_in_triggering_contradiction": False,
+                "known_contradiction_count": contradictions,
+            }))
+            graph.add_hierarchy_pair(root_id, identity)
+        _run_authority_component(graph, (root_id,), env={})
+        return tuple(identity for identity in eligible if graph.nodes[identity].state is NodeState.CONFIRMED)
+
     def _deferred_request_plan(
         self,
         request_id: str,
@@ -10417,9 +10702,12 @@ class NativeProspectiveAuthorityV2:
         genome = CompetenceContextGrowthGenome(
             self.specialization_genome_seed
         )
+        eligible_ids = self._continuous_deferred_eligible_ids(
+            request, frontier=self.next_expected_ordinal - 1
+        )
         proposal = genome.propose_specialization(_GraphSpecializationRequest(
             context_member=f"context:{request.parent_cell_id}",
-            eligible_base_ids=request.eligible_base_ids,
+            eligible_base_ids=eligible_ids,
             # Candidate rows use the frozen genome/hash order with a stable
             # zero tie ordinal; reuse it at consumption for exact parity.
             request_ordinal=0,
@@ -10429,7 +10717,7 @@ class NativeProspectiveAuthorityV2:
                     item.supporting_occurrence_count,
                 )
                 for item in request.candidate_terminals
-                if item.confirmed
+                if item.confirmed and item.identity in eligible_ids
             ),
         ))
         disposition = "PENDING_CHILD"
@@ -10443,7 +10731,7 @@ class NativeProspectiveAuthorityV2:
             if (
                 len(members) != 2
                 or members[0] != expected_context
-                or members[1] not in request.eligible_base_ids
+                or members[1] not in eligible_ids
             ):
                 raise ProspectiveV2IntegrityError(
                     "genome emitted an ineligible specialization child"
@@ -10483,10 +10771,11 @@ class NativeProspectiveAuthorityV2:
     ) -> tuple[_DeferredRequestPlan, ...]:
         """Preview all pending births without mutating authority state.
 
-        The planner is deterministic and content-blind: it reads only the
-        frozen requests, existing structural identities, and the optional
-        incoming promotion members.  It deliberately does not inspect game
-        outcomes.  Every request receives one genome call, including empty or
+        Legacy planning reads only frozen requests and structural identities.
+        After continuous-protocol activation, native eligibility also closes
+        each residual against its exact typed/source predicate and all REAL
+        contradictions visible at this safe point.  Every request receives
+        one genome call, including empty or
         duplicate proposals; capacity is handled by the caller after all
         concrete proposals are known.
         """
@@ -11074,6 +11363,213 @@ class NativeProspectiveAuthorityV2:
             return False
         return True
 
+    def source_policy_identity_for_receipt(self, receipt_id: str) -> str:
+        """Identify the frozen actuator, never the changing graph generation."""
+
+        receipt = self.consumed_receipts.get(receipt_id)
+        if receipt is not None:
+            trace = receipt.trace
+        else:
+            native = self.base.receipts.get(receipt_id)
+            if native is None:
+                raise ProspectiveV2IntegrityError("source identity requires accepted REAL receipt")
+            trace = native.decision_trace
+        return _trace_source_policy_identity(trace)
+
+    def _continuous_reference_matches(
+        self, birth: BoundaryHypothesisBirth, reference: AcceptedRealReference,
+    ) -> bool:
+        roles = dict(reference.typed_signal_roles)
+        return bool(
+            set(birth.members).issubset(reference.ordered_signal_identities)
+            and all(roles.get(key) == role for key, role in birth.member_signal_roles)
+            and self.source_policy_identity_for_receipt(reference.receipt_id)
+            == birth.source_identity
+        )
+
+    def _append_boundary_hypothesis_birth(self, birth: BoundaryHypothesisBirth) -> None:
+        """One bounded immutable append, shared by admission and exact replay."""
+
+        self._mutation_add_mapping(self.boundary_hypothesis_births, birth.candidate_id, birth)
+        previous = self._boundary_hypothesis_birth_digest or _empty_hot_append_digest("hypothesis_birth")
+        self._mutation_set_attr(self, "_boundary_hypothesis_birth_digest", _next_hot_append_digest(
+            previous, "hypothesis_birth", birth.manifest(), len(self.boundary_hypothesis_births)
+        ))
+        self._advance_boundary_commitment("boundary_hypothesis_birth", birth.manifest())
+        self._mutation_set_attr(self, "_hot_path_revision", self._hot_path_revision + 1)
+
+    def register_boundary_hypothesis_birth(
+        self, *, candidate_id: str, members: Sequence[str],
+        member_signal_roles: Sequence[tuple[str, str]], source_identity: str,
+        semantic_identity: str, birth_frontier_ordinal: int,
+        triggering_receipt_id: str,
+    ) -> str:
+        """Explicitly opt in one fixed predicate at its actual semantic birth.
+
+        This may follow an observed discovery/contrast event, but must precede
+        the next REAL transaction.  It grants no graph authority or credit.
+        """
+
+        if (self.pending_event is not None or self.evaluation_sealed
+            or self.generation_phase is not GenerationPhase.PROSPECTIVE_OPEN
+            or self.structural_mode is not StructuralMode.EVENT_DRIVEN):
+            raise ProspectiveV2IntegrityError("hypothesis birth requires an unsealed quiescent event-local authority")
+        if candidate_id in self.boundary_hypothesis_births:
+            existing = self.boundary_hypothesis_births[candidate_id]
+            if (existing.members == tuple(members)
+                and existing.member_signal_roles == tuple(member_signal_roles)
+                and existing.source_identity == source_identity
+                and existing.semantic_identity == semantic_identity
+                and existing.birth_frontier_ordinal == birth_frontier_ordinal
+                and existing.triggering_receipt_id == triggering_receipt_id):
+                return existing.birth_digest
+            raise ProspectiveV2IntegrityError("hypothesis birth identity cannot be reused or changed")
+        if (isinstance(birth_frontier_ordinal, bool)
+            or birth_frontier_ordinal != self.next_expected_ordinal - 1):
+            raise ProspectiveV2IntegrityError("hypothesis birth cannot be backdated or future-dated")
+        latest = self.consumed_receipts.get(
+            self._accepted_real_reference_order[-1] if self._accepted_real_reference_order else ""
+        )
+        if latest is None:
+            raise ProspectiveV2IntegrityError("hypothesis birth requires a just-consumed prospective REAL")
+        if self.accepted_real_references[latest.receipt_id].source_generation != self.current_generation:
+            raise ProspectiveV2IntegrityError("hypothesis birth must precede its event's structural settlement")
+        trigger = self.accepted_real_references.get(triggering_receipt_id)
+        if trigger is None or not trigger.observed_outcome or trigger.ordinal > birth_frontier_ordinal:
+            raise ProspectiveV2IntegrityError("hypothesis birth requires an already accepted positive discovery trigger")
+        birth = BoundaryHypothesisBirth(
+            candidate_id=str(candidate_id), members=tuple(members),
+            member_signal_roles=tuple(member_signal_roles), source_identity=source_identity,
+            semantic_identity=semantic_identity, birth_frontier_ordinal=birth_frontier_ordinal,
+            triggering_receipt_id=triggering_receipt_id, source_generation=self.current_generation,
+            sequence=len(self.boundary_hypothesis_births),
+            discovery_exclusion_commitment=self._accepted_real_prefix_commitment(self.accepted_real_references),
+        )
+        if (not self._continuous_reference_matches(birth, trigger)
+            or any(not _specialization_identity_role_permitted(trigger, member) for member in birth.members)
+            or any(member.startswith("context:") or member == "internal:policy_response" for member in birth.members)
+            or self.source_policy_identity_for_receipt(latest.receipt_id) != source_identity):
+            raise ProspectiveV2IntegrityError("hypothesis birth predicate/source differs from discovery trace")
+        journal = _StructuralMutationJournal()
+        prior = getattr(self, "_structural_mutation_journal", None)
+        self._structural_mutation_journal = journal
+        try:
+            self._append_boundary_hypothesis_birth(birth)
+        except Exception:
+            journal.rollback()
+            raise
+        else:
+            journal.commit()
+        finally:
+            if prior is None:
+                self.__dict__.pop("_structural_mutation_journal", None)
+            else:
+                self._structural_mutation_journal = prior
+        return birth.birth_digest
+
+    def _continuous_birth_for_request(self, request: BoundaryPromotionRequest) -> BoundaryHypothesisBirth:
+        birth = self.boundary_hypothesis_births.get(request.candidate_id)
+        if (birth is None or birth.birth_digest != request.hypothesis_birth_digest
+            or birth.members != request.members
+            or birth.triggering_receipt_id != request.triggering_receipt_id
+            or request.fixed_polarity is not AvailabilityState.AVAILABLE):
+            raise ProspectiveV2IntegrityError("promotion does not bind its precommitted hypothesis")
+        return birth
+
+    def _continuous_evidence_ids(
+        self, birth: BoundaryHypothesisBirth, frontier: int,
+    ) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+        """Read-only safe-point reclosure; never a lifetime per-event scan."""
+
+        inspected = tuple(sorted(reference.receipt_id for reference in self.accepted_real_references.values()
+                                 if birth.birth_frontier_ordinal < reference.ordinal <= frontier))
+        # A remembered failure is applicability evidence, not certification
+        # evidence.  An identical reincarnation cannot erase that constraint.
+        relevant = tuple(reference for reference in self.accepted_real_references.values()
+                         if reference.ordinal <= frontier and self._continuous_reference_matches(birth, reference))
+        support = tuple(sorted(reference.receipt_id for reference in relevant
+                               if reference.ordinal > birth.birth_frontier_ordinal and reference.observed_outcome))
+        negatives = tuple(sorted(reference.receipt_id for reference in relevant if not reference.observed_outcome))
+        return inspected, support, negatives
+
+    def _validate_continuous_boundary_promotion(
+        self, request: BoundaryPromotionRequest, *, evidence_frontier: int | None,
+        require_current_generation: bool,
+    ) -> BoundaryPromotionRequest:
+        birth = self._continuous_birth_for_request(request)
+        if request.provenance_schema_version != PROVENANCE_COMMITMENT_V4:
+            raise ProspectiveV2IntegrityError("continuous promotion requires compact V4 provenance")
+        frontier = self.next_expected_ordinal - 1 if evidence_frontier is None else int(evidence_frontier)
+        if (require_current_generation and request.source_generation != self.current_generation
+            or frontier < birth.birth_frontier_ordinal
+            or frontier >= self.next_expected_ordinal):
+            raise ProspectiveV2IntegrityError("continuous promotion frontier/generation differs")
+        inspected, support, negatives = self._continuous_evidence_ids(birth, frontier)
+        if negatives:
+            raise ProspectiveV2IntegrityError("continuous hypothesis matches a known negative")
+        if len(support) < MIN_SUPPORT:
+            raise ProspectiveV2IntegrityError("continuous promotion requires four strictly postbirth positives")
+        if request.provenance_schema_version == PROVENANCE_COMMITMENT_V4:
+            if (request.inspected_receipt_commitment != _compact_set_commitment(inspected, exclusive_frontier=frontier + 1)
+                or request.supporting_receipt_commitment != _compact_set_commitment(support, exclusive_frontier=frontier + 1)):
+                raise ProspectiveV2IntegrityError("continuous promotion evidence commitment is incomplete")
+        elif request.inspected_receipt_ids != inspected or request.supporting_receipt_ids != support:
+            raise ProspectiveV2IntegrityError("continuous promotion evidence set is incomplete")
+        return request
+
+    def _transfer_continuous_boundary_evidence(
+        self, state: ProspectiveAuthorityState, request: BoundaryPromotionRequest,
+    ) -> None:
+        """Replay precommitted evidence into newly allocated graph lifecycle.
+
+        Historical REAL emissions remain untouched.  The authority was not
+        physically present then, so its maturity is exposed only after this
+        atomic allocation, never to the action that supplied the last read.
+        """
+
+        self._boundary_replay_reset_state(state)
+        frontier = state.hypothesis.materialization_frontier
+        if frontier is None:
+            raise ProspectiveV2IntegrityError("continuous transfer lacks physical frontier")
+        self._validate_continuous_boundary_promotion(
+            request, evidence_frontier=frontier, require_current_generation=False
+        )
+        birth = self._continuous_birth_for_request(request)
+        _inspected, support_ids, _negatives = self._continuous_evidence_ids(birth, frontier)
+        for receipt_id in sorted(support_ids, key=lambda key: self.accepted_real_references[key].ordinal):
+            receipt = self.consumed_receipts.get(receipt_id)
+            if receipt is None or not _receipt_is_post_birth(state.hypothesis, receipt):
+                raise ProspectiveV2IntegrityError("continuous transfer contains discovery or nonprospective evidence")
+            graph = _run_authority_graph(
+                {state.hypothesis.cell_id: state}, AuthorityMeasurementSnapshot(receipt.trace, receipt),
+                accepted_real_references=self.accepted_real_references,
+                current_real_reference=self.accepted_real_references[receipt_id],
+                specialization_mode=SpecializationMode.DISCONNECTED,
+                lifetime_requested_parent_ids=frozenset(),
+                specialization_genome_seed=self.specialization_genome_seed,
+                compact_provenance=True,
+            )
+            cell_id = state.hypothesis.cell_id
+            if graph["commitment"] != (cell_id,) or graph["support"] != (cell_id,):
+                raise ProspectiveV2IntegrityError("continuous evidence fails graph-native predicate support")
+            state.support += 1
+            state.successes += 1
+            self._append_state_ledger(state, "certification_receipt_ids", receipt_id)
+            self._append_state_ledger(state, "support_receipt_ids", receipt_id)
+            state.success_lower_bound = wilson_lower_bound(state.successes, state.support, WILSON_Z)
+            state.contradiction_lower_bound = wilson_lower_bound(0, state.support, WILSON_Z)
+            if cell_id in graph["maturity"]:
+                state.prospectively_certified = True
+                self._append_state_ledger(state, "transition_rows", {
+                    "transition": "GRAPH_PROSPECTIVE_MATURITY",
+                    "receipt_id": receipt_id, "ordinal": receipt.ordinal,
+                    "pending_token": receipt.pending_token,
+                    "evidence_origin": BOUNDARY_HYPOTHESIS_BIRTH_SCHEMA,
+                    "materialization_frontier": frontier,
+                })
+        if not state.prospectively_certified:
+            raise ProspectiveV2IntegrityError("continuous evidence did not reach native graph maturity")
+
     def _validate_boundary_promotion_request(
         self,
         request: BoundaryPromotionRequest,
@@ -11084,6 +11580,14 @@ class NativeProspectiveAuthorityV2:
         reference_ordinals: Sequence[int] | None = None,
     ) -> BoundaryPromotionRequest:
         """Validate one ecology-produced request against accepted REAL data."""
+
+        if request.hypothesis_birth_digest is not None:
+            return self._validate_continuous_boundary_promotion(
+                request, evidence_frontier=evidence_frontier,
+                require_current_generation=require_current_generation,
+            )
+        if request.candidate_id in self.boundary_hypothesis_births:
+            raise ProspectiveV2IntegrityError("continuous candidate omitted its birth link")
 
         if (
             require_current_generation
@@ -11366,7 +11870,8 @@ class NativeProspectiveAuthorityV2:
                 raise ProspectiveV2IntegrityError(
                     "boundary promotion history lacks its materialized child"
                 )
-            frontier = state.hypothesis.birth_frontier
+            frontier = (state.hypothesis.materialization_frontier
+                        if request.hypothesis_birth_digest is not None else state.hypothesis.birth_frontier)
             self._validate_boundary_promotion_request(
                 request,
                 evidence_frontier=frontier,
@@ -11379,7 +11884,7 @@ class NativeProspectiveAuthorityV2:
             ):
                 self._validate_compact_exclusion_commitment(
                     escrow.discovery_exclusion_commitment,
-                    birth_frontier=frontier,
+                    birth_frontier=state.hypothesis.birth_frontier,
                     label="boundary promotion escrow",
                     prefix_commitments=compact_prefix_commitments,
                 )
@@ -11465,7 +11970,7 @@ class NativeProspectiveAuthorityV2:
         *,
         rebuild_topology: bool = True,
     ) -> str:
-        """Materialize one zero-authority ordinary boundary hypothesis."""
+        """Allocate a hypothesis; continuous candidates keep their evidence."""
 
         child_id = self._adaptive_boundary_child_id(request)
         if child_id in self.states:
@@ -11484,9 +11989,14 @@ class NativeProspectiveAuthorityV2:
         compact_request = request.provenance_schema_version == (
             PROVENANCE_COMMITMENT_V4
         )
+        continuous_birth = (self._continuous_birth_for_request(request)
+                            if request.hypothesis_birth_digest is not None else None)
+        materialization_frontier = self.next_expected_ordinal - 1
         prefix_commitment = self._accepted_real_prefix_commitment(
             self.accepted_real_references
         )
+        if continuous_birth is not None:
+            prefix_commitment = continuous_birth.discovery_exclusion_commitment
         if not prefix_commitment.count:
             raise ProspectiveV2IntegrityError(
                 "boundary promotion requires an accepted REAL ledger"
@@ -11494,7 +12004,7 @@ class NativeProspectiveAuthorityV2:
         consensus_reads = tuple(sorted(
             set(request.inspected_receipt_ids)
             - {request.triggering_receipt_id}
-        ))
+        )) if continuous_birth is None else ()
         read_ids = tuple(sorted(
             set(consensus_reads) | {request.triggering_receipt_id}
         ))
@@ -11513,7 +12023,9 @@ class NativeProspectiveAuthorityV2:
                 "contradiction_trigger": _compact_set_commitment(
                     (), exclusive_frontier=prefix_commitment.exclusive_frontier
                 ),
-                "consensus_reads": request.inspected_receipt_commitment,
+                "consensus_reads": (request.inspected_receipt_commitment
+                                    if continuous_birth is None else _compact_set_commitment(
+                                        (), exclusive_frontier=prefix_commitment.exclusive_frontier)),
             }
             if not isinstance(
                 category_commitments["consensus_reads"],
@@ -11539,7 +12051,7 @@ class NativeProspectiveAuthorityV2:
             visible_ids = prefix_commitment.witness_ids
             nomination_frontier = (
                 request.inspected_receipt_commitment.exclusive_frontier - 1
-            )
+            ) if continuous_birth is None else continuous_birth.birth_frontier_ordinal
             birth_frontier = prefix_commitment.exclusive_frontier - 1
         else:
             ordinals = {
@@ -11625,7 +12137,8 @@ class NativeProspectiveAuthorityV2:
             parent_hypothesis_digest=None,
             source_generation=self.current_generation,
             discovery_support_receipt_ids=(
-                _bounded_provenance_witnesses(request.supporting_receipt_ids)
+                _bounded_provenance_witnesses(request.supporting_receipt_ids
+                    if continuous_birth is None else (request.triggering_receipt_id,))
                 if compact_request else request.supporting_receipt_ids
             ),
             provenance_schema_version=(
@@ -11636,11 +12149,17 @@ class NativeProspectiveAuthorityV2:
                 prefix_commitment if compact_request else None
             ),
             nomination_read_commitments=read_commitments,
+            hypothesis_birth_digest=request.hypothesis_birth_digest,
+            materialization_frontier=(materialization_frontier if continuous_birth is not None else None),
+            semantic_source_identity=(continuous_birth.source_identity if continuous_birth is not None else None),
+            semantic_member_roles=(continuous_birth.member_signal_roles if continuous_birth is not None else ()),
         )
         child_state = ProspectiveAuthorityState(
             hypothesis=hypothesis,
             prospectively_certified=False,
         )
+        if continuous_birth is not None:
+            self._transfer_continuous_boundary_evidence(child_state, request)
         self._mutation_add_mapping(self.states, child_id, child_state)
         child_invariant = CellStructuralInvariant(
             cell_id=child_id,
@@ -12399,6 +12918,13 @@ class NativeProspectiveAuthorityV2:
             )
         request = self.deferred_requests[request_id]
         selected_identity = birth.members[1]
+        semantic_contract = self._continuous_deferred_contract(
+            request, selected_identity, frontier=self.next_expected_ordinal - 1
+        )
+        if semantic_contract is not None and (
+            semantic_contract[2] < MIN_SUPPORT or semantic_contract[3]
+        ):
+            raise ProspectiveV2IntegrityError("deferred materialization escaped native safe-point eligibility")
         compact_request = request.provenance_schema_version == (
             PROVENANCE_COMMITMENT_V4
         )
@@ -12650,6 +13176,8 @@ class NativeProspectiveAuthorityV2:
             discovery_read_commitment=discovery_commitment,
             discovery_exclusion_commitment=exclusion_commitment,
             nomination_read_commitments=escrow_read_commitments,
+            semantic_source_identity=(semantic_contract[0] if semantic_contract is not None else None),
+            semantic_member_roles=(semantic_contract[1] if semantic_contract is not None else ()),
         )
         child_state = ProspectiveAuthorityState(
             hypothesis=hypothesis,
@@ -14103,6 +14631,11 @@ class NativeProspectiveAuthorityV2:
                 self.experimental_identity
             ),
         }
+        if self.boundary_hypothesis_births:
+            manifest["boundary_hypothesis_births"] = {
+                key: value.manifest() for key, value in sorted(self.boundary_hypothesis_births.items())
+            }
+            manifest["boundary_hypothesis_birth_digest"] = self._boundary_hypothesis_birth_digest
         if self.boundary_digest_schema == (
             BOUNDARY_DIGEST_SCHEMA_MUTATION_CHAIN
         ):

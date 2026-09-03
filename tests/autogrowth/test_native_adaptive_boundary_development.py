@@ -18,6 +18,7 @@ from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import
     StructuralMode,
 )
 from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
+    NativeIntrinsicCurriculumResult,
     R0_ACTION_SELECTION_LOCAL_RECON,
     R1_ACTION_SELECTION_LOCAL_RECON,
 )
@@ -207,6 +208,40 @@ def test_profiles_preserve_frozen_r0_and_only_change_r1_work(tmp_path: Path) -> 
         match="profile must be one of canary, follow-through, gate",
     ):
         adaptive.development_config("scientific")
+
+
+@pytest.mark.parametrize("profile", adaptive.PROFILES)
+def test_continuous_evidence_switch_only_changes_lifecycle_config(
+    tmp_path: Path, profile: str,
+) -> None:
+    common = {
+        "profile": profile,
+        "output_dir": tmp_path,
+        "seed": 2026090110,
+        "max_wall_seconds": 7200.0,
+        "max_peak_rss_mib": 8192.0,
+    }
+    default = adaptive.development_config(**common)
+    baseline = adaptive.development_config(
+        **common, continuous_hypothesis_evidence=False,
+    )
+    continuous = adaptive.development_config(
+        **common, continuous_hypothesis_evidence=True,
+    )
+
+    assert default == baseline
+    assert baseline.r0_boundary_continuous_evidence is False
+    assert continuous.r0_boundary_continuous_evidence is True
+    baseline_payload = asdict(baseline)
+    continuous_payload = asdict(continuous)
+    assert {
+        name
+        for name in baseline_payload
+        if baseline_payload[name] != continuous_payload[name]
+    } == {"r0_boundary_continuous_evidence"}
+    assert adaptive._profile_for_config(continuous) == profile
+    adaptive._validate_adaptive_mechanism_config(baseline)
+    adaptive._validate_adaptive_mechanism_config(continuous)
 
 
 @pytest.mark.parametrize(
@@ -711,6 +746,44 @@ def test_cli_writes_independent_schema_and_source_identity(
     assert attempt["r1_pass"] is False
     assert attempt["work_completed"] is True
     assert attempt["scientific_gate_passed"] is False
+
+
+@pytest.mark.parametrize(
+    ("flags", "expected"),
+    (
+        ((), False),
+        (("--continuous-hypothesis-evidence",), True),
+        (("--no-continuous-hypothesis-evidence",), False),
+    ),
+)
+def test_cli_serializes_actual_continuous_evidence_config(
+    tmp_path: Path, monkeypatch, flags: tuple[str, ...], expected: bool,
+) -> None:
+    observed_configs = []
+
+    def fake_run(config):
+        observed_configs.append(config)
+        return NativeIntrinsicCurriculumResult(
+            config=config,
+            payload={"r0": {"pass": True}},
+        )
+
+    monkeypatch.setattr(adaptive, "run_development", fake_run)
+    assert adaptive.main([
+        "--profile", "follow-through", "--seed", "2026090110",
+        "--output-dir", str(tmp_path), *flags,
+    ]) == 0
+
+    assert len(observed_configs) == 1
+    config = observed_configs[0]
+    assert config.r0_boundary_continuous_evidence is expected
+    result = json.loads((tmp_path / "result.json").read_text())
+    attempt = json.loads((tmp_path / "attempt.json").read_text())
+    serialized_config = json.loads(json.dumps(asdict(config)))
+    assert result["config"] == attempt["config"] == serialized_config
+    assert result["config"]["r0_boundary_continuous_evidence"] is expected
+    assert attempt["profile"] == "follow-through"
+    assert attempt["config"]["r1_epochs"] == 32
 
 
 def test_cli_normalizes_follow_through_and_reports_failed_scientific_gate(
