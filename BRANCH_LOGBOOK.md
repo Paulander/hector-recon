@@ -1665,3 +1665,38 @@ exact-version environment was used without bypassing saved fingerprints.
   preserved; both final snapshot hashes unchanged. About7.4 GiB free afterward.
   Restore instructions: `reports/autogrowth/development/NETWORK_ARCHIVE_20260903.md`;
   per-file checksums/removal receipts: sibling `.jsonl`. No network data discarded.
+
+### V26 continuous-hypothesis evidence repair and paired gate — 2026-09-03
+
+- Implemented on `codex/native-continuous-hypothesis-evidence`, exact tested
+  source **`10dc4c54c857dfba664543e7a68caeb10a79dc87`**. An unchanged local
+  sketch retains its genuinely post-birth evidence when becoming a graph cell;
+  discovery never certifies it, and applicable historical failures survive
+  reincarnation. Predicate changes require fresh future evidence. Deferred
+  children bind source/roles and reject known counterexamples before allocation.
+  No action-selection, reward, learning-rate, curriculum or core-policy change.
+- Final targeted suite: **241 passed in 385.51 s**. Paired code-defined chess
+  canary: certification after **8 baseline versus 5 repair REAL observations**,
+  then a real handoff, positive successor value and TD credit; no same-event
+  bootstrap. Atomic rollback, negative constraints, core protection and exact
+  snapshot/replay/resume tested. Repeated canary geometry is not generalization.
+- At **08:18 UTC**, launched two fresh development processes from clean,
+  code-only detached checkout `../v26-continuous-gate-10dc4c54`. Both use seed
+  **2026090110**, unchanged `follow-through`: R0 96×48 decisions; R1 at most
+  32×8 decisions, 4 validation/4 final-regression rows, snapshots every4 epochs.
+  Python 3.12.13, NumPy2.2.6, python-chess1.999; hash seed0 and numerical
+  threads1. Each has a **7,200-s / 4,096-MiB** complete-epoch ceiling, not a hard
+  deadline; final reporting can exceed it. No automatic continuation or restart.
+- Independent outputs below `reports/autogrowth/development/`:
+  `native_continuous_v26_seed_2026090110_10dc4c54_baseline` (worker26308), and
+  `native_continuous_v26_seed_2026090110_10dc4c54_repair` (worker26307).
+  Config comparison confirmed the evidence flag is the sole behavioral change.
+  Startup verified both workers active; about9.0 GiB disk free before launch.
+  Preserve and stop these new workers only if the 1.5-GiB disk floor is crossed
+  or an integrity/resource failure demands it; do not touch old PC workers.
+- **Training result pending; no-go for a full campaign remains unchanged.**
+  Compare matched receipt/epoch frontiers, legitimate transferred witnesses,
+  new-shell AVAILABLE envelopes/handoffs/value, core retention and exhaustive
+  M2 scores. No eligible four-witness hypothesis within budget is inconclusive.
+  Full gate/null and remaining Q/M4/worst-reply limitations:
+  `docs/autogrowth/V26_CONTINUOUS_EVIDENCE_GATE.md`.
