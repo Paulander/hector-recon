@@ -2198,7 +2198,7 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
         r1_mastery_threshold=2.0,
         mature_child_priority=False,
         r1_action_selection_mode=selection_mode,
-        r1_local_exploration_mode=("finite_local_ucb_v1" if v27 else "first_contact_then_ucb_v1"),
+        r1_local_exploration_mode=("bounded_local_optimism_v1" if v27 else "first_contact_then_ucb_v1"),
         r1_black_policy=("exact_mate_horizon_v1" if v27 else "learner_counterexample"),
         r1_reply_policy=("prospective_counterexample" if v27 else "sampled_round_robin"),
         r1_require_certified_finisher_for_action=not v27,

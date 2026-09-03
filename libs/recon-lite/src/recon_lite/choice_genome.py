@@ -36,6 +36,7 @@ class AnonymousChoiceOption:
     actuator_identity: str
     activation: float
     confirmed: bool = True
+    tie_break_measurements: tuple[float, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -64,6 +65,9 @@ class AnonymousChoiceGenome:
             raise RuntimeError("anonymous choice requires at least one option")
         if len({row.identity for row in rows}) != len(rows):
             raise ValueError("anonymous option identities must be unique")
+        if any(not math.isfinite(float(value)) for row in rows
+               for value in row.tie_break_measurements):
+            raise ValueError("anonymous tie measurements must be finite")
         graph = Graph()
         graph.add_node(Node(self.ROOT_ID, NodeType.SCRIPT, meta={
             "confirm_policy": "choice",
@@ -88,6 +92,18 @@ class AnonymousChoiceGenome:
             ))
             graph.add_hierarchy_pair(self.ROOT_ID, option_id)
             graph.add_hierarchy_pair(option_id, sensor_id)
+            tie_ids = []
+            for tie_index, value in enumerate(row.tie_break_measurements):
+                evidence_id = f"generic_choice_tie_{index}_{tie_index}"
+                graph.add_node(Node(
+                    evidence_id, NodeType.TERMINAL,
+                    predicate=_measured_terminal(float(value), row.confirmed),
+                    meta={"terminal_kind": "anonymous_internal_measurement"},
+                ))
+                graph.add_hierarchy_pair(option_id, evidence_id)
+                tie_ids.append(evidence_id)
+            if tie_ids:
+                graph.nodes[option_id].meta["choice_tie_strength_node_ids"] = tie_ids
         engine = FormalReConEngine(graph, record_trace=False)
         engine.request(self.ROOT_ID)
         engine.run(

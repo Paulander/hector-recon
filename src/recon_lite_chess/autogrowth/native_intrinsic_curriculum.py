@@ -1364,7 +1364,11 @@ def run_native_intrinsic_curriculum(
                 != R1_ACTION_SELECTION_LOCAL_RECON
             ),
             "runtime_child_priority_source": (
-                "not_used_native_local_policy_plus_certified_successor"
+                (
+                    "not_used_native_local_policy_plus_certified_successor"
+                    if cfg.r1_require_certified_finisher_for_action
+                    else "not_used_native_local_policy_plus_attempted_successor"
+                )
                 if cfg.r1_action_selection_mode
                 == R1_ACTION_SELECTION_LOCAL_RECON
                 else "explicit_mechanistic_arm"
@@ -1381,7 +1385,11 @@ def run_native_intrinsic_curriculum(
                 else "legacy_host_routing"
             ),
             "adaptive_evaluation_successor_source": (
-                "certified_native_v2_authority_fail_closed"
+                (
+                    "certified_native_v2_authority_fail_closed"
+                    if cfg.r1_require_certified_finisher_for_action
+                    else "native_v2_emitted_action_independent_of_certification"
+                )
                 if cfg.r1_action_selection_mode
                 == R1_ACTION_SELECTION_LOCAL_RECON
                 else "legacy_host_routing"
@@ -5672,7 +5680,11 @@ def _run_r1_arm(
         or evaluation_child_authority is not None
     )
     current_routing_name = (
-        "native_local_first_move_with_certified_successor"
+        (
+            "native_local_first_move_with_certified_successor"
+            if config.r1_require_certified_finisher_for_action
+            else "native_local_first_move_with_attempted_successor"
+        )
         if config.r1_action_selection_mode
         == R1_ACTION_SELECTION_LOCAL_RECON
         else (

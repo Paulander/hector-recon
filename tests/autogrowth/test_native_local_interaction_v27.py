@@ -13,7 +13,8 @@ from recon_lite_chess.autogrowth.native_adaptive_boundary_development import dev
 from recon_lite_chess.autogrowth.mate_horizon_opponent import choose_mate_horizon_reply
 from recon_lite_chess.autogrowth.foundation_curriculum import _mate_moves
 from recon_lite_chess.autogrowth.native_single_graph_curriculum import (
-    LOCAL_EXPLORATION_FINITE_UCB, NativeReConKRKGraph, NativeSingleGraphConfig,
+    LOCAL_EXPLORATION_FINITE_UCB, LOCAL_EXPLORATION_BOUNDED,
+    NativeReConKRKGraph, NativeSingleGraphConfig,
 )
 
 M1 = "k7/8/1K6/8/8/8/8/7R w - - 0 1"
@@ -41,9 +42,10 @@ def test_finite_uncertainty_can_lose_to_success_without_killing_exploration():
     assert decisions.count(0) > decisions.count(1)
 
 
-def test_native_incumbent_can_recur_before_all_first_contacts(monkeypatch):
+@pytest.mark.parametrize("mode", [LOCAL_EXPLORATION_FINITE_UCB, LOCAL_EXPLORATION_BOUNDED])
+def test_native_incumbent_can_recur_before_all_first_contacts(monkeypatch, mode):
     graph = NativeReConKRKGraph(config=NativeSingleGraphConfig(
-        max_ticks=80, key_mode="canonical", local_exploration_mode=LOCAL_EXPLORATION_FINITE_UCB,
+        max_ticks=80, key_mode="canonical", local_exploration_mode=mode,
     ))
     board = chess.Board(M1)
     incumbent = min(board.legal_moves, key=lambda move: move.uci())
@@ -64,9 +66,10 @@ def test_native_incumbent_can_recur_before_all_first_contacts(monkeypatch):
     assert graph._local_action_option_exposure(identity, incumbent.uci()) == 1
 
 
-def test_finite_local_choice_pickle_and_readonly_parity():
+@pytest.mark.parametrize("mode", [LOCAL_EXPLORATION_FINITE_UCB, LOCAL_EXPLORATION_BOUNDED])
+def test_finite_local_choice_pickle_and_readonly_parity(mode):
     graph = NativeReConKRKGraph(config=NativeSingleGraphConfig(
-        max_ticks=80, key_mode="canonical", local_exploration_mode=LOCAL_EXPLORATION_FINITE_UCB,
+        max_ticks=80, key_mode="canonical", local_exploration_mode=mode,
     ))
     board = chess.Board(M1)
     for _ in range(3):
@@ -154,7 +157,74 @@ def test_v27_configuration_changes_only_the_named_interaction_contract():
         "r1_local_exploration_mode", "r1_black_policy", "r1_require_certified_finisher_for_action",
     }
     assert new.r1_black_policy == curriculum.R1_BLACK_TASK_PERFECT
+    assert new.r1_local_exploration_mode == LOCAL_EXPLORATION_BOUNDED
     with pytest.raises(ValueError):
         curriculum._effective_r1_reply_policy(new, None)
     with pytest.raises(ValueError):
         replace(new, r1_require_certified_finisher_for_action="false")
+
+
+@pytest.mark.parametrize("mode", [LOCAL_EXPLORATION_FINITE_UCB, LOCAL_EXPLORATION_BOUNDED])
+def test_maximal_experienced_return_is_not_beaten_by_imagined_upside(monkeypatch, mode):
+    graph = NativeReConKRKGraph(config=NativeSingleGraphConfig(
+        max_ticks=80, key_mode="canonical", local_exploration_mode=mode,
+    ))
+    board = chess.Board(M1)
+    incumbent = min(board.legal_moves, key=lambda move: move.uci())
+    identity = graph.apply_intrinsic_td(board, incumbent, td_error=0.0,
+        prediction_value=1.0, stage_diagnostic="synthetic_maximal_return")
+    monkeypatch.setattr(graph, "_full_audit_candidates", lambda *_a, **_k: [
+        (19.0, move.uci(), identity) for move in board.legal_moves
+    ])
+    selected = graph.choose_local_training_action(board, "synthetic_maximal_return")
+    if mode == LOCAL_EXPLORATION_FINITE_UCB:
+        # Explicitly retain the counterexample to the first attempted fix.
+        assert selected.move != incumbent
+        assert selected.activation > 1.0
+    else:
+        assert selected.move == incumbent
+        assert selected.activation == selected.prediction == 1.0
+        assert selected.exploration_bonus == 0.0
+
+
+def test_bounded_attention_releases_an_incumbent_after_bad_returns(monkeypatch):
+    graph = NativeReConKRKGraph(config=NativeSingleGraphConfig(
+        max_ticks=80, key_mode="canonical", local_exploration_mode=LOCAL_EXPLORATION_BOUNDED,
+    ))
+    board = chess.Board(M1)
+    incumbent = min(board.legal_moves, key=lambda move: move.uci())
+    identity = graph.apply_intrinsic_td(board, incumbent, td_error=0.0,
+        prediction_value=1.0, stage_diagnostic="synthetic_contrast")
+    monkeypatch.setattr(graph, "_full_audit_candidates", lambda *_a, **_k: [
+        (19.0, move.uci(), identity) for move in board.legal_moves
+    ])
+    for _ in range(32):
+        action = graph.choose_local_training_action(board, "synthetic_contrast")
+        assert action.activation <= 1.0
+        if action.move != incumbent:
+            break
+        graph.apply_intrinsic_td(board, action.move, td_error=-1.0-action.prediction,
+            prediction_value=action.prediction, stage_diagnostic="synthetic_contrast")
+    else:
+        pytest.fail("contradicted incumbent retained attention indefinitely")
+
+
+def test_bounded_attention_does_not_hide_negative_value_updates(monkeypatch):
+    graph = NativeReConKRKGraph(config=NativeSingleGraphConfig(
+        max_ticks=80, key_mode="canonical", local_exploration_mode=LOCAL_EXPLORATION_BOUNDED,
+    ))
+    board = chess.Board(M1)
+    incumbent = min(board.legal_moves, key=lambda move: move.uci())
+    identity = graph.apply_intrinsic_td(board, incumbent, td_error=0.0,
+        prediction_value=1.0, stage_diagnostic="synthetic_contrast")
+    graph.apply_intrinsic_td(board, incumbent, td_error=-1.0,
+        prediction_value=1.0, stage_diagnostic="synthetic_contrast")
+    monkeypatch.setattr(graph, "_full_audit_candidates", lambda *_a, **_k: [
+        (19.0, move.uci(), identity) for move in board.legal_moves
+    ])
+    # Both optimistic activations reach1, but the contradicted value0.9
+    # must not beat an alternative's0.95 merely through familiarity.
+    selected = graph.choose_local_training_action(board, "synthetic_contrast")
+    assert selected.move != incumbent
+    assert selected.prediction == pytest.approx(0.95)
+    assert selected.activation == 1.0

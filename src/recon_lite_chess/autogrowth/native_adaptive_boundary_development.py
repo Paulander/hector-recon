@@ -36,7 +36,7 @@ from .native_prospective_evidence_authority_v2 import (
 from .native_single_graph_curriculum import (
     NativeReConKRKGraph,
     LOCAL_EXPLORATION_FIRST_CONTACT,
-    LOCAL_EXPLORATION_FINITE_UCB,
+    LOCAL_EXPLORATION_BOUNDED,
 )
 from recon_lite_hector.learning import IntrinsicCreditEngine
 
@@ -602,7 +602,7 @@ def development_config(
         r1_reply_policy=R1_REPLY_POLICY_PROSPECTIVE_COUNTEREXAMPLE,
         r1_action_selection_mode=R1_ACTION_SELECTION_LOCAL_RECON,
         r1_local_exploration_mode=(
-            LOCAL_EXPLORATION_FINITE_UCB if local_interaction
+            LOCAL_EXPLORATION_BOUNDED if local_interaction
             else LOCAL_EXPLORATION_FIRST_CONTACT
         ),
         r1_black_policy=(
@@ -681,7 +681,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--local-interaction", action="store_true",
         help=(
-            "V27: finite local R1 exploration, environment-only exact mate-horizon "
+            "V27: bounded local R1 optimism, environment-only exact mate-horizon "
             "Black, and attempted finisher actions without certification veto; "
             "trusted bootstrap value still requires certification"
         ),

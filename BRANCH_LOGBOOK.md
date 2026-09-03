@@ -1884,3 +1884,59 @@ exact-version environment was used without bypassing saved fingerprints.
   `docs/autogrowth/V27_LOCAL_INTERACTION.md` for the next mechanism contract.
 - No V27 curriculum-performance claim yet. A tiny pretrained-R0 development
   canary is the next verification; no overnight campaign is started.
+
+### V27 pretrained-R0 canary outcome — 2026-09-03
+
+- Exact learner commit **`2c8db186`**, seed **2026090301**, one numerical thread;
+  two already-viewed development positions, four epochs/eight interactions.
+  Only the immutable R0 graph/credit from V26 repair's saved source was
+  transferred. New source identity explicitly records pretraining reuse;
+  no old R1 graph, action values, candidates or evidence were transferred.
+- R1 snapshot duration **232.545s**; epoch-safe240s overall budget crossed at
+  **273.365s** including setup; clean epoch4 snapshot. Full canary including
+  read-only final probes **363.981s**, process exit0 (the script handled the
+  intended ceiling). No validation/regression pool was read. Empty-pool zero
+  fields in generic progress are not retention/performance observations.
+- **No functional pass:** eight nonwinning episodes, seven unique REAL
+  successor observations, no surprise successes, no authority cells/handoffs/
+  successor value. All eight selected options were first contacts. With no
+  rewarded incumbent, this does not test reward-driven revisiting in the
+  natural stream; synthetic tests establish the absence of mandatory priority.
+- Read-only all-reply probe on the same two TRAINING positions: **0/2**
+  conversions, **1/5** reply finishes mated, zero illegal/null first moves.
+  All five finishing attempts were uncertified; the successful attempt gained
+  no authority. These are not held-out/generalization scores. Core semantic
+  identity remained exact. Graph:4592 nodes,213114 edges,852 triplets,578171
+  cumulative M3 updates (baseline4547/211114/844/577171); no M4 event.
+- Snapshot SHA256:
+  `9b3b9e97f7c829ac3dcb6771f92977b064257db3eed36ec5687b952558c5de66`.
+  Conditions and detailed results:
+  `reports/autogrowth/development/native_local_v27_pretrained_r0_canary_2c8db186/`.
+  Network checkpoint retained locally, not added to Git. No longer run started.
+- A subsequent report-only edit corrects legacy labels so attempted
+  uncertified successor actions are not called certified routing. It does not
+  change the mechanism measured at2c8db186 or retroactively rewrite its files.
+
+### V27 bounded-attention refinement — 2026-09-03
+
+- Rejected the initial uncapped finite-UCB rule as the final design: with one
+  local exposure, a maximal experienced value1 scores1.833 but an untried
+  prior0.95 scores2.127. The counterexample remains an explicit regression test.
+- The opt-in now uses `bounded_local_optimism_v1`: optimistic activation is
+  capped at the return ceiling1. Equal activations preserve value ordering,
+  then prefer REAL exposure. Both are internal measurement terminals in the
+  generic formal choice graph, not a host move picker. This second tie rule
+  matters: exposure alone incorrectly retained a contradicted value0.9 over
+  an alternative prior0.95 when both optimistic activations saturated at1.
+  Exact negative-outcome tests now reject that familiarity bias as well.
+- This deliberately gives up compulsory exploration coverage; lucky outcomes,
+  aliasing and inaccurate values can still produce fixation. It is neither
+  calibrated confidence nor a convergence theorem. No rewards, numerical
+  learning rates, solution labels or fabricated contacts were introduced.
+- Focused native choice, generic graph arbitration and full V27 snapshot/resume
+  tests: **28 passed,75 deselected in6.47s**. This overlaps earlier suites.
+  The initial canary at2c8db186 does **not** test this later bounded revision.
+- Broader nine-module regression suite before the final value-preserving tie
+  refinement: **256 passed in286.39s**. Final focused local-choice, generic
+  formal-engine and V27 exact-resume suite: **46 passed,73 deselected in19.69s**.
+  Counts overlap; these are not independent evidence samples.

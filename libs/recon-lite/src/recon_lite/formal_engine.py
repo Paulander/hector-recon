@@ -446,6 +446,7 @@ class FormalReConEngine:
         for child_id in children:
             child = self.g.nodes[child_id]
             strength_nodes.update(map(str, child.meta.get("choice_strength_node_ids", ())))
+            strength_nodes.update(map(str, child.meta.get("choice_tie_strength_node_ids", ())))
         if any(
             child_id not in self.g.nodes
             or self.g.nodes[child_id].state not in terminal_states
@@ -486,16 +487,26 @@ class FormalReConEngine:
                 return math.fsum(values)
             raise ValueError(f"unsupported anonymous choice aggregation: {aggregation}")
 
+        def tie_strength(option: Node) -> tuple[float, ...]:
+            # Declared measurement order is lexicographic priority. These
+            # anonymous internal signals never override primary activation.
+            sources = [self.g.nodes[str(source_id)] for source_id in
+                option.meta.get("choice_tie_strength_node_ids", ())]
+            if any(source.state not in {NodeState.TRUE, NodeState.CONFIRMED}
+                   for source in sources):
+                return tuple(0.0 for _ in sources)
+            return tuple(float(source.activation.value) for source in sources)
+
         ranked = sorted(
-            ((strength(option), option.nid, option) for option in confirmed),
-            key=lambda row: (row[0], row[1]),
+            ((strength(option), tie_strength(option), option.nid, option) for option in confirmed),
+            key=lambda row: (row[0], row[1], row[2]),
             reverse=True,
         )
-        selected_strength, selected_id, selected = ranked[0]
+        selected_strength, _tie_strength, selected_id, selected = ranked[0]
         actuator_identity = selected.meta.get("actuator_identity")
         if not isinstance(actuator_identity, str) or not actuator_identity:
             return NodeState.FAILED
-        for _value, _child_id, option in ranked:
+        for _value, _tie_value, _child_id, option in ranked:
             option.meta["choice_selected"] = option.nid == selected_id
         selected.activation.value = selected_strength
         node.activation.value = selected_strength

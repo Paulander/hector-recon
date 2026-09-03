@@ -52,9 +52,11 @@ _LOCAL_ACTION_VALUE_META_KEY = "local_action_value_by_actuator"
 _LOCAL_FIRST_CONTACT_PRIORITY = 3.0
 LOCAL_EXPLORATION_FIRST_CONTACT = "first_contact_then_ucb_v1"
 LOCAL_EXPLORATION_FINITE_UCB = "finite_local_ucb_v1"
+LOCAL_EXPLORATION_BOUNDED = "bounded_local_optimism_v1"
 LOCAL_EXPLORATION_MODES = (
     LOCAL_EXPLORATION_FIRST_CONTACT,
     LOCAL_EXPLORATION_FINITE_UCB,
+    LOCAL_EXPLORATION_BOUNDED,
 )
 _TRANSIENT_NODE_META_KEYS = frozenset({
     "activation_count",
@@ -912,7 +914,7 @@ class NativeReConKRKGraph:
         # admitted a starvation counterexample: a tried positive option could
         # remain above a sufficiently negative untried prior forever.
         #
-        # First contact is therefore an ordinal local lifecycle.  If any
+        # In the legacy mode, first contact is an ordinal local lifecycle. If any
         # represented option has no REAL outcome, all such options occupy a
         # disjoint activation tier and every tried option receives no novelty
         # bonus.  The generalized graph value still orders the untried cohort,
@@ -921,6 +923,9 @@ class NativeReConKRKGraph:
         # uncapped logarithmic UCB supplies diminishing but renewable revisit
         # pressure.  The harness supplies neither an action ordering nor a
         # clock; the formal anonymous genome still emits the sole actuator.
+        # The opt-in finite/bounded modes below remove that compulsory tier.
+        # Bounded optimism intentionally trades guaranteed contact for reuse
+        # of a sufficiently valuable, experienced local branch.
         total_exposures = sum(
             int(row["action_option_exposure"]) for row in pattern_rows
         )
@@ -931,7 +936,9 @@ class NativeReConKRKGraph:
             option_exposure = int(row["action_option_exposure"])
             if not exploration_enabled:
                 exploration_bonus = 0.0
-            elif self.config.local_exploration_mode == LOCAL_EXPLORATION_FINITE_UCB:
+            elif self.config.local_exploration_mode in (
+                LOCAL_EXPLORATION_FINITE_UCB, LOCAL_EXPLORATION_BOUNDED,
+            ):
                 # Value and uncertainty compete in one activation range from
                 # the start. An experienced success need not wait for every
                 # alternative to receive contact. Counts are read, never
@@ -939,6 +946,13 @@ class NativeReConKRKGraph:
                 exploration_bonus = finite_local_uncertainty(
                     option_exposure, total_exposures
                 )
+                if self.config.local_exploration_mode == LOCAL_EXPLORATION_BOUNDED:
+                    # Values live in [-1, 1]. Imagined upside cannot exceed
+                    # that same ceiling. Without this bound, novelty can beat
+                    # even an experienced option valued at the maximum return.
+                    exploration_bonus = min(
+                        exploration_bonus, 1.0 - float(row["normalized_value"])
+                    )
             elif has_untried_option:
                 exploration_bonus = (
                     _LOCAL_FIRST_CONTACT_PRIORITY
@@ -977,6 +991,15 @@ class NativeReConKRKGraph:
                 actuator_identity=str(row["move_uci"]),
                 activation=float(row["activation"]),
                 confirmed=True,
+                # Preserve value ordering when optimistic activations tie;
+                # familiarity must not conceal a negative value update.
+                # Only equal values then prefer actual REAL experience.
+                tie_break_measurements=(
+                    (float(row["normalized_value"]), float(row["action_option_exposure"]))
+                    if exploration_enabled
+                    and self.config.local_exploration_mode == LOCAL_EXPLORATION_BOUNDED
+                    else ()
+                ),
             )
             for row in pattern_rows
         )

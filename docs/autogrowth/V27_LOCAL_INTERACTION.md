@@ -47,6 +47,31 @@ out of 128. This describes a compulsory exploration policy, not evidence that
 weights never affected choices. R0 received 96 attempts per training position;
 this matched R1 frontier received only 16.
 
+## One actual interaction, in plain language
+
+1. Board features activate relational terminals. Candidate action effects also
+   activate before/after and delta terminals. These are observations and legal
+   affordances, not lists of good moves.
+2. Active branches contribute learned values and local uncertainty. The
+   anonymous choice circuit emits one legal actuator. Python still assembles
+   its measurement inputs; this is not yet a wholly self-contained persistent
+   graph choosing from raw sensory input.
+3. White executes that move. Black independently chooses its task-optimal
+   defence. The learner receives the played move/board, not Black's search data.
+4. The learned mate-in-one policy emits a finishing move. The environment
+   reports checkmate, loss, or failure to finish within the episode horizon.
+   Virtual all-reply competence queries cannot mint observed-success evidence.
+5. Outcome versus prediction produces a TD error. It changes the chosen
+   first-move branch's graph value and associated mutable weights/edges.
+   Currently the episode adapter names this responsibility; a learned temporal
+   trace does not yet discover all responsible upstream paths.
+6. An unexpected observed finish may grow a tentative local-pattern hypothesis.
+   Subsequent real outcomes support, refine, or retire it. The present ecology
+   stores cheap sketches outside the graph before materializing them. That
+   limitation is real, not merely an unfortunate choice of wording.
+7. Repeat. In this version the R0 finishing policy itself remains protected;
+   learning a new boundary around it is not the same as improving the finisher.
+
 ## New exploration rule
 
 For each currently relevant legal option, let `n` be its actual recorded REAL
@@ -55,20 +80,32 @@ uncertainty signal is:
 
 `bonus = sqrt(2 * log(1 + N) / (1 + n))`
 
-Choice activation remains `learned_value + bonus`. TD continues to read only
-the learned value. The denominator regularizer does not add an observation,
-reward, or certification receipt. There is no separate first-contact tier,
-host epoch counter, forced successful-move repeat, or chess-specific optimum
-detector. A strong experienced branch can win before every alternative is tried.
-Weak evidence can still lose to uncertainty; one lucky win is not an irreversible
-commitment. Read-only policy evaluation uses no exploration bonus.
+The deployed activation is `min(1, learned_value + bonus)`: imagined upside
+cannot exceed the same return ceiling as the learned value. Internal terminals
+also measure the value without its exploration bonus and the REAL exposure
+count. On equal optimistic activations, the formal graph compares value first,
+then exposure. Familiarity therefore cannot conceal a lower value caused by
+negative feedback. Neither tie measurement overrides a strictly higher primary
+activation. TD continues to read only the learned value. Neither the
+denominator regularizer nor the evidence terminal adds an observation, reward,
+or certification receipt. There is no separate first-contact tier, host epoch
+counter, correct-move detector, or forced chess-specific successful-move repeat.
+Read-only policy evaluation uses neither exploration nor this tie preference.
 
-This is a finite UCB-style heuristic, not a statistically calibrated confidence
-bound for a changing graph. With a fixed finite recurrent action population,
-bounded exploitation values and accumulating contact counts, permanently
-unvisited alternatives eventually acquire dominant novelty pressure. Changing
-representations, disappearing options and finite training budgets invalidate
-any stronger coverage/convergence claim. Nothing here proves chess convergence.
+The initial finite, uncapped prototype is retained as `finite_local_ucb_v1`
+for reproducing its canary. A counterexample rejects it as the final rule:
+with one local observation, a maximal experienced value1 receives activation
+1.833, but an untried prior0.95 receives2.127. The bounded rule instead ties
+them at1 and preserves the experienced option's higher learned value. Synthetic
+negative outcomes show that
+the incumbent can subsequently lose attention; it is not permanently locked.
+
+This is a bounded optimistic-attention heuristic, not a statistically calibrated
+confidence bound for a changing graph. A maximal incumbent can intentionally
+suppress further exploration. We therefore claim neither compulsory eventual
+coverage nor convergence. Lucky outcomes, aliased contexts, overconfident values
+and insufficient recurrence can still produce self-confirming fixation. One
+ordinary win need not immediately make the learned value maximal.
 
 ## Exact opponent contract
 
@@ -117,7 +154,7 @@ The historical development mode remains the default. The new contract is opted
 into with `--local-interaction` on `native_adaptive_boundary_development`.
 This sets only these R1 fields:
 
-- `r1_local_exploration_mode = finite_local_ucb_v1`;
+- `r1_local_exploration_mode = bounded_local_optimism_v1`;
 - `r1_black_policy = exact_mate_horizon_v1`;
 - `r1_require_certified_finisher_for_action = false`.
 
@@ -130,8 +167,11 @@ than describe itself as same-run empty-start pretraining.
 
 ## Focused verification
 
-- Finite uncertainty can lose to a rewarded incumbent before complete contact;
-  neglected alternatives still regain attention in an exact synthetic stream.
+- A useful incumbent can recur before complete contact. A maximal experienced
+  return beats untried optimistic ties, independently of option ordering;
+  negative updates are not hidden by familiarity when activations saturate,
+  and negative outcomes can release that incumbent again. The retained finite
+  prototype has a separate synthetic renewable-exploration test.
 - Choice/read-only queries create no REAL contacts and exploration is excluded
   from TD; graph values and decisions survive exact pickle round trips.
 - For every legal first move in four already-viewed development positions,
@@ -165,3 +205,28 @@ than describe itself as same-run empty-start pretraining.
 Before a longer run, discriminate delayed exploitation, actual finishing gaps,
 and cross-context value transfer. Prove the intended temporal connection in a
 tiny data-free branching world before adding another chess-scale mechanism.
+
+## Bounded natural canary result
+
+Initial finite-prototype learner commit `2c8db186`, seed2026090301: transferred only the immutable,
+already-viewed V26 pretrained R0; started new source identity and empty boundary
+authority. Two viewed development positions, four epochs, eight interactions,
+one numerical thread. Training snapshot duration232.545s; the240s overall budget
+was crossed at an exact epoch at273.365s including setup. Final read-only probe
+and serialization brought total duration to363.981s. No protected, validation
+or regression outcomes were opened; final evaluation used the training positions.
+
+No training win, surprise bud, handoff or successor value occurred. There were
+seven unique REAL successor observations and eight first-contact action choices.
+The natural stream therefore does not yet verify reward-driven early revisits;
+the focused positive-incumbent test does. Full all-reply trained-policy probe:
+0/2 positions, one mating finish out of five reply paths, no illegal/null first
+moves. The successful finisher was uncertified and was permitted to act without
+gaining certification. The pretrained core's semantic state remained unchanged.
+
+The subsequently bounded exploration revision was not used in this canary;
+its evidence is the focused synthetic/native-choice and exact resume tests.
+This passes a bounded execution/safety canary, not a learning/performance gate.
+There is no evidence here for starting a long curriculum run unchanged. Keep the
+next work focused on genuine temporal responsibility/composition and a mutable,
+source-versioned finisher, not another global schedule or legacy M4 switch.
