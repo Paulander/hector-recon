@@ -1786,3 +1786,23 @@ exact-version environment was used without bypassing saved fingerprints.
   integrity/memory failure, the1.5-GiB disk floor, or a check observing more
   than3h for one worker. Exact updated protocol:
   `docs/autogrowth/V26_CONTINUOUS_EVIDENCE_GATE.md`.
+
+### V26 checkpoint-recovery comparison launched — 2026-09-03
+
+- Frozen source **`48dd21a68f283a9c5da87c99f8a9b943af1aa2aa`**, code-only clean
+  checkout `../v26-checkpoint-gate-48dd21a6`. The existing learner is unchanged;
+  both comparison arms include the tested checkpoint-ordering repair.
+- Repair started **14:01:02 UTC /16:01 Stockholm**, seed **2026090110**,
+  worker 46997, caffeinate 47004, tool session 61172. Same follow-through conditions
+  above, evidence flag on. **Baseline queued, not running**, to start once after
+  an understood acceptable repair termination; no concurrent training arms.
+- About **61.8 GiB** free at launch. Final clean-checkout smoke: 2 passed in 21.70s
+  (repeat subset of the 249 cases already recorded). Config comparison confirmed
+  only output locations and the continuous-evidence flag differ between arms.
+- Independent directories under `reports/autogrowth/development/` use prefix
+  `native_continuous_v26_seed_2026090110_48dd21a6_retry_` and suffix repair/baseline.
+  Existing app follow-up checks the run and stops after the bounded pair; no new
+  monitoring framework. Exact command/status and safety conditions:
+  `reports/autogrowth/development/V26_CHECKPOINT_RETRY_20260903.md`.
+- **Training result pending; no new M2 success claim.** Old V26 remains
+  resource-inconclusive; V25's held-out M2 validation remains 0/4 in both seeds.
