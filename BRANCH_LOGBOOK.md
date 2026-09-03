@@ -1940,3 +1940,39 @@ exact-version environment was used without bypassing saved fingerprints.
   refinement: **256 passed in286.39s**. Final focused local-choice, generic
   formal-engine and V27 exact-resume suite: **46 passed,73 deselected in19.69s**.
   Counts overlap; these are not independent evidence samples.
+
+### V27 final bounded-attention verification — 2026-09-03
+
+- Exact learner source **`43d91d25702e4da324c3e45100b695cf8b65c286`**.
+  Final nine-module suite: **257 passed in297.31s**; includes exact V27 resume,
+  generic formal engine/choice, adversarial opponent isolation, value-preserving
+  attention, intrinsic credit and legacy curriculum regressions.
+- Fresh bounded canary, same seed2026090301 and same two viewed positions/core
+  as the finite prototype, one numerical thread,240s epoch-safe budget,
+  four epochs/eight interactions. No old R1 state/evidence transferred and no
+  protected/validation/regression pool opened. Completed with clean epoch4
+  checkpoint and intended wall-ceiling status; total including final read-only
+  training-position evaluation **378.620s**, process exit0.
+- No training win, surprise bud, authority cell, handoff or successor value;
+  seven unique REAL successors. All eight options were first contacts. Final
+  exhaustive trained-policy conversion **0/2**, finishing replies **1/5**,
+  no illegal/null first moves. Graph4592 nodes/213114 edges/852 triplets;
+  cumulative M3 updates578171, M4 events0. Core semantic identity unchanged.
+- This small negative stream validates execution, not positive learning or
+  eventual failure. Early success reuse remains demonstrated by synthetic
+  tests, not by this natural stream. No long run started.
+- Checkpoint SHA256:
+  `ce04e4f33887c532e94d4874538eefa9d6125f52723eab8d424cdc77a25e473d`.
+  Results: `reports/autogrowth/development/native_local_v27_pretrained_r0_canary_43d91d25/`.
+  Both canary checkpoints are retained locally; only small reports enter Git.
+- Post-run **LAB-ONLY oracle-first finisher diagnostic**, two queries on these
+  same viewed positions: **1/2**, while actual learned conversion stays0/2.
+  Neither answers nor hypothetical outcomes entered training/evidence. On the
+  first position epoch1 already chose its unique correct first move, but the
+  fixed finisher missed mate; the unsuccessful episode gave the first branch
+  TD=-1. On the second, the finisher can complete the correct continuation but
+  that first move was not tried. Core/evidence unchanged; diagnostic24.966s.
+- Concrete next priority is plastic finisher learning plus REAL-turn credit,
+  not more boundary certification or lag features alone. Preserve policy-
+  versioned evidence; do not reward, inject or force the diagnosed correct move.
+  See `LAB_ONLY_finisher_ceiling.json` and the final V27 design section.

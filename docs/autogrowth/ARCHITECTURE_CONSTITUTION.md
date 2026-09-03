@@ -8,8 +8,17 @@ Status: active boundary for native KRK autonomy claims.
 
 May execute legal chess transitions and expose generic world facts: legal move,
 checkmate, stalemate, piece loss, and elapsed real steps. It may execute a child
-policy to obtain a real rollout. It must not choose a move using mate distance,
-tablebase policy, a curriculum label, or a validator verdict.
+policy to obtain a real rollout. It must not choose the learner's move using
+mate distance, tablebase policy, a curriculum label, or a validator verdict.
+
+The user-authorized V27 opponent boundary is different: Black may use exact
+chess knowledge to choose its own legal defence after White has committed its
+move. Only the played move/board is exposed to the learner, never solution
+labels, search values, or hypothetical successful continuations. The current
+rules-only opponent is exact for denying mate on White's next move, not for
+unrestricted full-game WDL/DTM. This supersedes the older blanket prohibition
+on engine-selected moves for the opponent only. Actual environmental outcomes
+still determine reward; opponent search is not a reward-shaping oracle.
 
 ### Generic embodiment/genome
 

@@ -1,0 +1,40 @@
+{
+  "actual_learned_canary_conversion_count": 0,
+  "core_and_real_evidence_unchanged": true,
+  "diagnostic_answers_entered_training": false,
+  "elapsed_seconds": 24.966008707880974,
+  "kind": "LAB_ORACLE_FIRST_FINISHER_UPPER_BOUND_NOT_LEARNED_PERFORMANCE",
+  "position_count": 2,
+  "protected_outcomes_opened": false,
+  "rows": [
+    {
+      "LAB_SUPPLIED_FIRST_NOT_LEARNED": "b6c6",
+      "all_reply_learned_finisher_succeeded": false,
+      "continuations": [
+        {
+          "available_before_outcome": false,
+          "black_reply": "b1a1",
+          "learned_finish": "c6a6",
+          "observed_outcome": null
+        }
+      ],
+      "viewed_fen": "8/8/1R6/8/8/1K6/8/1k6 w - - 0 1"
+    },
+    {
+      "LAB_SUPPLIED_FIRST_NOT_LEARNED": "b4c3",
+      "all_reply_learned_finisher_succeeded": true,
+      "continuations": [
+        {
+          "available_before_outcome": false,
+          "black_reply": "b1c1",
+          "learned_finish": "a8a1",
+          "observed_outcome": "mate"
+        }
+      ],
+      "viewed_fen": "R7/8/8/8/1K6/8/8/1k6 w - - 0 1"
+    }
+  ],
+  "source_snapshot_sha256": "ce04e4f33887c532e94d4874538eefa9d6125f52723eab8d424cdc77a25e473d",
+  "success_count": 1,
+  "training_process_completed_first": true
+}

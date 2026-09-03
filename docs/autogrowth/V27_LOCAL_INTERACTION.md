@@ -230,3 +230,53 @@ This passes a bounded execution/safety canary, not a learning/performance gate.
 There is no evidence here for starting a long curriculum run unchanged. Keep the
 next work focused on genuine temporal responsibility/composition and a mutable,
 source-versioned finisher, not another global schedule or legacy M4 switch.
+
+## Final bounded-revision result and finisher discrimination
+
+Learner source `43d91d25702e4da324c3e45100b695cf8b65c286` passed all257 tests
+in the selected nine-module suite (297.31s). A new bounded-attention canary
+used the same seed2026090301, transferred core and two viewed positions, with
+empty validation/regression pools: eight interactions/four epochs, exact
+epoch-safe wall stop,378.620s including final read-only evaluation, exit0.
+The result remained0/2 all-reply conversions,1/5 finishing reply paths,
+zero training wins/buds/handoffs/successor value. All eight choices were first
+contacts. Graph4592 nodes/213114 edges/852 triplets; source core unchanged.
+This is not a natural positive-reuse result or a general failure theorem.
+
+After training ended, a separately named **LAB-ONLY oracle-first diagnostic**
+asked whether the unchanged learned finisher could complete the correct
+continuation on these same two positions. Each has one correct first move and
+one legal reply after it, so only two finisher queries were needed. These first
+move answers were not supplied to training, not counted as learned decisions,
+and produced no REAL/certification receipts. The diagnostic scored1/2; actual
+learned performance remains0/2.
+
+Crucially, on the first position the native learner had already selected that
+unique correct first move in epoch1. Its fixed finisher then emitted a nonmating
+move, and the first branch received TD=-1 for the unsuccessful episode. That
+credit is correct for the behavior actually executed; the defect is that the
+finisher cannot learn from its own failure. On the second position the finisher
+does complete the correct continuation, but the first move was never attempted
+in the four training visits. Thus the two examples discriminate a downstream
+policy gap from insufficient exploration; neither is merely missing certification.
+
+For the first position, changing only upstream values or boundary predicates
+cannot solve the task while the same fixed finishing actuation is retained.
+V2 classifies the trace returned by the immutable R0 policy and returns that
+same actuation (`native_prospective_evidence_authority_v2.py`, virtual-query
+path; `native_authority_handover.py`, `_emit_action_with_trace_on_runtime`).
+This conclusion is about this policy/position, not all mate-in-two positions.
+
+**Next implementation priority:** let both actual White decisions learn from
+their own observed episode, with real-turn eligibility and a plastic finisher
+extension to the pretrained core. Keep policy-versioned evidence so changes to
+the finishing policy cannot inherit certificates about its old behavior.
+Then test native temporal POR/RET composition through the same actual trace.
+Do not teach the diagnosed move, compensate its reward, force its replay, or
+add a special case for either board. Lag sensors may help temporal patterns,
+but adding them alone cannot fix a finishing policy that never updates.
+
+Small reports are under
+`reports/autogrowth/development/native_local_v27_pretrained_r0_canary_43d91d25/`.
+`LAB_ONLY_finisher_ceiling.json` is diagnostic information, never training data.
+The checkpoint is retained locally. No longer run was started.
