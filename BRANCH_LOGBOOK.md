@@ -1700,3 +1700,32 @@ exact-version environment was used without bypassing saved fingerprints.
   M2 scores. No eligible four-witness hypothesis within budget is inconclusive.
   Full gate/null and remaining Q/M4/worst-reply limitations:
   `docs/autogrowth/V26_CONTINUOUS_EVIDENCE_GATE.md`.
+
+### V26 paired gate stopped at disk floor — 2026-09-03
+
+- **Resource-interrupted and scientifically inconclusive; no retry/full run.**
+  At09:40UTC, free disk was1.40GiB, below the frozen1.5GiB stop threshold.
+  Only verified new workers26308/26307 were interrupted; both exited130.
+  Same source/seed/conditions as above. Log timestamp durations were4958s
+  baseline /4953s repair (about82.6min; not persisted runner timers).
+- Both completed R0 epoch96, with48 local providers and **15/16** initial
+  validation. Their saved progress summaries are byte-identical, but no saved
+  graph/pool manifests remain to audit canonical starting-policy equality.
+  Both interruption stacks are in early R1 checkpoint evaluation, after the
+  current epoch's training: each had completed **epoch1 or4 (8 or32 decisions)**.
+  The exact epoch and all in-memory growth/certification/handoff/value/TD and
+  M2/retention scores are unavailable, **not zero**. Final regression not reached.
+- No R1 network snapshot was written. Epoch1 is evaluated without a scheduled
+  snapshot; epoch4 saves only after expensive evaluation. KeyboardInterrupt
+  bypasses the runner's ordinary error-record handler. Only progress/log files
+  survive, so these attempts **cannot be resumed**. No files were deleted.
+- Outputs used just8KiB combined before the stop,16KiB after tracebacks. Saved
+  networks therefore did not exhaust storage. Post-stop machine-wide swap was
+  11,700.19MiB used; no pre-run swap baseline or process attribution is available.
+  The stacks locate interruption in graph guard/audit evaluation, not total
+  runtime dominance or the cause of disk pressure.
+- The241-test/canary evidence remains valid; this natural-training pair neither
+  verifies nor falsifies the repair. Future work needs resource headroom and
+  review of durable checkpoint ordering before report-only work, not an
+  automatic longer run or a new monitoring framework. Conditions, evidence
+  limits and file hashes: `reports/autogrowth/development/V26_PAIRED_GATE_20260903.md`.
