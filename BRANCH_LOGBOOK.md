@@ -1806,3 +1806,26 @@ exact-version environment was used without bypassing saved fingerprints.
   `reports/autogrowth/development/V26_CHECKPOINT_RETRY_20260903.md`.
 - **Training result pending; no new M2 success claim.** Old V26 remains
   resource-inconclusive; V25's held-out M2 validation remains 0/4 in both seeds.
+
+### V26 repair wall-budget stop; baseline started — 2026-09-03
+
+- Repair seed2026090110 stopped at exact **R1 epoch18** under its intended
+  wall ceiling, not memory/integrity failure. Actual runner duration
+  **7225.500555s**, attempt written16:01:29 UTC. Its65,702,098-byte snapshot
+  loads successfully; no completed training was lost. Numeric process exit
+  status unavailable after the original tool session detached.
+- Saved **144 episodes /139 unique REAL observations**, seven handoffs,
+  eight AVAILABLE all-reply envelopes, successor-value sum **4.771100415597943**,
+  two structural transitions and two positive-credit action revisits. Provider
+  origin and certification details remain for the final paired audit; aggregate
+  handoffs are not proof of continuous-evidence/new-shell functionality.
+- Last evaluated checkpoint epoch16: frozen mate-in-1 policy **15/16**, unchanged
+  from initial validation; V2 shell coverage12/16 is a separate metric. M2
+  validation has not passed. Checkpoint evaluation short-circuits; do not report
+  a complete0/4 or final regression result. Epoch18 evaluation was skipped at
+  the wall ceiling. No M2 competence improvement is established.
+- The single authorized baseline started **16:06:41 UTC**, worker51502,
+  caffeinate51510, session53102, same clean frozen **48dd21a6** source/seed/profile,
+  evidence off, numerical threads1,7200s/4096MiB, independent directory.
+  Repair is not resumed. Compare matched frontiers after baseline exits;
+  no additional attempts or learner changes are authorized.
