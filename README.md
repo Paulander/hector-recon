@@ -1,5 +1,11 @@
 # ReCoN‑lite (Request–Confirmation Network) — Chess Sandbox
 
+> **This branch: mate-in-one through actual play.** Start an empty learned graph,
+> give feedback only for its submitted move, and keep the coach blind to network
+> internals. See [the experiment and two-computer launch commands](docs/autogrowth/MATE_ONE_COACH.md).
+> This uses the existing hybrid native learner; fully graph-native control is
+> still an open implementation task. The broader descriptions below are historical.
+
 > **Research status:** this README contains historical architecture and milestone descriptions, including older M3-planned language. See [`docs/BRIEF.md`](docs/BRIEF.md) for the audited current claims, corrections, and next decision gate.
 
 ReCoN‑lite is a small, dependency‑light Python implementation of a **Request–Confirmation Network (ReCoN)** plus a set of chess‑focused demos (KRK/KPK endgames, macrograph, visualization, and training/eval tooling). The goal is to explore ReCoNs as an **orchestrator** for scripts, heuristics, and learned components — not as a monolithic learner — while keeping the internal graph state explainable and easy to visualize.

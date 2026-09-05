@@ -1,5 +1,26 @@
 # ReCoN/Hector Agent Instructions
 
+## Active experiment on `codex/mate-in-one-coach`
+
+The user's September 5, 2026 instruction starts a fresh **KRK engineering**
+experiment: an opaque organism plays curated mate-in-one exercises. The coach
+supplies a position through its sensor interface, executes the submitted move,
+and returns +1 for observed checkmate or -1 for failing the one-move exercise.
+Nonmate is exercise failure, not a claim that the chess position is lost.
+The learner owns exploration, fast plasticity, generated triplets, and local
+slow-value updates. The coach must not inspect activations, imagined boards,
+graph shape, or alternatives to decide feedback, scheduling, or consolidation.
+Position preparation may check that a mate exists; it exports no answer moves.
+
+This explicit user direction supersedes older requirements below for graded
+geometry feedback, trainer-controlled consolidation, or continuing a failed
+mate-in-one exercise. Preserve those historical instructions for the broader
+roadmap where consistent. The existing native learner remains a hybrid; do not
+claim that this adapter establishes fully graph-native control or autonomy.
+The frozen experiment, limits, commands, and tests are in
+`docs/autogrowth/MATE_ONE_COACH.md`. Do not silently broaden the curriculum or
+change the learner after a negative run. Test and report actual chess behavior.
+
 ## Active Goal
 
 The active branch direction is `KRK Autogrowth v0`.

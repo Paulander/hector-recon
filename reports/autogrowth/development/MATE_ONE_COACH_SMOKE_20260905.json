@@ -1,0 +1,110 @@
+{
+  "schema": "mate_one_coach_smoke.v1",
+  "date": "2026-09-05",
+  "base_commit": "b5fbd7ba57090b171b82266a5399ba3f1094d9e6",
+  "branch": "codex/mate-in-one-coach",
+  "scope": "Engineering smoke of an opaque coach and the existing hybrid native learner; not a graph-native autonomy or KRK mastery claim.",
+  "source": {
+    "code_sha256": "71fea9498f9451fd55a5b11b05c428311339e65533f275f8d905d23334381ceb",
+    "python": [
+      "3",
+      "12"
+    ],
+    "chess": "1.11.2",
+    "numpy": "2.3.5",
+    "pythonhashseed": "0"
+  },
+  "pool": {
+    "schema": "mate_one_pool.v1",
+    "seed": 20260905,
+    "splits": {
+      "train": {
+        "count": 256,
+        "sha256": "6007840a71af73552e78ca3a272ce0af1b4639258246b39fa578f842a5a2a8f2",
+        "distinct_orbits": 120
+      },
+      "validation": {
+        "count": 128,
+        "sha256": "dd92f3740e916f89665f459f9165088bac563a465c8bd803404a241f48798c2e",
+        "distinct_orbits": 25
+      },
+      "test": {
+        "count": 128,
+        "sha256": "353b0b7ab8479b298764a6879b4f7cefcd7f58dcaee92eb003ce62d4750c2dc1",
+        "distinct_orbits": 16
+      }
+    },
+    "curation": "legal KRK with an available mate; only positions exported",
+    "partition": "D4 orbit hash; 80/10/10"
+  },
+  "training": {
+    "attempts": 196,
+    "real_white_moves": 196,
+    "checkmates": 13,
+    "training_success_rate": 0.0663265306122449,
+    "illegal_actions": 0,
+    "abstentions": 0,
+    "seed": 1,
+    "train_pool_sha256": "6007840a71af73552e78ca3a272ce0af1b4639258246b39fa578f842a5a2a8f2",
+    "invocation_seconds": 122.595,
+    "stop_reason": "wall_limit",
+    "validation_used_for_training": false,
+    "exercise": "mate within one own move; +1 mate, -1 exercise failure"
+  },
+  "baseline_evaluation": {
+    "schema": "mate_one_coach_evaluation.v1",
+    "split": "validation",
+    "count": 128,
+    "pool_sha256": "dd92f3740e916f89665f459f9165088bac563a465c8bd803404a241f48798c2e",
+    "training_attempts": 0,
+    "checkmates": 0,
+    "illegal_actions": 0,
+    "abstentions": 128,
+    "learning": false,
+    "success_rate": 0.0
+  },
+  "trained_evaluation": {
+    "schema": "mate_one_coach_evaluation.v1",
+    "split": "validation",
+    "count": 128,
+    "pool_sha256": "dd92f3740e916f89665f459f9165088bac563a465c8bd803404a241f48798c2e",
+    "training_attempts": 196,
+    "checkmates": 67,
+    "illegal_actions": 0,
+    "abstentions": 0,
+    "learning": false,
+    "success_rate": 0.5234375
+  },
+  "final_test_opened": false,
+  "focused_regression": {
+    "passed": 65,
+    "seconds": 30.31,
+    "files": [
+      "tests/autogrowth/test_mate_one_coach.py",
+      "tests/autogrowth/test_native_local_interaction_v27.py",
+      "tests/test_intrinsic_credit.py",
+      "libs/recon-lite/tests/test_formal_choice.py",
+      "tests/test_fanin_terminals.py"
+    ]
+  },
+  "trace": {
+    "sha256": "09263596443f08e3b44f5fe5ce50d982e3fad2d7dfd9397a037be25f22236346",
+    "events": 196,
+    "distinct_training_positions": 196,
+    "bytes": 33815
+  },
+  "checkpoint_transport": {
+    "sha256": "c260adb2fb6a844980b58695b6522861cfe89de0ca89632e0cc8588650b4b1e0",
+    "bytes": 765955
+  },
+  "interpretation": [
+    "The training command stopped safely at its 120-second wall budget (122.595 seconds including the final transaction/checkpoint), before its 256-attempt ceiling.",
+    "Every training start was distinct: this smoke covered only 196 of the 256 training positions, less than one epoch.",
+    "The fresh greedy policy abstained on all 128 validation positions. This is not a random-play baseline.",
+    "Post-training greedy evaluation solved 67/128 (52.34375%) with learning disabled and no illegal moves or abstentions.",
+    "The 128 validation rows span 25 reflection/rotation orbits, so they are not 128 independent geometric families.",
+    "Validation is now development data. The reserved test was not evaluated.",
+    "The fixed longer experiment remains unrun. This result does not establish mastery, robust replication, full KRK, or a fully persistent graph-owned selector."
+  ],
+  "reproduce": "Use the default prepare seed/counts, initialize seed 1 with --episodes 0, evaluate validation, resume with --episodes 196 --wall-seconds 0 --checkpoint-every 64, then evaluate validation. Source/runtime fingerprints and pinned requirements must match."
+}
