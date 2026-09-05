@@ -5,6 +5,12 @@ This is a fresh KRK engineering baseline using the existing native learner.
 It imports no trained finisher, teacher policy, solved move table, or frozen
 baseline. The initial learned graph contains one root and zero learned edges.
 
+The clarified target is a numeric feature basis with spawned, learned projection
+terminals. The current `BoardSensor` adapter does **not** implement that target.
+The commands below remain runnable hybrid-reference experiments. The next
+implementation is specified in
+[Feature terminals, credit, and growth](FEATURE_TERMINAL_IMPLEMENTATION.md).
+
 Initial smoke: 196 actual training moves produced 13 checkmates; the resulting
 greedy policy solved 67/128 validation exercises with learning disabled, no
 illegal moves, and no abstentions. These validation rows span 25 symmetry
@@ -22,6 +28,16 @@ executes exactly that submitted move on the real board. Reward is +1 for
 observed checkmate and -1 otherwise. A legal nonmate is `exercise_timeout`,
 not a chess loss. This is explicitly coached mate-in-one feedback, which is
 more informative than full-game win/loss feedback.
+
+Only scalar reward crosses the feedback boundary, accompanied by the event ID
+and already-submitted action for exact credit binding. `reason` remains in the
+coach's move log. It is not a learner input. The earlier adapter passed that
+unused diagnostic field; this interface correction removes it.
+
+The published 67/128 result belongs to commit `c10164f8`, before that correction.
+Source fingerprints deliberately prevent its checkpoint from resuming under
+changed code. Use its original checkout to continue that reference run; start
+a new run directory for this version. Do not remove the source check.
 
 Only offline `prepare` checks whether candidate exercises have a mating move.
 It writes FENs, split hashes, and counts; no answers. Training reads only the

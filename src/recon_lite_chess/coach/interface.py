@@ -19,7 +19,7 @@ class PositionReading:
 
 @dataclass(frozen=True)
 class BoardSensor:
-    """Read-only measured feature space, with no reference to the live board."""
+    """Legacy read-only board snapshot; not a learned feature-terminal substrate."""
 
     reading: PositionReading
 
@@ -29,10 +29,15 @@ class BoardSensor:
 
 @dataclass(frozen=True)
 class Feedback:
+    """Scalar teaching signal plus binding to the learner's own submitted action.
+
+    Event/action fields prevent stale or duplicate credit. They are not feature
+    inputs. Outcome categories and diagnostic explanations stay in the coach.
+    """
+
     event_id: int
     action: str | None
     reward: float
-    reason: str
 
 
 class Organism(Protocol):

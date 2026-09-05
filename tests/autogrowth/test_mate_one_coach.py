@@ -1,7 +1,7 @@
 """Boundary and behavior tests. Test-side answers never enter learner training."""
 
 import argparse
-from dataclasses import FrozenInstanceError
+from dataclasses import asdict, FrozenInstanceError
 import json
 import math
 
@@ -58,7 +58,9 @@ def test_coach_grades_only_the_actual_action(monkeypatch, move, reason, reward, 
     attempt = play_mate_one(organism, M1, event_id=9, learn=True)
     assert (attempt.reason, attempt.reward, attempt.real_moves) == (reason, reward, real_moves)
     assert pushes == ([move] if real_moves else [])
-    assert organism.feedback == [Feedback(9, move, reward, reason)]
+    assert organism.feedback == [Feedback(9, move, reward)]
+    assert set(asdict(organism.feedback[0])) == {"event_id", "action", "reward"}
+    assert not hasattr(organism.feedback[0], "reason")
     if reason == "exercise_timeout":
         assert not chess.Board(attempt.after_fen).is_game_over()
     assert not hasattr(organism.sensor, "board")
@@ -116,14 +118,14 @@ def test_feedback_binding_rejects_duplicates_and_partial_checkpoints(tmp_path):
     organism = NativeOrganism()
     action = organism.act(_reading(), event_id=4, learn=True)
     with pytest.raises(ValueError, match="match"):
-        organism.observe(Feedback(3, action, -1, "exercise_timeout"))
+        organism.observe(Feedback(3, action, -1))
     with pytest.raises(ValueError, match="reward"):
-        organism.observe(Feedback(4, action, math.nan, "exercise_timeout"))
+        organism.observe(Feedback(4, action, math.nan))
     with pytest.raises(RuntimeError, match="between action"):
         save_checkpoint(RunState(organism, "test", 0, source_identity()), tmp_path)
-    organism.observe(Feedback(4, action, -1, "synthetic_test_outcome"))
+    organism.observe(Feedback(4, action, -1))
     with pytest.raises(RuntimeError, match="no pending"):
-        organism.observe(Feedback(4, action, -1, "synthetic_test_outcome"))
+        organism.observe(Feedback(4, action, -1))
     with pytest.raises(ValueError, match="increasing"):
         organism.act(_reading(), event_id=4, learn=True)
     assert organism._observations == 1
@@ -136,7 +138,7 @@ def test_value_and_slow_memory_have_the_same_meaning():
         _, _, decision = organism._pending
         before = decision.prediction
         # Synthetic positive outcome tests numerical semantics, not chess skill.
-        organism.observe(Feedback(i, action, 1.0, "synthetic_test_outcome"))
+        organism.observe(Feedback(i, action, 1.0))
         q = organism._graph._local_action_option_value(decision.triplet_id, action)
         state = organism._credit.states[decision.triplet_id + ":" + action]
         expected = min(1.0, before + organism._graph.config.eta_m3 * min(1.0, 1.0 - before))

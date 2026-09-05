@@ -21,6 +21,15 @@ The frozen experiment, limits, commands, and tests are in
 `docs/autogrowth/MATE_ONE_COACH.md`. Do not silently broaden the curriculum or
 change the learner after a negative run. Test and report actual chess behavior.
 
+The user's subsequent clarification requires a numeric feature basis read by
+spawned coordinate/projection terminals. `BoardSensor` is only the legacy
+board-snapshot adapter and does not satisfy that architecture. Treat the 67/128
+smoke as a hybrid reference result. Next implementation follows
+`docs/autogrowth/FEATURE_TERMINAL_IMPLEMENTATION.md`; do not claim that renaming
+an adapter or wrapping an external scorer implements learned terminals.
+Feedback carries scalar reward and action/event binding only. Keep outcome
+reason labels in the coach's external log, not learner feedback.
+
 ## Active Goal
 
 The active branch direction is `KRK Autogrowth v0`.

@@ -54,5 +54,5 @@ def play_mate_one(organism: Organism, fen: str, *, event_id: int, learn: bool) -
                       "stalemate" if board.is_stalemate() else "exercise_timeout")
     reward = 1.0 if reason == "checkmate" else -1.0
     if learn:
-        organism.observe(Feedback(event_id, action, reward, reason))
+        organism.observe(Feedback(event_id, action, reward))
     return Attempt(event_id, fen, action, board.fen(), reward, reason, moved)
