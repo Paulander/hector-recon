@@ -5,6 +5,12 @@ The scalar-feedback correction is implemented. The feature/selector migration
 and growth changes below are not yet implemented. The existing 67/128 result
 uses a hybrid native learner and cannot establish the target architecture.
 
+Read the [architecture constitution](ARCHITECTURE_CONSTITUTION.md) for the
+controlling philosophy and allowed prior measurements. The user's clarified
+target is sparse terminal discovery and learned composition over a declared
+feature space. Dense trainable projections are one possible reader family, not
+a mandatory replacement for existing sparse masks, thresholds or prototypes.
+
 ## What exists, and the actual gap
 
 | Component | Current code | Required change |
@@ -21,18 +27,20 @@ uses a hybrid native learner and cannot establish the target architecture.
 ## 1. Explicit base, actual terminals
 
 Define a versioned feature schema and a frame-local numeric vector `x`.
-The conservative first chess base is piece-type/color occupancy by square,
-side to move, and the rule state needed by the chosen exercise. KRK M1 does not
-need castling or en-passant fields; full chess does. Additional geometry, if
-included, must be named and frozen as supplied prior knowledge. The base must
+The user explicitly permits geometry such as opponent-king-at-edge and distances
+between pieces. Include the declared measurements needed for the selected
+experiment, with their meanings and scales recorded. Raw piece occupancy may
+also be included, but a raw-square-only experiment is not required by this
+architecture. The base must
 not quietly acquire mate-family, opposition-plan, endgame-stage, action-quality,
 distance-to-mate, or winning-move coordinates.
 
-Piece occupancy is one possible explicit base, not a claim that the user's
-phrase "feature space" requires raw squares only. Any richer proposed basis
-needs an equally explicit inventory. The architecture issue is who learns and
-owns the readers and compositions, separately from how much prior structure the
-base supplies.
+The ambient vector has fixed dimension `n` for a schema. Terminal `i` can read
+only a subset `S_i`, with a different subset size for each terminal. Coordinates
+may have different physical units or numerical scales; that does not make the
+ambient vectors have different dimensions. Primitive measurements and their
+normalization are supplied prior structure. Their useful readers, combinations,
+action contingencies and reuse must be learned.
 
 A terminal first measures `z = w dot x + b`, then applies its response rule,
 for example `a = sigmoid(z)`. A basis-vector `w` and zero bias measure coordinate
@@ -147,11 +155,17 @@ is a learned/mechanistic hypothesis to test, not an already verified selector.
 
 ## 4. Implementation order and acceptance tests
 
+First audit and reuse the existing sparse-mask/prototype machinery where its
+updates and growth can obey the terminal boundary. Do not add a new dense
+projection learner merely because the earlier draft of this specification
+suggested one. A reader-family comparison is a separate scientific choice.
+
 | Work package | Required executable acceptance tests |
 | --- | --- |
 | Scalar feedback boundary (implemented) | Only reward and event/action binding reach `observe`; failure reasons remain in the external log; wrong/duplicate feedback is rejected; existing play and resume behavior still passes. |
 | Later reward scaling/speed cost | A slower win scores below a faster win and above a failed exercise throughout the declared horizon; total time cost is bounded; changing internal microticks or imagined moves does not change the real-move reward; the same fixed normalization applies to rewards, values and consolidation. |
 | Base and projection terminals | Schema/dimension mismatch fails; coordinate and mixed projections match analytic examples; saved/restored parameters match; terminals are leaves; same-schema REAL/VIRTUAL frames never share mutable request or eligibility state. |
+| Observation boundary | With identical internal state, random state and complete terminal-response transcript (including action availability), changing an unexposed raw board field cannot change the graph's decision. New trial readers may obtain new information only through terminal measurements. |
 | Internal representation learning | With an externally opaque learner, reward changes the participating projection parameters on a small non-chess task requiring a mixed feature detector; inactive controls stay unchanged; representations survive save/resume. A constructor-only projection test is insufficient. |
 | Persistent graph action selection | Disable the legacy candidate-score builder; actions still follow terminal request/confirmation paths; graph intervention changes the selected actuator; unused Python ranking/cache values cannot affect it. No rewarding hypothetical alternatives. |
 | Delayed and hierarchical credit | A delayed observed reward updates the earlier participating path; maturity is not required for fast learning; no update reaches an inactive sibling; terminal reward is counted once; variable-duration child completion uses the correct elapsed-time return; cyclic self-confirmation cannot manufacture value. |

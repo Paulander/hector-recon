@@ -2,6 +2,96 @@
 
 Status: active boundary for native KRK autonomy claims.
 
+## Founding objective and clarified measurement boundary
+
+The user's September 5, 2026 clarification is the controlling interpretation:
+start with a top-level goal and generic embodiment, then learn useful terminal
+readers, script/gate structure, temporal relationships, weights, and reuse by
+playing chess and receiving scalar outcome feedback. Chess is the controlled
+task for developing this architecture. A good chess score by itself does not
+establish that the graph discovered a strategy.
+
+The environment adapter owns the board and executes chess rules. The generic
+ReCoN runtime executes requests, confirmations and learning rules; sharing a
+process with the board does not give graph policy or structural-growth decisions
+permission to inspect it directly. All observational influence on those
+decisions must pass through declared terminal measurements. Action terminals
+translate graph requests into primitive chess actions. A host helper may perform
+that translation; it must not return an unrequested tactical choice or score.
+
+The supplied feature schema may include geometry: the user explicitly allows
+opponent-king-at-edge and distances between pieces. These are declared prior
+measurements, not forbidden scaffolding. The target does not require starting
+from raw square occupancy alone or learning the rules of chess. It does require
+learning which measurements, parameter ranges and compositions support action.
+Providing an opposition strategy, mate-family classifier, correct action, or
+whole solution policy as a supposedly atomic measurement changes the claim.
+
+For a fixed schema, the environment has a numeric feature vector `x` of length
+`n`. Coordinates may have different units, ranges and value types encoded
+numerically. Terminal `i` selects a subset `S_i` and measures `x[S_i]`, whose
+length `k_i` may be one, two or more. Different terminals may therefore use
+different dimensional subspaces of the same fixed-dimensional ambient space.
+Normalize or otherwise define coordinate scales explicitly; version the schema
+when its coordinate identities or meanings change.
+
+A sparse coordinate, interval, threshold, projection or prototype reader can
+be a valid terminal. Arbitrary trainable dense projections are not a prerequisite
+for structural learning. What matters is that terminal birth, selection,
+parameters, connectivity and survival are learned internally within the stated
+representation family. A terminal need not inspect every feature or reconstruct
+a complete chess board. Growth may probe a previously unused coordinate through
+a trial terminal. It must not bypass the terminal boundary to mine the raw board
+or obtain teacher-labelled candidate structures.
+
+SCRIPT nodes compose and coordinate terminal/subgraph responses. SUB/SUR and
+POR/RET supply generic request/confirmation and sequencing grammar; their useful
+learned organization is part of the result. Generic before/action/after birth
+templates may provide a way to act and observe consequences. Generating one
+large stored triplet per encountered situation is not, by itself, evidence of
+compact reusable strategic structure. Terminals remain leaves; sensor sharing
+must preserve the behavior of independent request/frame/binding contexts.
+
+The curriculum coach supplies positions, executes the submitted move and grades
+its observed outcome. It does not choose structures to mature, inspect virtual
+states to assign reward, select actions, or inject subgoal labels. The current
+M1 contract explicitly rewards observed mate and punishes failure within one
+own move. Internal eligibility, prediction error, affordance and consolidated
+child value are computed by the organism, not supplied as additional teacher
+judgments. Offline scientific inspection remains permitted and must not become
+an online teaching channel.
+
+Internal terminals obey the same measurement discipline for network state.
+Virtual frames later change the context in which terminals measure; they do not
+authorize a hidden solver or turn imagined success into observed success.
+Separately trained modules should eventually be reused and prioritized through
+learned contextual support and goal-relevant value, without hand-coded material
+switches. This is a target to demonstrate, not an assertion of current coverage.
+
+A small strategic motif may end with roughly a dozen nodes; no such bound has
+been established for a full KRK policy. Node counts must account for complexity
+in feature extractors, action primitives and binding rules. Discovery may require
+more temporary candidates than the final consolidated motif. Do not impose the
+user's compactness intuition as a hard initial growth cap.
+
+### Source trail and interpretation
+
+- [Published AAAI paper](https://ojs.aaai.org/index.php/AAAI-SS/article/view/42560):
+  pages 317-318 describe the progression from fixed topology and learned
+  coordination to exploratory structural growth. The stronger discovery wording
+  on page 319 must be assessed against the actual implementation and evidence;
+  it does not establish that every later from-scratch requirement already passed.
+- [Recorded talk: Hector Cognitive Architecture for Structural Deliberation](https://www.youtube.com/watch?v=sIJL_UvSGBk).
+  Located by title and author; the recording's transcript was not available in
+  this review. Its content is not used as independent evidence here.
+- [Earlier internal-terminal decision](INTERNAL_PROPRIOCEPTION_ARCHITECTURE_DECISION_20260713.md)
+  already requires internal decisions to consume measurements through topology.
+- [Earlier from-scratch plan](NATIVE_FROM_SCRATCH_KRK_PLAN.md) sets the empty
+  learned-graph and real-consequence goal. Its older continuation/consolidation
+  instructions yield to the user's explicit M1 coaching contract above.
+- [Current implementation specification](FEATURE_TERMINAL_IMPLEMENTATION.md)
+  separates implemented code from remaining terminal, credit and growth work.
+
 ## Four systems
 
 ### Environment

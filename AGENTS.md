@@ -1,5 +1,13 @@
 # ReCoN/Hector Agent Instructions
 
+Read `docs/autogrowth/ARCHITECTURE_CONSTITUTION.md` for the user's architecture
+and information boundary before adding mechanisms. Geometric base measurements
+such as king-at-edge and piece distance are permitted. Terminals may read only
+one or two coordinates; dense trainable projections are not required. The graph
+must learn useful readers and compositions through terminal-mediated interaction
+and scalar outcome feedback. Do not replace that target with either raw-square-
+only learning or a hand-authored chess policy hidden behind a terminal.
+
 ## Active experiment on `codex/mate-in-one-coach`
 
 The user's September 5, 2026 instruction starts a fresh **KRK engineering**
@@ -22,7 +30,8 @@ The frozen experiment, limits, commands, and tests are in
 change the learner after a negative run. Test and report actual chess behavior.
 
 The user's subsequent clarification requires a numeric feature basis read by
-spawned coordinate/projection terminals. `BoardSensor` is only the legacy
+spawned sparse terminals (coordinate, threshold, prototype or projection readers).
+`BoardSensor` is only the legacy
 board-snapshot adapter and does not satisfy that architecture. Treat the 67/128
 smoke as a hybrid reference result. Next implementation follows
 `docs/autogrowth/FEATURE_TERMINAL_IMPLEMENTATION.md`; do not claim that renaming
