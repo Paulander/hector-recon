@@ -1,190 +1,182 @@
-# Mate-in-one: play first, learn internally
+# Mate-in-one: play through learned feature terminals
 
-Branch: `codex/mate-in-one-coach`, based on `b5fbd7b` (V27).
-This is a fresh KRK engineering baseline using the existing native learner.
-It imports no trained finisher, teacher policy, solved move table, or frozen
-baseline. The initial learned graph contains one root and zero learned edges.
+Branch: `codex/mate-in-one-coach`. The default learner is now
+`coach/terminal.py:TerminalOrganism`, backed by the generic
+`learning/terminal_development.py` runtime. Start a new run directory: old hybrid
+checkpoints intentionally cannot resume against changed source code.
 
-The clarified target is a numeric feature basis with spawned, learned projection
-terminals. The current `BoardSensor` adapter does **not** implement that target.
-The commands below remain runnable hybrid-reference experiments. The next
-implementation is specified in
-[Feature terminals, credit, and growth](FEATURE_TERMINAL_IMPLEMENTATION.md).
+## Measured initial run
 
-Initial smoke: 196 actual training moves produced 13 checkmates; the resulting
-greedy policy solved 67/128 validation exercises with learning disabled, no
-illegal moves, and no abstentions. These validation rows span 25 symmetry
-orbits. The fresh greedy baseline abstained on all rows; it is not a random
-baseline. This was less than one training epoch, not a mastery or replication
-result. The reserved test remains unopened. See the
-[measured smoke summary](../../reports/autogrowth/development/MATE_ONE_COACH_SMOKE_20260905.json).
+After 182 actual training moves (99 mates, 180.675 seconds including final
+checkpoint), nonlearning validation improved from 4/128 to **124/128 (96.875%)**.
+There were no illegal moves or abstentions. These development rows cover 25
+symmetry orbits; this is one short seed, not sealed confirmation. The final test
+is unopened. Pruning's 256-exercise grace period was not reached in chess;
+pruning and dependency retention passed separate mechanism tests.
 
-## Information boundary
+The saved graph has 96 condition definitions, 70 distinct reader definitions,
+20 action-binding slots, and 3,385 instantiated vertices. Twenty-five conditions
+already carry nonzero slow weights. No causal MATURE certificate was issued.
+See the [measured report](../../reports/autogrowth/development/TERMINAL_DEVELOPMENT_SMOKE_20260905.json).
+The focused suite passed 79 tests; two boundary tests were rechecked after the
+final protocol typing/doc clarification.
 
-The coach presents a board through `BoardSensor.measure()`. The organism
-receives piece locations and board clocks/turn, reconstructs its private rules
-model, chooses one action, and receives feedback for that action. The coach
-executes exactly that submitted move on the real board. Reward is +1 for
-observed checkmate and -1 otherwise. A legal nonmate is `exercise_timeout`,
-not a chess loss. This is explicitly coached mate-in-one feedback, which is
-more informative than full-game win/loss feedback.
+The separately supplied `TERMINAL_DEVELOPMENT_SMOKE_20260905.zip` archive
+contains the exact trained organism, pool, schedule, real-move log and evaluation
+results. It is not published in the repository. Extraction and checkpoint
+restoration were verified. Download it into the checkout root and extract it
+before creating directories with these same names:
 
-Only scalar reward crosses the feedback boundary, accompanied by the event ID
-and already-submitted action for exact credit binding. `reason` remains in the
-coach's move log. It is not a learner input. The earlier adapter passed that
-unused diagnostic field; this interface correction removes it.
+```bash
+python -m zipfile -e TERMINAL_DEVELOPMENT_SMOKE_20260905.zip .
+```
 
-The published 67/128 result belongs to commit `c10164f8`, before that correction.
-Source fingerprints deliberately prevent its checkpoint from resuming under
-changed code. Use its original checkout to continue that reference run; start
-a new run directory for this version. Do not remove the source check.
+This restores `reports/autogrowth/runs/terminal-m1-seed1` and
+`reports/autogrowth/runs/m1-coach-smoke-pool`. An additional training experiment
+can use those paths with `--resume --seed 1` and an explicitly chosen total
+`--episodes` and wall budget. The initial 180-second experiment is complete.
 
-Only offline `prepare` checks whether candidate exercises have a mating move.
-It writes FENs, split hashes, and counts; no answers. Training reads only the
-training FEN file. Scheduling is shuffled repetition, independent of success,
-graph contents, or imagined futures. Reflection/rotation equivalent positions
-are assigned to the same split. Validation is a separate, nonlearning command.
+## Implemented loop
 
-The organism uses existing generated before/action/after triplets, finite
-local UCB exploration, and M3 updates. Only its emitted action gets real
-outcome credit. Its local credit engine consolidates slow values every 256
-observed actions, using its own grounded outcome evidence. The coach neither
-approves that step nor freezes the policy. These slow values are preparation
-for child-value use; they do not yet control this one-level policy. This is
-not causal structural-candidate promotion or a complete M5 lifecycle.
+The environment owns the board. A catalog terminal reads legal actuator bindings;
+spawned input terminals read individual coordinates of a fixed, typed feature
+schema. SCRIPT nodes combine their confirmations. Plastic SUR edges carry signed
+expected-return contributions into a `weighted_evidence` SCRIPT; the existing
+formal choice primitive selects one bound action. A requested output terminal
+then executes that action. The coach observes its actual result and sends only
+scalar reward plus the action/event binding: +1 for actual mate, -1 for failing
+this one-own-move exercise. Nonmate is exercise failure, not a chess loss.
 
-Sensors are shared read-only measurements. Saved native graph inputs are
-leaf `TERMINAL` nodes queried by scripts. Sharing a measurement does not
-authorize sharing mutable request/frame/binding state across independent
-terminal contexts. Tests assert leaf terminal structure.
+The 16-coordinate schema is declared in `coach/terminal.py`. It contains current
+turn, whether the bound actuator moves the rook, king/piece distances, edge and
+alignment measurements, and distances/alignment between the actuator's target
+square and current kings. These last coordinates describe action parameters;
+no successor board is constructed. They are supplied geometric embodiment, not
+learned rules or tactical classifications. No checkmate, opposition, ideal-move,
+mate-distance or selected-answer coordinate exists.
 
-**Remaining learner limitations are explicit:** the inherited implementation
-still enumerates legal actions and simulates their successors in Python,
-constructs scores, then uses an anonymous formal choice graph to emit an
-action. It retains the native raw/geometric feature vocabulary, including
-king/rook relationships; it is not a raw-square-only learner. Hand-authored
-shared projection conjunctions, grouped cache terminals, action-only scoring,
-and hierarchy-edge scoring are disabled in this profile. Merely wrapping it
-does not move all control into persistent ReCoN vertices. Known chess rules
-are supplied; no claim is made that the transition rules were learned.
-Internal hypothetical board evaluation is permitted; the coach never sees it.
+One learned condition definition contains one to three equality readers and an
+AND, OR or exactly-one XOR operator. Equality to False supplies Boolean negation.
+Readers may join a composition immediately; independent usefulness or maturity
+is not a prerequisite. Random proposals provide the initial finite search
+family; selected-action reward error adjusts their effective graph-edge weights.
+The proposal distribution itself is not learned in this first implementation.
 
-## Fixed first experiment
+Conditions share their parameters across action bindings and positions. Each
+binding has separate physical terminal/SCRIPT instances, including separate
+request states. A 96-definition budget therefore does **not** mean 96 total
+vertices. The persisted graph includes all instantiated vertices and edges.
+Terminal readers are shared among conditions within a binding only; they remain
+leaves and are retained while any surviving condition needs them.
 
-- Hypothesis: this fresh learner can improve unseen mate-in-one behavior from
-  repeated selected-action feedback without coach access to its graph.
-- Strongest null: it memorizes local choices while held-out behavior stays
-  poor, or exploration/representation prevents useful improvement.
-- Profile: the constructor in `coach/native.py`, unchanged throughout a run.
-  This restart establishes a baseline; it is not a one-factor causal comparison
-  with V27, whose initialization, training contract, and profile differ.
-- Replicates: same 256/128/128 pool and code; training-order seeds 1 and 2.
-  Both arms should improve if the claim is robust. Seed order, not a different
-  feature package, distinguishes the two computers.
-- Budget per replicate: 20,000 total attempts, up to eight hours per invocation.
-  The wall limit checkpoints a partial run; resume to the same total target.
-  No automatic new mechanism, parameter sweep, or curriculum expansion follows.
-- Check behavior at 2,000, 10,000, and 20,000 attempts with separate validation
-  commands. These viewed positions are development data, not sealed confirmation.
-  Training always ignores the results. Compare greedy evaluation with its
-  zero-attempt baseline; training statistics include exploration.
-- Stop this profile after the fixed budget if held-out behavior remains poor.
-  Report a negative/inconclusive result and investigate the learning trace
-  offline; do not add answer labels or inspect virtual states to shape rewards.
-- Do not advance to mate-in-two on training memorization. Require 100% on the
-  frozen validation exercises in both replicates, then a fresh confirmation
-  exercise pool after freezing code. A finite test is not proof over all KRK.
-  The reserved test below is a final internal check, not independently adjudicated
-  generic-core transfer evidence. Opening it freezes that run for training.
+Final outcome credit reaches the actual participating conditions of executed
+actions. Earlier actions can retain decaying eligibility until final feedback.
+Inactive conditions do not receive that outcome update. Slow consolidation
+transfers part of fast weight into slow weight without changing their sum; both
+parts contribute to the next decision, and fast learning remains enabled.
+Pruning retires weak whole conditions after a grace period and then removes
+orphan readers. This is a bounded engineering survival rule, not evidence of
+causal structural importance. Reward correlations never become fabricated
+intervention evidence or causal MATURE certification.
 
-Mate-in-two is deliberately a later exercise implementation: exact M2 gives
-two own moves with an actual opponent reply. Three own moves would be a named
-relaxed exercise. No imagined mate label or arbitrary ten-move cap substitutes
-for observed success. Broad KRK, learned module selection, longer commitments,
-and counterfactual sequences of consecutive own moves are not implemented here.
+The coach does not inspect topology or virtual states to schedule, reward,
+consolidate or prune. It saves the opaque organism and shuffled exercise order.
+Offline preparation may verify that starts contain a mate; exported pools
+contain no answer moves. Reflection/rotation equivalent positions stay in the
+same split. Validation is a separate nonlearning process and never saves changes
+to the organism. The final test remains sealed until explicitly evaluated.
 
-## Install and launch
+## Scope and reuse
 
-Use Python 3.12 and this checkout. These commands avoid installing Torch.
+This uses the existing Graph, formal request/confirmation engine, choice and
+Boolean operators, plus `StemCellState` and `CandidateLocalStats`. The existing
+stem-cell integration receives board/FEN or whole-feature samples; M5's broader
+structure manager scans rich episode traces and includes KRK-specific discovery.
+`OnlinePairCompositionLearner` requires supplied atom IDs and keeps trials out
+of prediction until validated. Those entry points do not provide this empty-root,
+terminal-only, immediately composable action path. The small lifecycle adapter
+therefore lives inside Hector's learning package, never in the coach; it reuses
+candidate statistics while keeping correlation distinct from intervention.
+
+The older intrinsic-credit engine remains for grounded hierarchical child-value
+handoff. Its competence-provider gating is not used to authorize local feature
+weight updates: that would prevent immature features from learning. This first
+path implements a normalized episodic reward-error update, not a claim that
+hierarchical value handoff or variable-duration option learning is completed.
+
+Still deferred: reader-parameter mutation beyond birth/selection, residual-driven
+proposal selection, recursive SCRIPT/sequence discovery, virtual frames, learned
+world dynamics, module arbitration and multi-move chess exercises. A finite
+random condition grammar can miss useful structures. Passing a small Boolean
+task or improving M1 is not proof of full KRK or general self-organization.
+
+The earlier 67/128 validation result belongs to the historical hybrid, which
+reconstructed boards and scored candidate successors. Its code is retained for
+regression/reference, and its original protocol is in
+[MATE_ONE_COACH_HYBRID_REFERENCE.md](MATE_ONE_COACH_HYBRID_REFERENCE.md).
+It is not evidence for this new implementation.
+
+## Install and run
+
+Use Python 3.12. No GPU or Torch installation is needed.
 
 ```bash
 git fetch origin
-git switch --track origin/codex/mate-in-one-coach
+git switch codex/mate-in-one-coach
+git pull --ff-only
 python3.12 -m venv .venv-coach
 source .venv-coach/bin/activate
 python -m pip install -r requirements-mate-one-coach.txt
 python scripts/autogrowth/run_mate_one_coach.py prepare --pool reports/autogrowth/runs/m1-pool
 ```
 
-On Windows, use `py -3.12 -m venv .venv-coach` and
-`.venv-coach\Scripts\Activate.ps1` instead of the two Unix environment commands.
-If the local branch already exists, use `git switch codex/mate-in-one-coach`.
-The launcher sets a deterministic Python hash seed before importing the learner
-and defaults native numerical libraries to one thread. A GPU is not used.
+For a first checkout, `git switch --track origin/codex/mate-in-one-coach` creates
+the local branch. Windows activation is `.venv-coach\Scripts\Activate.ps1`.
+The launcher fixes Python's hash seed and limits numerical-library thread counts.
 
-Computer A:
-
-```bash
-python scripts/autogrowth/run_mate_one_coach.py train --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/m1-seed1 --seed 1 --episodes 20000 --wall-seconds 28800
-```
-
-Computer B: run the same preparation command with its unchanged defaults, then:
+The initial engineering budget and failure criteria are frozen in
+[TERMINAL_DEVELOPMENT_RUN.md](TERMINAL_DEVELOPMENT_RUN.md). Capture the untrained
+baseline, then run up to 2,048 exercises or 180 seconds:
 
 ```bash
-python scripts/autogrowth/run_mate_one_coach.py train --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/m1-seed2 --seed 2 --episodes 20000 --wall-seconds 28800
+python scripts/autogrowth/run_mate_one_coach.py train --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/terminal-m1-seed1 --seed 1 --episodes 0
+python scripts/autogrowth/run_mate_one_coach.py evaluate --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/terminal-m1-seed1 --split validation
+python scripts/autogrowth/run_mate_one_coach.py train --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/terminal-m1-seed1 --seed 1 --episodes 2048 --wall-seconds 180 --resume
+python scripts/autogrowth/run_mate_one_coach.py evaluate --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/terminal-m1-seed1 --split validation
 ```
 
-Both machines use the identical pool; their manifests should match. Each has
-its own organism and run directory. Do not merge their weights. Compare their
-held-out chess outcomes. Alternatively, both processes can run on one machine
-using separate run directories; each uses one CPU process.
+The initial graph can make a legal move without learned readers. Its greedy
+baseline uses the formal primitive's deterministic tie rule, not random play.
+After this diagnostic run, a longer run or second seed should be identified as
+an additional experiment. On a second computer use the identical code/pool and
+a separate run directory and seed; do not merge weights or checkpoint files.
 
-To capture the zero-attempt baseline, first run the training command with
-`--episodes 0`. It checkpoints the fresh organism without moving. Run
-validation, then train with `--episodes 20000 --resume`. A fresh graph can
-abstain during greedy evaluation; report that separately rather than calling
-it random play.
+`--episodes` is a total target, including resumed episodes. A wall limit ends
+only after the current action/feedback transaction. Ctrl-C or a `STOP` file in
+the run directory likewise requests a clean checkpoint. Remove `STOP` to resume.
+The two newest checkpoints are retained. Resume restores the organism, RNG and
+shuffled schedule, and rejects changed source/runtime, pool or seed. After a
+crash, remove `run.lock` only once the old process has stopped. Python pickle
+checkpoints must come from a trusted source.
 
-For scheduled checks, first target `--episodes 2000`, evaluate, then resume
-with `--episodes 10000`, and finally `20000`. Or run uninterrupted for the
-full budget. `--episodes` is always a **total** target, not additional attempts.
+Outputs: real-move JSONL, progress JSON, a checkpoint pointer, compressed opaque
+checkpoints and separate evaluation JSON. Transport hashes protect file bytes;
+continuation tests compare learned state, graph edges, shared parameter identity
+and subsequent actions. Neither is evidence of chess mastery.
 
-```bash
-python scripts/autogrowth/run_mate_one_coach.py evaluate --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/m1-seed1 --split validation
-python scripts/autogrowth/run_mate_one_coach.py train --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/m1-seed1 --seed 1 --episodes 20000 --wall-seconds 28800 --resume
-```
-
-Ctrl-C or a file named `STOP` in the run directory requests a stop after the
-current action and feedback finish. Remove `STOP` before resuming. Checkpoints
-retain the organism and exact shuffled schedule together, with the two most
-recent complete files retained. A crash can lose work after the last checkpoint
-(default 256 attempts); resume discards uncommitted trace entries. After a hard
-crash remove `run.lock` only once the old process has stopped. Resume requires
-the original source, Python minor version, package versions, pool, and seed.
-Use only checkpoints you produced or trust: they contain Python pickle data.
-
-Outputs are `moves.jsonl` (real positions/actions/outcomes), `progress.json`,
-`latest.json`, opaque compressed checkpoints, and separate evaluation JSON.
-Checkpoint hashes verify transport integrity; the continuation tests compare
-canonical graph semantics, credit state, and subsequent actual moves. Hashing
-a pickle is not evidence of semantic equality or mastery.
-
-When the configuration is frozen, `evaluate --split test` opens the reserved
-test once and writes `final_test_opened.json`. That run cannot train afterward.
-Repeated validation at different checkpoints is allowed; the same checkpoint
-and split cannot overwrite an existing evaluation.
+`evaluate --split test` opens the reserved test once and freezes that run against
+further training. M2 remains blocked until reliable disjoint M1 performance;
+this implementation does not automatically change the curriculum.
 
 ## Tests
 
-From an activated environment on Unix:
-
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 PYTHONPATH=src:libs/recon-lite/src python -m pytest -q tests/autogrowth/test_mate_one_coach.py tests/autogrowth/test_native_local_interaction_v27.py tests/test_intrinsic_credit.py libs/recon-lite/tests/test_formal_choice.py tests/test_fanin_terminals.py
+PYTHONPATH=src:libs/recon-lite/src python -m pytest -q tests/autogrowth/test_terminal_development.py tests/autogrowth/test_mate_one_coach.py tests/autogrowth/test_native_local_interaction_v27.py tests/test_intrinsic_credit.py libs/recon-lite/tests/test_formal_choice.py tests/test_fanin_terminals.py
 ```
 
-The coach tests cover actual-move-only grading, no graph access by the coach,
-no runtime teacher helpers, empty initialization, terminal leaves, exact
-feedback binding, no double credit, consistent value updates and slow memory,
-semantic continuation after restore, deterministic resume order, disjoint
-curated splits, read-only evaluation, and corrupt-checkpoint rejection. Unit
-tests may inspect internals; production feedback and scheduling may not.
+These exercise terminal-only observation/action, typed sparse masks, actual
+AND/OR/XOR semantics, learning XOR without marginal feature correlation, selected
+and delayed credit, protected composition members, bounded noisy growth,
+consolidation, persistence, real chess moves, coach opacity and old-path
+regressions. Test-side planted structures isolate primitives; the XOR learning
+test starts empty and receives only scalar outcomes of its own choices.

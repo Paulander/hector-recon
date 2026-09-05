@@ -1,0 +1,274 @@
+{
+  "schema": "terminal_development_engineering_smoke.v1",
+  "date": "2026-09-05",
+  "base_commit": "e850c58f526b8991462b9bb37c70ae165b9b41c0",
+  "source_identity": {
+    "code_sha256": "8562d4da3b186a02fab471426e315dad18123123744c125897c0cc000044f974",
+    "python": [
+      "3",
+      "12"
+    ],
+    "chess": "1.11.2",
+    "numpy": "2.3.5",
+    "pythonhashseed": "0"
+  },
+  "learner": "recon_lite_chess.coach.terminal.TerminalOrganism",
+  "config": {
+    "max_conditions": 96,
+    "births_per_episode": 2,
+    "learning_rate": 0.3,
+    "exploration": 0.25,
+    "grace_episodes": 256,
+    "prune_weight": 0.02,
+    "consolidate_every": 32,
+    "consolidation_rate": 0.1,
+    "eligibility_decay": 0.8
+  },
+  "feature_schema": [
+    {
+      "name": "white_to_move",
+      "values": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "actuator_moves_rook",
+      "values": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "kings_file_distance",
+      "values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "name": "kings_rank_distance",
+      "values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "name": "rook_black_king_file_distance",
+      "values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "name": "rook_black_king_rank_distance",
+      "values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "name": "target_black_king_file_distance",
+      "values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "name": "target_black_king_rank_distance",
+      "values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "name": "target_white_king_file_distance",
+      "values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "name": "target_white_king_rank_distance",
+      "values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "name": "black_king_on_edge_file",
+      "values": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "black_king_on_edge_rank",
+      "values": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "target_aligned_black_king_file",
+      "values": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "target_aligned_black_king_rank",
+      "values": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "kings_aligned_file",
+      "values": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "kings_aligned_rank",
+      "values": [
+        false,
+        true
+      ]
+    }
+  ],
+  "training": {
+    "attempts": 182,
+    "real_white_moves": 182,
+    "checkmates": 99,
+    "training_success_rate": 0.5439560439560439,
+    "illegal_actions": 0,
+    "abstentions": 0,
+    "seed": 1,
+    "train_pool_sha256": "6007840a71af73552e78ca3a272ce0af1b4639258246b39fa578f842a5a2a8f2",
+    "invocation_seconds": 180.675,
+    "stop_reason": "wall_limit",
+    "validation_used_for_training": false,
+    "exercise": "mate within one own move; +1 mate, -1 exercise failure"
+  },
+  "baseline_validation": {
+    "schema": "mate_one_coach_evaluation.v1",
+    "split": "validation",
+    "count": 128,
+    "pool_sha256": "dd92f3740e916f89665f459f9165088bac563a465c8bd803404a241f48798c2e",
+    "training_attempts": 0,
+    "checkmates": 4,
+    "illegal_actions": 0,
+    "abstentions": 0,
+    "learning": false,
+    "success_rate": 0.03125
+  },
+  "trained_validation": {
+    "schema": "mate_one_coach_evaluation.v1",
+    "split": "validation",
+    "count": 128,
+    "pool_sha256": "dd92f3740e916f89665f459f9165088bac563a465c8bd803404a241f48798c2e",
+    "training_attempts": 182,
+    "checkmates": 124,
+    "illegal_actions": 0,
+    "abstentions": 0,
+    "learning": false,
+    "success_rate": 0.96875
+  },
+  "validation_symmetry_orbits": 25,
+  "final_test_opened": false,
+  "offline_graph_audit_after_training": {
+    "condition_definitions": 96,
+    "condition_definitions_born": 96,
+    "condition_definitions_pruned": 0,
+    "binding_slots": 20,
+    "vertices": 3385,
+    "edges_including_reverse_pairs": 12164,
+    "node_types": {
+      "SCRIPT": 1943,
+      "TERMINAL": 1442
+    },
+    "distinct_reader_definitions": 70,
+    "condition_operators": {
+      "and": 83,
+      "xor": 5,
+      "or": 8
+    },
+    "condition_states": {
+      "TRIAL": 69,
+      "PROBATION": 27
+    },
+    "conditions_with_nonzero_slow_weight": 25,
+    "causal_intervention_count": 0,
+    "all_terminals_are_leaves": true,
+    "formal_pairs_valid": true,
+    "weights_finite": true
+  },
+  "verification": {
+    "focused_suite": "79 passed; two boundary tests rechecked after protocol typing/doc clarification",
+    "xor": "All four contexts solved after 1200 scalar-reward trials from empty learned structure; both input marginals are uninformative; action identifiers renamed at evaluation.",
+    "other": "Typed sparse masks, Boolean operators, actual graph-edge intervention, selective delayed credit, trial grace, dependency-preserving pruning, bounded noise growth, exact continuation and old-path regressions."
+  },
+  "limits": [
+    "One short engineering seed; validation rows were already development data, with 25 symmetry orbits rather than 128 independent families.",
+    "Condition proposal distribution is fixed and random; reader survival and graph-edge contributions learn from outcomes.",
+    "Pruning was not reached in this chess run; its dependency/grace behavior was tested separately.",
+    "No causal MATURE certificate, recursive temporal growth, learned world dynamics, virtual frames, module handoff or M2 implementation.",
+    "The historical hybrid result is not a matched causal control."
+  ],
+  "checkpoint_archive": {
+    "path": "TERMINAL_DEVELOPMENT_SMOKE_20260905.zip (separately supplied; not published in repository)",
+    "sha256": "53d2d0a8ba9551897e6fd4a3752b640c3d487fec247fe47c7bb6c61eecd07131",
+    "bytes": 279388,
+    "extract_and_restore_verified": true
+  }
+}

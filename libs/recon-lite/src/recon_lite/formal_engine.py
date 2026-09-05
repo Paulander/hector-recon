@@ -396,6 +396,8 @@ class FormalReConEngine:
             env["__graph__"] = self.g
             done, success = node.predicate(node, self._env_for_node(node.nid, env))
         except Exception:
+            if env.get("raise_terminal_errors", False):
+                raise
             return NodeState.FAILED
         if not done:
             return NodeState.WAITING
@@ -521,6 +523,22 @@ class FormalReConEngine:
             # Only an explicit policy opts into settled child-state aggregation.
             return None
         policy = str(declared_policy).lower()
+        if policy == "weighted_evidence":
+            # A generic SCRIPT primitive: settled child confirmations carry
+            # signed, plastic SUR weights. Failure contributes zero; it does
+            # not veto other evidence. No host-provided candidate score.
+            children = self.g.children(node.nid)
+            if not children:
+                return NodeState.FAILED
+            settled = {NodeState.CONFIRMED, NodeState.FAILED}
+            if any(self.g.nodes[nid].state not in settled for nid in children):
+                return NodeState.WAITING
+            node.activation.value = math.fsum(
+                float(self.g.edge_by_key[(nid, node.nid, LinkType.SUR)].w)
+                * float(self.g.nodes[nid].activation.value)
+                for nid in children if self.g.nodes[nid].state == NodeState.CONFIRMED
+            )
+            return NodeState.TRUE
         if policy not in {"and", "or", "xor", "k_of_n", "quorum"}:
             return None
 

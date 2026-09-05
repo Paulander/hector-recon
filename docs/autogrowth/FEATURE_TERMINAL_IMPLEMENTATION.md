@@ -1,9 +1,13 @@
 # Feature terminals, scalar feedback, and internal growth
 
-Status: implementation specification following the user's clarification.
-The scalar-feedback correction is implemented. The feature/selector migration
-and growth changes below are not yet implemented. The existing 67/128 result
-uses a hybrid native learner and cannot establish the target architecture.
+Status: an initial finite terminal/composition loop is implemented in
+`learning/terminal_development.py` and is now the coach's default. The runnable
+scope and reuse decisions are in [MATE_ONE_COACH.md](MATE_ONE_COACH.md), with the
+initial budget in [TERMINAL_DEVELOPMENT_RUN.md](TERMINAL_DEVELOPMENT_RUN.md).
+The broader items below remain a roadmap where not explicitly completed:
+recursive/temporal growth, residual-directed proposals, virtual frames, reader
+parameter mutation and hierarchical child-value credit are still deferred.
+The existing 67/128 result used the historical hybrid learner.
 
 Read the [architecture constitution](ARCHITECTURE_CONSTITUTION.md) for the
 controlling philosophy and allowed prior measurements. The user's clarified
@@ -11,18 +15,21 @@ target is sparse terminal discovery and learned composition over a declared
 feature space. Dense trainable projections are one possible reader family, not
 a mandatory replacement for existing sparse masks, thresholds or prototypes.
 
-## What exists, and the actual gap
+## Implemented foundation and remaining gap
 
-| Component | Current code | Required change |
+| Component | Implemented now | Remaining work |
 | --- | --- | --- |
-| External feedback | `coach/interface.py`, `coach/exercise.py` | Done: scalar reward plus binding to the organism's already selected action; diagnostic reasons stay in the coach log. |
-| Observation | `BoardSensor.measure()` returns a piece-list snapshot; `NativeOrganism.act()` reconstructs a Python board | Publish a numeric feature basis; make graph requests reach it through leaf terminals. |
-| Terminal representation | Native triplets create terminals for fixed feature keys | Spawn coordinate or sparse projection readers with their parameters persisted in graph-owned state. |
-| Earlier representation machinery | `nodes/stem_cell.py` has feature masks, centroid/medoid prototypes and transition samples | Reuse the existing lifecycle and sample ownership where sound. Prototypes are not arbitrary learned linear projections. Audit the old stage-aware integration before reuse. |
-| FeatureHub | `features/hub.py` centralizes a hand-written feature registry | Reuse measurement/caching mechanics, not its entire tactical/phase vocabulary as an allegedly neutral base. |
-| Action selection | Native Python candidate scoring feeds a fresh anonymous formal choice graph | Persistent request/confirmation paths must compute candidate support and emit the action through actuator terminals. |
-| Credit | `learning/intrinsic_credit.py` has eligibility, fast/slow values and grounded child providers | Connect those mechanisms to the actual active terminal/edge/parent paths and terminal parameters. |
-| Growth | The coach adapter materializes selected before/action/after triplets | Integrate local residual-driven candidates with the existing stem-cell lifecycle; do not introduce a second lifecycle controller in the coach. |
+| External feedback | Scalar outcome plus event/action binding; reasons stay outside. | Later explicitly bounded speed cost. |
+| Observation | Sixteen typed coordinates; only spawned graph terminals call the measurement port. | Other reader families and virtual frame contexts. |
+| Representation | Discovered sparse equality readers and immediate Boolean composition trials. | Parameter mutation, recursive composition and broader feature domains. |
+| Selection | Persistent formal graph, signed plastic SUR support and requested actuator terminal. | Learned temporal commitments and module arbitration. |
+| Credit | Normalized episodic error on participating conditions; delayed eligibility; effective fast+slow weights. | Grounded hierarchical child handoff and duration-aware returns. |
+| Growth | Internal bounded proposals, whole-condition survival and orphan-reader pruning; existing candidate statistics. | Residual-directed growth and stronger causal utility assessment. |
+
+The implementation intentionally does not claim the whole roadmap below is
+complete. Its new weighted-evidence SCRIPT is a generic primitive, and its
+finite random birth grammar is supplied prior structure. Tests distinguish
+generated structures from test-side planted primitive fixtures.
 
 ## 1. Explicit base, actual terminals
 

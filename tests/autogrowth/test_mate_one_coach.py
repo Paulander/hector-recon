@@ -207,7 +207,9 @@ def test_runner_resume_order_and_separate_evaluation(pool, tmp_path):
     initial = train(_args(pool, run, 0))
     assert initial["attempts"] == initial["real_white_moves"] == 0
     baseline = evaluate(argparse.Namespace(pool=pool, run=run, split="validation"))
-    assert baseline["checkmates"] == 0 and baseline["abstentions"] == 4
+    # Generic legal-actuator embodiment can move before any readers are born.
+    assert baseline["count"] == 4 and baseline["abstentions"] == 0
+    assert baseline["illegal_actions"] == 0
     first = train(_args(pool, run, 4, resume=True))
     assert first["attempts"] == first["real_white_moves"] == 4
     with (run / "moves.jsonl").open("a") as stream:

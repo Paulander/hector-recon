@@ -1,12 +1,16 @@
 """The complete coach/organism information boundary.
 
 No graph, candidate, value, virtual frame, target move, or exercise family is
-part of this protocol. A sensor supplies a frozen board measurement. The native
-organism reconstructs its own rules-model state from that measurement.
+part of the teaching signal. The current embodiment offers typed coordinate
+measurements and primitive actions to graph terminals. BoardSensor is retained
+only for the historical hybrid adapter and its regression tests.
 """
 
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Protocol, TypeVar
+
+
+Observation = TypeVar("Observation", contravariant=True)
 
 
 @dataclass(frozen=True)
@@ -40,7 +44,7 @@ class Feedback:
     reward: float
 
 
-class Organism(Protocol):
-    def act(self, sensor: BoardSensor, *, event_id: int, learn: bool) -> str | None: ...
+class Organism(Protocol[Observation]):
+    def act(self, sensor: Observation, *, event_id: int, learn: bool) -> str | None: ...
 
     def observe(self, feedback: Feedback) -> None: ...

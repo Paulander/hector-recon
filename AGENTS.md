@@ -10,34 +10,41 @@ only learning or a hand-authored chess policy hidden behind a terminal.
 
 ## Active experiment on `codex/mate-in-one-coach`
 
-The user's September 5, 2026 instruction starts a fresh **KRK engineering**
-experiment: an opaque organism plays curated mate-in-one exercises. The coach
-supplies a position through its sensor interface, executes the submitted move,
-and returns +1 for observed checkmate or -1 for failing the one-move exercise.
-Nonmate is exercise failure, not a claim that the chess position is lost.
-The learner owns exploration, fast plasticity, generated triplets, and local
-slow-value updates. The coach must not inspect activations, imagined boards,
-graph shape, or alternatives to decide feedback, scheduling, or consolidation.
-Position preparation may check that a mate exists; it exports no answer moves.
+The September 5, 2026 user instructions authorize a fresh **KRK engineering**
+implementation and actual M1 play. The default is now `TerminalOrganism` in
+`coach/terminal.py`, with the domain-independent developmental loop in
+`learning/terminal_development.py`. The environment keeps the board. Graph input
+terminals read sparse typed coordinates; the persistent formal graph computes
+support and selects an action; an output terminal executes it. Feedback is only
+scalar reward plus event/action binding. Outcome reasons stay in coach logs.
 
-This explicit user direction supersedes older requirements below for graded
-geometry feedback, trainer-controlled consolidation, or continuing a failed
-mate-in-one exercise. Preserve those historical instructions for the broader
-roadmap where consistent. The existing native learner remains a hybrid; do not
-claim that this adapter establishes fully graph-native control or autonomy.
-The frozen experiment, limits, commands, and tests are in
-`docs/autogrowth/MATE_ONE_COACH.md`. Do not silently broaden the curriculum or
-change the learner after a negative run. Test and report actual chess behavior.
+The initial grammar is finite equality readers with one-to-three-reader
+AND/OR/exactly-one-XOR conditions. Random birth and outcome-based selection are
+implemented; adaptive proposal learning, recursive scripts, virtual frames,
+module handoff and M2 chess are not. Shared SUR parameters have fast and slow
+components. Correlation is not causal intervention; do not manufacture MATURE
+certification from observed reward. Whole-condition pruning must retain any
+terminal still needed by a surviving composition. Individual marginal utility
+or maturity must never gate composition trials.
 
-The user's subsequent clarification requires a numeric feature basis read by
-spawned sparse terminals (coordinate, threshold, prototype or projection readers).
-`BoardSensor` is only the legacy
-board-snapshot adapter and does not satisfy that architecture. Treat the 67/128
-smoke as a hybrid reference result. Next implementation follows
-`docs/autogrowth/FEATURE_TERMINAL_IMPLEMENTATION.md`; do not claim that renaming
-an adapter or wrapping an external scorer implements learned terminals.
-Feedback carries scalar reward and action/event binding only. Keep outcome
-reason labels in the coach's external log, not learner feedback.
+The current implementation's scope, existing-mechanism reuse and limitations
+are in `docs/autogrowth/MATE_ONE_COACH.md`. Its initial engineering run is frozen
+in `docs/autogrowth/TERMINAL_DEVELOPMENT_RUN.md`. Keep the +1 actual mate / -1
+one-move exercise-failure contract. Do not inspect graph shape or imagined boards
+to schedule training, reward behavior or authorize consolidation. Offline tests
+and audits may inspect internals. No automatic curriculum advance or parameter
+change follows a negative chess run.
+
+`BoardSensor` and `NativeOrganism` remain legacy reference paths, not the default.
+The historical 67/128 smoke is a hybrid result and cannot substantiate the new
+terminal path. Source checks intentionally prohibit resuming that checkpoint
+under new code. Do not disable them.
+
+These explicit user directions supersede older conflicting instructions below
+for graded geometry reward, trainer-controlled consolidation, frozen baselines,
+continued nonmate exercise or richer learner-visible information. The architecture
+constitution controls the interpretation. This is an initial developmental loop,
+not a declaration of general autonomy or a learned world model.
 
 ## Active Goal
 

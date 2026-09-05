@@ -32,6 +32,20 @@ def play_mate_one(organism: Organism, fen: str, *, event_id: int, learn: bool) -
     material = sorted((p.piece_type, p.color) for p in board.piece_map().values())
     if material != sorted(((chess.KING, True), (chess.ROOK, True), (chess.KING, False))):
         raise ValueError("this exercise adapter supports KRK only")
+    if getattr(organism, "embodiment", None) == "typed_feature_terminals_v1":
+        from .terminal import ChessFeaturePort
+
+        port = ChessFeaturePort(board)
+        action = organism.act(port, event_id=event_id, learn=learn)
+        if action != port.executed:
+            raise RuntimeError("action must be executed by the requested actuator terminal")
+        moved = int(port.executed is not None)
+        reason = ("no_action" if not moved else "checkmate" if board.is_checkmate()
+                  else "stalemate" if board.is_stalemate() else "exercise_timeout")
+        reward = 1.0 if reason == "checkmate" else -1.0
+        if learn:
+            organism.observe(Feedback(event_id, action, reward))
+        return Attempt(event_id, fen, action, board.fen(), reward, reason, moved)
     sensor = BoardSensor(PositionReading(
         pieces=tuple(sorted((sq, p.piece_type, p.color) for sq, p in board.piece_map().items())),
         white_to_move=board.turn,

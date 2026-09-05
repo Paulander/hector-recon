@@ -147,7 +147,7 @@ def _trim_uncommitted_trace(path: Path, next_event: int) -> None:
 
 
 def train(args: argparse.Namespace) -> dict:
-    from .native import NativeOrganism
+    from .terminal import TerminalOrganism
 
     fens, digest = load_split(args.pool, "train")
     directory = args.run
@@ -171,7 +171,7 @@ def train(args: argparse.Namespace) -> dict:
         else:
             if (directory / "latest.json").exists() or (directory / "moves.jsonl").exists():
                 raise FileExistsError("run already exists; use --resume or a new directory")
-            state = RunState(NativeOrganism(), digest, args.seed, source_identity(),
+            state = RunState(TerminalOrganism(seed=args.seed), digest, args.seed, source_identity(),
                              rng=random.Random(args.seed))
             save_checkpoint(state, directory)  # Durable empty-learned-state start.
         trace_path = directory / "moves.jsonl"
