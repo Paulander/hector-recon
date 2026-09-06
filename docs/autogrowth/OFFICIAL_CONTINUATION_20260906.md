@@ -91,11 +91,14 @@ the stable baseline while that experiment is developed. See
 [LEARNING_SEQUENCE.md](LEARNING_SEQUENCE.md) for mechanism order and the distinction
 between experimental controls and continuous learning in a future competent agent.
 
-Progress update: step 1 is implemented and its first bounded three-seed run is
-complete; see [M1_GROWTH_ATTRIBUTION.md](M1_GROWTH_ATTRIBUTION.md). Random birth
-added little to final M1 scores, and mixed-versus-atomic effects varied by seed.
-The production learner is unchanged. The next candidate implementation is step 2,
-not an automatic claim that adaptive growth will solve the remaining failures.
+Progress update: steps 1 and 2 have bounded three-seed results. See
+[M1_GROWTH_ATTRIBUTION.md](M1_GROWTH_ATTRIBUTION.md) and
+[RESIDUAL_SHADOW_NOMINATION.md](RESIDUAL_SHADOW_NOMINATION.md). Random birth added
+little; mixed-versus-atomic effects varied; residual ranking did not reliably beat
+matched random prediction. Shadow actors stayed identical to controls. The work
+branch now tests one live TRIAL under the predeclared
+[LIVE_TRIAL_MATERIALIZATION.md](LIVE_TRIAL_MATERIALIZATION.md) protocol. The
+production learner is unchanged; this is a behavior test, not a maturity gate.
 
 1. Run matched multi-seed controls: online random reveal, the same random
    condition set installed at initialization, and atomic-only representation.
@@ -105,8 +108,9 @@ not an automatic claim that adaptive growth will solve the remaining failures.
    generic composition work. Candidates learn without decision influence, then
    later real outcomes compare prediction with and without them. Match random
    proposals by budget, support and opportunity.
-3. Introduce promotion and pruning only with prospective evidence and persistent
-   hypothesis history. Ablate promoted structures after learning.
+3. Let one nominated TRIAL act and learn with persistent hypothesis history.
+   Compare ranked/random/no-addition trajectories and ablate its final live
+   contribution. Do not confuse permitting a trial with confirming maturity.
 4. Test competence and delegation first in a tiny two-context/two-child task.
    Train children independently from scalar outcomes; let a parent observe only
    typed child-response terminals; compare connected, disconnected and permuted

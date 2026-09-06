@@ -17,9 +17,11 @@ Read these current documents before changing the learner:
    learning and future operating profiles; identifies the isolated work branch.
 
 On `codex/residual-shadow-nomination`, also read
-`docs/autogrowth/RESIDUAL_SHADOW_NOMINATION.md`. This experimental branch adds
-internal nomination and prospective prediction evidence only. Shadows cannot
-act, change live credit or earn maturity; do not silently materialize them.
+`docs/autogrowth/RESIDUAL_SHADOW_NOMINATION.md` and
+`docs/autogrowth/LIVE_TRIAL_MATERIALIZATION.md`. `ShadowDevelopment` remains
+isolated; the explicitly authorized `TrialDevelopment` extension attaches one
+nominee after a fixed prefix, preserving history. It uses ordinary actor credit,
+stops shadow updates and keeps the new condition in TRIAL. No maturity claim.
 
 `CODEX_HANDOFF_BRIEF.md`, `docs/BRIEF.md`, TG/V plans, phase reports and archived
 runners are historical evidence, not live instructions. Consult them only for a
@@ -104,7 +106,7 @@ actor behavior/state stayed identical to controls; ranking beat random in one
 seed, chose the same candidate in another and slightly lost in the third.
 Do not claim reliable ranking superiority or causal usefulness from this result.
 
-Next bounded question: live TRIAL materialization with preserved history and
+Current bounded question: live TRIAL materialization with preserved history and
 ranked/random/no-addition controls. Keep actor weights plastic. Do not assume added
 topology is the cause or cure of weak performance; experience and optimization
 also matter. Test learned child competence and parent delegation separately in a
@@ -116,6 +118,8 @@ Use Python 3.12 and run:
 
 ```bash
 PYTHONPATH=src:libs/recon-lite/src python -m pytest -q \
+  tests/autogrowth/test_live_trial.py \
+  tests/autogrowth/test_live_trial_experiment.py \
   tests/autogrowth/test_residual_shadow.py \
   tests/autogrowth/test_residual_shadow_experiment.py \
   tests/autogrowth/test_mate_one_attribution.py \

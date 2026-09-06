@@ -77,5 +77,9 @@ the selected action, exploration, live weights, birth or pruning.
 
 Its discovery/prospective split is an experimental attribution control. It is not
 a proposed permanent two-phase training schedule or a maturity gate on ordinary
-learning. Prediction gain would justify a subsequent behavioral materialization
-experiment; it would not itself establish autonomous topology growth or handover.
+learning. The first prediction results were mixed; they do not establish useful
+structural selection. The next extension, `TrialDevelopment`, nevertheless permits
+one young nominee to act and learn, with its complete shadow record retained.
+Ranked/random/no-addition actual-play controls test that connection; a trial need
+not first prove scientific maturity. See `LIVE_TRIAL_MATERIALIZATION.md` for the
+fixed protocol. Autonomous regulation and strategic handover remain separate work.
