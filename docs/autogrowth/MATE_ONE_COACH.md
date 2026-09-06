@@ -5,6 +5,10 @@ Branch: `codex/mate-in-one-coach`. The default learner is now
 `learning/terminal_development.py` runtime. Start a new run directory: old hybrid
 checkpoints intentionally cannot resume against changed source code.
 
+The [cross-check request](ALIGNMENT_REVIEW_20260906.md) and
+[successor guidance draft](SUCCESSOR_GUIDANCE_DRAFT.md) describe the review before
+establishing the official main line. No merge to `main` has been performed.
+
 ## Measured initial run
 
 After 182 actual training moves (99 mates, 180.675 seconds including final
@@ -74,6 +78,8 @@ actions. Earlier actions can retain decaying eligibility until final feedback.
 Inactive conditions do not receive that outcome update. Slow consolidation
 transfers part of fast weight into slow weight without changing their sum; both
 parts contribute to the next decision, and fast learning remains enabled.
+Because future updates and pruning still consume that sum, transfer alone does
+not change the effective learning dynamics or demonstrate resistance to forgetting.
 Pruning retires weak whole conditions after a grace period and then removes
 orphan readers. This is a bounded engineering survival rule, not evidence of
 causal structural importance. Reward correlations never become fabricated
@@ -103,6 +109,11 @@ handoff. Its competence-provider gating is not used to authorize local feature
 weight updates: that would prevent immature features from learning. This first
 path implements a normalized episodic reward-error update, not a claim that
 hierarchical value handoff or variable-duration option learning is completed.
+
+The root named `goal` confirms action selection, not achievement of checkmate.
+Its raw activation, including any exploration bonus, is not calibrated child
+competence or a transferable goal-value signal. A future hierarchical interface
+must distinguish these before using a child response to support delegation.
 
 Still deferred: reader-parameter mutation beyond birth/selection, residual-driven
 proposal selection, recursive SCRIPT/sequence discovery, virtual frames, learned

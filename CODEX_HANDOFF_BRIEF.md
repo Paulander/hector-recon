@@ -1,5 +1,13 @@
 # CODEX HANDOFF BRIEF — Hector/ReCoN reset (2026-07)
 
+> **Historical handoff, superseded for the current continuation.** Its commands
+> below record the July plan, including training signals that conflict with
+> Oskar's later scalar-outcome and terminal-only clarifications. Start with
+> [AGENTS.md](AGENTS.md), the
+> [current cross-check request](docs/autogrowth/ALIGNMENT_REVIEW_20260906.md) and
+> [successor guidance draft](docs/autogrowth/SUCCESSOR_GUIDANCE_DRAFT.md).
+> Preserve this text as provenance; do not execute its old phases as live tasks.
+
 You are joining mid-project after an external review. Read this file fully. Do NOT read
 `docs/autogrowth/ACTIVE_BRIEF.md` except when a task below explicitly points you at a line in it —
 it is a 290-line historical log whose format has been driving checkpoint-accretion behavior.

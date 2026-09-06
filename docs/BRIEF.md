@@ -1,6 +1,13 @@
-# Hector/ReCoN — Current Research Ledger
+# Hector/ReCoN — Historical Research Ledger
 
-Status: this is the authoritative concise claim ledger. Historical phase narratives and artifacts remain provenance, not automatically valid evidence.
+Status updated 2026-09-06: this accumulated ledger preserves dated findings and
+corrections. Its older uses of "current" or "canonical" refer to those historical
+experiments, not the present continuation. Start with the
+[architecture constitution](autogrowth/ARCHITECTURE_CONSTITUTION.md),
+[implemented M1 path and evidence](autogrowth/MATE_ONE_COACH.md),
+[cross-check request](autogrowth/ALIGNMENT_REVIEW_20260906.md) and
+[successor guidance draft](autogrowth/SUCCESSOR_GUIDANCE_DRAFT.md).
+Official mainline promotion awaits that cross-check and Oskar's return.
 
 Canonical dieted parent: reports/autogrowth/clean_slate_krk/dieted_foundation_v1/krk_tg46c_real_mate2_repair_seed_20260702_rev1.json
 Canonical sha256: ae382d0463e35eff09e9515a715648b5d49b1e0891d127a660e036e378452eb6

@@ -1,5 +1,13 @@
 # ReCoN/Hector Agent Instructions
 
+Continuation status, 2026-09-06: `codex/mate-in-one-coach` is the proposed new
+main line, pending the user's requested cross-check with the previous instance.
+Read [the review brief](docs/autogrowth/ALIGNMENT_REVIEW_20260906.md) and
+[successor guidance draft](docs/autogrowth/SUCCESSOR_GUIDANCE_DRAFT.md).
+The draft is not an accepted promotion decision. Do not merge to `main` as part
+of this review handoff. The July root handoff and accumulated `docs/BRIEF.md`
+are historical sources; their old commands do not override the current boundary.
+
 Read `docs/autogrowth/ARCHITECTURE_CONSTITUTION.md` for the user's architecture
 and information boundary before adding mechanisms. Geometric base measurements
 such as king-at-edge and piece distance are permitted. Terminals may read only
@@ -45,6 +53,11 @@ for graded geometry reward, trainer-controlled consolidation, frozen baselines,
 continued nonmate exercise or richer learner-visible information. The architecture
 constitution controls the interpretation. This is an initial developmental loop,
 not a declaration of general autonomy or a learned world model.
+
+The remaining sections preserve earlier operating and experimental instructions.
+Apply compatible safeguards; resolve historical conflicts using the explicit
+user directions above. Consolidating this file is part of the proposed
+post-review work, not a reason to revive a retired runner or training signal.
 
 ## Active Goal
 

@@ -1,12 +1,22 @@
 # ReCoN‑lite (Request–Confirmation Network) — Chess Sandbox
 
-> **This branch: mate-in-one through actual play.** Start an empty learned graph,
-> give feedback only for its submitted move, and keep the coach blind to network
-> internals. See [the experiment and two-computer launch commands](docs/autogrowth/MATE_ONE_COACH.md).
-> This uses the existing hybrid native learner; fully graph-native control is
-> still an open implementation task. The broader descriptions below are historical.
+> **This branch: mate-in-one through learned feature terminals.** The default
+> `TerminalOrganism` reads declared coordinates through terminals, selects actions
+> in the persistent formal graph and executes them through an actuator terminal.
+> The coach returns scalar outcome feedback. See [the measured result, limits and
+> launch commands](docs/autogrowth/MATE_ONE_COACH.md). Adaptive structural discovery
+> and learned module handover remain to be demonstrated.
 
-> **Research status:** this README contains historical architecture and milestone descriptions, including older M3-planned language. See [`docs/BRIEF.md`](docs/BRIEF.md) for the audited current claims, corrections, and next decision gate.
+> **Review before mainline promotion:** read the
+> [cross-check request](docs/autogrowth/ALIGNMENT_REVIEW_20260906.md) and
+> [successor guidance draft](docs/autogrowth/SUCCESSOR_GUIDANCE_DRAFT.md).
+> `codex/mate-in-one-coach` is the proposed continuation; `main` has not been
+> promoted. The [architecture constitution](docs/autogrowth/ARCHITECTURE_CONSTITUTION.md)
+> records the user's clarified boundary.
+
+> **Historical overview below:** the remaining architecture and milestone
+> descriptions, and the accumulated [research ledger](docs/BRIEF.md), describe
+> earlier project states. They do not override the current entry points above.
 
 ReCoN‑lite is a small, dependency‑light Python implementation of a **Request–Confirmation Network (ReCoN)** plus a set of chess‑focused demos (KRK/KPK endgames, macrograph, visualization, and training/eval tooling). The goal is to explore ReCoNs as an **orchestrator** for scripts, heuristics, and learned components — not as a monolithic learner — while keeping the internal graph state explainable and easy to visualize.
 
