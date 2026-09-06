@@ -75,3 +75,26 @@ would show at least partly transient damage; persistent damage would motivate
 inspection of ordinary credit and action opportunity before another controller.
 Neither outcome authorizes promoting the probe or declaring autonomous useful
 selection. Keep mechanism evidence, chess performance and handover claims distinct.
+
+## Execution interruption and identical retry
+
+The first attempt at implementation `cca08f8d` was interrupted by the execution
+connection disappearing. Its session became unknown, and no training workers
+remained. Ten completed-arm console entries survived, but no complete seed record
+or aggregate summary did. It is **incomplete**, not a scientific result. Preserve
+`reports/autogrowth/development/TRIAL_RECOVERY_INTERRUPTED_20260906.json`.
+Those entries establish at least 6,016 actual moves; additional in-flight moves
+are uncounted. Do not present the completed retry's budget as the total compute
+used across attempts or cherry-pick the first attempt's favorable arms.
+
+The runner now writes each completed arm's full aggregate record immediately.
+This output-only fix changes no learner/input/schedule. A focused failure test
+checks that a later failure preserves earlier arm evidence without producing a
+complete summary. It does not add automatic resume or extend a timed-out run.
+
+Repeat all 15 arms with exactly the declared parameters and the same 1,800-second
+per-seed cap in a fresh directory:
+`reports/autogrowth/runs/trial-recovery-seeds123-retry1`. This retry is due to an
+execution interruption, with no scientific configuration change or score-based
+extension. Record its source hashes before play and check its completed arms
+against every available earlier log entry, excluding wall times.

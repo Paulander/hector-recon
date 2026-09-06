@@ -1,0 +1,119 @@
+{
+  "status": "incomplete",
+  "reason": "Execution connection interrupted; session became unknown and worker processes were absent. No complete seed or summary survived.",
+  "completed_arm_log_entries": [
+    {
+      "seed": 1,
+      "arm": "none",
+      "status": "no_addition",
+      "suffix_mates": 103,
+      "validation_mates": 126,
+      "use_reward_difference": null,
+      "recovery_mates": 98,
+      "pruned": 13,
+      "seconds": 137.079
+    },
+    {
+      "seed": 2,
+      "arm": "none",
+      "status": "no_addition",
+      "suffix_mates": 86,
+      "validation_mates": 115,
+      "use_reward_difference": null,
+      "recovery_mates": 81,
+      "pruned": 12,
+      "seconds": 233.951
+    },
+    {
+      "seed": 3,
+      "arm": "none",
+      "status": "no_addition",
+      "suffix_mates": 45,
+      "validation_mates": 66,
+      "use_reward_difference": null,
+      "recovery_mates": 55,
+      "pruned": 13,
+      "seconds": 240.442
+    },
+    {
+      "seed": 1,
+      "arm": "ranked",
+      "status": "attached",
+      "suffix_mates": 102,
+      "validation_mates": 128,
+      "use_reward_difference": null,
+      "recovery_mates": 95,
+      "pruned": 12,
+      "seconds": 167.469
+    },
+    {
+      "seed": 2,
+      "arm": "ranked",
+      "status": "attached",
+      "suffix_mates": 92,
+      "validation_mates": 101,
+      "use_reward_difference": null,
+      "recovery_mates": 84,
+      "pruned": 14,
+      "seconds": 174.716
+    },
+    {
+      "seed": 3,
+      "arm": "ranked",
+      "status": "attached",
+      "suffix_mates": 45,
+      "validation_mates": 66,
+      "use_reward_difference": null,
+      "recovery_mates": 52,
+      "pruned": 13,
+      "seconds": 173.626
+    },
+    {
+      "seed": 1,
+      "arm": "random",
+      "status": "attached",
+      "suffix_mates": 103,
+      "validation_mates": 128,
+      "use_reward_difference": null,
+      "recovery_mates": 101,
+      "pruned": 10,
+      "seconds": 163.249
+    },
+    {
+      "seed": 2,
+      "arm": "random",
+      "status": "attached",
+      "suffix_mates": 92,
+      "validation_mates": 101,
+      "use_reward_difference": null,
+      "recovery_mates": 84,
+      "pruned": 14,
+      "seconds": 234.647
+    },
+    {
+      "seed": 1,
+      "arm": "probe_ranked",
+      "status": "attached",
+      "suffix_mates": 103,
+      "validation_mates": 124,
+      "use_reward_difference": 0.06940371456500483,
+      "recovery_mates": 95,
+      "pruned": 12,
+      "seconds": 186.675
+    },
+    {
+      "seed": 3,
+      "arm": "random",
+      "status": "attached",
+      "suffix_mates": 45,
+      "validation_mates": 66,
+      "use_reward_difference": null,
+      "recovery_mates": 55,
+      "pruned": 13,
+      "seconds": 246.054
+    }
+  ],
+  "completed_arm_moves_lower_bound": 6016,
+  "inflight_move_count": "unknown",
+  "implementation_commit": "cca08f8d34c635239b5d87e2241197f952105948"
+}

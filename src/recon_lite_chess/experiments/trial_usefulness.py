@@ -124,6 +124,11 @@ def run_seed(task):
             result["ablation"] = ablation(o, validation, report, actions, deadline=deadline)
         result["seconds"] = round(time.monotonic() - started, 3)
         arms[name] = result
+        # Preserve complete independent-arm evidence across execution interruption.
+        # This is an output checkpoint, never an input to action or learning.
+        arm_path = Path(output).with_name(f"{Path(output).stem}-{name}.json")
+        with arm_path.open("x") as stream:
+            json.dump({"seed": seed, "arm": name, "result": result}, stream, indent=2)
         print(json.dumps({"seed": seed, "arm": name, "status": result["decision"]["status"],
                           "suffix_mates": suffix["mates"], "validation_mates": report["mates"],
                           "use_reward_difference": result.get("usefulness", {}).get("mean_reward_difference"),

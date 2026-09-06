@@ -99,3 +99,22 @@ def test_recovery_failure_is_incomplete(pool, tmp_path, monkeypatch):
     assert (tmp_path / "run/manifest.json").exists()
     assert (tmp_path / "run/failure.json").exists()
     assert not (tmp_path / "run/summary.json").exists()
+
+
+def test_later_failure_preserves_finished_arm_evidence(pool, tmp_path, monkeypatch):
+    original, prefixes = experiment.train, []
+    def train(*args, **kwargs):
+        if kwargs["start_event"] == 0:
+            prefixes.append(True)
+            if len(prefixes) == 2:
+                raise TimeoutError("next arm interrupted")
+        return original(*args, **kwargs)
+    monkeypatch.setattr(experiment, "train", train)
+    with pytest.raises(TimeoutError, match="next arm interrupted"):
+        experiment.run(request(pool, tmp_path / "run"))
+    saved = json.loads((tmp_path / "run/seed-1-none.json").read_text())
+    assert saved["arm"] == "none" and saved["seed"] == 1
+    assert saved["result"]["after_recovery"]["completed"] == 16
+    assert saved["result"]["evaluation"]["count"] == 4
+    assert (tmp_path / "run/failure.json").exists()
+    assert not (tmp_path / "run/summary.json").exists()
