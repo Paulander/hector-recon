@@ -120,9 +120,9 @@ as the actor learned. Do not treat its three-seed mean as confirmation.
 This led to the live TRIAL experiment below. Young structures do not require an
 established superiority claim before participating in a declared learning trial.
 
-### Latest branch status: completed live TRIAL experiment
+### Previous milestone: completed live TRIAL experiment
 
-Current work-branch results commit:
+Live materialization results commit:
 [`16f61e9c`](https://github.com/Paulander/hector-recon/commit/16f61e9ccdf00ba9d17b4512f16cdc48939c7758).
 The implementation and predeclared protocol are at
 [`3e9d236e`](https://github.com/Paulander/hector-recon/commit/3e9d236e8a2b2ded2e7e8c6d2e9212bfa24ff412).
@@ -163,14 +163,54 @@ remained TRIAL; no age-based retirement occurred. Checkpoint/tombstone continuit
 was tested, but long-run retention, automatic regulation, full KRK and handover
 were not established.
 
-Next proposed bounded implementation: internal randomized enable/disable of one
-TRIAL contribution during actual episodes, with retained assignment/outcome
-history and continued actor learning. First test usefulness versus mere
-correlation in generic fixtures, then run a predeclared matched M1 comparison.
-The coach must remain opaque and return only actual scalar outcomes. This signal
-is not implemented and should not acquire an automatic maturity or retirement
-threshold in the same change. See the branch document for exact boundaries.
-Independent child competence and strategic handover remain a separate small task.
+### Latest branch status: randomized-use probe remains experimental
+
+Implementation/protocol:
+[`567dd40f`](https://github.com/Paulander/hector-recon/commit/567dd40f095fec45e0c3c928ac02d7805ef817fe).
+Results and continuation:
+[`9268b1db`](https://github.com/Paulander/hector-recon/commit/9268b1db37790393a2e879289208f9c1fd7a75c5).
+Read the [complete protocol, results and next target](https://github.com/Paulander/hector-recon/blob/9268b1db37790393a2e879289208f9c1fd7a75c5/docs/autogrowth/TRIAL_USEFULNESS.md).
+Main has not adopted the new learner code.
+
+An internal leaf terminal randomly permits one TRIAL's graph contribution before
+each actual action in a fixed window. Disabled trials receive no action credit;
+all assigned outcomes enter the local comparison. The coach remains opaque and
+ordinary actor learning continues. The signal is collected but does not select,
+retain, mature or prune structures. Generic fixtures distinguish useful AND from
+irrelevant success correlation without freezing ordinary bias/edge learning.
+
+All 151 focused tests passed. All 7,296 planned real moves completed: 3,840
+training, 1,920 normal development validation and 1,536 ablation. Every old control
+record reproduced exactly apart from timing, including action/outcome and learned
+state digests. The final test stayed closed. Final development mates /128:
+
+| Seed | None | Always ranked | Always random | Probed ranked | Probed random |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1 | 126 | 126 | 128 | 122 | 126 |
+| 2 | 93 | 101 | 101 | 94 | 94 |
+| 3 | 66 | 66 | 66 | 66 | 66 |
+
+Half-time probing reduced or matched every corresponding final score. Short
+enabled-minus-disabled reward estimates were +0.0694, -0.0049 and -0.0347, identical
+for ranked/random within each seed. These did not establish reliable usefulness
+discrimination. Seed 1's two probes even had identical actual suffix transcripts
+despite different participation counts and final validation.
+
+Co-adaptation is the strongest finding. The same seed 2 AND definition helped the
+always-enabled policy (101 → 91 when masked) but harmed the probed policy
+(94 → 117 when masked; 2 mates lost, 25 gained). The online estimate averaged
+earlier adaptive outcomes and did not clearly identify that large final effect.
+**117/128 is an offline ablation result, not an autonomous score.** Do not have the
+coach remove the candidate on that basis or infer a learned removal capability.
+
+Keep the always-enabled actor as the work-track reference. Do not promote 50%
+probing, claim reliable causal maturity, or add a retention controller on this
+evidence. Next: a separately declared matched recovery run, adding 128 normal-access
+training actions after the probe window while all ordinary learning remains
+active. Record phases and any natural pruning in the longer run; do not attribute
+recovery solely to edge updates. This tests whether the damage persists before
+adding machinery. Merely probing less also gives fewer control observations.
+Independent child competence and strategic handover remain separate work.
 
 ### Baseline sequence
 

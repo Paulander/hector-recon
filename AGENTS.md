@@ -93,16 +93,30 @@ conditions differed by 0, 0 and +2 mates out of 128 across three seeds. Mixed
 versus atomic-only differed by -22, 0 and +51; there is no consistent superiority
 claim. These are experimental controls outside the unchanged production learner.
 
-Residual nomination and one live TRIAL are implemented on the separate branch
+Residual nomination, one live TRIAL, and an internal randomized-use probe are
+implemented on the separate branch
 `codex/residual-shadow-nomination`; see the exact commits, results and next step in
 `docs/autogrowth/OFFICIAL_CONTINUATION_20260906.md` before starting new work.
 Main intentionally retains the stable learner. Do not reimplement the experiment
 or merge its controls into production by default.
 
+Develop bounded experiments freely on the work branch. Preserve each protocol,
+exact source identity and favorable/adverse results in commits. Update main's
+status summary after a completed experiment. Tags are for deliberate stable
+releases or major evidence milestones, not every trial; never move an old tag.
+Test success, chess performance and architectural capability are separate claims.
+
 The branch tests live materialization with preserved history and
 ranked/random/no-addition behavioral controls. A TRIAL may act and learn before
 scientific maturity is established. Predictive history stays separate from live
 participation; after attachment it must not receive a second shadow update.
+The new internal permission terminal can withhold a TRIAL without giving it
+action credit. All 151 focused tests passed, but its 50% probing schedule reduced
+or matched final performance across 7,296 actual moves. It is not a default
+training improvement or an automatic usefulness/maturity decision.
+Next: a fixed matched recovery interval of normal-access play, with ordinary
+learning active, before adding a controller. The 117/128 masked score in seed 2
+was an offline intervention, not an autonomous removal learned by the graph.
 Do not assume added topology is the cause or cure of weak performance; experience
 and optimization also matter.
 Test learned child competence and parent delegation separately in a tiny
