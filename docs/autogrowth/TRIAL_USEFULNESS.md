@@ -34,6 +34,8 @@ It is not lifetime topology value, a per-position matched counterfactual, or the
 effect of retraining without a condition. Do not attach an iid confidence interval
 or maturity label to this short adaptive run. Imbalanced exposure can make these
 two estimates disagree; retain both and the counts. Sparse evidence stays uncertain.
+An average over the sampled positions can also obscure specialized usefulness in
+a rare context. It is not a contextual competence model or authority to prune.
 
 ## Fixed comparison, declared before outcomes
 
@@ -79,6 +81,9 @@ new tag for every exploratory result or rewrite an old one. Keep failed results.
 
 ## Verification before the chess run
 
+Implementation and pre-outcome protocol:
+[`567dd40f`](https://github.com/Paulander/hector-recon/commit/567dd40f095fec45e0c3c928ac02d7805ef817fe).
+
 All 151 focused tests passed in one regression run, including 23 new checks.
 New coverage includes actual-use discrimination in generic fixtures, preservation
 of AND/OR/XOR semantics, shared weight identity, disabled-credit exclusion,
@@ -105,3 +110,109 @@ PYTHONPATH=src:libs/recon-lite/src python scripts/autogrowth/run_trial_usefulnes
 
 Use a fresh output directory for an intentional reproduction. The script sets
 deterministic hash/thread defaults; the manifest records the actual runtime.
+
+## Completed result: 2026-09-06
+
+All 7,296 planned moves completed: 3,840 training and 3,456 development evaluation
+and ablation moves. Every record from the nine old control runs reproduced
+exactly apart from wall time, including actual action/outcome digests, learned
+state, structure and ablations. The final test stayed unopened. The aggregate
+record is `reports/autogrowth/development/TRIAL_USEFULNESS_20260906.json`.
+
+Final greedy development mates, out of 128 positions / 25 symmetry orbits:
+
+| Seed | No addition | Always ranked | Always random | Probed ranked | Probed random |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1 | 126 | 126 | 128 | 122 | 126 |
+| 2 | 93 | 101 | 101 | 94 | 94 |
+| 3 | 66 | 66 | 66 | 66 | 66 |
+
+The new probing schedule improved none of these comparisons. Ranked probing
+cost 4/7/0 mates versus always-ranked, and random probing cost 2/7/0 versus
+always-random. Suffix training mates were 103/82/45 for both probed roles, versus
+102/92/45 for always-ranked and 103/92/45 for always-random. This is an
+experimental performance regression; it has not been adopted by main.
+
+Each probe completed 128 assigned episodes with zero disabled participation
+credit. Enabled/disabled counts were 62/66, 61/67 and 67/61 for seeds 1/2/3.
+The following estimates were identical for ranked/random within each seed:
+
+| Seed | Enabled minus disabled mean reward | Propensity-weighted contrast |
+| --- | ---: | ---: |
+| 1 | +0.069404 | +0.031250 |
+| 2 | -0.004894 | -0.031250 |
+| 3 | -0.034744 | -0.062500 |
+
+These are observed estimates, not established positive/negative causal labels.
+In seed 1, the two different candidates produced exactly the same suffix
+action/outcome digest and reward estimates. Their actual enabled participation
+counts were 1 and 36, and final validation differed (122 versus 126). Identical
+observed behavior supplies no evidence to distinguish their access value on that
+history, even though their differently trained parameters generalize differently.
+Seed 2 had the same nominee in both roles and identical complete trajectories.
+
+Final-policy ablation of the probed actors:
+
+| Seed / role | Normal → masked mates | Action changes | Mates lost / gained when masked |
+| --- | ---: | ---: | ---: |
+| 1 ranked | 122 → 122 | 0 | 0 / 0 |
+| 1 random | 126 → 126 | 0 | 0 / 0 |
+| 2 ranked | 94 → 117 | 27 | 2 / 25 |
+| 2 random | 94 → 117 | 27 | 2 / 25 |
+| 3 ranked | 66 → 66 | 0 | 0 / 0 |
+| 3 random | 66 → 66 | 0 | 0 / 0 |
+
+The strongest finding is co-adaptation. Seed 2's same AND definition helped the
+always-enabled trained policy (101 → 91 when masked) but harmed the probed trained
+policy (94 → 117). It is not an intrinsically good or bad definition independent
+of its coefficient, surrounding weights and learning history. The nearly zero
+online estimate did not clearly identify this large final-policy effect. The
+online estimate averages earlier adaptive outcomes; final ablation tests the
+final policy on different development positions. Neither can replace the other.
+
+**117/128 is an offline ablation result, not a new autonomously achieved score.**
+Do not hard-remove the condition from the learner because an offline evaluator
+found that result, or claim the network learned that removal decision.
+
+## Confirmed capability and limits
+
+The internal permission terminal and local outcome recorder work: the graph
+decides and acts, ordinary weights remain plastic, disabled branches receive no
+participation credit, and all assigned actual rewards enter retained history.
+Generic fixtures distinguish a useful AND from irrelevant success correlation.
+No coach-side move labels, graph decisions or hypothetical rewards were added.
+
+This is a working measurement mechanism. It is not a useful automatic structural
+selection policy yet. The signal does not influence nomination, retention or
+pruning in this implementation. Its short, aggregate chess estimates did not
+establish reliable usefulness discrimination, and the 50% schedule reduced final
+performance. Do not promote that rate or turn these estimates into maturity.
+No retirement occurred at this horizon; lifecycle cleanup was unit-tested.
+Learned handover and general growth regulation remain separate open targets.
+
+## Next bounded work: recovery before another controller
+
+Keep the always-enabled live TRIAL as the work-track reference and retain this
+probe as an explicitly experimental option. Do not add an automatic retention
+controller on this evidence. First test whether the observed damage recovers
+through ordinary play:
+
+1. Reproduce the same prefix and probing interval, then add one predeclared
+   128-action interval with probing ended and normal trial access restored.
+   All ordinary learning remains active. Apply the same total experience budget
+   to the no-addition and always-enabled controls.
+2. Record actual outcomes by phase. Evaluate and ablate only after the fixed run.
+   Do not enable/disable a candidate from offline scores. The current mechanism
+   already stops random gating after its declared window.
+3. Keep the ordinary lifecycle unchanged and report any natural pruning/rebirth
+   in the longer run. That makes this a recovery test of the complete learner,
+   not an isolated causal claim about edge plasticity alone.
+4. Before running, declare the full move/time budget and source identity again.
+   This is a new experiment, not an automatic extension of the completed run.
+
+If recovery occurs, it shows that the probe's cost was at least partly transient;
+it still does not validate a usefulness-driven growth law. If it does not, inspect
+the ordinary credit/opportunity problem before adding further machinery. Any
+later estimator needs attention to recency, context and sample efficiency while
+preserving historical evidence. Merely reducing the disable rate trades lower
+interference for fewer control observations; it is not a free accuracy fix.

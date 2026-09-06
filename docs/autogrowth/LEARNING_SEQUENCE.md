@@ -82,4 +82,10 @@ structural selection. The next extension, `TrialDevelopment`, nevertheless permi
 one young nominee to act and learn, with its complete shadow record retained.
 Ranked/random/no-addition actual-play controls test that connection; a trial need
 not first prove scientific maturity. See `LIVE_TRIAL_MATERIALIZATION.md` for the
-fixed protocol. Autonomous regulation and strategic handover remain separate work.
+fixed protocol. The subsequent randomized trial-use probe is in
+`TRIAL_USEFULNESS.md`: it preserves the boundary and passes mechanism tests, but
+50% probing reduced or matched final chess scores and did not establish reliable
+usefulness discrimination. Keep normal trial access as the reference. The next
+bounded test is recovery through an additional fixed interval of ordinary play,
+with all learning active, before adding a controller. Autonomous regulation and
+strategic handover remain separate work.

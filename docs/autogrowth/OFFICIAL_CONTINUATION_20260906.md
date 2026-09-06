@@ -106,9 +106,17 @@ selected by both methods; masking it changed 54 moves and reduced 101 mates to
 91 (32 lost, 22 gained). This establishes a useful live graph contribution after
 history-preserving attachment, not ranking superiority. A candidate with 35
 positive participations elsewhere had zero evaluation action effect when masked.
-Next proposed work is bounded internal randomized trial-usefulness evidence,
-described in that document. Handovers and automatic growth regulation remain
-separate. Do not rerun steps 1–3 as though they were unimplemented.
+Internal randomized trial-use evidence is now implemented; see
+[TRIAL_USEFULNESS.md](TRIAL_USEFULNESS.md). All 151 focused tests passed, all 7,296
+planned actual moves completed, and the previous controls reproduced exactly.
+Half-time probing reduced or matched final performance. Most notably, seed 2's
+probed actor scored 94 but its offline masked clone scored 117, while the same
+definition helped the always-enabled trained actor. Co-adaptation matters; the
+short online estimate did not clearly identify that final effect. 117 is not an
+autonomously learned score. Keep this probe experimental and the always-enabled
+actor as reference. Next is a fixed matched recovery interval of ordinary play,
+before a usefulness-driven controller. Handovers and automatic growth regulation
+remain separate. Do not rerun steps 1–3 as though they were unimplemented.
 
 1. Run matched multi-seed controls: online random reveal, the same random
    condition set installed at initialization, and atomic-only representation.

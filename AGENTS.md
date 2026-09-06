@@ -119,10 +119,17 @@ The seed 2 AND condition changed 54 evaluation moves when masked, with a net
 useful live composition in that policy, not reliable ranking superiority. No
 retirement or maturity occurred; history continuity passed focused tests.
 
-The current target is a bounded internal randomized use/no-use signal for a
-TRIAL's actual contribution, with ordinary actor learning active. Read
-`docs/autogrowth/TRIAL_USEFULNESS.md` for the protocol and implementation status.
-Do not treat
+The internal randomized use/no-use mechanism is implemented and tested; read
+`docs/autogrowth/TRIAL_USEFULNESS.md`. All 151 focused tests and 7,296 planned
+actual moves completed; old controls reproduced exactly. Half-time probing
+reduced or matched final chess performance, and short online estimates did not
+establish reliable usefulness discrimination. Seed 2's probed policy scored 94,
+but an offline masked clone scored 117. Do not turn that offline finding into a
+coach-selected removal or claim it as an autonomous score.
+
+Next bounded target: a matched recovery run with a fixed additional normal-access
+training interval before adding a controller. The exact scope is in that document.
+Keep always-enabled training as the reference. Do not promote 50% probing or treat
 positive correlation, prediction accuracy or activation as causal maturity.
 Experience and optimization also matter. Test learned child competence and parent
 delegation separately in a tiny two-context/two-child environment before using M1
