@@ -16,6 +16,11 @@ Read these current documents before changing the learner:
 4. `docs/autogrowth/LEARNING_SEQUENCE.md` — implementation order, concurrent
    learning and future operating profiles; identifies the isolated work branch.
 
+On `codex/residual-shadow-nomination`, also read
+`docs/autogrowth/RESIDUAL_SHADOW_NOMINATION.md`. This experimental branch adds
+internal nomination and prospective prediction evidence only. Shadows cannot
+act, change live credit or earn maturity; do not silently materialize them.
+
 `CODEX_HANDOFF_BRIEF.md`, `docs/BRIEF.md`, TG/V plans, phase reports and archived
 runners are historical evidence, not live instructions. Consult them only for a
 specific reuse or failure-mode question. Git history preserves the longer agent
@@ -105,6 +110,8 @@ Use Python 3.12 and run:
 
 ```bash
 PYTHONPATH=src:libs/recon-lite/src python -m pytest -q \
+  tests/autogrowth/test_residual_shadow.py \
+  tests/autogrowth/test_residual_shadow_experiment.py \
   tests/autogrowth/test_mate_one_attribution.py \
   tests/autogrowth/test_terminal_development.py \
   tests/autogrowth/test_mate_one_coach.py \

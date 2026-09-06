@@ -243,6 +243,10 @@ class TerminalDevelopment:
             node.meta.pop("reading", None)
             node.meta.pop("emitted", None)
 
+    def _before_execute(self, engine, env, *, event_id, slot, prediction, learn):
+        """Extension point after graph choice, before the observation frame closes."""
+        pass
+
     def act(self, port: FeaturePort, *, event_id: int, learn: bool) -> str | None:
         if learn and event_id <= self.last_event:
             raise ValueError("action event must increase; cannot duplicate credit")
@@ -293,6 +297,8 @@ class TerminalDevelopment:
         active = tuple(cid for cid in self.conditions
                        if self.graph.nodes[f"gate:{slot}:{cid}"].state == NodeState.CONFIRMED)
         prediction = self.graph.nodes[selected].activation.value - exploration.get(slot, 0.0)
+        self._before_execute(engine, env, event_id=event_id, slot=slot,
+                             prediction=prediction, learn=learn)
         engine.request("execute")
         engine.run(max_ticks=16, env=env,
                    until=lambda e: e.g.nodes["execute"].state in (NodeState.CONFIRMED, NodeState.FAILED))
