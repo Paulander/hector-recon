@@ -86,6 +86,12 @@ engineering baseline are preserved as named archival branches.
 
 ## Next decision sequence
 
+Progress update: step 1 is implemented and its first bounded three-seed run is
+complete; see [M1_GROWTH_ATTRIBUTION.md](M1_GROWTH_ATTRIBUTION.md). Random birth
+added little to final M1 scores, and mixed-versus-atomic effects varied by seed.
+The production learner is unchanged. The next candidate implementation is step 2,
+not an automatic claim that adaptive growth will solve the remaining failures.
+
 1. Run matched multi-seed controls: online random reveal, the same random
    condition set installed at initialization, and atomic-only representation.
    This attributes gradual birth and nonlinear composition without pretending the

@@ -85,12 +85,17 @@ condition contributions. This shows behavioral dependence on learned condition
 weights and added value from compositions. It does not show adaptive growth,
 because condition birth was random and the atomic vocabulary was nearly covered.
 
-Next, compare online random reveal, the identical fixed-at-start random condition
-set, and an atomic-only matched-budget arm across independent seeds. Then add one
-adaptive residual-ranked nomination mechanism in shadow mode and compare it with
-matched random proposals. Only after that should topology promotion/pruning be
-claimed as learned growth. Test learned child competence and parent delegation in
-a tiny two-context/two-child environment before using M1 as an M2 child.
+The first matched comparison is complete; see
+`docs/autogrowth/M1_GROWTH_ATTRIBUTION.md`. Online versus identical fixed random
+conditions differed by 0, 0 and +2 mates out of 128 across three seeds. Mixed
+versus atomic-only differed by -22, 0 and +51; there is no consistent superiority
+claim. These are experimental controls outside the unchanged production learner.
+
+Next candidate: one adaptive residual-ranked nomination mechanism in shadow mode,
+compared with matched random proposals. Do not assume added topology is the cause
+or cure of weak performance; experience/exploration order and optimization also
+matter. Test learned child competence and parent delegation in a tiny
+two-context/two-child environment before using M1 as an M2 child.
 
 ## Focused verification
 
@@ -98,6 +103,7 @@ Use Python 3.12 and run:
 
 ```bash
 PYTHONPATH=src:libs/recon-lite/src python -m pytest -q \
+  tests/autogrowth/test_mate_one_attribution.py \
   tests/autogrowth/test_terminal_development.py \
   tests/autogrowth/test_mate_one_coach.py \
   tests/autogrowth/test_native_local_interaction_v27.py \

@@ -192,6 +192,11 @@ this implementation does not automatically change the curriculum.
 
 ## Tests
 
+The separate [growth-attribution experiment](M1_GROWTH_ATTRIBUTION.md) compares
+online birth, the identical fixed representation and atomic-only learning. It
+does not change this production learner. Its first three-seed comparison and
+portable launch command are documented there.
+
 ```bash
 PYTHONPATH=src:libs/recon-lite/src python -m pytest -q tests/autogrowth/test_terminal_development.py tests/autogrowth/test_mate_one_coach.py tests/autogrowth/test_native_local_interaction_v27.py tests/test_intrinsic_credit.py libs/recon-lite/tests/test_formal_choice.py tests/test_fanin_terminals.py
 ```

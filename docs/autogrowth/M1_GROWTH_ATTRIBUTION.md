@@ -94,3 +94,42 @@ Tests: `tests/autogrowth/test_mate_one_attribution.py` covers grammar reuse,
 definition/timing pairing, unshared random streams, actual terminal-only actions,
 opaque training, serialization, final-test isolation, budget/overlap guards and
 identical serial/parallel results.
+
+## Completed first comparison
+
+Implementation: `2188bf59`. All nine arms completed their exact budget; 93
+focused tests passed. No production learner or coach code changed. Full frozen
+plans, source identities, row/orbit summaries and structural costs are in the
+[result JSON](../../reports/autogrowth/development/M1_GROWTH_ATTRIBUTION_20260906.json).
+It contains no trained weights or raw board/move logs.
+
+| Seed | Online random | Identical fixed random | Atomic-only |
+| --- | ---: | ---: | ---: |
+| 1 | 103/128 | 103/128 | 125/128 |
+| 2 | 62/128 | 62/128 | 62/128 |
+| 3 | 128/128 | 126/128 | 75/128 |
+| Mean mate rate | 76.30% | 75.78% | 68.23% |
+
+Online minus fixed has paired differences of 0, 0 and +2 mates: mean +0.52
+percentage points, paired-seed standard deviation 0.90 points. The corresponding
+orbit-macro differences are 0, 0 and +1.33 points. These results do not establish
+a substantial reliable benefit from gradual random birth on this distribution.
+
+Fixed mixed minus atomic has differences of -22, 0 and +51 mates: mean +7.55
+points, but paired-seed standard deviation 29.26 points. The mean alone would be
+misleading. The mixed representation is not consistently superior in these
+three short runs. Atomic-only uses the same complete vocabulary in every seed,
+so seed variation cannot be attributed solely to which random conditions exist;
+experience/exploration order and optimization also vary.
+
+The earlier ablation removed compositions from an already trained model. This
+comparison trains the atomic model independently, letting it compensate with
+other weights. Those are different questions, so the results do not conflict.
+One 128/128 seed is not mastery, and three engineering seeds on viewed validation
+are not sealed confirmation.
+
+Next candidate implementation remains the smallest residual-guided nomination
+and prospective shadow-comparison mechanism, using actual terminal responses
+and scalar outcomes. Do not assume it will fix the weaker seeds: retain these
+controls and separately test whether added structures help prediction and action.
+No adaptive mechanism or additional training was triggered by this result.
