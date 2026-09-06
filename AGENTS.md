@@ -129,8 +129,14 @@ establish reliable usefulness discrimination. Seed 2's probed policy scored 94,
 but an offline masked clone scored 117. Do not turn that offline finding into a
 coach-selected removal or claim it as an autonomous score.
 
-Next bounded target: a matched recovery run with a fixed additional normal-access
-training interval before adding a controller. The exact scope is in that document.
+The matched recovery is complete; read `docs/autogrowth/TRIAL_RECOVERY.md`.
+157 distinct focused tests passed. A completed retry executed all 9,216 moves;
+an interrupted first attempt is preserved separately. Recovery was partial:
+seed 1 probed scores were ranked 124 and random 128; seed 2 both 98; seed 3 both 66.
+No probed arm exceeded its always-enabled reference. Ordinary pruning/replacement
+ran, but the harmful seed 2 probed trial survived (98 normal, 113 offline masked).
+Next: isolate edge learning from lifecycle turnover with a fixed-topology recovery
+control; keep weights plastic. No automatic retention controller yet.
 Keep always-enabled training as the reference. Do not promote 50% probing or treat
 positive correlation, prediction accuracy or activation as causal maturity.
 Experience and optimization also matter. Test learned child competence and parent

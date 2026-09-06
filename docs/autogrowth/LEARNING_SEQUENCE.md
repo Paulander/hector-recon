@@ -85,7 +85,9 @@ not first prove scientific maturity. See `LIVE_TRIAL_MATERIALIZATION.md` for the
 fixed protocol. The subsequent randomized trial-use probe is in
 `TRIAL_USEFULNESS.md`: it preserves the boundary and passes mechanism tests, but
 50% probing reduced or matched final chess scores and did not establish reliable
-usefulness discrimination. Keep normal trial access as the reference. The next
-bounded test is recovery through an additional fixed interval of ordinary play,
-with all learning active, before adding a controller. Autonomous regulation and
-strategic handover remain separate work.
+usefulness discrimination. Keep normal trial access as the reference. The
+bounded recovery test is complete; see `TRIAL_RECOVERY.md`. Recovery was partial;
+ordinary pruning/replacement occurred, and harmful trials could survive. Next
+isolate edge learning from lifecycle turnover with a fixed-topology recovery
+control whose weights remain plastic. This is a laboratory intervention, not a
+permanent training profile. Autonomous regulation and handover remain separate.

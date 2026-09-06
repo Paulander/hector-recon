@@ -190,7 +190,12 @@ performance. Do not promote that rate or turn these estimates into maturity.
 No retirement occurred at this horizon; lifecycle cleanup was unit-tested.
 Learned handover and general growth regulation remain separate open targets.
 
-## Next bounded work: recovery before another controller
+## Follow-up recovery protocol (now completed)
+
+The matched follow-up is complete; see [TRIAL_RECOVERY.md](TRIAL_RECOVERY.md).
+Recovery was partial, and ordinary lifecycle turnover occurred. The current next
+target in that document isolates edge learning from that turnover. The protocol
+below is retained as the pre-outcome rationale, not an instruction to rerun it.
 
 Keep the always-enabled live TRIAL as the work-track reference and retain this
 probe as an explicitly experimental option. Do not add an automatic retention

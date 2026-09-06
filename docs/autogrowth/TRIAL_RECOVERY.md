@@ -98,3 +98,119 @@ per-seed cap in a fresh directory:
 execution interruption, with no scientific configuration change or score-based
 extension. Record its source hashes before play and check its completed arms
 against every available earlier log entry, excluding wall times.
+
+## Implementation and verification
+
+Initial phase runner/protocol: `cca08f8d34c635239b5d87e2241197f952105948`.
+Output checkpoint fix and retry protocol:
+`426b4e80b543f0d82c82461ca681d7ab412562a7`.
+
+157 distinct focused tests passed across the checks: 146 unchanged mechanism/
+regression tests and 11 experiment tests, including six new recovery/output
+checks. The original ten experiment tests also passed before the interruption.
+The output fix's eleven experiment tests were rerun successfully before the retry.
+No learner or coach mechanism was modified.
+
+## Completed retry: 2026-09-06
+
+All 9,216 planned moves completed: 5,760 training, 1,920 normal validation and
+1,536 offline ablation. Seed totals were 862.153, 971.213 and 965.109 seconds,
+below the unchanged 1,800-second cap. The aggregate is
+`reports/autogrowth/development/TRIAL_RECOVERY_20260906.json`.
+The interrupted attempt is recorded separately; the retry's move count excludes
+its at-least-6,016 completed-arm moves and unknown in-flight work.
+
+Every arm reproduced the previous 256-action prefix/comparison records and exact
+learned-state digest, including nomination and retained shadow history. All six
+probe reports/history digests stayed identical to the previous completed probe
+experiment: recovery did not generate new assignments or rewrite its evidence.
+All ten surviving interrupted-arm console entries reproduced apart from timing.
+Final-test rows stayed unopened. Validation remains 128 viewed development rows
+in 25 training-disjoint symmetry orbits.
+
+Development mates before → after the additional 128 training actions:
+
+| Seed | No addition | Always ranked | Always random | Probed ranked | Probed random |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1 | 126 → 126 | 126 → 128 | 128 → 128 | 122 → 124 | 126 → 128 |
+| 2 | 93 → 115 | 101 → 101 | 101 → 101 | 94 → 98 | 94 → 98 |
+| 3 | 66 → 66 | 66 → 66 | 66 → 66 | 66 → 66 |
+
+Recovery is partial and nonuniform. Seed 1's random-probe deficit closes, while
+its ranked-probe deficit stays four mates. Seed 2's deficits shrink from seven
+to three mates. Seed 3 has no deficit to recover but remains at 66/128, with zero
+of the 25 orbits entirely solved in every arm. No probed arm beats its matched
+always-enabled reference after recovery. Perfect development scores in some seed
+1 arms do not establish reliable M1 mastery, final-test success or superiority of
+residual-ranked growth. Each actor has still had only 384 training decisions.
+
+Recovery training mates (out of 128) in none/ranked/random/probe_ranked/probe_random
+order were 98/95/101/95/101, 81/84/84/84/84 and 55/52/55/52/55. They are on a
+different scheduled block from the earlier comparison interval; do not interpret
+raw phase-rate changes as a matched before/after test.
+
+Final offline ablations:
+
+| Seed / arms | Normal → masked | Actions changed | Mates lost / gained when masked |
+| --- | ---: | ---: | ---: |
+| 1 always ranked | 128 → 128 | 0 | 0 / 0 |
+| 1 probed ranked | 124 → 124 | 0 | 0 / 0 |
+| 1 always/probed random, each | 128 → 124 | 4 | 4 / 0 |
+| 2 always ranked/random, each | 101 → 94 | 51 | 29 / 22 |
+| 2 probed ranked/random, each | 98 → 113 | 35 | 10 / 25 |
+| 3 all four addition arms, each | 66 → 66 | 0 | 0 / 0 |
+
+Seed 2 again selected the same AND for ranked/random. Within each always/probed
+pair, its subsequent action/outcome digests, evaluations, ablations and lifecycle
+matched. These are not independent confirmations. Its probed final-policy harm
+shrinks from 23 to 15 mates, but remains material; 113 is an offline masked score,
+not an autonomous removal or a learned achievement.
+
+The same condition helps its always-enabled policy (101 → 94 when masked), yet
+the independently trained no-addition actor reaches 115. Thus current-policy
+dependence, the benefit of adding a condition during learning, and earlier
+randomized access estimates remain distinct. A single lifetime score cannot be
+treated as universal usefulness or child competence.
+
+## Confirmed lifecycle behavior and limits
+
+The longer real-play interval exercised ordinary pruning and replacement for
+the first time on this track: 10–14 base conditions retired and 9–13 new random
+conditions were born per arm. Tombstones persist and block identical rebirth.
+All twelve added trial instances survived and remained TRIAL, including the
+harmful seed 2 probed instances. Low absolute weight is not a causal usefulness
+criterion, and this experiment provides no automatic retention/maturity policy.
+
+Final populations contain 31–32 live definitions. Additions began recovery with
+33, but replacement birth uses the unchanged base cap of 32; the extra lifetime
+attachment does not reserve a permanent extra slot. Seed 2's always-enabled arms
+end at 31 because finite random birth attempts need not immediately refill every
+vacancy. These ordinary lifecycle effects are part of the measured trajectories.
+Physical graph counts, including disconnected shadow structures, are recorded in
+the aggregate; they are not independent learned concepts.
+
+New evidence: partial recovery without a coach intervention, actual retirement
+and new births while preserving history, and persistent dependence on the whole
+learning trajectory. This establishes operation of the existing mechanisms under
+longer chess play. It does not demonstrate causally useful adaptive growth,
+strategic handover, consolidation benefit or general M1/KRK competence.
+
+## Next bounded target
+
+Before changing usefulness rates or adding a controller, separate ordinary edge
+learning from the lifecycle changes that occurred during recovery. Add one
+experimental **fixed-topology recovery control**: reproduce the same first 256
+actions, then suppress birth/pruning only during the fixed 128-action recovery
+interval. Keep all edge learning, normal action selection and outcome feedback
+active. Compare against the completed ordinary-lifecycle recovery reference.
+
+This is a laboratory control, not a proposed permanent frozen organism. Test
+that topology stays fixed while weights and decisions can change, episode-256
+history reproduces, probe evidence stays intact, and coach opacity is preserved.
+Declare matched seeds, roles and resources before play. Use the result to choose
+a credit or lifecycle correction instead of assuming either is the source of the
+remaining deficit. Do not silently extend this completed run.
+
+The tiny independently trained two-child competence/delegation task remains a
+separate planned capability. It need not wait for perfect structural discovery,
+but no result here establishes learned strategic handover.

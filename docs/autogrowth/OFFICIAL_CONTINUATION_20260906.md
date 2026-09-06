@@ -114,9 +114,17 @@ probed actor scored 94 but its offline masked clone scored 117, while the same
 definition helped the always-enabled trained actor. Co-adaptation matters; the
 short online estimate did not clearly identify that final effect. 117 is not an
 autonomously learned score. Keep this probe experimental and the always-enabled
-actor as reference. Next is a fixed matched recovery interval of ordinary play,
-before a usefulness-driven controller. Handovers and automatic growth regulation
-remain separate. Do not rerun steps 1–3 as though they were unimplemented.
+actor as reference. The recovery follow-up is now complete; see
+[TRIAL_RECOVERY.md](TRIAL_RECOVERY.md). The completed retry executed all 9,216
+planned moves after an interruption preserved separately. All 157 distinct focused
+tests passed; every episode-256 state/history reproduced. Final none/ranked/random/
+probe_ranked/probe_random mates were 126/128/128/124/128, 115/101/101/98/98,
+and 66/66/66/66/66. Recovery was partial, with no probing advantage over always
+enabled. Ordinary pruning/replacement ran; the harmful seed 2 probed trial survived
+(98 normal, 113 offline masked). Next isolate edge learning from lifecycle turnover
+with a fixed-topology recovery control, keeping weights plastic. This is a
+laboratory comparison, not a permanently frozen organism. Handovers and automatic
+growth regulation remain separate. Do not rerun implemented steps as new work.
 
 1. Run matched multi-seed controls: online random reveal, the same random
    condition set installed at initialization, and atomic-only representation.
