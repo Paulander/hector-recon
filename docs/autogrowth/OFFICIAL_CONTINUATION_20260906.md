@@ -93,7 +93,8 @@ between experimental controls and continuous learning in a future competent agen
 
 ### Separate branch status: completed residual-shadow experiment
 
-Implementation and results are on `codex/residual-shadow-nomination`, tip
+The first shadow-only implementation and results were recorded on
+`codex/residual-shadow-nomination` at
 [`e55bfd88`](https://github.com/Paulander/hector-recon/commit/e55bfd88ab273f6d30c16ddf694893a2ef80f458).
 Read the [branch experiment and continuation instructions](https://github.com/Paulander/hector-recon/blob/e55bfd88ab273f6d30c16ddf694893a2ef80f458/docs/autogrowth/RESIDUAL_SHADOW_NOMINATION.md)
 before resuming. Main has summaries and architecture guidance only; it has not
@@ -116,20 +117,69 @@ not reliable ranking superiority, causal usefulness or live adaptive growth.
 Support matching was coarse and subsequent activation counts changed materially
 as the actor learned. Do not treat its three-seed mean as confirmation.
 
-The next bounded branch question is one live TRIAL materialization, preserving
-hypothesis history, with ranked/random/no-addition behavioral controls. Keep actor
-weights plastic. No automatic rate regulator or handover was added; those remain
-separate mechanisms. Young structures do not require an established superiority
-claim before participating in a declared learning trial.
+This led to the live TRIAL experiment below. Young structures do not require an
+established superiority claim before participating in a declared learning trial.
+
+### Latest branch status: completed live TRIAL experiment
+
+Current work-branch results commit:
+[`16f61e9c`](https://github.com/Paulander/hector-recon/commit/16f61e9ccdf00ba9d17b4512f16cdc48939c7758).
+The implementation and predeclared protocol are at
+[`3e9d236e`](https://github.com/Paulander/hector-recon/commit/3e9d236e8a2b2ded2e7e8c6d2e9212bfa24ff412).
+Read the [live TRIAL mechanism, full results and next target](https://github.com/Paulander/hector-recon/blob/16f61e9ccdf00ba9d17b4512f16cdc48939c7758/docs/autogrowth/LIVE_TRIAL_MATERIALIZATION.md)
+and [aggregate record](https://github.com/Paulander/hector-recon/blob/16f61e9ccdf00ba9d17b4512f16cdc48939c7758/reports/autogrowth/development/LIVE_TRIAL_20260906.json).
+Main retains its stable learner and records these results only as branch status.
+
+`TrialDevelopment` attaches one internally nominated definition after 128 actual
+actions. Its signed weight and original predictive evidence survive attachment;
+new live participation records are separate. Shadow requests/updates stop in
+every arm. Ordinary graph selection and actor credit continue, with at most 33
+live definitions versus the original budget of 32. No coach-side move scorer,
+graph inspection, correct-action label or hypothetical reward was introduced.
+
+All 128 distinct focused tests passed, and all 4,224 planned actual moves finished:
+2,304 training, 1,152 normal development validation, 768 read-only ablation. The
+earlier shadow prefixes were reproduced exactly, including history digests.
+Final-test positions stayed closed. Final validation mates out of 128:
+
+| Seed | No addition | Ranked | Random |
+| --- | ---: | ---: | ---: |
+| 1 | 126 | 126 | 128 |
+| 2 | 93 | 101 | 101 |
+| 3 | 66 | 66 | 66 |
+
+Seed 2's ranked and random selectors chose the same two-reader AND condition.
+Masking its final contribution changed 54 evaluation moves and reduced 101 mates
+to 91: 32 mates were lost and 22 gained. This confirms useful live composition in
+that policy. It does not establish that the atoms were marginally useless or
+that an atomic alternative could not learn the task. Seed 1's random addition
+fell from 128 to 124 when masked; its no-addition training control scored 126.
+Immediate dependence and the benefit of adding a node during learning differ.
+
+Ranked nomination did not beat random in any seed. Seed 3's ranked trial had 35
+positive and 2 negative participations, but zero evaluation action changes when
+masked. Do not turn correlation into a usefulness/maturity claim. All additions
+remained TRIAL; no age-based retirement occurred. Checkpoint/tombstone continuity
+was tested, but long-run retention, automatic regulation, full KRK and handover
+were not established.
+
+Next proposed bounded implementation: internal randomized enable/disable of one
+TRIAL contribution during actual episodes, with retained assignment/outcome
+history and continued actor learning. First test usefulness versus mere
+correlation in generic fixtures, then run a predeclared matched M1 comparison.
+The coach must remain opaque and return only actual scalar outcomes. This signal
+is not implemented and should not acquire an automatic maturity or retirement
+threshold in the same change. See the branch document for exact boundaries.
+Independent child competence and strategic handover remain a separate small task.
 
 ### Baseline sequence
 
 Progress update: step 1 is complete on main; see
 [M1_GROWTH_ATTRIBUTION.md](M1_GROWTH_ATTRIBUTION.md). Random birth added little to
-final M1 scores, and mixed-versus-atomic effects varied by seed. Step 2 is complete
-on the separate branch described above. Main's production learner is unchanged.
-The next implementation question is a single behavioral trial under step 3,
-not an assumption that adaptive growth will solve the remaining failures.
+final M1 scores, and mixed-versus-atomic effects varied by seed. Steps 2 and the
+single live-TRIAL part of step 3 are complete on the separate branch described
+above. Main's production learner is unchanged. Resume the next target above;
+do not reimplement the already completed nomination and attachment experiments.
 
 1. Run matched multi-seed controls: online random reveal, the same random
    condition set installed at initialization, and atomic-only representation.
@@ -139,8 +189,9 @@ not an assumption that adaptive growth will solve the remaining failures.
    generic composition work. Candidates learn without decision influence, then
    later real outcomes compare prediction with and without them. Match random
    proposals by budget, support and opportunity.
-3. Introduce promotion and pruning only with prospective evidence and persistent
-   hypothesis history. Ablate promoted structures after learning.
+3. Let one nominated TRIAL act and learn with persistent hypothesis history.
+   Compare ranked/random/no-addition trajectories and ablate its final live
+   contribution. Do not confuse permitting a trial with confirming maturity.
 4. Test competence and delegation first in a tiny two-context/two-child task.
    Train children independently from scalar outcomes; let a parent observe only
    typed child-response terminals; compare connected, disconnected and permuted
@@ -149,8 +200,11 @@ not an assumption that adaptive growth will solve the remaining failures.
    M1 child, but virtual success never becomes reward. Actual play and final
    observed outcome remain grounding.
 
-Longer M1 training is not first because the current random vocabulary was already
-near saturation and its earlier lifecycle semantics were known to be weak.
+The original pause before longer training addressed weak lifecycle claims; it
+was not evidence that more experience could not help. Keep edge learning active
+and include a continued-training control in growth experiments. The smaller
+32-condition work-branch budget is also distinct from the earlier 96-condition
+engineering run. Do not compare their raw scores as if only growth changed.
 
 ## What “starting over” means
 

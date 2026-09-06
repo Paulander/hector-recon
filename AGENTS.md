@@ -93,15 +93,18 @@ conditions differed by 0, 0 and +2 mates out of 128 across three seeds. Mixed
 versus atomic-only differed by -22, 0 and +51; there is no consistent superiority
 claim. These are experimental controls outside the unchanged production learner.
 
-The residual nomination experiment is implemented on the separate branch
-`codex/residual-shadow-nomination` at `e55bfd88`; see the branch status in
+Residual nomination and one live TRIAL are implemented on the separate branch
+`codex/residual-shadow-nomination`; see the exact commits, results and next step in
 `docs/autogrowth/OFFICIAL_CONTINUATION_20260906.md` before starting new work.
 Main intentionally retains the stable learner. Do not reimplement the experiment
 or merge its controls into production by default.
 
-The next branch question is one live TRIAL materialization with preserved history
-and ranked/random/no-addition behavioral controls. Do not assume added topology
-is the cause or cure of weak performance; experience and optimization also matter.
+The branch tests live materialization with preserved history and
+ranked/random/no-addition behavioral controls. A TRIAL may act and learn before
+scientific maturity is established. Predictive history stays separate from live
+participation; after attachment it must not receive a second shadow update.
+Do not assume added topology is the cause or cure of weak performance; experience
+and optimization also matter.
 Test learned child competence and parent delegation separately in a tiny
 two-context/two-child environment before using M1 as an M2 child.
 
