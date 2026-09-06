@@ -60,6 +60,17 @@ def ablation(o, fens, normal, actions, *, deadline):
             "net_trial_mates": normal["mates"] - result["mates"]}
 
 
+def lifecycle(o):
+    """Offline phase-boundary observation; never supplied to the coach/learner."""
+    c = o.trial_condition
+    return {"completed": o.completed, "births": o.next_condition, "pruned": o.pruned,
+            "live_ids": sorted(o.conditions),
+            "retired_ids": sorted(c.identity for c in o.retired_conditions.values()),
+            "trial_live": c is not None and c.identity in o.conditions,
+            "trial_id": None if c is None else c.identity,
+            "trial_state": None if c is None else c.state.name}
+
+
 def run_seed(task):
     seed, spec, fens, validation, wall_seconds, output = task
     deadline = time.monotonic() + wall_seconds
@@ -78,7 +89,20 @@ def run_seed(task):
         if arms and (prefix != arms["none"]["prefix_training"]
                      or history != arms["none"]["shadow"]["history_digest"]):
             raise RuntimeError("probe changed pre-attachment behavior or evidence")
-        suffix = train(o, fens, spec["order"][after:], start_event=after, deadline=deadline)
+        recovery = spec.get("recovery_episodes", 0)
+        stop = len(spec["order"]) - recovery
+        suffix = train(o, fens, spec["order"][after:stop], start_event=after, deadline=deadline)
+        phase_record = {}
+        if recovery:
+            before = {"learned_digest": prior.learned_digest(o),
+                      "use_history_digest": use_digest(o), "lifecycle": lifecycle(o)}
+            recovered = train(o, fens, spec["order"][stop:], start_event=stop, deadline=deadline)
+            if use_digest(o) != before["use_history_digest"]:
+                raise RuntimeError("recovery changed completed probe history or RNG")
+            if probe and not o.use_enabled:
+                raise RuntimeError("recovery failed to restore normal trial access")
+            phase_record = {"before_recovery": before, "recovery_training": recovered,
+                            "after_recovery": lifecycle(o), "probe_history_unchanged": True}
         if digest(o.shadow.report()) != history or o.shadow.observations != after:
             raise RuntimeError("frozen shadow history changed")
         report, actions = evaluate(o, validation, deadline=deadline)
@@ -90,7 +114,7 @@ def run_seed(task):
                   "structure": {"live_conditions": len(o.conditions),
                                 "retired_conditions": len(o.retired_conditions),
                                 "physical_vertices": len(o.graph.nodes), "physical_edges": len(o.graph.edges)},
-                  "evaluation": report, "learned_digest": prior.learned_digest(o)}
+                  "evaluation": report, "learned_digest": prior.learned_digest(o), **phase_record}
         if probe:
             use = o.usefulness_report()
             if use["groups"]["disabled"]["participations"]:
@@ -103,6 +127,7 @@ def run_seed(task):
         print(json.dumps({"seed": seed, "arm": name, "status": result["decision"]["status"],
                           "suffix_mates": suffix["mates"], "validation_mates": report["mates"],
                           "use_reward_difference": result.get("usefulness", {}).get("mean_reward_difference"),
+                          **({"recovery_mates": recovered["mates"], "pruned": o.pruned} if recovery else {}),
                           "seconds": result["seconds"]}), flush=True)
     if time.monotonic() >= deadline:
         raise TimeoutError("seed budget expired")
@@ -125,9 +150,12 @@ def summarize(results):
 
 
 def run(args):
+    recovery = getattr(args, "recovery", 0)
     if (not args.seeds or len(set(args.seeds)) != len(args.seeds)
             or min(args.workers, args.wall_seconds, args.suffix) < 1):
         raise ValueError("positive budgets and unique seeds required")
+    if recovery < 0 or (recovery and args.suffix != args.window):
+        raise ValueError("nonnegative recovery and a suffix equal to the probe window required")
     actor_config = prior.DevelopmentConfig(max_conditions=args.conditions)
     shadow_config = prior.residual_shadow.ShadowConfig(candidates=args.candidates,
                          discovery_episodes=args.discovery, min_support=args.min_support)
@@ -143,12 +171,15 @@ def run(args):
     validation_orbits = {orbit_key(chess.Board(fen)) for fen in validation}
     if train_orbits & validation_orbits:
         raise ValueError("training and validation symmetry orbits overlap")
-    episodes = args.after_episode + args.suffix
+    episodes = args.after_episode + args.suffix + recovery
     plans = {str(seed): {"actor_config": asdict(actor_config), "shadow_config": asdict(shadow_config),
                         "usefulness_config": asdict(use_config), "after_episode": args.after_episode,
                         "order": schedule_indices(len(fens), episodes, seed),
                         "definitions": [asdict(d) for d in prior.residual_shadow.random_definitions(
                             SCHEMA, seed=seed, count=shadow_config.candidates)]} for seed in args.seeds}
+    if recovery:
+        for spec in plans.values():
+            spec["recovery_episodes"] = recovery
     modules = {"trial_usefulness": mechanism, "live_trial": prior.mechanism,
                "residual_shadow": prior.residual_shadow, "prior_experiment": prior,
                "shadow_experiment": prior.shadow_experiment, "shared_helpers": prior.mate_one_attribution}
@@ -169,6 +200,11 @@ def run(args):
                            "All assigned outcomes enter the estimate, not only activations.",
                            "Adaptive access value is not lifetime topology value or final ablation effect.",
                            "Reused development seeds and a short window do not establish reliable superiority."]}
+    if recovery:
+        manifest.update(schema="trial_usefulness_recovery.v1", phase_episodes={
+            "prefix": args.after_episode, "probe_or_matched_control": args.suffix,
+            "normal_access_recovery": recovery})
+        manifest["limits"].append("Recovery includes ordinary pruning and random replacement births; it does not isolate edge plasticity.")
     args.output.mkdir(parents=True, exist_ok=False)
     with (args.output / "manifest.json").open("x") as stream:
         json.dump(manifest, stream, indent=2)
@@ -202,6 +238,8 @@ def main():
     parser.add_argument("--discovery", type=int, default=64)
     parser.add_argument("--after-episode", type=int, default=128)
     parser.add_argument("--suffix", type=int, default=128)
+    parser.add_argument("--recovery", type=int, default=0,
+                        help="additional normal-access actions after the complete probing window")
     parser.add_argument("--window", type=int, default=128)
     parser.add_argument("--probability", type=float, default=0.5)
     parser.add_argument("--min-support", type=int, default=4)

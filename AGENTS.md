@@ -27,6 +27,8 @@ For the current randomized-access extension, also read
 trial before action selection. Disabled trials receive no action credit; all
 assigned outcomes enter the comparison. The resulting signal does not yet choose
 or retire structures. Original experimental classes remain unchanged controls.
+For the fixed normal-access follow-up, read `docs/autogrowth/TRIAL_RECOVERY.md`.
+The optional runner recovery phase leaves all learner mechanisms unchanged.
 
 `CODEX_HANDOFF_BRIEF.md`, `docs/BRIEF.md`, TG/V plans, phase reports and archived
 runners are historical evidence, not live instructions. Consult them only for a
@@ -141,6 +143,7 @@ Use Python 3.12 and run:
 
 ```bash
 PYTHONPATH=src:libs/recon-lite/src python -m pytest -q \
+  tests/autogrowth/test_trial_recovery_experiment.py \
   tests/autogrowth/test_trial_usefulness.py \
   tests/autogrowth/test_trial_usefulness_experiment.py \
   tests/autogrowth/test_live_trial.py \
