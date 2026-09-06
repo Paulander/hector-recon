@@ -91,11 +91,45 @@ the stable baseline while that experiment is developed. See
 [LEARNING_SEQUENCE.md](LEARNING_SEQUENCE.md) for mechanism order and the distinction
 between experimental controls and continuous learning in a future competent agent.
 
-Progress update: step 1 is implemented and its first bounded three-seed run is
-complete; see [M1_GROWTH_ATTRIBUTION.md](M1_GROWTH_ATTRIBUTION.md). Random birth
-added little to final M1 scores, and mixed-versus-atomic effects varied by seed.
-The production learner is unchanged. The next candidate implementation is step 2,
-not an automatic claim that adaptive growth will solve the remaining failures.
+### Separate branch status: completed residual-shadow experiment
+
+Implementation and results are on `codex/residual-shadow-nomination`, tip
+[`e55bfd88`](https://github.com/Paulander/hector-recon/commit/e55bfd88ab273f6d30c16ddf694893a2ef80f458).
+Read the [branch experiment and continuation instructions](https://github.com/Paulander/hector-recon/blob/e55bfd88ab273f6d30c16ddf694893a2ef80f458/docs/autogrowth/RESIDUAL_SHADOW_NOMINATION.md)
+before resuming. Main has summaries and architecture guidance only; it has not
+adopted the experimental learner hook or shadow implementation.
+
+The generic mechanism nominates from random terminal/SCRIPT candidates using
+residuals from actual action-bound rewards. Candidates read only the selected
+binding, remain disconnected from the actor, and commit predictions before later
+outcomes score them. Both actor and shadow weights continue learning.
+
+Verification: 111 distinct focused tests, including useful joint signal with zero
+marginal atom signal, reward-dependent nomination, terminal-only observations,
+opaque coaching and serial/parallel reproducibility. Six runs completed 768 real
+moves. For every seed, shadows preserved the full action/outcome digest and final
+learned actor state. Neither validation nor final-test positions were opened.
+
+Across seeds 1/2/3, ranked versus random prospective MSE reduction was +0.027642,
+0 (same nominee) and -0.001159. This is a working nomination/evidence mechanism,
+not reliable ranking superiority, causal usefulness or live adaptive growth.
+Support matching was coarse and subsequent activation counts changed materially
+as the actor learned. Do not treat its three-seed mean as confirmation.
+
+The next bounded branch question is one live TRIAL materialization, preserving
+hypothesis history, with ranked/random/no-addition behavioral controls. Keep actor
+weights plastic. No automatic rate regulator or handover was added; those remain
+separate mechanisms. Young structures do not require an established superiority
+claim before participating in a declared learning trial.
+
+### Baseline sequence
+
+Progress update: step 1 is complete on main; see
+[M1_GROWTH_ATTRIBUTION.md](M1_GROWTH_ATTRIBUTION.md). Random birth added little to
+final M1 scores, and mixed-versus-atomic effects varied by seed. Step 2 is complete
+on the separate branch described above. Main's production learner is unchanged.
+The next implementation question is a single behavioral trial under step 3,
+not an assumption that adaptive growth will solve the remaining failures.
 
 1. Run matched multi-seed controls: online random reveal, the same random
    condition set installed at initialization, and atomic-only representation.
