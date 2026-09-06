@@ -98,11 +98,17 @@ conditions differed by 0, 0 and +2 mates out of 128 across three seeds. Mixed
 versus atomic-only differed by -22, 0 and +51; there is no consistent superiority
 claim. These are experimental controls outside the unchanged production learner.
 
-Next candidate: one adaptive residual-ranked nomination mechanism in shadow mode,
-compared with matched random proposals. Do not assume added topology is the cause
-or cure of weak performance; experience/exploration order and optimization also
-matter. Test learned child competence and parent delegation in a tiny
-two-context/two-child environment before using M1 as an M2 child.
+This branch implements residual-ranked nomination and prospective shadow testing.
+Its first three-seed result is in `docs/autogrowth/RESIDUAL_SHADOW_NOMINATION.md`:
+actor behavior/state stayed identical to controls; ranking beat random in one
+seed, chose the same candidate in another and slightly lost in the third.
+Do not claim reliable ranking superiority or causal usefulness from this result.
+
+Next bounded question: live TRIAL materialization with preserved history and
+ranked/random/no-addition controls. Keep actor weights plastic. Do not assume added
+topology is the cause or cure of weak performance; experience and optimization
+also matter. Test learned child competence and parent delegation separately in a
+tiny two-context/two-child environment before using M1 as an M2 child.
 
 ## Focused verification
 

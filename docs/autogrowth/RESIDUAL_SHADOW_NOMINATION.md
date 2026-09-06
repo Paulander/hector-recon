@@ -117,3 +117,50 @@ alone establishes whether M1 needs more topology or more stable weight learning.
 See [LEARNING_SEQUENCE.md](LEARNING_SEQUENCE.md) for concurrent learning and future
 development/operation profiles. This experiment's phase split is a measurement
 control, not the lifelong training schedule.
+
+## Completed first experiment
+
+Implementation: `f3a45e16`. Verification: 111 distinct focused tests passed (110 in
+the full focused run plus the final added reward-dependence test). All six runs
+completed the fixed budget: 768 actual moves, no evaluation-pool reads and no
+configuration changes. Source hashes and complete random plans are in
+[`RESIDUAL_SHADOW_20260906.json`](../../reports/autogrowth/development/RESIDUAL_SHADOW_20260906.json).
+
+Each row scores 64 later actual actions. Lower squared prediction error is better.
+
+| Seed | Actor MSE | Ranked MSE | Random MSE | Ranked gain over random |
+| --- | ---: | ---: | ---: | ---: |
+| 1 | 0.321166 | 0.272876 | 0.300518 | +0.027642 |
+| 2 | 0.565366 | 0.511097 | 0.511097 | 0.000000, same candidate |
+| 3 | 0.297657 | 0.299027 | 0.297868 | -0.001159 |
+
+Mean ranked gain over random was 0.008828, with across-seed difference standard
+deviation 0.016304. Three short seeds, including one identical selection, do not
+establish reliable ranking superiority. The ranked candidate helped prediction
+against the actor alone in two seeds and slightly hurt in the third. This need
+not represent a missing logical basis: a shadow coefficient can also compensate
+for imperfect existing weight estimates.
+
+The live actor remained identical to its no-shadow control: same full action and
+outcome digest, same learned state and topology. Training mates were 86, 49 and 49
+out of 128, respectively. These are exploratory training outcomes, not validation
+scores and not a chess improvement from shadows.
+
+Matching limits were material. Discovery active counts for ranked/random were
+17/29, 23/23 and 15/4. In the prospective phase they became 4/31, 8/8 and 24/1 as
+the actor continued learning and changing its choices. Equal observation windows
+and coarse past-support bins do not ensure equal future activation opportunities.
+The winning nominees were one atomic condition and two two-reader ANDs; the XOR
+zero-marginal-signal result is a separate mechanism fixture, not a chess result.
+
+Shadows added 121–126 physical vertices and 372–394 edges per seed, with 56–61
+shared reader definitions. They observe one selected binding rather than all
+20 actor slots. Under three-worker execution, each control took about 25–27
+seconds and each shadow run 44–46 seconds; this overhead is reported, not hidden.
+
+The implementation target is complete. The next bounded question is one live
+TRIAL materialization with preserved hypothesis history and ranked/random/no-addition
+controls. Keep the actor plastic and measure actual behavioral effect. The current
+ranking is not proven; young structures need not wait for that claim to act in a
+declared trial. Do not add an automatic growth-rate regulator or handover as part
+of that same experiment, or tune this completed run to improve its result.
