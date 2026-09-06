@@ -13,6 +13,8 @@ Read these current documents before changing the learner:
    accepted review findings and next tests.
 3. `docs/autogrowth/MATE_ONE_COACH.md` — runnable terminal M1 substrate and
    bounded engineering evidence.
+4. `docs/autogrowth/LEARNING_SEQUENCE.md` — implementation order, concurrent
+   learning and future operating profiles; identifies the isolated work branch.
 
 `CODEX_HANDOFF_BRIEF.md`, `docs/BRIEF.md`, TG/V plans, phase reports and archived
 runners are historical evidence, not live instructions. Consult them only for a

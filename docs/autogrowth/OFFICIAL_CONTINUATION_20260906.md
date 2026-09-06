@@ -86,6 +86,11 @@ engineering baseline are preserved as named archival branches.
 
 ## Next decision sequence
 
+The next implementation track is `codex/residual-shadow-nomination`. Main remains
+the stable baseline while that experiment is developed. See
+[LEARNING_SEQUENCE.md](LEARNING_SEQUENCE.md) for mechanism order and the distinction
+between experimental controls and continuous learning in a future competent agent.
+
 Progress update: step 1 is implemented and its first bounded three-seed run is
 complete; see [M1_GROWTH_ATTRIBUTION.md](M1_GROWTH_ATTRIBUTION.md). Random birth
 added little to final M1 scores, and mixed-versus-atomic effects varied by seed.
