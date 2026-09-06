@@ -15,6 +15,8 @@ from recon_lite.formal_engine import FormalReConEngine
 from recon_lite.graph import Graph, LinkType, Node, NodeState, NodeType
 from recon_lite_hector.nodes.stem_cell import CandidateLocalStats, StemCellState
 
+ACTION_CHOICE = "action_choice"
+
 
 @dataclass(frozen=True)
 class Coordinate:
@@ -126,7 +128,7 @@ def _exploration(node, env):
 def _actuator(node, env):
     # This terminal is requested only after the formal choice root confirms.
     graph = env["__graph__"]
-    root = graph.nodes["goal"]
+    root = graph.nodes[ACTION_CHOICE]
     if root.state != NodeState.CONFIRMED:
         return True, False
     token = root.meta["emitted_actuator_identity"]
@@ -148,7 +150,7 @@ class TerminalDevelopment:
         self.rng = random.Random(seed)
         self.schema: tuple[Coordinate, ...] | None = None
         self.graph = Graph()
-        self.graph.add_node(Node("goal", NodeType.SCRIPT, meta={"confirm_policy": "choice"}))
+        self.graph.add_node(Node(ACTION_CHOICE, NodeType.SCRIPT, meta={"confirm_policy": "choice"}))
         self.graph.add_node(Node("catalog_root", NodeType.SCRIPT, meta={"confirm_policy": "and"}))
         self.graph.add_node(Node("catalog", NodeType.TERMINAL, predicate=_catalog))
         self.graph.add_hierarchy_pair("catalog_root", "catalog")
@@ -156,6 +158,10 @@ class TerminalDevelopment:
         self.graph.add_node(Node("actuator", NodeType.TERMINAL, predicate=_actuator))
         self.graph.add_hierarchy_pair("execute", "actuator")
         self.conditions: dict[int, Condition] = {}
+        # Pruning removes decision influence, not the organism's memory that an
+        # identical hypothesis already existed. This prevents evidence-free
+        # rebirth under a fresh identity.
+        self.retired_conditions: dict[tuple[str, tuple[tuple[int, bool | int], ...]], Condition] = {}
         self.bias = PlasticWeight()
         self.slots = 0
         self.completed = 0
@@ -192,7 +198,7 @@ class TerminalDevelopment:
             self.graph.add_node(Node(option, NodeType.SCRIPT, meta={
                 "confirm_policy": "weighted_evidence", "actuator_identity": "unbound",
             }))
-            self.graph.add_hierarchy_pair("goal", option)
+            self.graph.add_hierarchy_pair(ACTION_CHOICE, option)
             for kind, predicate, weight in (("bias", _constant, self.bias),
                                              ("explore", _exploration, 1.0)):
                 nid = f"{kind}:{slot}"
@@ -207,7 +213,8 @@ class TerminalDevelopment:
     def _birth(self):
         if self.schema is None:
             return
-        keys = {(c.operator, c.atoms) for c in self.conditions.values()}
+        keys = ({(c.operator, c.atoms) for c in self.conditions.values()}
+                | set(self.retired_conditions))
         for _ in range(self.config.births_per_episode):
             if len(self.conditions) >= self.config.max_conditions:
                 break
@@ -249,7 +256,7 @@ class TerminalDevelopment:
         if self.schema is None:
             self.schema = schema
         self._reset()
-        # The goal may have no options until the catalog terminal has read the
+        # The action chooser may have no options until the catalog terminal has read the
         # current legal bindings. Validate the complete graph after binding.
         engine = FormalReConEngine(self.graph, validate_pairs=False, record_trace=False)
         env = {"port": port, "schema": schema, "raise_terminal_errors": True}
@@ -276,11 +283,12 @@ class TerminalDevelopment:
             bound = 1.0 + 2.0 * (abs(float(self.bias)) + sum(abs(float(c.weight)) for c in self.conditions.values()))
             exploration[self.rng.randrange(len(bindings))] = bound
         env.update(bindings=bindings, exploration=exploration)
-        engine.request("goal")
+        engine.request(ACTION_CHOICE)
         engine.run(max_ticks=40, env=env,
-                   until=lambda e: e.g.nodes["goal"].state in (NodeState.CONFIRMED, NodeState.FAILED))
-        token = engine.emit_exactly_one_actuator("goal")
-        selected = self.graph.nodes["goal"].meta["choice_selected_child"]
+                   until=lambda e: e.g.nodes[ACTION_CHOICE].state in
+                   (NodeState.CONFIRMED, NodeState.FAILED))
+        token = engine.emit_exactly_one_actuator(ACTION_CHOICE)
+        selected = self.graph.nodes[ACTION_CHOICE].meta["choice_selected_child"]
         slot = int(selected.split(":")[1])
         active = tuple(cid for cid in self.conditions
                        if self.graph.nodes[f"gate:{slot}:{cid}"].state == NodeState.CONFIRMED)
@@ -313,23 +321,17 @@ class TerminalDevelopment:
             for cid in active:
                 condition = self.conditions[cid]
                 condition.weight.fast += delta
-                condition.stats.record_activation("goal")
-                condition.stats.record_confirm(self.completed, "goal")
+                condition.stats.record_activation(ACTION_CHOICE)
+                condition.stats.record_confirm(self.completed, ACTION_CHOICE)
                 condition.stats.record_correlation("positive" if reward > 0 else "negative" if reward < 0 else "neutral")
             for condition in self.conditions.values():
-                condition.stats.record_request("goal")
-        for condition in self.conditions.values():
-            if condition.stats.relevance_stats.activation_count >= 32:
-                # Outcome correlation supports operational consolidation. It is
-                # deliberately NOT counterfactual causal MATURE certification.
-                condition.state = StemCellState.PROBATION
+                condition.stats.record_request(ACTION_CHOICE)
+        # Participation/correlation is not nomination evidence. Candidates stay
+        # TRIAL until a later prospective comparison justifies PROBATION.
         self.pending.clear()
         self.completed += 1
         if self.completed % self.config.consolidate_every == 0:
             self.bias.consolidate(self.config.consolidation_rate)
-            for condition in self.conditions.values():
-                if condition.state == StemCellState.PROBATION:
-                    condition.weight.consolidate(self.config.consolidation_rate)
             self._prune()
         self._birth()
 
@@ -343,8 +345,9 @@ class TerminalDevelopment:
             return
         remove = {f"gate:{slot}:{cid}" for slot in range(self.slots) for cid in doomed}
         for cid in doomed:
-            self.conditions[cid].state = StemCellState.PRUNED
-            del self.conditions[cid]
+            condition = self.conditions.pop(cid)
+            condition.state = StemCellState.PRUNED
+            self.retired_conditions[(condition.operator, condition.atoms)] = condition
         for nid, node in self.graph.nodes.items():
             if node.predicate is _reader and all(parent in remove for parent in self.graph.all_parents(nid)):
                 remove.add(nid)

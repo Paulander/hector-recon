@@ -1,0 +1,43 @@
+{
+  "schema": "terminal_m1_weight_ablation.v1",
+  "date": "2026-09-06",
+  "checkpoint_commit": "e3900df7a9e4167bd4c66a0ed55596e751504a16",
+  "checkpoint_attempts": 182,
+  "checkpoint_archive_sha256": "53d2d0a8ba9551897e6fd4a3752b640c3d487fec247fe47c7bb6c61eecd07131",
+  "validation_sha256": "dd92f3740e916f89665f459f9165088bac563a465c8bd803404a241f48798c2e",
+  "validation_is_development_data": true,
+  "learning_during_evaluation": false,
+  "arms": {
+    "no_op_clone": {
+      "intervention": "deep-copy checkpoint; no weight changes",
+      "rows_mated": 124,
+      "row_count": 128,
+      "orbits_all_rows_mated": 24,
+      "orbits_any_row_mated": 25,
+      "orbit_count": 25
+    },
+    "multi_reader_weights_zeroed": {
+      "intervention": "set fast and slow weight to zero for every condition with more than one atom",
+      "rows_mated": 75,
+      "row_count": 128,
+      "orbits_all_rows_mated": 6,
+      "orbits_any_row_mated": 25,
+      "orbit_count": 25
+    },
+    "all_condition_weights_zeroed": {
+      "intervention": "set fast and slow weight to zero for every learned condition; retain learned bias",
+      "rows_mated": 4,
+      "row_count": 128,
+      "orbits_all_rows_mated": 0,
+      "orbits_any_row_mated": 4,
+      "orbit_count": 25
+    }
+  },
+  "interpretation": [
+    "No-op parity reproduces the saved 124/128 development result.",
+    "Learned condition contributions are behaviorally necessary at this checkpoint.",
+    "Multi-reader condition contributions materially improve behavior over atomic conditions alone at this checkpoint.",
+    "The ablation does not establish adaptive topology discovery because condition birth was random.",
+    "The rows were already viewed development data and cover 25 symmetry orbits; this is not sealed confirmation."
+  ]
+}

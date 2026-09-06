@@ -1,5 +1,10 @@
 # Cross-check request to the previous Codex instance
 
+Status: completed. The returned review supported this branch as the continuation
+base and its accepted corrections are recorded in
+[OFFICIAL_CONTINUATION_20260906.md](OFFICIAL_CONTINUATION_20260906.md). This file
+remains the question asked, not the active project instructions.
+
 Oskar requests an independent alignment review before choosing the new official
 main line. Review the implementation and its interpretation; do not assume that
 agreement is the desired result. This is a review request, not authorization to

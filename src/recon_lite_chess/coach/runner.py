@@ -30,14 +30,21 @@ def _digest(path: Path) -> str:
     return h.hexdigest()
 
 
+def _runtime_source_paths(root: Path) -> tuple[Path, ...]:
+    paths = []
+    for subdir in ("libs/recon-lite/src", "src/recon_lite_chess/coach"):
+        paths.extend((root / subdir).rglob("*.py"))
+    paths.extend(root / path for path in (
+        "src/recon_lite_hector/learning/terminal_development.py",
+        "src/recon_lite_hector/nodes/stem_cell.py",
+    ))
+    return tuple(sorted(set(paths)))
+
+
 def source_identity() -> dict:
     root = Path(__file__).resolve().parents[3]
-    paths = []
-    for subdir in ("libs/recon-lite/src", "src/recon_lite_hector",
-                   "src/recon_lite_chess/autogrowth", "src/recon_lite_chess/coach"):
-        paths.extend((root / subdir).rglob("*.py"))
     h = hashlib.sha256()
-    for path in sorted(paths):
+    for path in _runtime_source_paths(root):
         h.update(path.relative_to(root).as_posix().encode())
         h.update(path.read_bytes())
     return {"code_sha256": h.hexdigest(), "python": platform.python_version_tuple()[:2],

@@ -4,6 +4,7 @@ import argparse
 from dataclasses import asdict, FrozenInstanceError
 import json
 import math
+from pathlib import Path
 
 import chess
 import pytest
@@ -14,7 +15,8 @@ from recon_lite_chess.coach.interface import BoardSensor, Feedback, PositionRead
 from recon_lite_chess.coach.native import NativeConfig, NativeOrganism
 from recon_lite_chess.coach.pools import load_split, orbit_key, prepare
 from recon_lite_chess.coach.runner import (
-    RunState, evaluate, load_checkpoint, save_checkpoint, source_identity, train,
+    RunState, _runtime_source_paths, evaluate, load_checkpoint, save_checkpoint,
+    source_identity, train,
 )
 
 
@@ -243,3 +245,13 @@ def test_checkpoint_rejects_corrupted_transport(tmp_path):
         stream.write(b"corrupt")
     with pytest.raises(ValueError, match="transport"):
         load_checkpoint(tmp_path)
+
+
+def test_checkpoint_source_identity_excludes_retired_experiment_tree():
+    # The clean coach is invalidated only by its actual runtime packages, not by
+    # edits to unrelated historical autogrowth runners.
+    root = Path(__file__).resolve().parents[2]
+    paths = {path.relative_to(root).as_posix() for path in _runtime_source_paths(root)}
+    assert not any(path.startswith("src/recon_lite_chess/autogrowth/") for path in paths)
+    assert "src/recon_lite_chess/coach/runner.py" in paths
+    assert "src/recon_lite_hector/learning/terminal_development.py" in paths

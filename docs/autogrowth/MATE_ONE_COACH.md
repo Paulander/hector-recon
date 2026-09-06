@@ -1,17 +1,17 @@
 # Mate-in-one: play through learned feature terminals
 
-Branch: `codex/mate-in-one-coach`. The default learner is now
+Official restart line: `main`. The default learner is
 `coach/terminal.py:TerminalOrganism`, backed by the generic
 `learning/terminal_development.py` runtime. Start a new run directory: old hybrid
-checkpoints intentionally cannot resume against changed source code.
+checkpoints and the pre-correction terminal checkpoint intentionally cannot resume
+against changed source code.
 
-The [cross-check request](ALIGNMENT_REVIEW_20260906.md) and
-[successor guidance draft](SUCCESSOR_GUIDANCE_DRAFT.md) describe the review before
-establishing the official main line. No merge to `main` has been performed.
+The [official continuation](OFFICIAL_CONTINUATION_20260906.md) records the review,
+accepted corrections and next attribution tests.
 
 ## Measured initial run
 
-After 182 actual training moves (99 mates, 180.675 seconds including final
+At commit `e3900df`, after 182 actual training moves (99 mates, 180.675 seconds including final
 checkpoint), nonlearning validation improved from 4/128 to **124/128 (96.875%)**.
 There were no illegal moves or abstentions. These development rows cover 25
 symmetry orbits; this is one short seed, not sealed confirmation. The final test
@@ -24,21 +24,31 @@ already carry nonzero slow weights. No causal MATURE certificate was issued.
 See the [measured report](../../reports/autogrowth/development/TERMINAL_DEVELOPMENT_SMOKE_20260905.json).
 The focused suite passed 79 tests; two boundary tests were rechecked after the
 final protocol typing/doc clarification.
+The corrected official baseline passes 81 focused tests, including action-root
+semantics, TRIAL lifecycle behavior and evidence-preserving pruning.
+
+A subsequent read-only weight ablation reproduced 124/128, fell to 75/128 when
+all multi-reader condition contributions were zeroed, and fell to 4/128 when all
+condition contributions were zeroed. This establishes behavioral dependence on
+the learned weights and material contribution from compositions at that checkpoint.
+It does not establish adaptive topology growth because birth was random. See the
+[ablation report](../../reports/autogrowth/development/TERMINAL_M1_WEIGHT_ABLATION_20260906.json).
 
 The separately supplied `TERMINAL_DEVELOPMENT_SMOKE_20260905.zip` archive
 contains the exact trained organism, pool, schedule, real-move log and evaluation
 results. It is not published in the repository. Extraction and checkpoint
-restoration were verified. Download it into the checkout root and extract it
-before creating directories with these same names:
+restoration were verified against `e3900df`. Download it into a checkout of that
+commit and extract it before creating directories with these same names:
 
 ```bash
 python -m zipfile -e TERMINAL_DEVELOPMENT_SMOKE_20260905.zip .
 ```
 
 This restores `reports/autogrowth/runs/terminal-m1-seed1` and
-`reports/autogrowth/runs/m1-coach-smoke-pool`. An additional training experiment
-can use those paths with `--resume --seed 1` and an explicitly chosen total
-`--episodes` and wall budget. The initial 180-second experiment is complete.
+`reports/autogrowth/runs/m1-coach-smoke-pool`. The initial 180-second experiment
+is complete. Current `main` deliberately rejects its continuation because the
+action-root, lifecycle, hypothesis-history and source-identity semantics changed.
+Use a new run directory for new experiments.
 
 ## Implemented loop
 
@@ -75,13 +85,14 @@ leaves and are retained while any surviving condition needs them.
 
 Final outcome credit reaches the actual participating conditions of executed
 actions. Earlier actions can retain decaying eligibility until final feedback.
-Inactive conditions do not receive that outcome update. Slow consolidation
-transfers part of fast weight into slow weight without changing their sum; both
-parts contribute to the next decision, and fast learning remains enabled.
-Because future updates and pruning still consume that sum, transfer alone does
-not change the effective learning dynamics or demonstrate resistance to forgetting.
+Inactive conditions do not receive that outcome update. Randomly proposed
+conditions remain TRIAL: participation and outcome correlation do not nominate
+them for PROBATION. The `PlasticWeight` type retains fast/slow fields, but simple
+sum-preserving transfer does not change effective learning dynamics or demonstrate
+resistance to forgetting.
 Pruning retires weak whole conditions after a grace period and then removes
-orphan readers. This is a bounded engineering survival rule, not evidence of
+orphan readers. A tombstone retains the condition identity and evidence and blocks
+evidence-free identical rebirth. This is a bounded engineering survival rule, not evidence of
 causal structural importance. Reward correlations never become fabricated
 intervention evidence or causal MATURE certification.
 
@@ -110,7 +121,7 @@ weight updates: that would prevent immature features from learning. This first
 path implements a normalized episodic reward-error update, not a claim that
 hierarchical value handoff or variable-duration option learning is completed.
 
-The root named `goal` confirms action selection, not achievement of checkmate.
+The root is named `action_choice` and confirms action selection, not achievement of checkmate.
 Its raw activation, including any exploration bonus, is not calibrated child
 competence or a transferable goal-value signal. A future hierarchical interface
 must distinguish these before using a child response to support delegation.
@@ -133,7 +144,7 @@ Use Python 3.12. No GPU or Torch installation is needed.
 
 ```bash
 git fetch origin
-git switch codex/mate-in-one-coach
+git switch main
 git pull --ff-only
 python3.12 -m venv .venv-coach
 source .venv-coach/bin/activate
@@ -141,8 +152,8 @@ python -m pip install -r requirements-mate-one-coach.txt
 python scripts/autogrowth/run_mate_one_coach.py prepare --pool reports/autogrowth/runs/m1-pool
 ```
 
-For a first checkout, `git switch --track origin/codex/mate-in-one-coach` creates
-the local branch. Windows activation is `.venv-coach\Scripts\Activate.ps1`.
+For a first checkout, clone the repository and use `main`. Windows activation is
+`.venv-coach\Scripts\Activate.ps1`.
 The launcher fixes Python's hash seed and limits numerical-library thread counts.
 
 The initial engineering budget and failure criteria are frozen in
@@ -150,10 +161,10 @@ The initial engineering budget and failure criteria are frozen in
 baseline, then run up to 2,048 exercises or 180 seconds:
 
 ```bash
-python scripts/autogrowth/run_mate_one_coach.py train --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/terminal-m1-seed1 --seed 1 --episodes 0
-python scripts/autogrowth/run_mate_one_coach.py evaluate --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/terminal-m1-seed1 --split validation
-python scripts/autogrowth/run_mate_one_coach.py train --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/terminal-m1-seed1 --seed 1 --episodes 2048 --wall-seconds 180 --resume
-python scripts/autogrowth/run_mate_one_coach.py evaluate --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/terminal-m1-seed1 --split validation
+python scripts/autogrowth/run_mate_one_coach.py train --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/terminal-m1-new-seed1 --seed 1 --episodes 0
+python scripts/autogrowth/run_mate_one_coach.py evaluate --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/terminal-m1-new-seed1 --split validation
+python scripts/autogrowth/run_mate_one_coach.py train --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/terminal-m1-new-seed1 --seed 1 --episodes 2048 --wall-seconds 180 --resume
+python scripts/autogrowth/run_mate_one_coach.py evaluate --pool reports/autogrowth/runs/m1-pool --run reports/autogrowth/runs/terminal-m1-new-seed1 --split validation
 ```
 
 The initial graph can make a legal move without learned readers. Its greedy

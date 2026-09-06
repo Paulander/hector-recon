@@ -13,8 +13,10 @@ from recon_lite_chess.coach.interface import Feedback
 from recon_lite_chess.coach.exercise import play_mate_one
 from recon_lite_chess.coach.terminal import ChessFeaturePort, TerminalOrganism
 from recon_lite_hector.learning.terminal_development import (
-    Condition, Coordinate, DevelopmentConfig, PlasticWeight, TerminalDevelopment,
+    ACTION_CHOICE, Condition, Coordinate, DevelopmentConfig, PlasticWeight,
+    TerminalDevelopment,
 )
+from recon_lite_hector.nodes.stem_cell import StemCellState
 
 BOOL = (False, True)
 M1 = "k7/8/1K6/8/8/8/8/7R w - - 0 1"
@@ -64,6 +66,8 @@ def learned_state(organism):
         "config": asdict(organism.config),
         "bias": asdict(organism.bias),
         "conditions": [(cid, asdict(c)) for cid, c in organism.conditions.items()],
+        "retired_conditions": [(key, asdict(c))
+                               for key, c in organism.retired_conditions.items()],
         "completed": organism.completed,
         "next_condition": organism.next_condition,
         "pruned": organism.pruned,
@@ -147,7 +151,8 @@ def test_zero_marginal_xor_is_learned_from_actions_and_scalar_outcomes():
         assert (organism.act(port, event_id=0, learn=False) == "new-b") == (x != y)
     assert learned_state(organism) == state
     assert any(len(c.atoms) > 1 and abs(float(c.weight)) > 0.05 for c in organism.conditions.values())
-    assert any(c.weight.slow != 0 for c in organism.conditions.values())
+    assert all(c.state == StemCellState.TRIAL for c in organism.conditions.values())
+    assert all(c.weight.slow == 0 for c in organism.conditions.values())
     assert all(not c.stats.has_causal_intervention for c in organism.conditions.values())
 
 
@@ -190,6 +195,8 @@ def test_pruning_preserves_readers_needed_by_a_joint_condition():
     organism._prune()
     assert id(organism.graph) == graph_id
     assert marginal.identity not in organism.conditions and doomed.identity not in organism.conditions
+    assert (marginal.operator, marginal.atoms) in organism.retired_conditions
+    assert (doomed.operator, doomed.atoms) in organism.retired_conditions
     assert joint.identity in organism.conditions
     assert "read:0:0:1" in organism.graph.nodes
     assert "read:0:1:0" not in organism.graph.nodes
@@ -276,6 +283,21 @@ def test_trial_grace_and_noise_have_a_finite_structural_budget():
     organism.completed += 1
     organism._prune()
     assert candidate.identity not in organism.conditions
+    key = (candidate.operator, candidate.atoms)
+    assert organism.retired_conditions[key] is candidate
+    assert candidate.state == StemCellState.PRUNED
+    for _ in range(100):
+        organism._birth()
+    assert key not in {(c.operator, c.atoms) for c in organism.conditions.values()}
+
+
+def test_action_choice_confirmation_is_not_named_goal_competence():
+    organism = TerminalDevelopment(config=DevelopmentConfig(exploration=0))
+    port = BooleanPort()
+    organism.act(port, event_id=0, learn=False)
+    assert ACTION_CHOICE in organism.graph.nodes
+    assert organism.graph.nodes[ACTION_CHOICE].state == NodeState.CONFIRMED
+    assert "goal" not in organism.graph.nodes
 
 
 def test_changing_unexposed_board_clocks_cannot_change_a_decision():

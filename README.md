@@ -1,18 +1,17 @@
 # ReCoN‑lite (Request–Confirmation Network) — Chess Sandbox
 
-> **This branch: mate-in-one through learned feature terminals.** The default
+> **Official restart: mate-in-one through learned feature terminals.** The default
 > `TerminalOrganism` reads declared coordinates through terminals, selects actions
 > in the persistent formal graph and executes them through an actuator terminal.
 > The coach returns scalar outcome feedback. See [the measured result, limits and
 > launch commands](docs/autogrowth/MATE_ONE_COACH.md). Adaptive structural discovery
 > and learned module handover remain to be demonstrated.
 
-> **Review before mainline promotion:** read the
-> [cross-check request](docs/autogrowth/ALIGNMENT_REVIEW_20260906.md) and
-> [successor guidance draft](docs/autogrowth/SUCCESSOR_GUIDANCE_DRAFT.md).
-> `codex/mate-in-one-coach` is the proposed continuation; `main` has not been
-> promoted. The [architecture constitution](docs/autogrowth/ARCHITECTURE_CONSTITUTION.md)
-> records the user's clarified boundary.
+> **Current direction:** `main` is the clean terminal baseline. Read the
+> [official continuation](docs/autogrowth/OFFICIAL_CONTINUATION_20260906.md) and
+> [architecture constitution](docs/autogrowth/ARCHITECTURE_CONSTITUTION.md).
+> The present claim is boundary purity, not adaptive growth, KRK mastery or
+> learned module handover.
 
 > **Historical overview below:** the remaining architecture and milestone
 > descriptions, and the accumulated [research ledger](docs/BRIEF.md), describe

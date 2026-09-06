@@ -1,6 +1,11 @@
 # Successor guidance and mainline promotion draft
 
-Status: proposed on 2026-09-06 for cross-check with the previous Codex instance.
+Status: reviewed and superseded by
+[OFFICIAL_CONTINUATION_20260906.md](OFFICIAL_CONTINUATION_20260906.md). Retained
+to show the proposal that was cross-checked; do not treat its pending language as
+the current repository state.
+
+Original status: proposed on 2026-09-06 for cross-check with the previous Codex instance.
 The user's sequence is review first, then return here to establish the official
 main line. This draft does not declare `main` promoted or authorize bypassing
 that sequence. The architecture constitution already governs the current branch.
