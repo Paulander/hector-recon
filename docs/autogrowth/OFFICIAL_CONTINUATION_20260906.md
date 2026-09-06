@@ -96,9 +96,19 @@ Progress update: steps 1 and 2 have bounded three-seed results. See
 [RESIDUAL_SHADOW_NOMINATION.md](RESIDUAL_SHADOW_NOMINATION.md). Random birth added
 little; mixed-versus-atomic effects varied; residual ranking did not reliably beat
 matched random prediction. Shadow actors stayed identical to controls. The work
-branch now tests one live TRIAL under the predeclared
+branch completed one live TRIAL experiment under the predeclared
 [LIVE_TRIAL_MATERIALIZATION.md](LIVE_TRIAL_MATERIALIZATION.md) protocol. The
 production learner is unchanged; this is a behavior test, not a maturity gate.
+
+All 4,224 actual moves completed. Final development mates for none/ranked/random
+were 126/126/128, 93/101/101 and 66/66/66. The useful seed 2 two-reader AND was
+selected by both methods; masking it changed 54 moves and reduced 101 mates to
+91 (32 lost, 22 gained). This establishes a useful live graph contribution after
+history-preserving attachment, not ranking superiority. A candidate with 35
+positive participations elsewhere had zero evaluation action effect when masked.
+Next proposed work is bounded internal randomized trial-usefulness evidence,
+described in that document. Handovers and automatic growth regulation remain
+separate. Do not rerun steps 1–3 as though they were unimplemented.
 
 1. Run matched multi-seed controls: online random reveal, the same random
    condition set installed at initialization, and atomic-only representation.
@@ -119,8 +129,11 @@ production learner is unchanged; this is a behavior test, not a maturity gate.
    M1 child, but virtual success never becomes reward. Actual play and final
    observed outcome remain grounding.
 
-Longer M1 training is not first because the current random vocabulary was already
-near saturation and its earlier lifecycle semantics were known to be weak.
+The original pause before longer training addressed weak lifecycle claims; it
+was not evidence that more experience could not help. Keep edge learning active
+and include a continued-training control in growth experiments. The smaller
+32-condition work-branch budget is also distinct from the earlier 96-condition
+engineering run. Do not compare their raw scores as if only growth changed.
 
 ## What “starting over” means
 

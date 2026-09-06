@@ -106,11 +106,21 @@ actor behavior/state stayed identical to controls; ranking beat random in one
 seed, chose the same candidate in another and slightly lost in the third.
 Do not claim reliable ranking superiority or causal usefulness from this result.
 
-Current bounded question: live TRIAL materialization with preserved history and
-ranked/random/no-addition controls. Keep actor weights plastic. Do not assume added
-topology is the cause or cure of weak performance; experience and optimization
-also matter. Test learned child competence and parent delegation separately in a
-tiny two-context/two-child environment before using M1 as an M2 child.
+One live TRIAL is now implemented and tested; read
+`docs/autogrowth/LIVE_TRIAL_MATERIALIZATION.md`. All 4,224 planned actual moves
+completed. Validation none/ranked/random: 126/126/128, 93/101/101 and 66/66/66.
+The seed 2 AND condition changed 54 evaluation moves when masked, with a net
+10-mate loss; ranked/random selected the same condition there. This confirms a
+useful live composition in that policy, not reliable ranking superiority. No
+retirement or maturity occurred; history continuity passed focused tests.
+
+Next proposed target is a bounded internal randomized use/no-use signal for a
+TRIAL's actual contribution, with ordinary actor learning active. Read the exact
+scope and limitations in that document before implementation. Do not treat
+positive correlation, prediction accuracy or activation as causal maturity.
+Experience and optimization also matter. Test learned child competence and parent
+delegation separately in a tiny two-context/two-child environment before using M1
+as an M2 child. Neither automatic rate regulation nor handover is implemented.
 
 ## Focused verification
 
