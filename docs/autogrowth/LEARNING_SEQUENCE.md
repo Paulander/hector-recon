@@ -85,8 +85,12 @@ maturity. Read the branch status in `OFFICIAL_CONTINUATION_20260906.md` for exac
 results and continuation. The later internal randomized-use probe passes its
 mechanism checks but half-time probing reduced or matched final chess performance.
 Its short aggregate estimates do not justify automatic retention or maturity.
-Next is a fixed matched recovery interval of normal-access play with all ordinary
-learning active, before a controller. A condition's contribution depends on its
+That recovery comparison is complete: recovery was partial, ordinary pruning and
+replacement occurred, and harmful trial instances survived. See the latest branch
+result in `OFFICIAL_CONTINUATION_20260906.md`. Next isolate edge learning from
+lifecycle turnover with a fixed-topology recovery control, keeping weights plastic.
+This is an experimental comparison, not a permanently frozen organism or a new
+default training profile. A condition's contribution depends on its
 surrounding learned policy, context and learning stage; preserve history without
 treating one lifetime score as universal competence. Autonomous regulation and
 strategic handover remain separate work; main has not adopted the experimental

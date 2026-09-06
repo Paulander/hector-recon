@@ -114,9 +114,18 @@ The new internal permission terminal can withhold a TRIAL without giving it
 action credit. All 151 focused tests passed, but its 50% probing schedule reduced
 or matched final performance across 7,296 actual moves. It is not a default
 training improvement or an automatic usefulness/maturity decision.
-Next: a fixed matched recovery interval of normal-access play, with ordinary
-learning active, before adding a controller. The 117/128 masked score in seed 2
-was an offline intervention, not an autonomous removal learned by the graph.
+The recovery follow-up is complete on the work branch at `57b7d67e`; read the
+latest section in `OFFICIAL_CONTINUATION_20260906.md`. 157 distinct focused tests
+passed; a completed retry ran all 9,216 planned moves. An interrupted first attempt
+is recorded separately. Recovery was partial: final none/ranked/random/probe_ranked/
+probe_random mates were 126/128/128/124/128, 115/101/101/98/98 and 66/66/66/66/66.
+Ordinary pruning/replacement occurred; all added trials survived, including the
+harmful seed 2 probed condition (98 normal, 113 offline masked). Neither the old
+117 nor new 113 masked score is an autonomous removal learned by the graph.
+Next: isolate edge learning from lifecycle turnover with an experimental
+fixed-topology recovery control. Keep weights plastic; this is a laboratory
+control, not a permanently frozen learner or a new default training schedule.
+Do not promote probing or add a usefulness-driven retention controller yet.
 Do not assume added topology is the cause or cure of weak performance; experience
 and optimization also matter.
 Test learned child competence and parent delegation separately in a tiny

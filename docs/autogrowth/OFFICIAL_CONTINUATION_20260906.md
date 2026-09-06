@@ -163,7 +163,7 @@ remained TRIAL; no age-based retirement occurred. Checkpoint/tombstone continuit
 was tested, but long-run retention, automatic regulation, full KRK and handover
 were not established.
 
-### Latest branch status: randomized-use probe remains experimental
+### Previous milestone: randomized-use probe remains experimental
 
 Implementation/protocol:
 [`567dd40f`](https://github.com/Paulander/hector-recon/commit/567dd40f095fec45e0c3c928ac02d7805ef817fe).
@@ -205,12 +205,62 @@ coach remove the candidate on that basis or infer a learned removal capability.
 
 Keep the always-enabled actor as the work-track reference. Do not promote 50%
 probing, claim reliable causal maturity, or add a retention controller on this
-evidence. Next: a separately declared matched recovery run, adding 128 normal-access
-training actions after the probe window while all ordinary learning remains
-active. Record phases and any natural pruning in the longer run; do not attribute
-recovery solely to edge updates. This tests whether the damage persists before
-adding machinery. Merely probing less also gives fewer control observations.
+evidence. The separately declared recovery follow-up is complete below. It added
+128 normal-access actions with all ordinary learning active and recorded natural
+pruning; it does not attribute recovery solely to edge updates. Merely probing
+less also gives fewer control observations.
 Independent child competence and strategic handover remain separate work.
+
+### Latest branch result: partial recovery with lifecycle turnover
+
+Results/continuation commit:
+[`57b7d67e`](https://github.com/Paulander/hector-recon/commit/57b7d67e9f24bfe458459ef965e2c74fd43020f3).
+Read the [recovery protocol, complete results and next target](https://github.com/Paulander/hector-recon/blob/57b7d67e9f24bfe458459ef965e2c74fd43020f3/docs/autogrowth/TRIAL_RECOVERY.md)
+and [aggregate record](https://github.com/Paulander/hector-recon/blob/57b7d67e9f24bfe458459ef965e2c74fd43020f3/reports/autogrowth/development/TRIAL_RECOVERY_20260906.json).
+The runner adds an optional fixed recovery phase and saves each finished arm's
+evidence. It changes no learner or coach mechanism. Main receives guidance only.
+
+157 distinct focused tests passed. An execution interruption ended the first
+attempt after ten arm summaries, at least 6,016 actual moves plus uncounted
+in-flight work. That attempt is preserved as incomplete. The identical retry
+completed all 9,216 planned moves within the same 1,800-second per-seed cap.
+All 15 episode-256 action/outcome records and learned-state digests reproduced;
+all six probe histories remained unchanged, and all ten interrupted-arm summaries
+reproduced except timing. The final test stayed unopened.
+
+Development mates before → after 128 further training actions:
+
+| Seed | None | Always ranked | Always random | Probed ranked | Probed random |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1 | 126 → 126 | 126 → 128 | 128 → 128 | 122 → 124 | 126 → 128 |
+| 2 | 93 → 115 | 101 → 101 | 101 → 101 | 94 → 98 | 94 → 98 |
+| 3 | 66 → 66 | 66 → 66 | 66 → 66 | 66 → 66 |
+
+Some probing costs recover, but no probed arm beats its always-enabled reference.
+Seed 2's probed final policy still improves under offline masking, 98 → 113:
+35 actions change, 10 mates are lost and 25 gained. Its same AND helps the
+always-enabled policy, 101 → 94 when masked, while the separately trained
+no-addition actor reaches 115. Current-policy dependence and the benefit of an
+addition during learning differ. The masked 113 is not an autonomous policy score.
+Ranked/random chose the same candidate in seed 2, with matching trajectories
+within each pair; these are not independent confirmations.
+
+Real-play lifecycle behavior is now observed: 10–14 base conditions retired and
+9–13 replacements were born per arm, with retained tombstones. All twelve added
+trials survived, including the harmful probed ones. Final populations contain
+31–32 live definitions: the original 32-condition birth cap does not replenish a
+permanent extra slot for the one lifetime attachment. This is actual operation
+of the existing lifecycle, not evidence for causally useful pruning or maturity.
+
+**Next bounded target:** isolate edge learning from lifecycle turnover during
+recovery. Reproduce the same first 256 actions, then compare the existing normal
+lifecycle with a laboratory control that suppresses birth/pruning for the next
+128 actions while all edge learning remains active. Predeclare resources and test
+the complete boundary. Use the result to choose a credit or lifecycle correction
+before a usefulness controller. This is not a permanent freeze or automatic
+extension of the completed experiment. The tiny independently trained two-child
+competence/delegation task remains a separate next capability; M1/M2 mastery and
+learned strategic handover remain unproved.
 
 ### Baseline sequence
 
