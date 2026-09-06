@@ -22,6 +22,11 @@ On `codex/residual-shadow-nomination`, also read
 isolated; the explicitly authorized `TrialDevelopment` extension attaches one
 nominee after a fixed prefix, preserving history. It uses ordinary actor credit,
 stops shadow updates and keeps the new condition in TRIAL. No maturity claim.
+For the current randomized-access extension, also read
+`docs/autogrowth/TRIAL_USEFULNESS.md`. Its internal permission terminal gates one
+trial before action selection. Disabled trials receive no action credit; all
+assigned outcomes enter the comparison. The resulting signal does not yet choose
+or retire structures. Original experimental classes remain unchanged controls.
 
 `CODEX_HANDOFF_BRIEF.md`, `docs/BRIEF.md`, TG/V plans, phase reports and archived
 runners are historical evidence, not live instructions. Consult them only for a
@@ -114,9 +119,10 @@ The seed 2 AND condition changed 54 evaluation moves when masked, with a net
 useful live composition in that policy, not reliable ranking superiority. No
 retirement or maturity occurred; history continuity passed focused tests.
 
-Next proposed target is a bounded internal randomized use/no-use signal for a
-TRIAL's actual contribution, with ordinary actor learning active. Read the exact
-scope and limitations in that document before implementation. Do not treat
+The current target is a bounded internal randomized use/no-use signal for a
+TRIAL's actual contribution, with ordinary actor learning active. Read
+`docs/autogrowth/TRIAL_USEFULNESS.md` for the protocol and implementation status.
+Do not treat
 positive correlation, prediction accuracy or activation as causal maturity.
 Experience and optimization also matter. Test learned child competence and parent
 delegation separately in a tiny two-context/two-child environment before using M1
@@ -128,6 +134,8 @@ Use Python 3.12 and run:
 
 ```bash
 PYTHONPATH=src:libs/recon-lite/src python -m pytest -q \
+  tests/autogrowth/test_trial_usefulness.py \
+  tests/autogrowth/test_trial_usefulness_experiment.py \
   tests/autogrowth/test_live_trial.py \
   tests/autogrowth/test_live_trial_experiment.py \
   tests/autogrowth/test_residual_shadow.py \
