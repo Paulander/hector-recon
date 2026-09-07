@@ -42,6 +42,9 @@ All alternative-action grades and feasibility comparisons are offline. Nothing
 from them enters training or an actor's choice; the runtime never imports it.
 Read `M1_RANKING_CERTIFICATE.md` and `M1_CAPACITY_PROBE.md` in the same directory
 for the tie-aware proof and the subsequent single-budget-field comparison.
+Read `docs/autogrowth/M1_CAPACITY_REPLICATION.md` for the fresh-seed follow-up:
+six new actors, a fixed 1,024-decision prefix and the same late 32/64 intervention.
+The learning rate and all learner mechanisms stay unchanged.
 
 `CODEX_HANDOFF_BRIEF.md`, `docs/BRIEF.md`, TG/V plans, phase reports and archived
 runners are historical evidence, not live instructions. Consult them only for a
@@ -187,6 +190,7 @@ Use Python 3.12 and run:
 
 ```bash
 PYTHONPATH=src:libs/recon-lite/src python -m pytest -q \
+  tests/autogrowth/test_m1_capacity_replication.py \
   tests/autogrowth/test_m1_representation.py \
   tests/autogrowth/test_m1_ranking_certificate.py \
   tests/autogrowth/test_m1_capacity.py \

@@ -4,11 +4,13 @@ Status: accepted 2026-09-06. `main` is the official continuation line after the
 promotion commit containing this record. Earlier branches and reports remain
 provenance and a parts library, not active specifications.
 
-Current work-branch continuation (2026-09-07): the shadow, live-trial, randomized
-access, recovery and fixed-topology comparisons have completed. Read `AGENTS.md`
-and `FIXED_TOPOLOGY_RECOVERY.md` for the latest result and next ordinary-play
-target. The original sequence below records the restart plan, not unfinished
-instructions to repeat those experiments. Main has its own linked branch-status
+Current work-branch continuation (2026-09-07): the earlier comparisons, longer
+ordinary play, saved-graph diagnosis and two-seed capacity probe have completed.
+Read `AGENTS.md` and `M1_CAPACITY_PROBE.md` for the results. The next bounded
+replication is specified in `M1_CAPACITY_REPLICATION.md`: six fresh seeds and the
+same late 32/64-condition intervention, with unchanged learner mechanisms and
+learning rate. The original sequence below records the restart plan, not
+instructions to repeat completed experiments. Main has its own linked status
 summary and retains its stable production learner.
 
 ## Decision
