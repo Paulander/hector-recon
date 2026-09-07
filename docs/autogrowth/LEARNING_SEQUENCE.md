@@ -87,7 +87,13 @@ fixed protocol. The subsequent randomized trial-use probe is in
 50% probing reduced or matched final chess scores and did not establish reliable
 usefulness discrimination. Keep normal trial access as the reference. The
 bounded recovery test is complete; see `TRIAL_RECOVERY.md`. Recovery was partial;
-ordinary pruning/replacement occurred, and harmful trials could survive. Next
-isolate edge learning from lifecycle turnover with a fixed-topology recovery
-control whose weights remain plastic. This is a laboratory intervention, not a
-permanent training profile. Autonomous regulation and handover remain separate.
+ordinary pruning/replacement occurred, and harmful trials could survive. The
+paired fixed-topology control is also complete; see `FIXED_TOPOLOGY_RECOVERY.md`.
+Holding definitions while weights learned improved no final score, tied twelve
+comparisons and worsened three. It did not repair seed 2's probed-policy harm or
+seed 3's plateau. Ordinary lifecycle remains the reference; no retention controller
+is justified. Next give the always-enabled references more actual M1 play at fixed
+endpoints with private resumable checkpoints, retaining the exact episode-384
+anchors and separate exploration streams. This tests limited experience before
+guessing a representation or credit correction. Automatic regulation and the tiny
+independent-child handover experiment remain separate capabilities.

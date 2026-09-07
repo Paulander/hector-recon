@@ -139,8 +139,17 @@ an interrupted first attempt is preserved separately. Recovery was partial:
 seed 1 probed scores were ranked 124 and random 128; seed 2 both 98; seed 3 both 66.
 No probed arm exceeded its always-enabled reference. Ordinary pruning/replacement
 ran, but the harmful seed 2 probed trial survived (98 normal, 113 offline masked).
-Next: isolate edge learning from lifecycle turnover with a fixed-topology recovery
-control; keep weights plastic. No automatic retention controller yet.
+That control is now complete; read `docs/autogrowth/FIXED_TOPOLOGY_RECOVERY.md`.
+169 distinct focused tests and all 14,592 declared moves completed. Fixed topology
+improved zero of 15 pairs, tied twelve and worsened three. Prefix histories and
+paired exploration matched; fixed definitions stayed unchanged while weights
+learned. Seed 2's probed policy remained at 98 with or without turnover, versus
+116 under offline masking. Seed 3 stayed at 66. No automatic retention controller.
+Next: a bounded longer ordinary-M1 run with private resumable checkpoints,
+targeting 1,024 training decisions for no-addition/ranked/random references.
+Reproduce the new normal episode-384 records and keep separate exploration
+randomness. Declare resources and endpoints before play; do not select the best
+checkpoint or extend this completed run. Keep birth/pruning and weights plastic.
 Keep always-enabled training as the reference. Do not promote 50% probing or treat
 positive correlation, prediction accuracy or activation as causal maturity.
 Experience and optimization also matter. Test learned child competence and parent

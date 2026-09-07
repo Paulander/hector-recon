@@ -214,3 +214,10 @@ remaining deficit. Do not silently extend this completed run.
 The tiny independently trained two-child competence/delegation task remains a
 separate planned capability. It need not wait for perfect structural discovery,
 but no result here establishes learned strategic handover.
+
+Follow-up completed 2026-09-07: see `FIXED_TOPOLOGY_RECOVERY.md`. A shared RNG
+between birth proposals and exploration required contemporaneous controls with
+separate matched exploration streams; the old final scores above were retained
+as history rather than used as the primary comparator. Holding definitions did
+not improve any of the fifteen comparisons. The new document records all results
+and the next bounded ordinary-play target.

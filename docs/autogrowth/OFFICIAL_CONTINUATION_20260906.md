@@ -4,6 +4,13 @@ Status: accepted 2026-09-06. `main` is the official continuation line after the
 promotion commit containing this record. Earlier branches and reports remain
 provenance and a parts library, not active specifications.
 
+Current work-branch continuation (2026-09-07): the shadow, live-trial, randomized
+access, recovery and fixed-topology comparisons have completed. Read `AGENTS.md`
+and `FIXED_TOPOLOGY_RECOVERY.md` for the latest result and next ordinary-play
+target. The original sequence below records the restart plan, not unfinished
+instructions to repeat those experiments. Main has its own linked branch-status
+summary and retains its stable production learner.
+
 ## Decision
 
 Continue from the terminal M1 substrate introduced at `e3900df`. Reset the active
