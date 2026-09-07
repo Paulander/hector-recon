@@ -45,6 +45,9 @@ for the tie-aware proof and the subsequent single-budget-field comparison.
 Read `docs/autogrowth/M1_CAPACITY_REPLICATION.md` for the fresh-seed follow-up:
 six new actors, a fixed 1,024-decision prefix and the same late 32/64 intervention.
 The learning rate and all learner mechanisms stay unchanged.
+The next longer continuation is specified in `docs/autogrowth/M1_LONG_PLAY.md`:
+all six larger-budget endpoints, event 1,280 to 4,096, with fixed measurements
+of both progress and retention. It changes no learner settings or mechanisms.
 
 `CODEX_HANDOFF_BRIEF.md`, `docs/BRIEF.md`, TG/V plans, phase reports and archived
 runners are historical evidence, not live instructions. Consult them only for a
@@ -188,8 +191,7 @@ study from ALL six larger-budget endpoints, measuring both gains and losses at
 fixed milestones. Keep rates and learner mechanisms unchanged; do not choose
 the best checkpoint or claim another 32/64 causal comparison without matched play.
 Keep existing growth, pruning, exploration and scalar-outcome learning active.
-Do not
-interpret fixed-graph impossibility or a short plateau as requiring a new
+Do not interpret fixed-graph impossibility or a short plateau as requiring a new
 controller, hand-authored composition or feature. Diagnostic labels/fitted weights
 never enter the learner. Private checkpoints remain outside git; main's production
 learner is unchanged. Learned child competence/delegation remains a separate tiny
@@ -201,6 +203,7 @@ Use Python 3.12 and run:
 
 ```bash
 PYTHONPATH=src:libs/recon-lite/src python -m pytest -q \
+  tests/autogrowth/test_m1_long_play.py \
   tests/autogrowth/test_m1_capacity_replication.py \
   tests/autogrowth/test_m1_representation.py \
   tests/autogrowth/test_m1_ranking_certificate.py \
