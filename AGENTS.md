@@ -29,6 +29,10 @@ assigned outcomes enter the comparison. The resulting signal does not yet choose
 or retire structures. Original experimental classes remain unchanged controls.
 For the fixed normal-access follow-up, read `docs/autogrowth/TRIAL_RECOVERY.md`.
 The optional runner recovery phase leaves all learner mechanisms unchanged.
+For the paired lifecycle control, read `docs/autogrowth/FIXED_TOPOLOGY_RECOVERY.md`.
+Recovery holds shared condition definitions while edges learn. Both new modes
+separate exploration randomness from births; compare their contemporaneous
+results, not the old shared-RNG final scores. This is an isolated lab control.
 
 `CODEX_HANDOFF_BRIEF.md`, `docs/BRIEF.md`, TG/V plans, phase reports and archived
 runners are historical evidence, not live instructions. Consult them only for a
@@ -149,6 +153,8 @@ Use Python 3.12 and run:
 
 ```bash
 PYTHONPATH=src:libs/recon-lite/src python -m pytest -q \
+  tests/autogrowth/test_fixed_topology_recovery.py \
+  tests/autogrowth/test_fixed_topology_recovery_experiment.py \
   tests/autogrowth/test_trial_recovery_experiment.py \
   tests/autogrowth/test_trial_usefulness.py \
   tests/autogrowth/test_trial_usefulness_experiment.py \
