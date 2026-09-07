@@ -106,8 +106,19 @@ Keep this distinction explicit: fixed-graph capacity is a property of a saved
 representation; ordinary training changes both the graph and its weights. The
 current process can make further progress without adding a new mechanism. More
 random capacity helped one development case, but does not establish adaptive
-structural selection or explain which births caused the improvement. Next
-replicate the capacity comparison on fresh seeds under a declared full schedule
-before changing a learning law or adopting a budget profile. Keep diagnostic
-answers outside training. Automatic regulation and the independently trained
-child-competence/delegation experiment remain separate capabilities.
+structural selection or explain which births caused the improvement.
+
+The fresh-seed replication is complete; see `M1_CAPACITY_REPLICATION.md`. All six
+32-budget actors improved from 384 to 1,280 decisions. Late expansion to 64 won
+four pairs and tied two, with 25 gained and zero lost paired development mates.
+However, seed 5's ordinary control fell from 128 at 1,024 to 124 at 1,280. Early
+plateaus are not final limits, and further learning is not monotonically helpful.
+No learning rate was varied, so neither “too slow” nor a corrective rate is
+established. The next longer study can use 64 as a provisional work profile and
+continue all six larger-budget endpoints with unchanged learning mechanisms.
+Declare fixed evaluation milestones and record retention as well as gains;
+do not select the best historical checkpoint as the final result. This is not
+another causal budget comparison without matched new play in both arms.
+Keep diagnostic answers outside training. Main's learner/defaults stay unchanged.
+Automatic regulation and the independently trained child-competence/delegation
+experiment remain separate capabilities.

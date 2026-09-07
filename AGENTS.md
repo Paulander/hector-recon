@@ -175,9 +175,20 @@ budget, 32 versus 64. Across 1,536 new actual moves, seed 2 ended 124 versus 128
 seed 3 improved from 66 to 111 in BOTH arms. More ordinary play can therefore
 escape the earlier plateau without a new mechanism or larger budget. More capacity
 helped one selected case; random birth is still not adaptive structural selection.
-Next replicate the capacity comparison on fresh seeds under a declared complete
-schedule before changing a learning law or adopting a budget profile. Keep the
-existing growth, pruning, exploration and scalar-outcome learning active. Do not
+The fresh-seed replication is complete; read `M1_CAPACITY_REPLICATION.md` in
+docs/autogrowth. All 196 tests passed; all 12,288 declared actual moves completed.
+At 1,280 decisions, 32/64 scores for seeds 4–9 are 123/128, 124/128, 128/128,
+97/103, 115/125 and 111/111. The larger budget won four pairs and tied two, gaining
+25 mates without paired losses. All six 32-budget actors improved from 384, but
+seed 5 regressed from 128 at 1,024 to 124 at 1,280. More play is useful, not
+monotonically beneficial. The unchanged 0.3 learning rate was not tested as a cause.
+All 18 final prefix/arm checkpoints restored; 114 private payloads were retained.
+Next use 64 as a provisional work profile for a longer declared ordinary-play
+study from ALL six larger-budget endpoints, measuring both gains and losses at
+fixed milestones. Keep rates and learner mechanisms unchanged; do not choose
+the best checkpoint or claim another 32/64 causal comparison without matched play.
+Keep existing growth, pruning, exploration and scalar-outcome learning active.
+Do not
 interpret fixed-graph impossibility or a short plateau as requiring a new
 controller, hand-authored composition or feature. Diagnostic labels/fitted weights
 never enter the learner. Private checkpoints remain outside git; main's production

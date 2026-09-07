@@ -6,10 +6,14 @@ provenance and a parts library, not active specifications.
 
 Current work-branch continuation (2026-09-07): the earlier comparisons, longer
 ordinary play, saved-graph diagnosis and two-seed capacity probe have completed.
-Read `AGENTS.md` and `M1_CAPACITY_PROBE.md` for the results. The next bounded
-replication is specified in `M1_CAPACITY_REPLICATION.md`: six fresh seeds and the
-same late 32/64-condition intervention, with unchanged learner mechanisms and
-learning rate. The original sequence below records the restart plan, not
+Read `AGENTS.md` and `M1_CAPACITY_PROBE.md` for those results. The six-fresh-seed
+replication in `M1_CAPACITY_REPLICATION.md` is also complete: late expansion won
+four pairs and tied two; all six smaller-budget actors improved from 384 to
+1,280, but an intermediate perfect score could regress. All 196 tests and 12,288
+declared moves completed. Next is longer ordinary play from all six saved
+64-budget endpoints, with fixed evaluations of both gains and losses and no
+learning-rate or mechanism change. The original sequence below records the
+restart plan, not
 instructions to repeat completed experiments. Main has its own linked status
 summary and retains its stable production learner.
 

@@ -86,3 +86,99 @@ diagnostic access, fixed milestones, paired exploration, source-bound restoratio
 unchanged learning rate and continued-training equivalence across evaluation and
 reload. Run the complete required branch suite in `AGENTS.md` before play. Public
 results contain aggregates and transport hashes; trained weights remain private.
+
+## Completed result — 2026-09-07
+
+Implementation and this protocol were published before play at
+[`bca4f0ad`](https://github.com/Paulander/hector-recon/commit/bca4f0add0727f404087133912c8727e903912fc).
+All **196 required branch tests passed** before the experiment. The new tiny
+fixture initially used a discovery interval too short for its active/inactive
+support requirement; that fixture was corrected before play. No learner change
+or failed chess attempt was involved.
+
+The [public aggregate](../../reports/autogrowth/development/M1_CAPACITY_REPLICATION_20260907.json)
+records every seed, fixed manifest, outcomes, lifecycle counts and private
+checkpoint hashes. All **12,288 actual moves** completed in one attempt:
+**9,216 training** (5,342 mates) and **3,072 frozen evaluation**. There were no
+diagnostic laboratory transitions in this study. Seed times ranged from
+1,169.170 to 1,275.818 seconds, within the 2,400-second caps. No retry, extension,
+intermediate checkpoint selection or final-test access occurred.
+
+Development mates out of 128:
+
+| Seed | 384 decisions, 32 | 1,024 decisions, 32 | 1,280 decisions, 32 | 1,280 decisions, 64 | 64 minus 32 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 4 | 122 | 122 | 123 | 128 | +5 |
+| 5 | 106 | 128 | 124 | 128 | +4 |
+| 6 | 66 | 120 | 128 | 128 | 0 |
+| 7 | 62 | 62 | 97 | 103 | +6 |
+| 8 | 62 | 62 | 115 | 125 | +10 |
+| 9 | 66 | 111 | 111 | 111 | 0 |
+
+### More ordinary experience
+
+Every 32-condition actor improved its final total relative to 384 decisions.
+The mean rose from 80.67/128 to 116.33/128 (63.02% to 90.89%). In particular,
+seeds 7 and 8 remained at 62 at both 384 and 1,024, then reached 97 and 115 with
+another 256 ordinary decisions. The earlier observed plateau was not evidence
+that their current growing process could not improve.
+
+Progress was not monotonic. Seed 5 reached 128 at 1,024 and fell to 124 with the
+same budget at 1,280, losing four previously solved rows. Seed 4's late net gain
+of one hides four gains and three losses. Longer training must therefore measure
+both gains and retention; do not select the best historical score as the final
+result or claim that sufficient patience guarantees convergence.
+
+The edge learning rate remained **0.3** throughout. These results do not establish
+that it was too small, that a faster rate would help, or whether particular gains
+came from weight changes, new conditions, pruning or exploratory experience.
+
+### More capacity
+
+The larger budget improved four seed pairs and tied two; it worsened none. Across
+the 768 paired development rows it gained 25 mates and lost none: a mean of
+**4.17 mates per seed**, or **3.26 percentage points**. Its mean final score was
+120.5/128 (94.14%). Three larger-budget actors solved all 25 development symmetry
+orbits, versus one 32-condition actor. Seed 7 still solved only 18/25 and seed 9
+also 18/25; these are not generally competent M1 solvers.
+
+All six pairs had matching exploration streams, unchanged inherited states,
+identical initial settings except the budget, and unchanged completed shadow
+histories. Every evaluation preserved learned state. The six final prefix and
+twelve final arm checkpoints were independently restored and checked against
+their reports. All **114 immutable private payloads** were retained, including
+the stronger intermediate seed 5 state and the worse final control.
+
+During the additional 256 decisions, 32-budget actors made 5–11 births and 5–11
+retirements; 64-budget actors made 35–43 births and 3–10 retirements. Final live
+counts were 31–32 and 63–64. The budget is a ceiling, not a promise that every
+slot is populated after pruning. Physical vertices ranged from 1,469–1,592 versus
+2,489–2,690, so the benefit also has a real graph cost. The public aggregate gives
+every individual count. Births still came from the unchanged generic random
+grammar, not a supplied chess composition or learned adaptive proposal law.
+
+### Interpretation and next target
+
+The evidence now supports two narrower conclusions: early endpoints understated
+what ordinary learning could achieve in these seeds, and late random-capacity
+expansion helped repeatedly in this fixed development setting. The proposed
+explanation “the learning rate was too slow” remains untested. No new scaffolding,
+feature, controller, reward shaping or learning law was needed for these gains.
+
+Use **64 as a provisional experimental budget** for the next longer ordinary-play
+study, starting from all six saved 1,280-decision larger-budget actors. Declare
+the complete endpoint and intermediate evaluation schedule before further play;
+report gained and lost rows, and preserve every checkpoint rather than choosing
+the best one. Keep the learning rate, exploration, growth and pruning unchanged.
+Do not automatically alter rates from these evaluation outcomes. Main's original
+96-condition default and learner source remain unchanged.
+
+This follow-up asks whether more ordinary experience improves the remaining weak
+histories and preserves stronger ones. It is not another causal comparison of
+32 versus 64 unless both budgets receive matched new play. A later learning-rate
+comparison must vary that parameter explicitly; neither increasing nor decreasing
+it is established by this study. Fresh positions and a deliberately frozen final
+test will still be needed for mastery claims. Adaptive structural selection and
+the independently trained child-competence/delegation task remain separate work;
+the delegation experiment need not wait for perfect structural discovery. This
+replication is complete and closed.
