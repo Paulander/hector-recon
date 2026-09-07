@@ -138,17 +138,31 @@ More random capacity helped one selected case; adaptive structural selection is
 still unproved. Main's learner/defaults are unchanged (its original default was
 96 conditions, distinct from the small experimental budget).
 
-Next replicate the matched capacity comparison on fresh seeds under a declared
-complete training schedule before changing a learning law or adopting a profile.
-Keep normal growth/pruning, exploration and scalar-outcome learning active.
-A fixed-graph impossibility certificate does not require replacing the learner;
-ordinary training changes graph and weights. Do not supply a hand-authored
-composition, correct-action label or new controller because of a short plateau.
-Offline diagnostic answers and fitted weights never enter training. Report real
-training experience separately from evaluation and laboratory transitions.
-Private checkpoints and favorable/adverse evidence are retained. Learned child
+The fresh-seed replication is complete at `6039510925b7329196cb0ec692ec3bd8d7c5a104`;
+read the latest result in `OFFICIAL_CONTINUATION_20260906.md`. All 196 branch tests
+passed and 12,288 actual moves completed (9,216 training, 3,072 evaluation).
+For seeds 4–9 the final 32/64 scores were 123/128, 124/128, 128/128, 97/103,
+115/125 and 111/111. Late expansion won four pairs and tied two, gaining 25 mates
+without paired losses. All six 32-budget actors improved from 384 to 1,280, but
+seed 5 fell from a perfect 128 at 1,024 to 124 at 1,280. More play can escape
+plateaus; it is not monotonically beneficial. The unchanged learning rate 0.3
+was never varied, so “too slow” is not an established explanation.
+
+All 18 final prefix/arm states restored and 114 private payloads were retained.
+Next use 64 as a provisional experimental budget for a longer fixed schedule
+from ALL six larger-budget endpoints. Declare milestones before play, record
+gained and lost rows, and retain every checkpoint. Keep edge learning, random
+birth/pruning and exploration active with their unchanged rates. Do not select
+the best historical checkpoint, add a controller or use evaluation outcomes to
+adjust training. A new 32/64 causal comparison would need matched new play.
+Main's stable learner and original 96-condition default remain unchanged.
+
+Diagnostic labels and fitted weights never enter training. Report rewarded
+training separately from evaluation and laboratory transitions. Learned child
 competence and parent delegation remain a separate tiny two-context/two-child
-test before M2; no handover, learned world model or M1 mastery is established.
+capability before M2; no adaptive structural selection, handover, learned world
+model or general M1 mastery is established. Delegation need not wait for perfect
+structural discovery.
 
 ## Focused verification
 

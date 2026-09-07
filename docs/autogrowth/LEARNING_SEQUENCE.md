@@ -102,12 +102,20 @@ concerns fixed representations. A paired condition-budget probe then supplied
 `OFFICIAL_CONTINUATION_20260906.md`.
 
 The existing growth/learning process can therefore progress without a new
-mechanism or larger budget. More random capacity helped one development case;
-this is not adaptive structural selection and does not identify which births
-caused the seed 3 gain. Next replicate the capacity comparison on fresh seeds
-under a declared complete schedule before changing a learning law or adopting a
-budget profile. Keep diagnostic answers outside training and count training
-experience separately from evaluation and laboratory moves. Main's source and
-original default budget are unchanged. Autonomous regulation and strategic
-handover remain separate work; the tiny independently trained child-competence
-and parent-delegation experiment need not wait for perfect structural discovery.
+mechanism or larger budget. The fresh-seed replication then completed all 12,288
+moves: all six 32-budget actors improved from 384 to 1,280, and late expansion
+won four pairs and tied two, with 25 paired gains and no losses. However, seed 5
+regressed from 128 at 1,024 to 124 at 1,280. See the latest result in
+`OFFICIAL_CONTINUATION_20260906.md` for all scores and verified checkpoints.
+
+Early plateaus are not final limits, and more play is not monotonically helpful.
+The learning rate remained 0.3; “too slow” was not tested as an explanation.
+Next use 64 as a provisional work profile for longer ordinary training from all
+six larger-budget endpoints, with fixed evaluations of both gains and retention.
+Keep existing learning rates and mechanisms unchanged; do not select the best
+historical checkpoint or adapt the schedule from evaluation outcomes. This is
+not a further causal 32/64 comparison without matched new play in both arms.
+Main's learner and original 96-condition default remain unchanged. Diagnostic
+answers stay outside training. Automatic regulation and the independently trained
+child-competence/delegation experiment remain separate capabilities; delegation
+need not wait for perfect structural discovery.

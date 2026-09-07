@@ -394,7 +394,7 @@ parent-delegation experiment remains a separate planned capability and need not
 wait for perfect structural discovery. Learned handover, adaptive structural
 selection, a competence envelope, a world model, M2 and full KRK remain unproved.
 
-### Latest branch result: diagnosed fixed-graph limits; existing learning progressed
+### Earlier branch result: diagnosed fixed-graph limits; existing learning progressed
 
 Full results and continuation:
 [`1a67e292`](https://github.com/Paulander/hector-recon/commit/1a67e292305183756a3d3fd15cf9dd556d28af99).
@@ -466,7 +466,7 @@ change caused that gain. More random capacity helped one selected development
 case and tied the other. It does not establish reliable adaptive structural
 selection, maturity, retention, handover or M1 mastery.
 
-**Next bounded target:** replicate the matched capacity comparison on fresh seeds
+**Follow-up completed below:** replicate the matched capacity comparison on fresh seeds
 with a declared complete training schedule before adopting a budget profile or
 changing a learning law. Keep ordinary growth/pruning and scalar-outcome learning
 active. Do not infer a need for another controller or hand-authored composition
@@ -475,6 +475,76 @@ moves and preserve the saved states. The independently trained child-competence
 and parent-delegation experiment remains a separate capability and need not wait
 for perfect structural discovery. All studies above are closed; any further play
 starts a separately declared experiment.
+
+### Latest branch result: fresh-seed gains from ordinary learning and more capacity
+
+Results and protocol are published at
+[`60395109`](https://github.com/Paulander/hector-recon/commit/6039510925b7329196cb0ec692ec3bd8d7c5a104).
+Read the [full replication report](https://github.com/Paulander/hector-recon/blob/6039510925b7329196cb0ec692ec3bd8d7c5a104/docs/autogrowth/M1_CAPACITY_REPLICATION.md)
+and its linked public aggregate. The implementation/protocol was published before
+play at `bca4f0add0727f404087133912c8727e903912fc`. Main receives guidance only.
+
+Six fresh seeds (4–9) each played a new 1,024-decision prefix with the unchanged
+32-condition actor. At that fixed boundary, matched copies continued for 256
+more decisions with 32 versus 64 conditions; only max_conditions differed.
+The edge learning rate remained 0.3 and exploration 0.25. No reward, feature,
+terminal, formal computation, birth/pruning or credit law changed. No shadow
+nominee was attached, and no diagnostic answers or fitted policy entered play.
+
+All **196 required branch tests passed before play**. All **12,288 declared
+actual moves** completed in one attempt: **9,216 training** (5,342 mates) and
+**3,072 frozen evaluation**. No laboratory alternatives were graded in this
+study. Per-seed times were 1,169.170–1,275.818 seconds, within 2,400-second caps.
+No timeout, retry, extension, score-selected endpoint or final-test access.
+
+Development mates out of 128:
+
+| Seed | 384, budget 32 | 1,024, budget 32 | 1,280, budget 32 | 1,280, budget 64 |
+| --- | ---: | ---: | ---: | ---: |
+| 4 | 122 | 122 | 123 | 128 |
+| 5 | 106 | 128 | 124 | 128 |
+| 6 | 66 | 120 | 128 | 128 |
+| 7 | 62 | 62 | 97 | 103 |
+| 8 | 62 | 62 | 115 | 125 |
+| 9 | 66 | 111 | 111 | 111 |
+
+All six ordinary 32-budget actors improved relative to 384. Seeds 7 and 8 stayed
+at 62 through 1,024 and then gained 35 and 53 mates in the next 256 decisions.
+This replicates escape from an apparent plateau using the existing process.
+But seed 5 lost four mates after a perfect 1,024 score, and seed 4's late net
+increase of one includes four gains and three losses. Do not confuse more
+experience with guaranteed monotonic progress or pick the best old checkpoint.
+
+Late expansion won four pairs and tied two: **25 paired gains, zero losses**
+across the 768 development rows, averaging +4.17 mates per seed (+3.26 percentage
+points). Mean final scores were 90.89% versus 94.14%. Three larger-budget actors
+solved all 25 development symmetry orbits, versus one smaller-budget actor;
+seeds 7 and 9 still solved only 18/25. These are fresh seeds on reused development
+positions, not an independent mastery test or a generally optimal budget.
+
+All inherited states, sole-field treatment and paired exploration checks passed;
+completed shadow histories stayed unchanged and evaluations preserved learned
+state. The six final prefix states and twelve final continuation states were
+independently restored. All **114 private checkpoint payloads** were retained,
+including regressions. Final live populations were 31–32 and 63–64: these are
+ceilings, not guaranteed occupancy. More capacity also increased physical vertices
+from 1,469–1,592 to 2,489–2,690; it is not a free performance gain.
+
+**Correction to the interpretation:** some earlier endpoints were too early to
+judge the growing process. The learning rate was not varied; neither “too slow”
+nor a corrective rate follows. Ordinary training changes weights and topology.
+More random capacity helped repeatedly here; adaptive proposal selection,
+reliable retention, competence and handover are still separate open claims.
+
+**Next bounded target:** use 64 as a provisional experimental budget for longer
+ordinary play from all six saved larger-budget endpoints. Declare the complete
+schedule and evaluation milestones before starting. Keep the learning rate,
+exploration, birth and pruning unchanged; measure both gains and lost rows.
+Do not choose a favorable seed or best historical checkpoint, and do not claim
+another causal 32/64 comparison unless both arms receive matched additional play.
+Main's learner and its original 96-condition default stay unchanged. The tiny
+independently trained child-competence/delegation experiment remains separate and
+need not wait for perfect growth. This replication is complete and closed.
 
 ### Baseline sequence
 
