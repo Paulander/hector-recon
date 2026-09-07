@@ -33,6 +33,10 @@ For the paired lifecycle control, read `docs/autogrowth/FIXED_TOPOLOGY_RECOVERY.
 Recovery holds shared condition definitions while edges learn. Both new modes
 separate exploration randomness from births; compare their contemporaneous
 results, not the old shared-RNG final scores. This is an isolated lab control.
+For the longer ordinary-play runner and private checkpoints, read
+`docs/autogrowth/ORDINARY_M1_CONTINUATION.md`. It reuses the always-enabled actor,
+reproduces the new episode-384 anchors and evaluates a fixed 1,024-decision
+endpoint. Resume preserves source, schedule and the original seed time cap.
 
 `CODEX_HANDOFF_BRIEF.md`, `docs/BRIEF.md`, TG/V plans, phase reports and archived
 runners are historical evidence, not live instructions. Consult them only for a
@@ -162,6 +166,7 @@ Use Python 3.12 and run:
 
 ```bash
 PYTHONPATH=src:libs/recon-lite/src python -m pytest -q \
+  tests/autogrowth/test_ordinary_m1.py \
   tests/autogrowth/test_fixed_topology_recovery.py \
   tests/autogrowth/test_fixed_topology_recovery_experiment.py \
   tests/autogrowth/test_trial_recovery_experiment.py \
