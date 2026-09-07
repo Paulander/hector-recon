@@ -82,3 +82,56 @@ composition correction, not supplying the missing chess answer. Distinguishable
 options with poor learned ordering motivate a credit/optimization investigation;
 they do not by themselves identify a particular update-law bug. Do not force a
 mechanism tweak if this run only locates, rather than resolves, the cause.
+
+## Completed result — 2026-09-07
+
+The original protocol/implementation was published at `c6997362`; the separately
+declared tie-aware follow-up at `ec8323f9`. The original run completed in
+1,136.752 seconds within its 1,200-second cap, with all 10,111 declared executions.
+The follow-up completed its separate 7,039 laboratory transitions within 180
+seconds. Combined: **3,072 frozen actor moves, 14,078 laboratory transitions,
+zero training moves**. All 73 focused tests passed before the subsequent capacity
+probe was added. No retries, shortened results or final-test access occurred.
+The [aggregate evidence](../../reports/autogrowth/development/M1_REPRESENTATION_DIAGNOSIS_20260907.json)
+contains both protocols, counts, split results and elementary contradiction
+certificates. No learned weights or alternative-action dataset is published.
+
+All eight actors reproduced their exact development actions and outcomes. All
+sixteen split evaluations preserved learned state and matched formal support and
+choice to the declared Boolean/weight calculation. No formal implementation bug
+was found. Within each examined position, neither the complete schema nor the
+existing reader predicates collapsed a winning and losing alternative. This is a
+local finding; it does not prove universal sufficiency of the feature space.
+
+| Seed | Actor | Saved event | Development mates | Local signature/tie upper bound |
+| --- | --- | ---: | ---: | ---: |
+| 2 | No addition | 384 | 121 | 123 |
+| 2 | No addition | 1,024 | 124 | 124 |
+| 2 | Ranked | 384 | 98 | 123 |
+| 2 | Ranked | 1,024 | 124 | 124 |
+| 3 | No addition | 384 | 66 | 128 |
+| 3 | No addition | 1,024 | 66 | 128 |
+| 3 | Ranked | 384 | 66 | 128 |
+| 3 | Ranked | 1,024 | 66 | 128 |
+
+Seed 2's final four development failures cannot be repaired by changing the
+existing weights: compositions alias the relevant alternatives and the existing
+tie selects the failing representative. Seed 3 has no such within-position gate
+alias. Its 128 upper bound is not an attainable-score certificate: a single set
+of shared weights must also work across positions.
+
+The [tie-aware follow-up](M1_RANKING_CERTIFICATE.md) closes that qualification.
+Every saved graph has an explicit contradictory pair of weight requirements on
+both splits. Some shared gate-weight difference must be positive in one case and
+nonpositive in another (or a zero difference must be positive). Thus **none of
+these particular fixed graphs can solve its whole examined split by weight
+changes alone**, even using its existing tie rule. For seed 3 this proves a
+capacity limitation, not that 66 is its best achievable score. It does not
+attribute every error to structure or identify a universally correct birth law.
+
+This rules out treating the remaining problem as merely a learning-rate tune or
+a chess-rule fix. It motivates a small test of the current growth budget before
+inventing another mechanism. See [M1_CAPACITY_PROBE.md](M1_CAPACITY_PROBE.md): restore
+identical saved no-addition actors, compare 32 versus 64 allowed conditions, and
+let the unchanged generic birth/credit laws receive matched actual chess play.
+That probe supplies no particular reader, composition, answer or fitted weight.

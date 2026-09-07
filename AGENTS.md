@@ -40,6 +40,8 @@ endpoint. Resume preserves source, schedule and the original seed time cap.
 For the saved-actor diagnostic, read `docs/autogrowth/M1_REPRESENTATION_DIAGNOSIS.md`.
 All alternative-action grades and feasibility comparisons are offline. Nothing
 from them enters training or an actor's choice; the runtime never imports it.
+Read `M1_RANKING_CERTIFICATE.md` and `M1_CAPACITY_PROBE.md` in the same directory
+for the tie-aware proof and the subsequent single-budget-field comparison.
 
 `CODEX_HANDOFF_BRIEF.md`, `docs/BRIEF.md`, TG/V plans, phase reports and archived
 runners are historical evidence, not live instructions. Consult them only for a
@@ -177,6 +179,8 @@ Use Python 3.12 and run:
 ```bash
 PYTHONPATH=src:libs/recon-lite/src python -m pytest -q \
   tests/autogrowth/test_m1_representation.py \
+  tests/autogrowth/test_m1_ranking_certificate.py \
+  tests/autogrowth/test_m1_capacity.py \
   tests/autogrowth/test_ordinary_m1.py \
   tests/autogrowth/test_fixed_topology_recovery.py \
   tests/autogrowth/test_fixed_topology_recovery_experiment.py \
