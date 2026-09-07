@@ -211,7 +211,7 @@ pruning; it does not attribute recovery solely to edge updates. Merely probing
 less also gives fewer control observations.
 Independent child competence and strategic handover remain separate work.
 
-### Latest branch result: partial recovery with lifecycle turnover
+### Previous milestone: partial recovery with lifecycle turnover
 
 Results/continuation commit:
 [`57b7d67e`](https://github.com/Paulander/hector-recon/commit/57b7d67e9f24bfe458459ef965e2c74fd43020f3).
@@ -252,15 +252,78 @@ trials survived, including the harmful probed ones. Final populations contain
 permanent extra slot for the one lifetime attachment. This is actual operation
 of the existing lifecycle, not evidence for causally useful pruning or maturity.
 
-**Next bounded target:** isolate edge learning from lifecycle turnover during
-recovery. Reproduce the same first 256 actions, then compare the existing normal
-lifecycle with a laboratory control that suppresses birth/pruning for the next
-128 actions while all edge learning remains active. Predeclare resources and test
-the complete boundary. Use the result to choose a credit or lifecycle correction
-before a usefulness controller. This is not a permanent freeze or automatic
-extension of the completed experiment. The tiny independently trained two-child
-competence/delegation task remains a separate next capability; M1/M2 mastery and
-learned strategic handover remain unproved.
+This motivated the paired control below. Birth proposals and exploration shared
+an RNG, so the new comparison required contemporaneous normal and fixed modes
+with separate matched exploration streams. The old final scores above remain
+historical references; they are not the new experiment's primary comparator.
+
+### Latest branch result: holding topology fixed did not repair recovery
+
+Implementation/protocol:
+[`f847e878`](https://github.com/Paulander/hector-recon/commit/f847e878f3c172b5229957d9af393f74e4ef8751).
+Results and continuation:
+[`3c8fe39d`](https://github.com/Paulander/hector-recon/commit/3c8fe39d84789ca72a0d579caa3143388e720059).
+Read the [complete protocol, result and next target](https://github.com/Paulander/hector-recon/blob/3c8fe39d84789ca72a0d579caa3143388e720059/docs/autogrowth/FIXED_TOPOLOGY_RECOVERY.md)
+and [aggregate record](https://github.com/Paulander/hector-recon/blob/3c8fe39d84789ca72a0d579caa3143388e720059/reports/autogrowth/development/FIXED_TOPOLOGY_RECOVERY_20260907.json).
+Main retains its stable production learner; this is a documentation update.
+
+Each seed/role reproduced its first 256 actions, then was cloned into two
+128-action recovery modes. The fixed mode held shared condition definitions and
+history identities while ordinary edge learning continued. Legal binding replicas
+could still instantiate the same weights. Both modes used matching independent
+exploration streams, so suppressing births could not shift exploration draws.
+The original coach, production learner and prior experiments were unchanged.
+
+All 169 distinct focused tests passed. All 14,592 declared moves completed in one
+attempt: 7,680 training, 3,840 development evaluation and 3,072 offline ablation.
+Seed times were 2,366.284, 2,171.301 and 2,260.578 seconds, within the unchanged
+2,400-second cap. All fifteen boundary histories and exploration pairs matched;
+all fifteen fixed arms retained their definitions while weights changed. All twelve
+probe reports stayed unchanged and all 54 evaluations preserved learned state.
+The final test remained unopened. Each final actor had 384 training decisions;
+shared histories were counted as actual play once, then copied.
+
+Development mates out of 128, **new normal / fixed topology**:
+
+| Seed | No addition | Always ranked | Always random | Probed ranked | Probed random |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1 | 124 / 124 | 128 / 126 | 128 / 128 | 124 / 122 | 128 / 128 |
+| 2 | 121 / 116 | 98 / 98 | 98 / 98 | 98 / 98 | 98 / 98 |
+| 3 | 66 / 66 | 66 / 66 | 66 / 66 | 66 / 66 | 66 / 66 |
+
+Holding topology fixed improved zero pairs, tied twelve and worsened three.
+These are not fifteen independent replications; seed 2's equal nominees produced
+matching trajectories within each always/probed pair. Normal turnover retired
+11–15 definitions and produced 10–15 replacements per actor. All 24 added-trial
+instances survived and remained TRIAL. This does not establish adaptive growth,
+useful retirement or maturity, but it argues against a blanket hold as the repair
+in these runs. Seed 3 still solved zero of the 25 development orbits completely.
+
+Seed 2's probed final policy scored 98 in both modes, versus 116 when masked
+offline: 32 actions changed, seven mates were lost and 25 gained. That persistent
+harm does not require lifecycle turnover. The same definition helped the always
+policy (98 to 94 when masked), while the no-addition actor reached 121/116.
+The masked 116 is not an autonomously learned removal. Separately, the fixed
+no-addition actor's real improvement from its episode-256 score of 93 to 116 shows
+that continued edge learning can improve behavior without new definitions.
+Improvement was not uniform across seeds and histories; no M1 mastery claim.
+
+**Next bounded target:** more ordinary M1 play with private resumable checkpoints,
+aiming at a fixed 1,024-decision endpoint for no-addition/ranked/random references
+in seeds 1, 2 and 3. Reproduce the new normal episode-384 anchors, retain matching
+separate exploration streams and keep ordinary birth/pruning and edge learning.
+Declare the exact schedule, endpoints and resources before that future run. Test
+checkpoint/resume action and evidence equivalence, source identity, shared weight
+continuity, coach opacity and read-only evaluation. Preserve incomplete evidence;
+do not report a best observed checkpoint as the fixed endpoint. Publish aggregate
+outcomes/hashes and keep trained weights private. This completed run is closed.
+
+This tests limited experience before guessing a credit or representation defect;
+the current result does not justify choosing either or adding a retention
+controller. Do not promote the hold or 50% probing. The tiny independently trained
+two-child competence/delegation experiment remains a separate planned capability
+and need not wait for perfect structural discovery. Learned handover, a competence
+envelope, a world model, M2 and full KRK remain unproved.
 
 ### Baseline sequence
 

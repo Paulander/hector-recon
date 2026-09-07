@@ -86,11 +86,14 @@ results and continuation. The later internal randomized-use probe passes its
 mechanism checks but half-time probing reduced or matched final chess performance.
 Its short aggregate estimates do not justify automatic retention or maturity.
 That recovery comparison is complete: recovery was partial, ordinary pruning and
-replacement occurred, and harmful trial instances survived. See the latest branch
-result in `OFFICIAL_CONTINUATION_20260906.md`. Next isolate edge learning from
-lifecycle turnover with a fixed-topology recovery control, keeping weights plastic.
-This is an experimental comparison, not a permanently frozen organism or a new
-default training profile. A condition's contribution depends on its
+replacement occurred, and harmful trial instances survived. The fixed-topology
+comparison has also completed: holding definitions while weights learned improved
+zero of fifteen pairs, tied twelve and worsened three. See the latest branch
+result in `OFFICIAL_CONTINUATION_20260906.md`. Keep normal lifecycle as the
+reference. Next test substantially more ordinary M1 experience at fixed endpoints,
+with private resumable checkpoints and exact episode-384 anchors, before guessing
+a credit or representation correction. Preserve separate exploration streams;
+do not promote the hold or the probing policy. A condition's contribution depends on its
 surrounding learned policy, context and learning stage; preserve history without
 treating one lifetime score as universal competence. Autonomous regulation and
 strategic handover remain separate work; main has not adopted the experimental

@@ -122,9 +122,19 @@ probe_random mates were 126/128/128/124/128, 115/101/101/98/98 and 66/66/66/66/6
 Ordinary pruning/replacement occurred; all added trials survived, including the
 harmful seed 2 probed condition (98 normal, 113 offline masked). Neither the old
 117 nor new 113 masked score is an autonomous removal learned by the graph.
-Next: isolate edge learning from lifecycle turnover with an experimental
-fixed-topology recovery control. Keep weights plastic; this is a laboratory
-control, not a permanently frozen learner or a new default training schedule.
+That fixed-topology comparison is now complete on the work branch at
+`3c8fe39d84789ca72a0d579caa3143388e720059`; see the latest branch result in
+`OFFICIAL_CONTINUATION_20260906.md`. All 169 focused tests and 14,592 declared
+moves completed. Holding definitions while weights learned improved zero of 15
+pairs, tied twelve and worsened three. All shared histories and exploration
+streams matched. Seed 2's probed policy stayed at 98 in both modes, versus 116
+under offline masking; seed 3 stayed at 66. Main receives summaries only.
+Next: a bounded longer ordinary-M1 run with private resumable checkpoints,
+targeting 1,024 training decisions for no-addition/ranked/random references in
+three seeds. Reproduce the new normal episode-384 records and keep separate
+exploration streams. Declare resources and endpoints before play, retain failed
+or interrupted evidence, and do not select the best checkpoint. Keep ordinary
+birth/pruning and edge learning active. The completed run is not extended.
 Do not promote probing or add a usefulness-driven retention controller yet.
 Do not assume added topology is the cause or cure of weak performance; experience
 and optimization also matter.
