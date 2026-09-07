@@ -149,13 +149,24 @@ plateaus; it is not monotonically beneficial. The unchanged learning rate 0.3
 was never varied, so “too slow” is not an established explanation.
 
 All 18 final prefix/arm states restored and 114 private payloads were retained.
-Next use 64 as a provisional experimental budget for a longer fixed schedule
-from ALL six larger-budget endpoints. Declare milestones before play, record
-gained and lost rows, and retain every checkpoint. Keep edge learning, random
-birth/pruning and exploration active with their unchanged rates. Do not select
-the best historical checkpoint, add a controller or use evaluation outcomes to
-adjust training. A new 32/64 causal comparison would need matched new play.
-Main's stable learner and original 96-condition default remain unchanged.
+The subsequent longer continuation is complete at `a21473e7b818271fbd5424204ea83d49c2d550f8`;
+read the latest result in `OFFICIAL_CONTINUATION_20260906.md`. All 199 branch tests
+passed and all 19,968 new moves completed (16,896 training, 3,072 evaluation).
+At event 4,096, seeds 4–9 scored 128, 128, 128, 126, 128 and 111. Two improved and
+four tied their event-1,280 totals; row-level outcomes include 28 gains and two
+losses. Seed 4 temporarily regressed and recovered. Seed 9 retained exactly the
+same failure partition despite 235 further births. All 24 evaluated payloads
+verified and 162 private payloads were retained. No setting or mechanism changed.
+
+Next declare one bounded read-only attribution using the existing representation/
+ranking checks: initial/final seed 9 and improving seed 7 as comparison. Ask what
+the saved compositions and shared weight ordering permit before choosing a new
+ordinary-play comparison. Do not feed labels or fitted weights into training,
+blindly extend the closed run or infer that a new controller is required.
+Broader positional coverage remains necessary: a new pool seed also changes
+symmetry-orbit split assignment. Preserve the original partition seed when
+sampling new development orbits; keep final-test rows unopened. Main's stable
+learner and original 96-condition default remain unchanged; 64 is provisional.
 
 Diagnostic labels and fitted weights never enter training. Report rewarded
 training separately from evaluation and laboratory transitions. Learned child

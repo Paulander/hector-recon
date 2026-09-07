@@ -476,7 +476,7 @@ and parent-delegation experiment remains a separate capability and need not wait
 for perfect structural discovery. All studies above are closed; any further play
 starts a separately declared experiment.
 
-### Latest branch result: fresh-seed gains from ordinary learning and more capacity
+### Earlier branch result: fresh-seed gains from ordinary learning and more capacity
 
 Results and protocol are published at
 [`60395109`](https://github.com/Paulander/hector-recon/commit/6039510925b7329196cb0ec692ec3bd8d7c5a104).
@@ -536,7 +536,7 @@ nor a corrective rate follows. Ordinary training changes weights and topology.
 More random capacity helped repeatedly here; adaptive proposal selection,
 reliable retention, competence and handover are still separate open claims.
 
-**Next bounded target:** use 64 as a provisional experimental budget for longer
+**Follow-up selected then (now completed below):** use 64 as a provisional experimental budget for longer
 ordinary play from all six saved larger-budget endpoints. Declare the complete
 schedule and evaluation milestones before starting. Keep the learning rate,
 exploration, birth and pruning unchanged; measure both gains and lost rows.
@@ -545,6 +545,61 @@ another causal 32/64 comparison unless both arms receive matched additional play
 Main's learner and its original 96-condition default stay unchanged. The tiny
 independently trained child-competence/delegation experiment remains separate and
 need not wait for perfect growth. This replication is complete and closed.
+
+### Latest branch result: longer play improves two actors, one plateau remains
+
+Protocol and implementation were published before play at `b2bf6d44317eca1d8aa1f50434c9b239f75d2698`.
+The completed [report and next target](https://github.com/Paulander/hector-recon/blob/a21473e7b818271fbd5424204ea83d49c2d550f8/docs/autogrowth/M1_LONG_PLAY.md)
+and [public aggregate](https://github.com/Paulander/hector-recon/blob/a21473e7b818271fbd5424204ea83d49c2d550f8/reports/autogrowth/development/M1_LONG_PLAY_20260907.json)
+are pinned at `a21473e7b818271fbd5424204ea83d49c2d550f8`. Main receives guidance only.
+
+All six 64-budget endpoints continued from event 1,280 to 4,096 with unchanged
+learning rate 0.3, exploration 0.25, ordinary births/pruning, scalar rewards and
+terminal-mediated decisions. No nominee, feature, coach-side intervention or
+learner mechanism was added. All **199 branch tests passed before play** and all
+**19,968 moves** completed: **16,896 training** (12,599 mates), **3,072 evaluation**.
+Each seed finished within its 4,800-second cap, in 3,358.905–3,535.321 seconds.
+No retry, extension, endpoint selection or final-test access occurred.
+
+Development mates out of 128, with event 1,280 inherited:
+
+| Seed | 1,280 | 1,536 | 2,048 | 3,072 | 4,096 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 4 | 128 | 128 | 124 | 126 | 128 |
+| 5 | 128 | 128 | 128 | 128 | 128 |
+| 6 | 128 | 128 | 128 | 128 | 128 |
+| 7 | 103 | 103 | 103 | 123 | 126 |
+| 8 | 125 | 128 | 128 | 128 | 128 |
+| 9 | 111 | 111 | 111 | 111 | 111 |
+
+Two improved, four tied, none finished with a lower total. Mean success rose
+from 94.14% to 97.53%, with **28 row gains and two losses**. Both final losses
+belong to seed 7: improved totals do not imply preservation of every old success.
+Seed 4 temporarily lost six distinct rows across measured milestones and
+recovered them; seed 7 lost five and recovered three. Retention was measured only
+at those milestones, not continuously. Slow consolidation is not established.
+
+Seed 9 kept exactly the same failure partition despite 235 new births and 237
+retirements. It was still learning and replacing conditions; this neither proves
+an ultimate limit nor identifies the learning rate as the cause. All source
+endpoints/configurations/schedules matched, all 24 evaluated payloads were
+independently verified and all six final pointers restored. All 162 private
+checkpoint payloads were preserved, including regressions. Viewed M1 performance
+does not establish adaptive proposal selection, general mastery or handover.
+
+**Next bounded target:** declare one offline attribution using the existing
+representation/ranking checks on initial/final seed 9, with initial/final seed 7
+as the improving comparison. Ask whether the remaining failures are constrained
+by the saved compositions/shared ordering or leave room for weight-only gains.
+Do not transfer labels or fitted weights into an actor, extend this closed run,
+or introduce a controller without evidence. Choose one subsequent ordinary-play
+comparison only after this check; it need not settle every causal question.
+Broader coverage remains necessary. Keep the original orbit partition seed when
+sampling new development positions: changing the generator's seed also changes
+split assignment and may move old training orbits into evaluation. The final test
+stays unopened. The separate tiny child-competence/delegation task need not wait
+for perfect viewed M1 scores or perfect structural discovery. Main's learner and
+original 96-condition default stay unchanged; 64 remains a provisional profile.
 
 ### Baseline sequence
 

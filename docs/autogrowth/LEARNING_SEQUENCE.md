@@ -110,11 +110,18 @@ regressed from 128 at 1,024 to 124 at 1,280. See the latest result in
 
 Early plateaus are not final limits, and more play is not monotonically helpful.
 The learning rate remained 0.3; “too slow” was not tested as an explanation.
-Next use 64 as a provisional work profile for longer ordinary training from all
-six larger-budget endpoints, with fixed evaluations of both gains and retention.
-Keep existing learning rates and mechanisms unchanged; do not select the best
-historical checkpoint or adapt the schedule from evaluation outcomes. This is
-not a further causal 32/64 comparison without matched new play in both arms.
+The longer study is now complete: at 4,096 the six saved larger-budget actors
+scored 128, 128, 128, 126, 128 and 111. Two improved and four tied starting totals,
+with 28 gained and two lost rows. Seed 4 temporarily regressed then recovered;
+seed 9 stayed at 111 despite turnover. See the latest branch record in
+`OFFICIAL_CONTINUATION_20260906.md`. All 199 tests and 19,968 moves completed.
+No setting or mechanism changed. Next reuse existing read-only representation/
+ranking checks on initial/final seed 9 and improving seed 7 to guide one supported
+subsequent intervention; do not extend the closed run or add a controller by
+assumption. This is continued learning on viewed M1 positions, not demonstrated
+consolidation, a causal rate comparison or general mastery. Future fresh pools
+must preserve orbit partition assignment: the current generator's seed changes
+both sampling and split assignment. Keep the final test unopened.
 Main's learner and original 96-condition default remain unchanged. Diagnostic
 answers stay outside training. Automatic regulation and the independently trained
 child-competence/delegation experiment remain separate capabilities; delegation
