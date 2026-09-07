@@ -89,3 +89,84 @@ exact source endpoint, actual move accounting, terminal-only observations,
 unchanged source files and configuration, schedule continuity, evaluation/reload
 equivalence to uninterrupted training, and interruption accounting. Run the
 required full branch suite in `AGENTS.md` before the declared experiment.
+
+## Completed result — 2026-09-07
+
+The protocol and implementation were published before play at
+`b2bf6d44317eca1d8aa1f50434c9b239f75d2698`. All **199 required branch tests passed**.
+All **19,968 declared actual moves** completed in one attempt: **16,896 rewarded
+training moves** (12,599 mates) and **3,072 frozen evaluation moves**. Per-seed
+times were 3,358.905–3,535.321 seconds, within the 4,800-second caps. No timeout,
+retry, extension, new diagnostic transitions or final-test access occurred.
+The [public aggregate](../../reports/autogrowth/development/M1_LONG_PLAY_20260907.json)
+contains the complete manifest, outcomes, lifecycle counts and checkpoint hashes.
+
+Development mates out of 128; event 1,280 is inherited, all later columns are new:
+
+| Seed | 1,280 | 1,536 | 2,048 | 3,072 | 4,096 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 4 | 128 | 128 | 124 | 126 | 128 |
+| 5 | 128 | 128 | 128 | 128 | 128 |
+| 6 | 128 | 128 | 128 | 128 | 128 |
+| 7 | 103 | 103 | 103 | 123 | 126 |
+| 8 | 125 | 128 | 128 | 128 | 128 |
+| 9 | 111 | 111 | 111 | 111 | 111 |
+
+Two actors improved, four tied, none finished with a lower total. Mean success
+rose from **94.14% to 97.53%** (+26 mates across six actors). Relative to the
+initial row outcomes there were **28 gains and two losses**, both losses in seed
+7. A nondecreasing final score does not mean every old success was retained.
+Four final actors solved all 25 development symmetry orbits; seed 7 solved 24,
+seed 9 remained at 18.
+
+Seed 7's long plateau ended without changing a learner mechanism or rate. Seed
+8 gained its final three mates early and retained them at every measured point.
+Seed 4 temporarily lost six distinct initially solved rows across the observed
+milestones, then recovered all of them. Seed 7 temporarily lost five initially
+solved rows and recovered three. Across actors, 712 of the 723 initially solved
+seed/row pairs remained solved at every observed milestone; 721 were solved at
+the final endpoint. These observations do not establish stability between
+measurements or attribute recovery to slow consolidation.
+
+Seed 9 kept exactly the same solved/failed row partition at every observation,
+despite **235 additional births and 237 retirements**. This is a persistent
+behavioral plateau, not an inactive learner or proof of its ultimate limit.
+Across actors, new births ranged 165–305, retirements 166–304, final live
+conditions 62–64 and final physical vertices 2,389–2,692. Ordinary turnover and
+weight updates continued together; this study does not isolate their effects.
+
+Every source endpoint, inherited configuration and schedule prefix matched.
+All 24 evaluated payloads were independently loaded and checked against their
+full reported snapshots; all six final pointers restored. Evaluations preserved
+learned state and completed shadow histories stayed unchanged. All **162 private
+checkpoint payloads** were retained, including the temporary regressions, in a
+verified archive (SHA256
+`9c8e6ac1850a2ea1cdb9caa76928bbe1c6fa4a1da5dbd432cca3d1aee6f01532`).
+
+**What this changes:** longer ordinary experience can improve another weak
+history and recover a temporary regression. The fixed 0.3 learning rate is still
+not an identified cause. No learner mechanism, feature, reward, oracle, authored
+composition or coach-side intervention was introduced. Random proposal plus
+outcome learning remains distinct from demonstrated adaptive structural
+selection. Reused development results do not establish general M1 mastery,
+competence estimation, strategic handover or a world model.
+
+**Next bounded target:** use the existing offline representation/ranking checks
+on seed 9's initial and final saved actors to ask whether the persistent failures
+are constrained by their current compositions/shared ordering, or leave room for
+weight-only improvement. Include seed 7's initial/final actors as the improving
+comparison; declare that scope before executing it. Do not feed diagnostic labels
+or fitted weights back, silently extend this closed study, or add a new controller.
+The result should select one subsequent ordinary-play comparison of an existing
+budget or learning setting, if justified; it need not promise a complete causal
+diagnosis. Do not require perfect scores on these viewed rows before the separate
+small child-competence/delegation experiment.
+
+Broader positional coverage also remains necessary. The pool generator currently
+uses its seed for both sampling and symmetry-orbit partition assignment. A new
+seed alone can therefore move old training orbits into a new evaluation split.
+Preserve the original partition seed (20260905), exclude already viewed
+development orbits when constructing a fresh development set, and leave the final
+test partition unopened. No new pool was generated in this study. Main retains
+its unchanged production learner and original 96-condition default; 64 remains a
+provisional experimental profile.

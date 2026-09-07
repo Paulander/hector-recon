@@ -4,18 +4,19 @@ Status: accepted 2026-09-06. `main` is the official continuation line after the
 promotion commit containing this record. Earlier branches and reports remain
 provenance and a parts library, not active specifications.
 
-Current work-branch continuation (2026-09-07): the earlier comparisons, longer
-ordinary play, saved-graph diagnosis and two-seed capacity probe have completed.
-Read `AGENTS.md` and `M1_CAPACITY_PROBE.md` for those results. The six-fresh-seed
-replication in `M1_CAPACITY_REPLICATION.md` is also complete: late expansion won
-four pairs and tied two; all six smaller-budget actors improved from 384 to
-1,280, but an intermediate perfect score could regress. All 196 tests and 12,288
-declared moves completed. Next is longer ordinary play from all six saved
-64-budget endpoints, with fixed evaluations of both gains and losses and no
-learning-rate or mechanism change. The original sequence below records the
-restart plan, not
-instructions to repeat completed experiments. Main has its own linked status
-summary and retains its stable production learner.
+Current work-branch continuation (2026-09-07): the fixed longer-play study in
+`M1_LONG_PLAY.md` is complete. All 199 tests and 19,968 declared moves completed.
+At event 4,096, seeds 4–9 scored 128, 128, 128, 126, 128 and 111 out of 128.
+Two actors improved from event 1,280 and four tied; 28 gained rows and two lost
+rows give a net +26. Seed 4 temporarily regressed and recovered; seed 9 remained
+at 111 despite continuing turnover. No learner setting or mechanism changed.
+All 24 evaluated payloads verified; 162 private states retained. Next is one
+bounded read-only attribution using the existing representation/ranking checks:
+initial/final seed 9, with improving seed 7 as comparison. Diagnostic answers
+never enter training. Do not blindly extend the closed study or require perfect
+viewed M1 scores before the separate child-competence/delegation task. Main has a
+linked status summary and its stable production learner. The original sequence
+below is history, not instructions to repeat completed experiments.
 
 ## Decision
 

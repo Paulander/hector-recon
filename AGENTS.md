@@ -45,7 +45,7 @@ for the tie-aware proof and the subsequent single-budget-field comparison.
 Read `docs/autogrowth/M1_CAPACITY_REPLICATION.md` for the fresh-seed follow-up:
 six new actors, a fixed 1,024-decision prefix and the same late 32/64 intervention.
 The learning rate and all learner mechanisms stay unchanged.
-The next longer continuation is specified in `docs/autogrowth/M1_LONG_PLAY.md`:
+The completed longer continuation is recorded in `docs/autogrowth/M1_LONG_PLAY.md`:
 all six larger-budget endpoints, event 1,280 to 4,096, with fixed measurements
 of both progress and retention. It changes no learner settings or mechanisms.
 
@@ -186,10 +186,18 @@ At 1,280 decisions, 32/64 scores for seeds 4–9 are 123/128, 124/128, 128/128,
 seed 5 regressed from 128 at 1,024 to 124 at 1,280. More play is useful, not
 monotonically beneficial. The unchanged 0.3 learning rate was not tested as a cause.
 All 18 final prefix/arm checkpoints restored; 114 private payloads were retained.
-Next use 64 as a provisional work profile for a longer declared ordinary-play
-study from ALL six larger-budget endpoints, measuring both gains and losses at
-fixed milestones. Keep rates and learner mechanisms unchanged; do not choose
-the best checkpoint or claim another 32/64 causal comparison without matched play.
+The longer continuation is complete; read `M1_LONG_PLAY.md`. All 199 tests passed
+and all 19,968 new moves completed (16,896 training, 3,072 evaluation). At 4,096,
+seeds 4–9 scored 128, 128, 128, 126, 128 and 111. Two improved and four tied their
+1,280 totals; row-level comparison has 28 gains and two losses. Seed 4 temporarily
+regressed and recovered, while seed 9's failure partition persisted despite 235
+new births. All 24 evaluated payloads verified; 162 private payloads retained.
+Next use the existing offline representation/ranking checks on seeds 9 and 7,
+initial and final saved actors, before changing a mechanism or learning setting.
+Declare this bounded attribution separately; no labels or fitted weights return
+to training. The longer study is closed, not an invitation to extend its endpoint.
+A new pool seed also changes orbit partition assignment: retain the original
+partition when broadening development coverage, and keep the final test unopened.
 Keep existing growth, pruning, exploration and scalar-outcome learning active.
 Do not interpret fixed-graph impossibility or a short plateau as requiring a new
 controller, hand-authored composition or feature. Diagnostic labels/fitted weights

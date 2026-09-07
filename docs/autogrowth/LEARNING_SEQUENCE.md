@@ -114,11 +114,18 @@ four pairs and tied two, with 25 gained and zero lost paired development mates.
 However, seed 5's ordinary control fell from 128 at 1,024 to 124 at 1,280. Early
 plateaus are not final limits, and further learning is not monotonically helpful.
 No learning rate was varied, so neither “too slow” nor a corrective rate is
-established. The next longer study can use 64 as a provisional work profile and
-continue all six larger-budget endpoints with unchanged learning mechanisms.
-Declare fixed evaluation milestones and record retention as well as gains;
-do not select the best historical checkpoint as the final result. This is not
-another causal budget comparison without matched new play in both arms.
+established. The longer fixed continuation is now complete; see `M1_LONG_PLAY.md`.
+At 4,096 the six larger-budget actors scored 128, 128, 128, 126, 128 and 111.
+Longer play helped two and matched four starting totals, with 28 row gains and
+two losses. Seed 4 temporarily regressed then recovered; seed 9 did not improve.
+This is evidence of continued learning and incomplete stability on viewed M1
+positions, not behavioral consolidation or a causal learning-rate comparison.
+Next reuse existing read-only representation/ranking checks on initial/final
+seed 9 and improving seed 7 to choose a supported next intervention. Do not extend
+the closed study or add an unmotivated controller. Random birth plus scalar
+credit remains the ordinary reference; 64 is provisional. For future broader
+coverage, preserve the existing orbit partition: the current generator's seed
+changes both sampling and split assignment. Keep final-test rows unopened.
 Keep diagnostic answers outside training. Main's learner/defaults stay unchanged.
 Automatic regulation and the independently trained child-competence/delegation
 experiment remain separate capabilities.
