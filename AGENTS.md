@@ -48,6 +48,9 @@ The learning rate and all learner mechanisms stay unchanged.
 The completed longer continuation is recorded in `docs/autogrowth/M1_LONG_PLAY.md`:
 all six larger-budget endpoints, event 1,280 to 4,096, with fixed measurements
 of both progress and retention. It changes no learner settings or mechanisms.
+The following offline attribution is specified in `docs/autogrowth/M1_FAILURE_PATTERNS.md`:
+seeds 7/9, initial/final saved actors, common chess patterns and exact ranking
+constraints. Its diagnostics never enter training.
 
 `CODEX_HANDOFF_BRIEF.md`, `docs/BRIEF.md`, TG/V plans, phase reports and archived
 runners are historical evidence, not live instructions. Consult them only for a
@@ -211,6 +214,7 @@ Use Python 3.12 and run:
 
 ```bash
 PYTHONPATH=src:libs/recon-lite/src python -m pytest -q \
+  tests/autogrowth/test_m1_failure_patterns.py \
   tests/autogrowth/test_m1_long_play.py \
   tests/autogrowth/test_m1_capacity_replication.py \
   tests/autogrowth/test_m1_representation.py \

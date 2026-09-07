@@ -132,7 +132,7 @@ def ranking_feasibility(rows, matrices, *, deadline):
             "fitted_weights_discarded": True}
 
 
-def inspect_actor(actor, rows, *, deadline, counts=None):
+def inspect_actor(actor, rows, *, deadline, counts=None, row_observer=None):
     before = prior.actor_digest(actor)
     conditions = list(actor.conditions.values())
     atoms = sorted({atom for c in conditions for atom in c.atoms})
@@ -163,6 +163,9 @@ def inspect_actor(actor, rows, *, deadline, counts=None):
         if won != row["wins"][chosen]:
             raise RuntimeError("laboratory and exercise outcome differ")
         outcomes.append(won); actions.append(attempt.action)
+        if row_observer is not None:
+            # Offline observer runs only after the graph's real frozen action.
+            row_observer(event, row, matrix, scores, chosen)
         if not won:
             winning_score = max(s for s, y in zip(scores, row["wins"]) if y)
             failures_tied += scores[chosen] == winning_score
