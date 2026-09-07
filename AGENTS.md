@@ -162,15 +162,24 @@ random scores are 124/128/128, 124/124/124 and 66/66/66. Seed 2's added policies
 improved from 98 to 124 and fall to 88 when masked offline, but its no-addition
 actor also reaches 124. Ranking superiority is unproved. Seed 3 remains stuck
 despite 24–28 further replacements. All added conditions remain live TRIALs.
-Next isolate missing representational distinctions from ineffective credit/choice
-using the saved actors in an offline diagnostic; do not feed diagnostic answers
-or fitted policies into the learner. Declare any new play budget separately.
-Keep always-enabled training and normal lifecycle as references. Do not promote
-50% probing, add an automatic retention controller or extend a completed study.
-Private checkpoints are retained outside git; only aggregates and hashes are
-public. Test learned child competence and delegation separately in the tiny
-two-context/two-child task before using M1 as an M2 child. Neither automatic rate
-regulation nor handover is implemented.
+The saved-actor diagnostic and tie-aware certificates are complete; read
+`M1_REPRESENTATION_DIAGNOSIS.md` and `M1_RANKING_CERTIFICATE.md` in docs/autogrowth.
+All eight actors reproduced their behavior; no formal-computation bug was found.
+Each saved graph has incompatible fixed-weight requirements on the examined rows.
+That concerns a particular graph, not the capacity of the growing process.
+The following `M1_CAPACITY_PROBE.md` comparison changed only the existing condition
+budget, 32 versus 64. Across 1,536 new actual moves, seed 2 ended 124 versus 128;
+seed 3 improved from 66 to 111 in BOTH arms. More ordinary play can therefore
+escape the earlier plateau without a new mechanism or larger budget. More capacity
+helped one selected case; random birth is still not adaptive structural selection.
+Next replicate the capacity comparison on fresh seeds under a declared complete
+schedule before changing a learning law or adopting a budget profile. Keep the
+existing growth, pruning, exploration and scalar-outcome learning active. Do not
+interpret fixed-graph impossibility or a short plateau as requiring a new
+controller, hand-authored composition or feature. Diagnostic labels/fitted weights
+never enter the learner. Private checkpoints remain outside git; main's production
+learner is unchanged. Learned child competence/delegation remains a separate tiny
+two-context/two-child test before M2; no handover or world-model claim.
 
 ## Focused verification
 

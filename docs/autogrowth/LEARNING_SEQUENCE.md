@@ -96,11 +96,18 @@ is justified. The longer ordinary-M1 study is also complete; see
 `ORDINARY_M1_CONTINUATION.md`. At 1,024 decisions, none/ranked/random scores are
 124/128/128, 124/124/124 and 66/66/66. More play improved seed 2, including policies
 with a useful live AND, but did not resolve seed 3 or establish ranking superiority.
-Nine historical anchors and actual checkpoint reloads matched. Source-bound
-private states now support the next bounded investigation: distinguish missing
-terminal/gate information from ineffective credit/choice in the persistent weak
-actor, using only offline diagnostics before proposing one generic correction.
-Do not turn diagnostic answers into training inputs or choose a best checkpoint.
-Keep ordinary lifecycle and edge learning active; the completed study is closed.
-Automatic regulation and the tiny independent-child handover experiment remain
-separate capabilities.
+Nine historical anchors and actual checkpoint reloads matched. The saved-actor diagnostic subsequently proved incompatible weight requirements
+for those particular fixed graphs, while finding no formal-computation mismatch.
+The following capacity-budget probe then changed only max_conditions (32 versus
+64), with 256 more ordinary decisions in both arms. Seed 2 finished at 124 versus
+128; seed 3 escaped 66 to 111 in both arms. See `M1_CAPACITY_PROBE.md`.
+
+Keep this distinction explicit: fixed-graph capacity is a property of a saved
+representation; ordinary training changes both the graph and its weights. The
+current process can make further progress without adding a new mechanism. More
+random capacity helped one development case, but does not establish adaptive
+structural selection or explain which births caused the improvement. Next
+replicate the capacity comparison on fresh seeds under a declared full schedule
+before changing a learning law or adopting a budget profile. Keep diagnostic
+answers outside training. Automatic regulation and the independently trained
+child-competence/delegation experiment remain separate capabilities.
