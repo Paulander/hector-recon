@@ -257,7 +257,7 @@ an RNG, so the new comparison required contemporaneous normal and fixed modes
 with separate matched exploration streams. The old final scores above remain
 historical references; they are not the new experiment's primary comparator.
 
-### Latest branch result: holding topology fixed did not repair recovery
+### Earlier branch result: holding topology fixed did not repair recovery
 
 Implementation/protocol:
 [`f847e878`](https://github.com/Paulander/hector-recon/commit/f847e878f3c172b5229957d9af393f74e4ef8751).
@@ -308,7 +308,7 @@ no-addition actor's real improvement from its episode-256 score of 93 to 116 sho
 that continued edge learning can improve behavior without new definitions.
 Improvement was not uniform across seeds and histories; no M1 mastery claim.
 
-**Next bounded target:** more ordinary M1 play with private resumable checkpoints,
+**Follow-up completed below:** more ordinary M1 play with private resumable checkpoints,
 aiming at a fixed 1,024-decision endpoint for no-addition/ranked/random references
 in seeds 1, 2 and 3. Reproduce the new normal episode-384 anchors, retain matching
 separate exploration streams and keep ordinary birth/pruning and edge learning.
@@ -324,6 +324,75 @@ controller. Do not promote the hold or 50% probing. The tiny independently train
 two-child competence/delegation experiment remains a separate planned capability
 and need not wait for perfect structural discovery. Learned handover, a competence
 envelope, a world model, M2 and full KRK remain unproved.
+
+### Latest branch result: longer ordinary M1 play and private checkpoints
+
+Implementation and pre-play protocol:
+[`846ca3d2`](https://github.com/Paulander/hector-recon/commit/846ca3d2c956299f77c84b791792ec151d75b344).
+Results and next target:
+[`ea74d8ff`](https://github.com/Paulander/hector-recon/commit/ea74d8fff85409336a8e9c302a28941006ca7cb7).
+Read the [full protocol and interpretation](https://github.com/Paulander/hector-recon/blob/ea74d8fff85409336a8e9c302a28941006ca7cb7/docs/autogrowth/ORDINARY_M1_CONTINUATION.md)
+and [public aggregate](https://github.com/Paulander/hector-recon/blob/ea74d8fff85409336a8e9c302a28941006ca7cb7/reports/autogrowth/development/ORDINARY_M1_CONTINUATION_20260907.json).
+Main receives guidance only; its production learner is unchanged.
+
+The runner adds source-bound private checkpoints and continues the same ordinary
+actors to 1,024 decisions. It changes no reward, feature, choice, credit,
+nomination or lifecycle law. The existing coach remains opaque. All 181 distinct
+focused tests passed, including 12 new checkpoint/continuation checks. All 13,056
+declared moves completed in one attempt: 9,216 training, 2,304 normal development
+evaluation and 1,536 offline ablation. Seed times were 2,126.807, 1,891.990 and
+2,005.432 seconds, within the original 3,000-second caps; no retry or extension.
+
+Every actor reproduced its first three training blocks and episode-384 state,
+then actually reloaded its checkpoint before further play. All nine historical
+anchors, frozen shadow histories and within-seed exploration streams matched.
+All 30 evaluations preserved learned state. Offline verification matched all 18
+evaluated actor payloads and checked the completed pointers. A private bundle
+preserves all 108 immutable checkpoint payloads; no trained weights enter git.
+The final-test rows stayed unopened. Evaluations occurred only at 384 and 1,024.
+
+Development mates out of 128, **384 → 1,024 training decisions**:
+
+| Seed | No addition | Ranked addition | Random addition |
+| --- | ---: | ---: | ---: |
+| 1 | 124 → 124 | 128 → 128 | 128 → 128 |
+| 2 | 121 → 124 | 98 → 124 | 98 → 124 |
+| 3 | 66 → 66 | 66 → 66 | 66 → 66 |
+
+More experience helped seed 2 substantially: added policies gained 26 solved rows
+without losing any; its no-addition actor gained three. Ranked/random there share
+the same nominee and training/evaluation trajectory, so are not independent
+confirmations. All three reach the same 124 outcomes. In seed 1, the unchanged
+no-addition total hides four gained and four lost rows, with fully solved orbits
+falling from 24 to 23. Final fully solved orbits out of 25 are 23/25/25,
+23/23/23 and 0/0/0 respectively. Reused development scores do not establish mastery.
+
+Final offline coefficient masking yields seed 1 ranked 128→128 (zero changes),
+random 128→124 (four mates lost); seed 2 both 124→88 (36 actions change, all 36
+mates lost); seed 3 both 66→66 (zero ranked and one random action changes).
+Seed 2's AND is now strongly useful within its final policy. This is not a causal
+advantage over training without it, whose actor also reaches 124. A condition's
+current contribution, its effect on the learning trajectory, and a nomination
+method's advantage are distinct claims. No offline removal is an autonomous score.
+
+Each actor retired and replaced another 16–28 base definitions and ended with 32
+live definitions. All six added conditions survived as TRIAL. Seed 3 had continued
+weight learning, structural turnover and 640 additional training decisions without
+improved mate outcomes. This does not identify the cause or prove that further
+experience can never help. It does show that this bounded extension alone did not
+repair the persistent failure. Survival and masking do not implement maturity.
+
+**Next bounded target:** use the saved weak actors and seed 2's recovered reference
+to distinguish missing terminal/gate distinctions from ineffective credit/choice.
+Make that an offline diagnostic, with a declared budget for any new actual moves;
+keep its answers and any fitted comparison weights out of the learner. A supported
+cause should motivate one generic correction with focused tests and a matched
+actual-play control. Do not guess either defect or keep extending this closed run.
+Keep ordinary lifecycle and edge learning active; do not promote 50% probing or
+add a retention controller. The tiny independently trained child-competence and
+parent-delegation experiment remains a separate planned capability and need not
+wait for perfect structural discovery. Learned handover, adaptive structural
+selection, a competence envelope, a world model, M2 and full KRK remain unproved.
 
 ### Baseline sequence
 

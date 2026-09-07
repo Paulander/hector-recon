@@ -110,36 +110,32 @@ The branch tests live materialization with preserved history and
 ranked/random/no-addition behavioral controls. A TRIAL may act and learn before
 scientific maturity is established. Predictive history stays separate from live
 participation; after attachment it must not receive a second shadow update.
-The new internal permission terminal can withhold a TRIAL without giving it
-action credit. All 151 focused tests passed, but its 50% probing schedule reduced
-or matched final performance across 7,296 actual moves. It is not a default
-training improvement or an automatic usefulness/maturity decision.
-The recovery follow-up is complete on the work branch at `57b7d67e`; read the
-latest section in `OFFICIAL_CONTINUATION_20260906.md`. 157 distinct focused tests
-passed; a completed retry ran all 9,216 planned moves. An interrupted first attempt
-is recorded separately. Recovery was partial: final none/ranked/random/probe_ranked/
-probe_random mates were 126/128/128/124/128, 115/101/101/98/98 and 66/66/66/66/66.
-Ordinary pruning/replacement occurred; all added trials survived, including the
-harmful seed 2 probed condition (98 normal, 113 offline masked). Neither the old
-117 nor new 113 masked score is an autonomous removal learned by the graph.
-That fixed-topology comparison is now complete on the work branch at
-`3c8fe39d84789ca72a0d579caa3143388e720059`; see the latest branch result in
-`OFFICIAL_CONTINUATION_20260906.md`. All 169 focused tests and 14,592 declared
-moves completed. Holding definitions while weights learned improved zero of 15
-pairs, tied twelve and worsened three. All shared histories and exploration
-streams matched. Seed 2's probed policy stayed at 98 in both modes, versus 116
-under offline masking; seed 3 stayed at 66. Main receives summaries only.
-Next: a bounded longer ordinary-M1 run with private resumable checkpoints,
-targeting 1,024 training decisions for no-addition/ranked/random references in
-three seeds. Reproduce the new normal episode-384 records and keep separate
-exploration streams. Declare resources and endpoints before play, retain failed
-or interrupted evidence, and do not select the best checkpoint. Keep ordinary
-birth/pruning and edge learning active. The completed run is not extended.
-Do not promote probing or add a usefulness-driven retention controller yet.
-Do not assume added topology is the cause or cure of weak performance; experience
-and optimization also matter.
-Test learned child competence and parent delegation separately in a tiny
-two-context/two-child environment before using M1 as an M2 child.
+The use/no-use probe and fixed-topology controls passed their mechanism tests,
+but neither became a default training improvement. Their complete favorable and
+adverse evidence remains on the work branch and in the continuation document.
+The longer ordinary-M1 run is now complete at
+`ea74d8fff85409336a8e9c302a28941006ca7cb7`; read the latest branch result in
+`OFFICIAL_CONTINUATION_20260906.md`. All 181 distinct focused tests and 13,056
+moves completed in one attempt. Each of nine actors reproduced its historical
+384-decision state, reloaded a private checkpoint and continued to 1,024 decisions.
+Final none/ranked/random scores are 124/128/128, 124/124/124 and 66/66/66.
+Seed 2's added policies improved from 98 to 124, and fall to 88 when masked
+offline; its no-addition actor also reaches 124. Equal nominees and trajectories
+are not independent evidence for ranking. Seed 3 stayed at 66 despite 24–28
+further replacements. All added conditions remain live TRIALs, not mature skills.
+The final test stays unopened; these are reused development results.
+
+Next isolate missing terminal/gate distinctions from ineffective credit/choice
+using the saved weak actors and the recovered reference in a bounded offline
+diagnostic. Any new play needs a separate declared budget. Do not feed diagnostic
+answers, fitted weights or selected actions into the learner. A supported cause
+should motivate one generic correction and matched actual-play comparison;
+do not guess a mechanism, add a retention controller or extend the closed study.
+Keep ordinary birth/pruning, edge learning and always-enabled training active.
+Private checkpoints remain outside git; only aggregates and hashes are public.
+Test learned child competence and parent delegation separately in the tiny
+two-context/two-child environment before using M1 as an M2 child. Main retains
+its stable learner; no automatic rate regulation, handover or M2 is established.
 
 ## Focused verification
 
