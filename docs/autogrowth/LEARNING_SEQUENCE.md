@@ -115,11 +115,27 @@ scored 128, 128, 128, 126, 128 and 111. Two improved and four tied starting tota
 with 28 gained and two lost rows. Seed 4 temporarily regressed then recovered;
 seed 9 stayed at 111 despite turnover. See the latest branch record in
 `OFFICIAL_CONTINUATION_20260906.md`. All 199 tests and 19,968 moves completed.
-No setting or mechanism changed. Next reuse existing read-only representation/
-ranking checks on initial/final seed 9 and improving seed 7 to guide one supported
-subsequent intervention; do not extend the closed run or add a controller by
-assumption. This is continued learning on viewed M1 positions, not demonstrated
-consolidation, a causal rate comparison or general mastery. Future fresh pools
+No setting or mechanism changed. The read-only follow-up is now complete at
+`ff71baaaf85d46dc2f394e9aeab2df6f77c34d57`: 209 branch tests passed and 8,575
+diagnostic executions included zero training. The remaining corner/knight-offset
+family matches the project's July 3 history, where a manually added alternative
+conjunction repaired recognition. That history requires preserving jointly useful
+signals and diverse compositions; it does not justify supplying the chess rule.
+Seed 7 gained per-split representational capacity during ordinary growth. Seed 9
+already had it initially, so its plateau cannot simply be called missing nodes.
+Each feasibility result concerns one split, not a shared fit or learnability.
+
+Next declare one matched comparison of existing exploration 0.25 versus 0.50 on
+saved final seeds 9, 7 and retention reference 4, with all other settings and
+normal growth/credit unchanged. Fix opportunity schedules, endpoints and caps
+before play, and record actual submitted action/outcome histories for post-play
+classification of successful experience. Do not steer training toward diagnosed
+families or install offline solutions. This comparison is diagnostic on selected
+histories; exploration is not yet a confirmed fix. If it fails, investigate the
+local selected-action credit objective before adding hierarchy by assumption.
+See the latest official record for the full results and historical source links.
+Continued learning on viewed M1 positions is not demonstrated consolidation, a
+causal rate comparison or general mastery. Future fresh pools
 must preserve orbit partition assignment: the current generator's seed changes
 both sampling and split assignment. Keep the final test unopened.
 Main's learner and original 96-condition default remain unchanged. Diagnostic

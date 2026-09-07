@@ -546,7 +546,7 @@ Main's learner and its original 96-condition default stay unchanged. The tiny
 independently trained child-competence/delegation experiment remains separate and
 need not wait for perfect growth. This replication is complete and closed.
 
-### Latest branch result: longer play improves two actors, one plateau remains
+### Earlier branch result: longer play improves two actors, one plateau remains
 
 Protocol and implementation were published before play at `b2bf6d44317eca1d8aa1f50434c9b239f75d2698`.
 The completed [report and next target](https://github.com/Paulander/hector-recon/blob/a21473e7b818271fbd5424204ea83d49c2d550f8/docs/autogrowth/M1_LONG_PLAY.md)
@@ -587,7 +587,7 @@ independently verified and all six final pointers restored. All 162 private
 checkpoint payloads were preserved, including regressions. Viewed M1 performance
 does not establish adaptive proposal selection, general mastery or handover.
 
-**Next bounded target:** declare one offline attribution using the existing
+**Follow-up selected then (now completed below):** declare one offline attribution using the existing
 representation/ranking checks on initial/final seed 9, with initial/final seed 7
 as the improving comparison. Ask whether the remaining failures are constrained
 by the saved compositions/shared ordering or leave room for weight-only gains.
@@ -600,6 +600,70 @@ split assignment and may move old training orbits into evaluation. The final tes
 stays unopened. The separate tiny child-competence/delegation task need not wait
 for perfect viewed M1 scores or perfect structural discovery. Main's learner and
 original 96-condition default stay unchanged; 64 remains a provisional profile.
+
+### Latest branch result: recurring corner geometry, different learning limits
+
+The [full diagnosis and historical review](https://github.com/Paulander/hector-recon/blob/ff71baaaf85d46dc2f394e9aeab2df6f77c34d57/docs/autogrowth/M1_FAILURE_PATTERNS.md)
+and [public evidence](https://github.com/Paulander/hector-recon/blob/ff71baaaf85d46dc2f394e9aeab2df6f77c34d57/reports/autogrowth/development/M1_FAILURE_PATTERNS_20260907.json)
+are pinned at `ff71baaaf85d46dc2f394e9aeab2df6f77c34d57`. Protocol and implementation
+were published first at `b780db52e73563fb71e8a2e56765ec514ff27727`. Main receives
+documentation only. All **209 branch tests passed**. The one diagnostic attempt
+completed in 1,093.001 seconds within 1,800: **7,039 laboratory transitions,
+1,536 frozen actor moves, zero training**. All historical endpoint behavior,
+formal support/choice and unchanged learned states verified; all 162 source
+checkpoint hashes remained intact. Final-test rows stayed unopened.
+
+Development mates, initial event 1,280 to final event 4,096:
+
+| King-support family | Rows | Seed 7 | Seed 9 |
+| --- | ---: | ---: | ---: |
+| Aligned kings, separation two | 86 | 86 → 86 | 86 → 86 |
+| Corner, file/rank gaps (1,2) | 25 | 0 → 25 | 25 → 25 |
+| Corner, file/rank gaps (2,1) | 17 | 17 → 15 | 0 → 0 |
+
+All 17 persistent seed 9 misses choose a rook check allowing exactly one reply.
+Seed 7's two lost rows are 180-degree rotations of one position in the same
+family, also checking with one escape. Both orientations exist in training;
+every training row appeared 16 times. Older logs do not reveal how many of those
+encounters produced successful experience, so coverage is not positive credit.
+
+The match to the old history is exact. The July 3
+[`31e85b4` commit](https://github.com/Paulander/hector-recon/commit/31e85b428368b50f34292f91f5a0d9908af4fec5),
+an ancestor of the continuation-without-fable branch, added corner AND
+knight-support as an alternative to edge-relative opposition. This was authored
+recognition structure, not autonomous discovery. Subsequent audits exposed
+scaffolding and functionally duplicate proposals. Preserve the lessons about
+joint signals, alternative support and functional diversity; do not restore the
+chess-specific controller or require marginal atom maturity before conjunctions.
+
+There are no within-position winning/losing aliases in the examined schema,
+readers or gates. Seed 7's initial graphs have exact conflicting shared-weight
+requirements on both splits; its final graph admits verified strict-margin
+solutions on each. Seed 9 already admits them at both endpoints. These are
+**separate per-split existence results**, not one shared train/development fit,
+reachable learned weights or generalization. Two final seed 9 tie-aware solver
+candidates failed direct tie verification; the independent verified strict-margin
+solutions establish feasibility. Three initial seed 7 individual training repairs
+remain numerically inconclusive. Offline coefficients were never installed.
+
+Seed 9's mean development winning-minus-chosen margin improved from -1.018 to
+-0.596 while every failed choice remained wrong. Seed 7's lost pair moved from
++0.931 to -0.035; new condition contributions account arithmetically for most of
+that reversal. This is score interference, not a causal no-growth experiment.
+Both actors gained discriminating conditions: births alone do not explain which
+one improved. Random growth is still not demonstrated adaptive proposal selection.
+
+**Next bounded target:** declare a matched comparison of the existing exploration
+parameter, 0.25 versus 0.50, using final seeds 9, 7 and strong retention reference
+4. Keep every other setting, ordinary growth/pruning and scalar credit unchanged.
+Publish fixed schedules, endpoints and resource caps before play. Record actual
+submitted actions/outcomes for post-play counts of successful family experience.
+No diagnosed-family oversampling, corner detector, fitted policy or adaptive
+coach enters training. This is a selected-history diagnostic, not fresh-seed
+confirmation or an established remedy. If more exploration fails, investigate
+local selected-action credit before assuming a new hierarchy is needed. Broader
+coverage and tiny child-competence/delegation remain separate targets. Main's
+learner and original 96-condition default stay unchanged; 64 is provisional.
 
 ### Baseline sequence
 

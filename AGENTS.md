@@ -158,11 +158,31 @@ losses. Seed 4 temporarily regressed and recovered. Seed 9 retained exactly the
 same failure partition despite 235 further births. All 24 evaluated payloads
 verified and 162 private payloads were retained. No setting or mechanism changed.
 
-Next declare one bounded read-only attribution using the existing representation/
-ranking checks: initial/final seed 9 and improving seed 7 as comparison. Ask what
-the saved compositions and shared weight ordering permit before choosing a new
-ordinary-play comparison. Do not feed labels or fitted weights into training,
-blindly extend the closed run or infer that a new controller is required.
+The bounded read-only attribution is complete at
+`ff71baaaf85d46dc2f394e9aeab2df6f77c34d57`; read the latest result in
+`OFFICIAL_CONTINUATION_20260906.md` and its linked `M1_FAILURE_PATTERNS.md`.
+All 209 branch tests passed; 8,575 diagnostic executions included zero training.
+Seed 9's 17 development misses are corner king separations (file, rank)=(2,1).
+Seed 7's two lost rows are rotations of one position in that same family.
+The historical `31e85b4` corner/knight-support branch solved this recognition
+gap by authored predicates and wiring; it was not autonomous discovery. Retain
+the requirement for useful joint signals and alternative compositions, not its
+chess-specific controller. The later `a1dc765` audit also exposed functionally
+duplicate proposals; different node names do not establish structural diversity.
+Seed 7's initial compositions have exact conflicting weight requirements, while
+its final graph and both seed 9 graphs admit verified perfect ordering on each
+examined split separately. This does not prove one shared train/development fit
+or a learning law that reaches it. Seed 9 is not simply missing capacity.
+
+Next declare a matched comparison of existing exploration 0.25 versus 0.50 on
+the saved final seeds 9, 7 and retention reference 4. Keep all other settings,
+ordinary growth/pruning and scalar-outcome learning unchanged. Fix schedules,
+endpoints and resource caps before play; log submitted actions/outcomes so actual
+successful experience can be classified after play. This is a selected-history
+diagnostic, not a fresh-seed result. Do not supply a corner rule, diagnosed-family
+oversampling, fitted weights or an adaptive coach. More exploration is a test,
+not an established remedy. If it fails, examine local selected-action credit
+before assuming new hierarchy is needed. The completed studies remain closed.
 Broader positional coverage remains necessary: a new pool seed also changes
 symmetry-orbit split assignment. Preserve the original partition seed when
 sampling new development orbits; keep final-test rows unopened. Main's stable
