@@ -48,7 +48,7 @@ The learning rate and all learner mechanisms stay unchanged.
 The completed longer continuation is recorded in `docs/autogrowth/M1_LONG_PLAY.md`:
 all six larger-budget endpoints, event 1,280 to 4,096, with fixed measurements
 of both progress and retention. It changes no learner settings or mechanisms.
-The following offline attribution is specified in `docs/autogrowth/M1_FAILURE_PATTERNS.md`:
+The completed offline attribution is recorded in `docs/autogrowth/M1_FAILURE_PATTERNS.md`:
 seeds 7/9, initial/final saved actors, common chess patterns and exact ranking
 constraints. Its diagnostics never enter training.
 
@@ -195,10 +195,24 @@ seeds 4–9 scored 128, 128, 128, 126, 128 and 111. Two improved and four tied t
 1,280 totals; row-level comparison has 28 gains and two losses. Seed 4 temporarily
 regressed and recovered, while seed 9's failure partition persisted despite 235
 new births. All 24 evaluated payloads verified; 162 private payloads retained.
-Next use the existing offline representation/ranking checks on seeds 9 and 7,
-initial and final saved actors, before changing a mechanism or learning setting.
-Declare this bounded attribution separately; no labels or fitted weights return
-to training. The longer study is closed, not an invitation to extend its endpoint.
+The combined failure-pattern/history analysis is complete; read `M1_FAILURE_PATTERNS.md`.
+All 209 tests and 8,575 diagnostic executions completed, with zero training moves.
+All 17 seed 9 failures and seed 7's two losses are the corner (file,rank)=(2,1)
+king-separation family; the two lost rows are one symmetry orbit. The family was
+already identified at historical commit 31e85b42, whose specific OR/AND corner
+recognizer was authored, not autonomously discovered. Do not copy it into training.
+Seed 7 grew from a graph with contradictory ranking requirements to one admitting
+perfect ordering on each examined split. Seed 9 admitted such ordering at BOTH
+endpoints yet remained behaviorally stuck; its failure score margins improved
+without crossing zero. No formal-choice or within-board feature/gate alias bug.
+Per-split existence is not joint-set/general mastery or convergence of learning.
+Next declare one existing-exploration comparison (0.25 versus 0.50), with ordinary
+growth and all other settings unchanged: final seed 9, seed 7 and strong seed 4.
+Log actual submitted actions/outcomes so positive experience can be counted after
+play; never feed family labels or graph inspections into the coach. Fix schedule
+and budgets first. This selected-history diagnostic does not establish that more
+exploration is the solution. Do not assume more capacity or a corner node is needed.
+Historical joint-signal and candidate-diversity lessons are linked in the report.
 A new pool seed also changes orbit partition assignment: retain the original
 partition when broadening development coverage, and keep the final test unopened.
 Keep existing growth, pruning, exploration and scalar-outcome learning active.

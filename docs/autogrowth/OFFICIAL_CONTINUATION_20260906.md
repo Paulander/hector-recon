@@ -4,19 +4,20 @@ Status: accepted 2026-09-06. `main` is the official continuation line after the
 promotion commit containing this record. Earlier branches and reports remain
 provenance and a parts library, not active specifications.
 
-Current work-branch continuation (2026-09-07): the fixed longer-play study in
-`M1_LONG_PLAY.md` is complete. All 199 tests and 19,968 declared moves completed.
-At event 4,096, seeds 4–9 scored 128, 128, 128, 126, 128 and 111 out of 128.
-Two actors improved from event 1,280 and four tied; 28 gained rows and two lost
-rows give a net +26. Seed 4 temporarily regressed and recovered; seed 9 remained
-at 111 despite continuing turnover. No learner setting or mechanism changed.
-All 24 evaluated payloads verified; 162 private states retained. Next is one
-bounded read-only attribution using the existing representation/ranking checks:
-initial/final seed 9, with improving seed 7 as comparison. Diagnostic answers
-never enter training. Do not blindly extend the closed study or require perfect
-viewed M1 scores before the separate child-competence/delegation task. Main has a
-linked status summary and its stable production learner. The original sequence
-below is history, not instructions to repeat completed experiments.
+Current work-branch continuation (2026-09-07): `M1_FAILURE_PATTERNS.md` completes
+the initial/final seed 7/9 diagnosis and recovers the July corner-history lesson.
+All 209 tests and 8,575 diagnostic executions completed, zero training moves.
+The 17 persistent misses and two lost development rows share corner (2,1) king
+separation; the lost pair is one symmetry orbit. Historical 31e85b42 supplied an
+authored corner-support branch, not autonomous discovery. Current seed 7 acquired
+sufficient per-split ranking capacity through ordinary growth; seed 9 already
+had it but failed to learn successful ordering. Failure margins moved toward wins
+without changing its binary score. Next is a declared comparison of existing
+exploration 0.25/0.50 from final seeds 9, 7 and strong reference 4, with all other
+settings and normal growth unchanged, logging actual behavior for later analysis.
+No diagnosis, family label or fitted weight enters training. Read the report for
+numerical/split qualifications and linked history. Main has guidance only and
+retains its stable learner. Earlier sequence entries below are historical.
 
 ## Decision
 

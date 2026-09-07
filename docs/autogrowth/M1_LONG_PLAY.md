@@ -151,7 +151,7 @@ outcome learning remains distinct from demonstrated adaptive structural
 selection. Reused development results do not establish general M1 mastery,
 competence estimation, strategic handover or a world model.
 
-**Next bounded target:** use the existing offline representation/ranking checks
+**Follow-up selected then (now completed in [M1_FAILURE_PATTERNS.md](M1_FAILURE_PATTERNS.md)):** use the existing offline representation/ranking checks
 on seed 9's initial and final saved actors to ask whether the persistent failures
 are constrained by their current compositions/shared ordering, or leave room for
 weight-only improvement. Include seed 7's initial/final actors as the improving

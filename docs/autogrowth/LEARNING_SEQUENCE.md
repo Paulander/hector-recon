@@ -120,12 +120,21 @@ Longer play helped two and matched four starting totals, with 28 row gains and
 two losses. Seed 4 temporarily regressed then recovered; seed 9 did not improve.
 This is evidence of continued learning and incomplete stability on viewed M1
 positions, not behavioral consolidation or a causal learning-rate comparison.
-Next reuse existing read-only representation/ranking checks on initial/final
-seed 9 and improving seed 7 to choose a supported next intervention. Do not extend
-the closed study or add an unmotivated controller. Random birth plus scalar
-credit remains the ordinary reference; 64 is provisional. For future broader
-coverage, preserve the existing orbit partition: the current generator's seed
-changes both sampling and split assignment. Keep final-test rows unopened.
+The subsequent `M1_FAILURE_PATTERNS.md` diagnosis is complete. The corner/knight-
+distance family matches the July history, but the old corner branch was authored.
+Seed 7 acquired a more expressive condition set during ordinary turnover; seed 9
+already admitted perfect ranking on each examined split at both endpoints.
+Its remaining problem cannot simply be declared missing capacity. Failure score
+margins improved without crossing the selection boundary. Next compare the
+existing exploration setting 0.25/0.50 from final seeds 9, 7 and strong reference
+4, with normal growth and all other settings unchanged. Declare budgets first
+and log actual behavior; never route diagnosed families or fitted weights back
+into play. This tests an explanation, not an established corrective rate.
+Remember joint signal and candidate diversity from the linked historical review.
+For future broader coverage, preserve the existing orbit partition: the current
+generator's seed changes both sampling and split assignment. Keep the final test
+unopened. Per-split mathematical capacity is not a jointly learned policy,
+general mastery or adaptive proposal selection.
 Keep diagnostic answers outside training. Main's learner/defaults stay unchanged.
 Automatic regulation and the independently trained child-competence/delegation
 experiment remain separate capabilities.
