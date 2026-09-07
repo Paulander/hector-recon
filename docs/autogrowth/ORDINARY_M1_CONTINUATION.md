@@ -104,3 +104,105 @@ clean resume and shared trial evidence, interrupted-block replay accounting,
 recovery of committed output, unchanged expired budgets, completed-seed recovery,
 serial/parallel parity, source/transport checks before unpickling, atomic pointer
 preservation and rejection of pending feedback.
+
+## Completed result — 2026-09-07
+
+Implementation and the protocol above were published before play at
+`846ca3d2c956299f77c84b791792ec151d75b344`.
+The [public aggregate](../../reports/autogrowth/development/ORDINARY_M1_CONTINUATION_20260907.json)
+contains the fixed manifest, full endpoint outcomes, paired comparisons, block
+transcript hashes, source identities and private checkpoint transport hashes.
+
+All **181 distinct focused tests passed**: 169 existing and 12 new. During test
+development, a tiny resume fixture incorrectly assumed its random candidates
+would nominate a trial. The fixture legitimately produced no nomination; that
+assertion was corrected, and a separate generic materialized-trial fixture
+verified shared weights, preserved hypothesis evidence and later credit after
+restoration. No learner change was needed for that test correction.
+
+The declared experiment completed in one attempt with **13,056 actual moves**:
+9,216 training, 2,304 normal development evaluation and 1,536 offline ablation.
+Each actor received exactly 1,024 training decisions. Seed wall times were
+2,126.807, 1,891.990 and 2,005.432 seconds, within the original 3,000-second caps.
+No interruption, retry, extension or score-selected checkpoint occurred.
+
+All nine historical anchors matched, including their first three action/outcome
+blocks and learned state. Every actor was actually reloaded at 384 before
+continuing. All nine frozen shadow histories and paired exploration streams
+remained consistent. All 30 evaluations preserved learned state. Offline
+verification loaded all 18 evaluated endpoint payloads and matched their reported
+state, and checked each completed seed pointer. There are 108 retained immutable
+private payloads. The sealed final-test rows remain unopened.
+
+Development mates out of 128, **384 → 1,024 training decisions**:
+
+| Seed | No addition | Ranked addition | Random addition |
+| --- | ---: | ---: | ---: |
+| 1 | 124 → 124 | 128 → 128 | 128 → 128 |
+| 2 | 121 → 124 | 98 → 124 | 98 → 124 |
+| 3 | 66 → 66 | 66 → 66 | 66 → 66 |
+
+Three actor totals improved and six tied; these are not nine independent
+replications. Seed 2 ranked/random selected the same candidate and reproduced
+the same training and evaluation trajectories. They gained 26 mates without
+losing any previously solved row. Its no-addition actor gained three without a
+loss. Seed 1's unchanged no-addition total hides four gained and four lost rows;
+fully solved development orbits fell from 24 to 23. Final fully solved orbits out
+of 25 are 23/25/25 for seed 1, 23/23/23 for seed 2, and 0/0/0 for seed 3.
+
+Final-policy ablation (a frozen offline intervention, never training feedback):
+
+| Seed | Addition | Normal → masked mates | Changed actions | Lost / gained mates |
+| --- | --- | ---: | ---: | ---: |
+| 1 | Ranked | 128 → 128 | 0 | 0 / 0 |
+| 1 | Random | 128 → 124 | 4 | 4 / 0 |
+| 2 | Ranked | 124 → 88 | 36 | 36 / 0 |
+| 2 | Random | 124 → 88 | 36 | 36 / 0 |
+| 3 | Ranked | 66 → 66 | 0 | 0 / 0 |
+| 3 | Random | 66 → 66 | 1 | 0 / 0 |
+
+Seed 2 now relies strongly on the added AND within its learned policy. This is
+current-policy usefulness, not a ranking advantage: the independently trained
+no-addition actor reaches the same 124 outcomes. Likewise, seed 1's ranked
+coefficient has no final direct effect, although its training trajectory reaches
+128 rather than the no-addition actor's 124. Removing a coefficient from a final
+policy and training without that condition are different interventions.
+
+Ordinary lifecycle remained active. Between 384 and 1,024, actors each retired
+and replaced 16–28 base definitions; all ended with 32 live definitions. All six
+added conditions survived and remained TRIAL. Seed 3 changed topology, weights
+and training experience without improving its mate outcomes. This rules out a
+frozen-topology explanation for these runs, but does not establish why the plateau
+persists or that further experience could never help. Neither survival nor these
+masking results constitute an implemented autonomous maturity decision.
+
+### What this adds
+
+The experimental actors now have source-bound private checkpoints with tested
+interruption accounting and verified continuation. More ordinary play can improve
+behavior substantially in some histories, including a policy using a live
+composition. Stronger dependence on a condition is not evidence that nomination
+reliably outperforms random proposals or the no-addition reference. Adaptive
+structural selection, useful retirement, learned competence/delegation, a world
+model, M2 and full KRK remain unproved. Main receives documentation only.
+
+## Next bounded target
+
+Use the saved 384/1,024 actors to investigate seed 3's persistent failure, with
+seed 2's recovered actors as a reference. Separate two questions: can the current
+terminal/gate representation distinguish the relevant alternatives, and does the
+existing credit/choice process exploit the distinctions it already has? Inspect
+these only in an explicitly offline diagnostic; the coach and ordinary learner
+must continue to receive only their existing observations and scalar outcomes.
+Any additional real moves require a separately declared budget and endpoint.
+Offline answers, fitted weights or selected actions must not become learner
+inputs or a deployed policy.
+
+The result should motivate one generic change with a matched control, if a cause
+is found: a proposal/composition correction for missing distinctions, or a
+credit/choice correction for unused distinctions. Do not presume either defect,
+add a retention controller, or silently extend this completed run. Preserve young
+joint Boolean trials even when their atoms lack individual value. Test the
+smallest correction through actual terminal-mediated play and scalar feedback.
+The independently trained two-child competence/delegation experiment remains a
+separate capability and need not wait for perfect structural discovery.

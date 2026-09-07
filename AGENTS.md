@@ -149,16 +149,23 @@ improved zero of 15 pairs, tied twelve and worsened three. Prefix histories and
 paired exploration matched; fixed definitions stayed unchanged while weights
 learned. Seed 2's probed policy remained at 98 with or without turnover, versus
 116 under offline masking. Seed 3 stayed at 66. No automatic retention controller.
-Next: a bounded longer ordinary-M1 run with private resumable checkpoints,
-targeting 1,024 training decisions for no-addition/ranked/random references.
-Reproduce the new normal episode-384 records and keep separate exploration
-randomness. Declare resources and endpoints before play; do not select the best
-checkpoint or extend this completed run. Keep birth/pruning and weights plastic.
-Keep always-enabled training as the reference. Do not promote 50% probing or treat
-positive correlation, prediction accuracy or activation as causal maturity.
-Experience and optimization also matter. Test learned child competence and parent
-delegation separately in a tiny two-context/two-child environment before using M1
-as an M2 child. Neither automatic rate regulation nor handover is implemented.
+The longer ordinary-M1 run is complete; read
+`docs/autogrowth/ORDINARY_M1_CONTINUATION.md`. All 181 distinct focused tests and
+13,056 declared moves completed. Nine episode-384 histories reproduced; all actors
+were actually reloaded before continuing to 1,024 decisions. Final none/ranked/
+random scores are 124/128/128, 124/124/124 and 66/66/66. Seed 2's added policies
+improved from 98 to 124 and fall to 88 when masked offline, but its no-addition
+actor also reaches 124. Ranking superiority is unproved. Seed 3 remains stuck
+despite 24–28 further replacements. All added conditions remain live TRIALs.
+Next isolate missing representational distinctions from ineffective credit/choice
+using the saved actors in an offline diagnostic; do not feed diagnostic answers
+or fitted policies into the learner. Declare any new play budget separately.
+Keep always-enabled training and normal lifecycle as references. Do not promote
+50% probing, add an automatic retention controller or extend a completed study.
+Private checkpoints are retained outside git; only aggregates and hashes are
+public. Test learned child competence and delegation separately in the tiny
+two-context/two-child task before using M1 as an M2 child. Neither automatic rate
+regulation nor handover is implemented.
 
 ## Focused verification
 

@@ -92,8 +92,15 @@ paired fixed-topology control is also complete; see `FIXED_TOPOLOGY_RECOVERY.md`
 Holding definitions while weights learned improved no final score, tied twelve
 comparisons and worsened three. It did not repair seed 2's probed-policy harm or
 seed 3's plateau. Ordinary lifecycle remains the reference; no retention controller
-is justified. Next give the always-enabled references more actual M1 play at fixed
-endpoints with private resumable checkpoints, retaining the exact episode-384
-anchors and separate exploration streams. This tests limited experience before
-guessing a representation or credit correction. Automatic regulation and the tiny
-independent-child handover experiment remain separate capabilities.
+is justified. The longer ordinary-M1 study is also complete; see
+`ORDINARY_M1_CONTINUATION.md`. At 1,024 decisions, none/ranked/random scores are
+124/128/128, 124/124/124 and 66/66/66. More play improved seed 2, including policies
+with a useful live AND, but did not resolve seed 3 or establish ranking superiority.
+Nine historical anchors and actual checkpoint reloads matched. Source-bound
+private states now support the next bounded investigation: distinguish missing
+terminal/gate information from ineffective credit/choice in the persistent weak
+actor, using only offline diagnostics before proposing one generic correction.
+Do not turn diagnostic answers into training inputs or choose a best checkpoint.
+Keep ordinary lifecycle and edge learning active; the completed study is closed.
+Automatic regulation and the tiny independent-child handover experiment remain
+separate capabilities.
