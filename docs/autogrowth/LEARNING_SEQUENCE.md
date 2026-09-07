@@ -93,13 +93,21 @@ result in `OFFICIAL_CONTINUATION_20260906.md`. Keep normal lifecycle as the
 reference. The longer ordinary-M1 follow-up is complete: at 1,024 decisions,
 none/ranked/random scores are 124/128/128, 124/124/124 and 66/66/66. Seed 2's added
 policies improved from 98 to 124 and rely strongly on their AND, but the actor
-without an addition also reaches 124. Seed 3's plateau persisted. All nine exact
-historical anchors and actual checkpoint reloads matched; private saved states
-support the next bounded investigation of missing terminal/gate distinctions
-versus ineffective credit/choice. Keep diagnostic answers outside training and
-motivate one generic correction only if a cause is supported. The completed study
-is closed; any new play has a separate declared budget. Do not promote the hold
-or probing policy. A condition's contribution depends on its surrounding policy,
-context and learning stage; preserve history without treating a lifetime score
-as universal competence. Autonomous regulation and strategic handover remain
-separate work; main has not adopted the experimental subclasses.
+without an addition also reaches 124. Seed 3's plateau persisted. The subsequent
+offline investigation found no formal-computation bug, but proved
+incompatible weight requirements in those particular saved graphs. That result
+concerns fixed representations. A paired condition-budget probe then supplied
+256 more ordinary decisions at 32 versus 64 conditions. Seed 2 finished 124 versus
+128; seed 3 escaped 66 to 111 in both arms. See the latest result in
+`OFFICIAL_CONTINUATION_20260906.md`.
+
+The existing growth/learning process can therefore progress without a new
+mechanism or larger budget. More random capacity helped one development case;
+this is not adaptive structural selection and does not identify which births
+caused the seed 3 gain. Next replicate the capacity comparison on fresh seeds
+under a declared complete schedule before changing a learning law or adopting a
+budget profile. Keep diagnostic answers outside training and count training
+experience separately from evaluation and laboratory moves. Main's source and
+original default budget are unchanged. Autonomous regulation and strategic
+handover remain separate work; the tiny independently trained child-competence
+and parent-delegation experiment need not wait for perfect structural discovery.

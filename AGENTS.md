@@ -125,17 +125,30 @@ are not independent evidence for ranking. Seed 3 stayed at 66 despite 24–28
 further replacements. All added conditions remain live TRIALs, not mature skills.
 The final test stays unopened; these are reused development results.
 
-Next isolate missing terminal/gate distinctions from ineffective credit/choice
-using the saved weak actors and the recovered reference in a bounded offline
-diagnostic. Any new play needs a separate declared budget. Do not feed diagnostic
-answers, fitted weights or selected actions into the learner. A supported cause
-should motivate one generic correction and matched actual-play comparison;
-do not guess a mechanism, add a retention controller or extend the closed study.
-Keep ordinary birth/pruning, edge learning and always-enabled training active.
-Private checkpoints remain outside git; only aggregates and hashes are public.
-Test learned child competence and parent delegation separately in the tiny
-two-context/two-child environment before using M1 as an M2 child. Main retains
-its stable learner; no automatic rate regulation, handover or M2 is established.
+The investigation and capacity follow-up are now complete at
+`1a67e292305183756a3d3fd15cf9dd556d28af99`; read the latest result in
+`OFFICIAL_CONTINUATION_20260906.md`. All 194 branch tests passed. No formal support
+or choice bug was found. Exact contradictory weight requirements prove limits
+of the particular saved graphs, not of the growing learning process.
+A subsequent 1,536-move probe changed ONLY the work-branch condition budget, 32
+versus 64, with 256 more ordinary training decisions per actor. Seed 2 finished
+124 versus 128; seed 3 escaped 66 to 111 in BOTH arms. Thus more ordinary play
+can improve the existing process without a new mechanism or a larger budget.
+More random capacity helped one selected case; adaptive structural selection is
+still unproved. Main's learner/defaults are unchanged (its original default was
+96 conditions, distinct from the small experimental budget).
+
+Next replicate the matched capacity comparison on fresh seeds under a declared
+complete training schedule before changing a learning law or adopting a profile.
+Keep normal growth/pruning, exploration and scalar-outcome learning active.
+A fixed-graph impossibility certificate does not require replacing the learner;
+ordinary training changes graph and weights. Do not supply a hand-authored
+composition, correct-action label or new controller because of a short plateau.
+Offline diagnostic answers and fitted weights never enter training. Report real
+training experience separately from evaluation and laboratory transitions.
+Private checkpoints and favorable/adverse evidence are retained. Learned child
+competence and parent delegation remain a separate tiny two-context/two-child
+test before M2; no handover, learned world model or M1 mastery is established.
 
 ## Focused verification
 

@@ -325,7 +325,7 @@ two-child competence/delegation experiment remains a separate planned capability
 and need not wait for perfect structural discovery. Learned handover, a competence
 envelope, a world model, M2 and full KRK remain unproved.
 
-### Latest branch result: longer ordinary M1 play and private checkpoints
+### Earlier branch result: longer ordinary M1 play and private checkpoints
 
 Implementation and pre-play protocol:
 [`846ca3d2`](https://github.com/Paulander/hector-recon/commit/846ca3d2c956299f77c84b791792ec151d75b344).
@@ -382,8 +382,8 @@ improved mate outcomes. This does not identify the cause or prove that further
 experience can never help. It does show that this bounded extension alone did not
 repair the persistent failure. Survival and masking do not implement maturity.
 
-**Next bounded target:** use the saved weak actors and seed 2's recovered reference
-to distinguish missing terminal/gate distinctions from ineffective credit/choice.
+**Investigation completed below:** the target was to use the saved weak actors
+and seed 2's recovered reference to distinguish missing terminal/gate distinctions from ineffective credit/choice.
 Make that an offline diagnostic, with a declared budget for any new actual moves;
 keep its answers and any fitted comparison weights out of the learner. A supported
 cause should motivate one generic correction with focused tests and a matched
@@ -393,6 +393,88 @@ add a retention controller. The tiny independently trained child-competence and
 parent-delegation experiment remains a separate planned capability and need not
 wait for perfect structural discovery. Learned handover, adaptive structural
 selection, a competence envelope, a world model, M2 and full KRK remain unproved.
+
+### Latest branch result: diagnosed fixed-graph limits; existing learning progressed
+
+Full results and continuation:
+[`1a67e292`](https://github.com/Paulander/hector-recon/commit/1a67e292305183756a3d3fd15cf9dd556d28af99).
+Read the [representation diagnosis](https://github.com/Paulander/hector-recon/blob/1a67e292305183756a3d3fd15cf9dd556d28af99/docs/autogrowth/M1_REPRESENTATION_DIAGNOSIS.md),
+[tie-aware certificate](https://github.com/Paulander/hector-recon/blob/1a67e292305183756a3d3fd15cf9dd556d28af99/docs/autogrowth/M1_RANKING_CERTIFICATE.md)
+and [capacity comparison](https://github.com/Paulander/hector-recon/blob/1a67e292305183756a3d3fd15cf9dd556d28af99/docs/autogrowth/M1_CAPACITY_PROBE.md).
+Their public aggregates are linked there. Main receives documentation only.
+
+All **194 tests** in the full branch verification passed. The implementation
+added isolated diagnostic/experiment runners; the learner, formal engine,
+terminal embodiment and coach source are unchanged. The only training treatment
+was a different value of the existing max_conditions parameter.
+
+The diagnostic examined no-addition/ranked actors from seeds 2 and 3 at both 384
+and 1,024 decisions. All eight reproduced their exact development behavior; all
+sixteen split evaluations preserved state and matched formal support/choice to
+the declared Boolean gates and weights. Within the examined positions, neither
+the full declared schema nor the grown reader predicates collapsed winning and
+losing alternatives. This does not prove universal feature sufficiency.
+
+Some seed 2 compositions do collapse alternatives: its final 124/128 score is
+also the local upper bound imposed by its signatures and existing tiebreak.
+Seed 3 has distinct signatures within each position, but shared weights must
+also satisfy all contexts. A separately declared post-hoc check handled the exact
+tiebreak and found direct contradictory weight requirements in every saved graph
+on both splits. Thus those particular graphs cannot solve their entire examined
+split by weight changes alone. This is an elementary contradiction certificate,
+not a fitted solver policy supplied to the network; it does not prove that 66
+was seed 3's best achievable score.
+
+The original diagnostic completed its 10,111 declared executions in 1,136.752
+seconds within 1,200. The separate tie-aware clarification completed 7,039
+laboratory transitions within 180 seconds. Combined: **3,072 frozen actor moves,
+14,078 laboratory transitions and zero training moves**. No diagnostic labels or
+fitted weights were installed in an actor, and the final test stayed closed.
+
+The next probe changed only the existing condition budget. Identical saved
+no-addition actors at event 1,024 were cloned into 32- and 64-condition arms,
+each receiving the same next 256 training positions and matched exploration.
+New nodes came from the original generic random birth law; nothing specified
+which chess feature, terminal, Boolean composition or strategy to build.
+
+Development mates out of 128:
+
+| Seed | Before at 1,024 | 32 conditions at 1,280 | 64 conditions at 1,280 |
+| --- | ---: | ---: | ---: |
+| 2 | 124 | 124 | 128 |
+| 3 | 66 | 111 | 111 |
+
+All **1,536 additional actual moves** completed: 1,024 training and 512 frozen
+evaluation. Seed times were 508.044 and 522.024 seconds, within 900-second caps.
+Both inherited actors stayed unchanged; only the cloned budget field differed.
+Exploration pairs and frozen histories matched. All four final checkpoints
+restored and all evaluations preserved learned state. Sixteen immutable private
+payloads were saved. No retry, extension or final-test access occurred.
+
+Seed 2's larger budget gained four mates without a loss and solved all 25
+development orbits. Seed 3 gained the same 45 mates without losses in both arms,
+solving 18 of 25 orbits. Its 32-budget control made eight new births/eight
+retirements; the 64-budget arm made 39/seven. Seed 2 made six/six versus 38/six.
+Final live populations were exactly 32 and 64. The comparison is about the small
+work-branch experiment: main's pre-existing default was 96 and is unchanged.
+
+**The important correction:** a fixed-graph capacity result concerns a particular
+saved representation; ordinary training changes both graph and weights. The
+existing 32-budget process escaped the observed seed 3 plateau without a new
+mechanism or larger budget. The probe does not isolate which new birth or weight
+change caused that gain. More random capacity helped one selected development
+case and tied the other. It does not establish reliable adaptive structural
+selection, maturity, retention, handover or M1 mastery.
+
+**Next bounded target:** replicate the matched capacity comparison on fresh seeds
+with a declared complete training schedule before adopting a budget profile or
+changing a learning law. Keep ordinary growth/pruning and scalar-outcome learning
+active. Do not infer a need for another controller or hand-authored composition
+from a short plateau. Count actual training separately from evaluation/laboratory
+moves and preserve the saved states. The independently trained child-competence
+and parent-delegation experiment remains a separate capability and need not wait
+for perfect structural discovery. All studies above are closed; any further play
+starts a separately declared experiment.
 
 ### Baseline sequence
 
