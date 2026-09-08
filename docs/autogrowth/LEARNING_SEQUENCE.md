@@ -25,6 +25,17 @@ every possible growth mechanism is implemented.
 
 ## When the mechanisms coexist
 
+Learned reuse and simplification are an explicit further structural milestone.
+Aim for compact, behaviorally reliable shared definitions; an exact minimum node
+count is not a gate for learning or delegation. The current birth law proposes
+shallow one-to-three-reader conditions. It does not discover arbitrary nested
+factoring or symmetry sharing. Future generic reuse must preserve terminal and
+action-binding semantics, receive evidence from subsequent real outcomes, and
+protect young jointly useful combinations. Keep this separate from the present
+exploration comparison; the coach never rewards graph shape or supplies chess
+rules. Count shared definitions and measurement complexity as well as physical
+vertices. Smaller graphs are not automatically more general or more stable.
+
 Choosing an already learned strategy happens on each relevant request. It does
 not require growing a node or changing a weight. Fast edge learning subsequently
 adjusts contextual preferences and predictions from eligible actual outcomes.
@@ -125,17 +136,21 @@ Seed 7 gained per-split representational capacity during ordinary growth. Seed 9
 already had it initially, so its plateau cannot simply be called missing nodes.
 Each feasibility result concerns one split, not a shared fit or learnability.
 
-Next declare one matched comparison of existing exploration 0.25 versus 0.50 on
-saved final seeds 9, 7 and retention reference 4, with all other settings and
-normal growth/credit unchanged. Fix opportunity schedules, endpoints and caps
-before play, and record actual submitted action/outcome histories for post-play
-classification of successful experience. Do not steer training toward diagnosed
-families or install offline solutions. This comparison is diagnostic on selected
-histories; exploration is not yet a confirmed fix. If it fails, investigate the
-local selected-action credit objective before adding hierarchy by assumption.
-See the latest official record for the full results and historical source links.
-Continued learning on viewed M1 positions is not demonstrated consolidation, a
-causal rate comparison or general mastery. Future fresh pools
+The exploration comparison is complete at `37e064ecbd6203163c8376c5a0882ed8070dbcae`:
+215 tests and 14,592 actual moves. Both rates end at 128, 128 and 124 / 128 for
+seeds 4/7/9, with identical final outcome partitions. Higher exploration temporarily
+worsened two histories and gave no final advantage. Seed 7 recovered. Seed 9
+learned all 17 old failures but lost four other corner rows, one symmetry orbit.
+Both families received actual successes; 0.50 yielded fewer than 0.25. All trained
+endpoints and action histories are retained. See the latest official record.
+
+Keep 0.25. Next declare a focused saved-trajectory attribution of the four new
+losses, with recovered seed 7 as reference: check current ability to retain both
+alternatives, then local selected-action credit and changed/retired contributions.
+Earlier capacity certificates do not automatically survive turnover. Do not
+install an offline solution, replay logged actions or add a corner/retention rule.
+These selected-history results establish neither general rate superiority,
+consolidation nor general mastery. Future fresh pools
 must preserve orbit partition assignment: the current generator's seed changes
 both sampling and split assignment. Keep the final test unopened.
 Main's learner and original 96-condition default remain unchanged. Diagnostic

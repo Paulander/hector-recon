@@ -601,7 +601,7 @@ stays unopened. The separate tiny child-competence/delegation task need not wait
 for perfect viewed M1 scores or perfect structural discovery. Main's learner and
 original 96-condition default stay unchanged; 64 remains a provisional profile.
 
-### Latest branch result: recurring corner geometry, different learning limits
+### Earlier branch result: recurring corner geometry, different learning limits
 
 The [full diagnosis and historical review](https://github.com/Paulander/hector-recon/blob/ff71baaaf85d46dc2f394e9aeab2df6f77c34d57/docs/autogrowth/M1_FAILURE_PATTERNS.md)
 and [public evidence](https://github.com/Paulander/hector-recon/blob/ff71baaaf85d46dc2f394e9aeab2df6f77c34d57/reports/autogrowth/development/M1_FAILURE_PATTERNS_20260907.json)
@@ -653,7 +653,7 @@ that reversal. This is score interference, not a causal no-growth experiment.
 Both actors gained discriminating conditions: births alone do not explain which
 one improved. Random growth is still not demonstrated adaptive proposal selection.
 
-**Next bounded target:** declare a matched comparison of the existing exploration
+**Follow-up selected then (now completed below):** declare a matched comparison of the existing exploration
 parameter, 0.25 versus 0.50, using final seeds 9, 7 and strong retention reference
 4. Keep every other setting, ordinary growth/pruning and scalar credit unchanged.
 Publish fixed schedules, endpoints and resource caps before play. Record actual
@@ -664,6 +664,73 @@ confirmation or an established remedy. If more exploration fails, investigate
 local selected-action credit before assuming a new hierarchy is needed. Broader
 coverage and tiny child-competence/delegation remain separate targets. Main's
 learner and original 96-condition default stay unchanged; 64 is provisional.
+
+### Latest branch result: exploration ties; old corner failures learned, other successes lost
+
+The [full report](https://github.com/Paulander/hector-recon/blob/37e064ecbd6203163c8376c5a0882ed8070dbcae/docs/autogrowth/M1_EXPLORATION.md)
+and [public evidence](https://github.com/Paulander/hector-recon/blob/37e064ecbd6203163c8376c5a0882ed8070dbcae/reports/autogrowth/development/M1_EXPLORATION_20260908.json)
+are pinned at `37e064ecbd6203163c8376c5a0882ed8070dbcae`. Protocol/implementation
+were published before play at `ea188d30a464e684f8ca79e0871e95e305e3fc9e`.
+Main receives documentation only; the learner and original 96-condition default
+are unchanged. All **215 required branch tests passed** before the experiment.
+
+Each saved final seed 4/7/9 actor was cloned into exploration 0.25 and 0.50 and
+continued from 4,096 to 6,144, with all other settings and normal growth/credit
+unchanged. The sole new runner capability records actual submitted actions and
+scalar outcomes after feedback. No labels or graph inspection guide the coach.
+All **12,288 training moves** (7,994 mates) and **2,304 evaluation moves** finished
+in one attempt. Arm times were 1,150.333–1,280.069 seconds, below 3,600-second
+caps. No retry, extension, laboratory transitions or final-test access occurred.
+
+Development mates out of 128:
+
+| Seed | Exploration | Inherited 4,096 | 4,608 | 5,120 | Final 6,144 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 4 | 0.25 | 128 | 128 | 128 | 128 |
+| 4 | 0.50 | 128 | 128 | 128 | 128 |
+| 7 | 0.25 | 126 | 126 | 128 | 128 |
+| 7 | 0.50 | 126 | 120 | 128 | 128 |
+| 9 | 0.25 | 111 | 122 | 124 | 124 |
+| 9 | 0.50 | 111 | 120 | 124 | 124 |
+
+All final pairs tie, including their solved/failed row partitions. Higher
+exploration temporarily loses six paired mates for seed 7 and two for seed 9;
+later measurements tie. Seed 7 recovered its two old lost rows, and its 0.50 arm
+recovered the additional six temporary losses. Seed 4 retained every development
+success at every measured milestone. Stability between milestones is not known.
+
+**Seed 9 learned every one of its 17 old failures, but lost four other rows.**
+Its final 124 means 86/86 aligned, 21/25 corner (1,2), and 17/17 corner (2,1).
+The four new losses are development rows 6, 9, 15 and 105, all orbit `10,54,0`;
+for example White king b3 / rook g7 / Black king a1. They persist at every new
+measurement in both arms. Do not describe them as four remnants of the old
+17-case failure, or claim all former successes were retained.
+
+Actual post-play logs show seed 9 had 106 versus 67 wins in 160 opportunities
+for corner (2,1), and 167 versus 130 wins in 232 opportunities for corner (1,2),
+at rates 0.25 versus 0.50. Every training position in both corner families produced
+a success. The specific lost development orbit is disjoint from training, so
+family-level success is not proof of successful experience on that orbit. Higher
+exploration did not yield more total successes. The logs do not identify which
+successes were exploratory choices. Earlier prefix action histories remain unknown.
+
+All 18 evaluated payloads and six final pointers independently verified; all 162
+source hashes stayed unchanged. All 120 new checkpoints and six action logs are
+saved. Two final-evaluation pending markers remained despite complete reports;
+they were retained and reconciled against verified endpoint states, transcripts
+and counts, without repeating any action. This bookkeeping issue is documented
+in the aggregate, not silently converted into another training attempt.
+
+**Next bounded target:** keep the existing 0.25 exploration setting. Declare one
+focused saved-trajectory attribution of the four new seed 9 losses, with recovered
+seed 7 as reference. Check current representational ability to retain both corner
+alternatives, then changed/retired contributions and selected-action credit. Old
+capacity results need not survive later turnover; positive family experience
+does not prove a credit-law defect. Do not author a chess rule, replay logged
+actions as training, freeze all growth or add a retention controller by assumption.
+Generic learned reuse/simplification, broader orbit coverage and tiny independently
+trained child-competence/delegation remain separate milestones. Neither an exact
+minimum graph nor perfect viewed M1 is a universal prerequisite for those tasks.
 
 ### Baseline sequence
 

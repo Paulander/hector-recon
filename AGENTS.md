@@ -174,15 +174,28 @@ its final graph and both seed 9 graphs admit verified perfect ordering on each
 examined split separately. This does not prove one shared train/development fit
 or a learning law that reaches it. Seed 9 is not simply missing capacity.
 
-Next declare a matched comparison of existing exploration 0.25 versus 0.50 on
-the saved final seeds 9, 7 and retention reference 4. Keep all other settings,
-ordinary growth/pruning and scalar-outcome learning unchanged. Fix schedules,
-endpoints and resource caps before play; log submitted actions/outcomes so actual
-successful experience can be classified after play. This is a selected-history
-diagnostic, not a fresh-seed result. Do not supply a corner rule, diagnosed-family
-oversampling, fitted weights or an adaptive coach. More exploration is a test,
-not an established remedy. If it fails, examine local selected-action credit
-before assuming new hierarchy is needed. The completed studies remain closed.
+The exploration comparison is complete at
+`37e064ecbd6203163c8376c5a0882ed8070dbcae`; read the latest official record and
+linked `M1_EXPLORATION.md`. All 215 tests and 14,592 actual moves completed:
+12,288 training and 2,304 evaluation. Both 0.25/0.50 arms end at 128, 128 and
+124 / 128 for seeds 4/7/9, with identical final solved/failed partitions. Higher
+exploration temporarily worsened two histories and gave no final advantage.
+Seed 7 recovered its two old lost rows. Seed 9 learned ALL 17 old failures but
+lost four other corner (1,2) rows, one orbit 10,54,0. These are not four remaining
+old failures. Both corner training families produced substantial actual wins;
+0.50 produced fewer total successful experiences. All 18 evaluated payloads and
+six final pointers verified; 120 new checkpoints and six action logs retained.
+Two leftover pending markers were reconciled with complete verified endpoints;
+no play was repeated. Keep 0.25; no learner or default change belongs on main.
+
+Next declare a focused saved-trajectory attribution of seed 9's four new losses,
+using recovered seed 7 as reference. Check whether the current condition set can
+retain both alternatives, then examine selected-action credit and changed/retired
+contributions. Earlier capacity results need not survive later turnover. Do not
+assume a credit defect or missing node, replay logged actions into training,
+author a corner rule or add a retention controller by assumption. These studies
+remain closed. Generic learned reuse/simplification is a separate milestone,
+not an exact-minimum-node gate or a new treatment in the exploration study.
 Broader positional coverage remains necessary: a new pool seed also changes
 symmetry-orbit split assignment. Preserve the original partition seed when
 sampling new development orbits; keep final-test rows unopened. Main's stable
