@@ -188,12 +188,34 @@ six final pointers verified; 120 new checkpoints and six action logs retained.
 Two leftover pending markers were reconciled with complete verified endpoints;
 no play was repeated. Keep 0.25; no learner or default change belongs on main.
 
-Next declare a focused saved-trajectory attribution of seed 9's four new losses,
-using recovered seed 7 as reference. Check whether the current condition set can
-retain both alternatives, then examine selected-action credit and changed/retired
-contributions. Earlier capacity results need not survive later turnover. Do not
-assume a credit defect or missing node, replay logged actions into training,
-author a corner rule or add a retention controller by assumption. These studies
+The retention diagnosis is complete at
+`6b464f0bf924befe08097ae288c41746211ce2b3`; see the latest official record and
+its linked `M1_RETENTION.md` and `RETENTION_EXPERT_PROMPT.md`. All 221 branch tests
+and 8,959 diagnostic executions passed, with zero training. ALL five inspected
+graphs admit a single perfect ordering across the 384-row train/development union.
+Seed 9 finishes 254/256 and 124/128 in both exploration arms; recovered seed 7
+finishes 256/256 and 128/128. The two failed training rows were previously solved
+and received actual wins during continuation.
+
+Actual logged credit reconstructs both seed 9 histories at all 32 subsequent
+boundaries to less than 8.89e-16. Representative .25 margin falls +0.85216 to
+-0.15925: updates contribute -0.99701 and retirement -0.01439. Rewarded corner
+(2,1) moves push against the other alternative through shared weights; the first
+pair crossing occurs away from pruning. Three distinct conditions also reduce
+to the same cue in both corner offsets. This is contextual overlap, not grounds
+for deleting them globally or supplying a corner-specific condition.
+All four development losses recover at saved step 5,888 in .25, then fail again;
+the earlier evaluation cadence missed this. Pair-margin crossings alone are not
+full-choice recoveries. All source checkpoints/logs are unchanged.
+
+Next propose a bounded actual-play learning-rate comparison, 0.3 versus 0.1,
+from step 4,096 across seeds 4/7/9. Keep .25 exploration, normal growth/pruning
+and the provisional 64-condition budget. Declare budgets and measurements first;
+measure acquisition AND retention. A smaller step may only delay learning or
+preserve the old errors. Do not call it an established fix, install a retention
+lock, replay fixed logs under a changed policy, or pass diagnostic labels/weights
+into learning. The expert prompt asks an independent instance to challenge this
+next test and consider generic credit/factoring alternatives. These studies
 remain closed. Generic learned reuse/simplification is a separate milestone,
 not an exact-minimum-node gate or a new treatment in the exploration study.
 Broader positional coverage remains necessary: a new pool seed also changes

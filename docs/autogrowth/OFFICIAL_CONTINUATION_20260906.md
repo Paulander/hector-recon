@@ -732,6 +732,79 @@ Generic learned reuse/simplification, broader orbit coverage and tiny independen
 trained child-competence/delegation remain separate milestones. Neither an exact
 minimum graph nor perfect viewed M1 is a universal prerequisite for those tasks.
 
+### Completed retention attribution — 2026-09-08
+
+Work-branch result: `6b464f0bf924befe08097ae288c41746211ce2b3`, following protocol
+`fd5df7b966b8ec8bd797d18a1da94a56e4accb7e`. This supersedes the preceding next
+target; do not repeat the closed diagnosis.
+
+- [Protocol, findings and next hypothesis](https://github.com/Paulander/hector-recon/blob/6b464f0bf924befe08097ae288c41746211ce2b3/docs/autogrowth/M1_RETENTION.md)
+- [Detailed public evidence](https://github.com/Paulander/hector-recon/blob/6b464f0bf924befe08097ae288c41746211ce2b3/reports/autogrowth/development/M1_RETENTION_20260908.json)
+- [Self-contained independent expert prompt](https://github.com/Paulander/hector-recon/blob/6b464f0bf924befe08097ae288c41746211ce2b3/docs/autogrowth/RETENTION_EXPERT_PROMPT.md)
+
+**221 branch tests passed** in 213.44 seconds. One diagnostic attempt completed
+in **778.02 seconds**: 7,039 laboratory transitions and 1,920 frozen actor moves,
+**zero training or learner update calls**. All 120 source payloads, six action
+logs and six other source files remain unchanged. No new trained state or
+final-test access. Main's production learner and defaults remain unchanged.
+
+| Actor | Step | Train / 256 | Development / 128 | Joint perfect ordering exists |
+| --- | ---: | ---: | ---: | --- |
+| Seed 9, exploration .25 | 4,096 | 236 | 111 | Yes |
+| Seed 9, exploration .25 | 4,608 | 253 | 122 | Yes |
+| Seed 9, exploration .25 | 6,144 | 254 | 124 | Yes |
+| Seed 9, exploration .50 | 6,144 | 254 | 124 | Yes |
+| Seed 7, exploration .25 | 6,144 | 256 | 128 | Yes |
+
+Each graph admits ONE weight vector satisfying all 6,655 strict ranking
+constraints on the 384-row union. Fitted coefficients were discarded. This
+strengthens the old per-split result but does not establish convergence or
+general mastery. Formal supports/choices and historical outcomes reproduced.
+Both seed 9 arms lose the same four development rows and two training rows;
+the training pair had previous successes and actual rewarded continuation moves.
+All six choose check with one escape, not mate. No axis precedence bug was found.
+
+Numerical accounting of the 4,096 actually logged training events reproduces all
+fast/slow weights and live lifetimes at 32 subsequent saved boundaries to less
+than 8.89e-16, without calling a learner or executing new actions. Representative
+development row 6's win-minus-final-loss margin changes as follows:
+
+| Exploration | Initial | Final | Actual credit | Removals at retirement |
+| --- | ---: | ---: | ---: | ---: |
+| .25 | +0.85216 | -0.15925 | -0.99701 | -0.01439 |
+| .50 | +0.85216 | -0.13366 | -0.92437 | -0.06145 |
+
+Recorded corner-(1,2) feedback supports this comparison, while corner-(2,1)
+feedback pushes against it through shared weights. The first positive-to-negative
+pair crossings in both arms are rewarded (2,1) moves away from pruning boundaries.
+This identifies actual credit interference on this comparison, not a global
+judgment that a condition is harmful or proof of another policy's performance.
+Three differently defined conditions are equivalent in the two corner-offset
+contexts; they are not globally equivalent. Do not delete them from this diagnosis.
+
+All four development rows recover at saved step **5,888** in .25 before failing
+again at 6,016 and 6,144. Coarser evaluation missed this. The fixed pair crosses
+zero 27/.25 and 49/.50 times, but beating one wrong move is not necessarily a
+winning full choice. The complete saved-choice check establishes the 5,888
+recovery. Development failures concern an untrained orbit; training failures
+also demonstrate instability on practised positions.
+
+**Next proposed experiment:** compare eta **0.3 versus 0.1** from the step-4,096
+checkpoints for seeds 4/7/9. Keep exploration .25, cap 64 and normal growth/pruning.
+Declare budgets and measurements before actual play. Measure retention, new
+acquisition, overall performance and lifecycle effects together. The smaller
+step is an untested hypothesis: it could merely delay acquisition or preserve
+the old errors. Policy changes can alter later topology; fixed action-log replay
+is not a valid on-policy control. If interference persists, examine generic
+credit allocation/contextual factoring next. Broadening training coverage is
+also a separate intervention and must preserve original orbit partitioning.
+
+The independent expert prompt contains the boundary, implementation equations,
+history, negative controls and these findings. It asks the reviewer to challenge
+the diagnosis and proposed next experiment. It has not been sent to another
+instance, and no expert endorsement is claimed. No authored chess conditions,
+coach-selected retention rules, global topology freeze or new controller.
+
 ### Baseline sequence
 
 Progress update: step 1 is complete on main; see

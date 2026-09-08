@@ -144,11 +144,26 @@ learned all 17 old failures but lost four other corner rows, one symmetry orbit.
 Both families received actual successes; 0.50 yielded fewer than 0.25. All trained
 endpoints and action histories are retained. See the latest official record.
 
-Keep 0.25. Next declare a focused saved-trajectory attribution of the four new
-losses, with recovered seed 7 as reference: check current ability to retain both
-alternatives, then local selected-action credit and changed/retired contributions.
-Earlier capacity certificates do not automatically survive turnover. Do not
-install an offline solution, replay logged actions or add a corner/retention rule.
+Keep 0.25. That retention attribution is complete at
+`6b464f0bf924befe08097ae288c41746211ce2b3`; read the latest official record and
+linked report/expert prompt. All 221 tests and 8,959 diagnostic executions passed,
+with zero training. All five inspected graphs admit a perfect SHARED ordering
+on the train/development union. Actual credit reconstructs every saved boundary;
+shared-weight updates, especially rewards for the other corner alternative,
+explain most of the representative loss. Removal contributes relatively little.
+The four development rows briefly recover at step 5,888 in .25, then fail again.
+Two actually practised training rows also finish lost in both exploration arms.
+Functional overlap among differently defined conditions is confirmed within the
+corner contexts, without proving global redundancy or a benefit from deletion.
+
+Next propose ordinary play from step 4,096 with eta=0.3 versus 0.1, fixed .25
+exploration, cap 64 and normal birth/pruning. Declare bounds before running and
+measure both acquisition and retention across seeds 4/7/9. This is a minimal
+step-size hypothesis, not proven consolidation or a fix. If it merely delays
+acquisition or leaves interference, examine generic credit allocation/contextual
+factoring next. No new controller is justified yet. The independent expert prompt
+explicitly invites disagreement with this ordering. Do not install an offline
+solution, replay logs under a changed policy or add a corner/retention rule.
 These selected-history results establish neither general rate superiority,
 consolidation nor general mastery. Future fresh pools
 must preserve orbit partition assignment: the current generator's seed changes
