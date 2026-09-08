@@ -54,6 +54,9 @@ constraints. Its diagnostics never enter training.
 Read `docs/autogrowth/M1_EXPLORATION.md` for the completed 0.25/0.50 comparison:
 final seeds 4/7/9, 2,048 further training moves per arm, fixed evaluations and
 post-feedback action logs. No learner change; later random streams can diverge.
+For the next declared offline retention study, read `docs/autogrowth/M1_RETENTION.md`:
+joint train/development ranking, saved-boundary contribution changes and arithmetic
+accounting of actual reward credit. No logged actions are replayed into learning.
 
 `CODEX_HANDOFF_BRIEF.md`, `docs/BRIEF.md`, TG/V plans, phase reports and archived
 runners are historical evidence, not live instructions. Consult them only for a
@@ -242,6 +245,7 @@ Use Python 3.12 and run:
 
 ```bash
 PYTHONPATH=src:libs/recon-lite/src python -m pytest -q \
+  tests/autogrowth/test_m1_retention.py \
   tests/autogrowth/test_m1_exploration.py \
   tests/autogrowth/test_m1_failure_patterns.py \
   tests/autogrowth/test_m1_long_play.py \
