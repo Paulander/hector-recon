@@ -54,7 +54,7 @@ constraints. Its diagnostics never enter training.
 Read `docs/autogrowth/M1_EXPLORATION.md` for the completed 0.25/0.50 comparison:
 final seeds 4/7/9, 2,048 further training moves per arm, fixed evaluations and
 post-feedback action logs. No learner change; later random streams can diverge.
-For the next declared offline retention study, read `docs/autogrowth/M1_RETENTION.md`:
+For the completed offline retention study, read `docs/autogrowth/M1_RETENTION.md`:
 joint train/development ranking, saved-boundary contribution changes and arithmetic
 accounting of actual reward credit. No logged actions are replayed into learning.
 
@@ -223,12 +223,36 @@ were substantial in both arms, and higher exploration produced fewer of them.
 All 18 evaluated payloads and six final pointers verified; 120 new checkpoints
 and six action logs retained. Two stale pending markers were reconciled against
 complete reports and independently verified endpoints without repeating play.
-Keep 0.25. Next declare a focused saved-trajectory attribution of the four new
-losses, with recovered seed 7 as reference: check current ability to retain both
+Keep 0.25. The following saved-trajectory attribution examined the four new
+losses, with recovered seed 7 as reference: current ability to retain both
 corner alternatives, then changed/retired contributions and selected-action credit.
 Earlier capacity certificates do not automatically survive later turnover. Do not
 assume either missing nodes or a broken credit law, extend this closed run, replay
 logged actions into training or provide a chess-specific retention rule.
+That retention diagnosis is now complete; read `M1_RETENTION.md`. All 221 tests
+and 8,959 diagnostic executions passed, with zero training. ALL five examined
+graphs admit one shared perfect ranking over the train/development UNION.
+Seed 9 ends 254/256 train and 124/128 development in both exploration arms; seed
+7 ends 256/256 and 128/128. The two lost training rows had actual wins as well.
+Actual logged credit reconstructs both histories at all 32 subsequent boundaries
+to 8.89e-16. For representative row 6, .25 margin declines +0.85216 to -0.15925:
+actual updates contribute -0.99701, retirement -0.01439. Successful corner (2,1)
+experience pushes against the other alternative through shared weights. The
+first pair crossing is a rewarded move, not pruning. This is interference on
+that comparison, not a global judgment that the contributing conditions are bad.
+Three differently defined conditions are functionally identical in both corner
+offset contexts; local overlap is not automatic grounds for global deletion.
+All four development rows recover at the saved step 5,888 in .25 before being
+lost again; earlier evaluation cadence missed that recovery. Keep pair-margin
+crossings separate from winning the complete action choice.
+Next propose a bounded actual-play 0.3-versus-0.1 learning-rate comparison from
+step 4,096, seeds 4/7/9, keeping .25 exploration and normal growth/pruning. Declare
+budgets first and measure both new acquisition and retention. A smaller step is
+an untested hypothesis; it may just delay learning or preserve the old errors.
+Do not install a retention lock, authored corner condition, offline fitted weights
+or changed-policy fixed-log replay. Broader orbit coverage and generic factoring
+remain separate interventions. `RETENTION_EXPERT_PROMPT.md` in docs/autogrowth is
+the self-contained independent review request, including these results.
 Historical joint-signal and candidate-diversity lessons are linked in the report.
 A new pool seed also changes orbit partition assignment: retain the original
 partition when broadening development coverage, and keep the final test unopened.

@@ -194,6 +194,84 @@ Reports are in `reports/autogrowth/development/`. Private checkpoints are not
 in git. If access is unavailable, use this prompt and state that limitation;
 do not claim to have inspected unavailable code or data.
 
-At initial publication the new retention diagnostic is declared but unexecuted.
-Its result appendix will be added below after the bounded run. Do not assume its
-outcome from the hypotheses above.
+The protocol was published at `fd5df7b966b8ec8bd797d18a1da94a56e4accb7e`
+before execution. The investigation is now complete; the appendix below is part
+of the evidence to review, not a required interpretation to endorse.
+
+## Completed retention investigation — 2026-09-08
+
+221 tests passed. The one bounded run completed in 778.02 seconds with 7,039
+laboratory transitions, 1,920 frozen actor moves, zero training, zero learner
+update calls and no final-test access. All source checkpoints/logs remain
+unchanged. Full report: `reports/autogrowth/development/M1_RETENTION_20260908.json`.
+
+| Saved actor | Step | Train / 256 | Development / 128 | Joint perfect ordering possible |
+| --- | ---: | ---: | ---: | --- |
+| Seed 9, epsilon .25 | 4,096 | 236 | 111 | Yes |
+| Seed 9, epsilon .25 | 4,608 | 253 | 122 | Yes |
+| Seed 9, epsilon .25 | 6,144 | 254 | 124 | Yes |
+| Seed 9, epsilon .50 | 6,144 | 254 | 124 | Yes |
+| Seed 7, epsilon .25 | 6,144 | 256 | 128 | Yes |
+
+Each feasibility result is ONE weight vector on the combined 384 rows, with all
+6,655 strict inequalities directly verified and fitted coefficients discarded.
+It is an expressibility result, not a learner solution or convergence proof.
+Formal supports/choices and historical development outcomes reproduced exactly.
+
+Both seed 9 arms also fail training rows 118 and 230, one other reflected orbit.
+They were initially solved and practised eight times each during continuation;
+.25 received four and three actual wins on them. Thus insufficient exposure to
+the specific development orbit is not the whole story. All six final failures
+give check but leave one legal escape. The training-pair score deficit is tiny:
+0.00108 at .25 and 0.03713 at .50, versus 0.15925/0.13366 on development.
+
+Numerically reconstructing the recorded update law from the ACTUAL submitted
+actions and rewards reproduced every condition lifetime and fast/slow weight
+at all 32 subsequent saved boundaries to less than 8.89e-16. It invoked no
+learner updates and produced no trained actor. For a representative lost
+development position, compare its win with its final chosen loss:
+
+| Epsilon | Initial win-minus-loss score | Final score | Actual credit contribution | Contribution of removals at retirement time |
+| --- | ---: | ---: | ---: | ---: |
+| .25 | +0.85216 | -0.15925 | -0.99701 | -0.01439 |
+| .50 | +0.85216 | -0.13366 | -0.92437 | -0.06145 |
+
+Recorded corner-(1,2) feedback pushes this margin up by +5.25905/+5.09721.
+Corner-(2,1) feedback pushes it down by -8.19954/-8.25057; remaining positions
+supply +1.94348/+2.22899. These are accumulated contributions with cancellation
+on the actual evolving history, not independently controllable effect sizes.
+At .25, successful (2,1) moves alone contribute -7.74158. Both arms' first
+positive-to-negative pair crossings happen after rewarded (2,1) moves, away
+from pruning boundaries. This establishes actual shared-weight interference
+on that comparison. It does not prove what a different learning law would do.
+
+The fixed pair crosses zero 27/.25 and 49/.50 times; a positive pair margin
+does not imply beating every other action. Full-choice calculation at saved
+boundaries shows all four development rows recovered at step 5,888 in .25,
+then failed again at 6,016 and 6,144. Coarser evaluations missed this recovery.
+The four transformed rows have matching outcomes at every saved boundary;
+event-level credit was calculated for one declared representative.
+
+There is confirmed contextual overlap among three influential conditions:
+
+- 93: target-file alignment is true.
+- 124: exactly one of {king rank separation=4, target-file alignment=false,
+  kings-file alignment=false}.
+- 364: target-file alignment=true AND kings-file alignment=false.
+
+For BOTH corner offsets (1,2)/(2,1), all three reduce to the same target-file
+alignment Boolean. The report checks the four-case symbolic truth table from
+saved definitions. They are not globally identical. Do not prescribe deleting
+them based on this target; investigate whether generic contextual overlap and
+credit allocation are relevant. Their distinct structural identities do not
+imply distinct evidence in these contexts.
+
+Our tentative next experiment is actual play from the 4,096 checkpoints at
+eta=0.3 versus eta=0.1, with epsilon=.25 and normal growth/pruning in both arms,
+measuring acquisition AND retention. This is an untested small-step hypothesis,
+not a claimed fix. It could merely delay new learning or leave the same objective
+conflict. Please critique whether this is the most informative next experiment,
+and whether generic credit allocation, contextual factoring, internal retention
+or broader training coverage deserves priority instead. Changing eta changes
+future actions and possibly topology; fixed-log replay would not be its valid
+on-policy control. A new sampling pool must preserve the original orbit partition.
