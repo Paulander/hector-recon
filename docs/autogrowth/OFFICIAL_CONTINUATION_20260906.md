@@ -4,20 +4,25 @@ Status: accepted 2026-09-06. `main` is the official continuation line after the
 promotion commit containing this record. Earlier branches and reports remain
 provenance and a parts library, not active specifications.
 
-Current work-branch continuation (2026-09-07): `M1_FAILURE_PATTERNS.md` completes
-the initial/final seed 7/9 diagnosis and recovers the July corner-history lesson.
-All 209 tests and 8,575 diagnostic executions completed, zero training moves.
-The 17 persistent misses and two lost development rows share corner (2,1) king
-separation; the lost pair is one symmetry orbit. Historical 31e85b42 supplied an
-authored corner-support branch, not autonomous discovery. Current seed 7 acquired
-sufficient per-split ranking capacity through ordinary growth; seed 9 already
-had it but failed to learn successful ordering. Failure margins moved toward wins
-without changing its binary score. Next is a declared comparison of existing
-exploration 0.25/0.50 from final seeds 9, 7 and strong reference 4, with all other
-settings and normal growth unchanged, logging actual behavior for later analysis.
-No diagnosis, family label or fitted weight enters training. Read the report for
-numerical/split qualifications and linked history. Main has guidance only and
-retains its stable learner. Earlier sequence entries below are historical.
+Current work-branch continuation (2026-09-08): `M1_EXPLORATION.md` completes the
+0.25/0.50 comparison, published before play at
+`ea188d30a464e684f8ca79e0871e95e305e3fc9e`. All 215 tests and 14,592 actual moves
+completed: 12,288 training and 2,304 evaluation. Both rates end at 128, 128 and
+124 / 128 for seeds 4/7/9, with identical final outcome partitions. Higher
+exploration temporarily worsened two histories and gave no final advantage.
+Seed 7 recovered its two lost rows. Seed 9 learned all 17 old corner failures
+but lost four other corner (1,2) rows, one orbit 10,54,0. Actual action logs show
+successful experience in both families; higher exploration yielded fewer wins.
+All 18 evaluated payloads and six final pointers verified; 120 new checkpoints
+and six logs retained. Two stale pending markers were reconciled without replay.
+No learner, feature, credit or formal-engine code changed. Keep 0.25 and next
+declare a focused attribution of the four new losses: check current structural
+ability to retain both alternatives, then selected-action credit and contribution
+changes. Earlier capacity checks do not automatically survive later turnover.
+Keep recovered seed 7 as reference; do not supply a corner rule or add a retention
+controller by assumption. The preceding `M1_FAILURE_PATTERNS.md` preserves the
+historical corner lesson and its autonomy qualifications. Main retains its stable
+learner. Earlier sequence entries below are historical.
 
 ## Decision
 

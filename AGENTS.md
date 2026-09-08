@@ -51,7 +51,7 @@ of both progress and retention. It changes no learner settings or mechanisms.
 The completed offline attribution is recorded in `docs/autogrowth/M1_FAILURE_PATTERNS.md`:
 seeds 7/9, initial/final saved actors, common chess patterns and exact ranking
 constraints. Its diagnostics never enter training.
-Read `docs/autogrowth/M1_EXPLORATION.md` for the next declared 0.25/0.50 comparison:
+Read `docs/autogrowth/M1_EXPLORATION.md` for the completed 0.25/0.50 comparison:
 final seeds 4/7/9, 2,048 further training moves per arm, fixed evaluations and
 post-feedback action logs. No learner change; later random streams can diverge.
 
@@ -209,12 +209,23 @@ perfect ordering on each examined split. Seed 9 admitted such ordering at BOTH
 endpoints yet remained behaviorally stuck; its failure score margins improved
 without crossing zero. No formal-choice or within-board feature/gate alias bug.
 Per-split existence is not joint-set/general mastery or convergence of learning.
-Next declare one existing-exploration comparison (0.25 versus 0.50), with ordinary
-growth and all other settings unchanged: final seed 9, seed 7 and strong seed 4.
-Log actual submitted actions/outcomes so positive experience can be counted after
-play; never feed family labels or graph inspections into the coach. Fix schedule
-and budgets first. This selected-history diagnostic does not establish that more
-exploration is the solution. Do not assume more capacity or a corner node is needed.
+The exploration comparison is complete; read `M1_EXPLORATION.md`. All 215 tests
+passed and all 14,592 actual moves completed (12,288 training, 2,304 evaluation).
+Both rates finish 128/128, 128/128 and 124/128 for seeds 4, 7 and 9, including
+identical final solved/failed partitions. Higher exploration temporarily worsened
+two actors and gave no final benefit. Seed 7 recovered its two lost rows. Seed 9
+learned ALL 17 old failures but lost four other corner (1,2) rows, one orbit
+10,54,0; do not call these four residual old failures. Actual corner training wins
+were substantial in both arms, and higher exploration produced fewer of them.
+All 18 evaluated payloads and six final pointers verified; 120 new checkpoints
+and six action logs retained. Two stale pending markers were reconciled against
+complete reports and independently verified endpoints without repeating play.
+Keep 0.25. Next declare a focused saved-trajectory attribution of the four new
+losses, with recovered seed 7 as reference: check current ability to retain both
+corner alternatives, then changed/retired contributions and selected-action credit.
+Earlier capacity certificates do not automatically survive later turnover. Do not
+assume either missing nodes or a broken credit law, extend this closed run, replay
+logged actions into training or provide a chess-specific retention rule.
 Historical joint-signal and candidate-diversity lessons are linked in the report.
 A new pool seed also changes orbit partition assignment: retain the original
 partition when broadening development coverage, and keep the final test unopened.

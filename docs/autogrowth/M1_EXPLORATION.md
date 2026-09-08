@@ -90,3 +90,131 @@ python scripts/autogrowth/run_m1_exploration.py \
   --seeds 4 7 9 --episodes 6144 --evaluate-at 4608 5120 6144 \
   --block 128 --workers 6 --wall-seconds 3600
 ```
+
+## Completed result — 2026-09-08
+
+The protocol and implementation were published before play at
+`ea188d30a464e684f8ca79e0871e95e305e3fc9e`. All **215 required branch tests passed**
+in 202.65 seconds, including exact logger/ordinary-loop agreement at both rates
+and serial/parallel agreement. All **14,592 actual moves** completed in one
+attempt: **12,288 training** (7,994 mates) and **2,304 evaluation**. Each arm took
+1,150.333–1,280.069 seconds, below its 3,600-second cap. No retry, extension,
+alternative-action grading or final-test access occurred. Full evidence is in the
+[public aggregate](../../reports/autogrowth/development/M1_EXPLORATION_20260908.json).
+
+Development mates out of 128; event 4,096 is inherited:
+
+| Seed | Exploration | 4,096 | 4,608 | 5,120 | 6,144 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 4 | 0.25 | 128 | 128 | 128 | 128 |
+| 4 | 0.50 | 128 | 128 | 128 | 128 |
+| 7 | 0.25 | 126 | 126 | 128 | 128 |
+| 7 | 0.50 | 126 | 120 | 128 | 128 |
+| 9 | 0.25 | 111 | 122 | 124 | 124 |
+| 9 | 0.50 | 111 | 120 | 124 | 124 |
+
+**Every final pair ties, including its exact solved/failed row partition.** At
+the first evaluation, higher exploration loses six paired mates for seed 7 and
+two for seed 9; the second and final evaluations tie. This provides no measured
+final-score reason to increase exploration. It does not establish equivalence on
+other histories or optimality of either setting, particularly with ceiling scores.
+Initial RNG states matched, but later conditional draws can diverge as declared.
+
+### Learning occurred, and the residual failure changed
+
+Seed 7 recovered its two old lost rows and finished with all 25 development
+symmetry orbits solved in both arms. Its 0.50 arm temporarily lost six additional
+previously solved rows, all in corner (2,1), then recovered all eight failures by
+5,120. Seed 4 retained every development success at every measured milestone in
+both arms. Neither observation proves continuous stability or slow consolidation.
+
+Seed 9's net gain of 13 consists of **17 gained rows and four lost rows** in each
+arm. It learned **all** of its formerly failing corner (2,1) family. Its four
+final failures are new losses in corner (1,2), present at every new evaluation.
+They are development rows **6, 9, 15 and 105**, all one symmetry orbit
+**`10,54,0`**; for example White king b3 / rook g7 / Black king a1. Final family
+scores are **86/86 aligned, 21/25 corner (1,2), 17/17 corner (2,1)**. Thus 124 does
+not mean four remnants of the old 17-case failure. Both arms finish with 24 of
+25 development orbits completely solved.
+
+This confirms further learning of the historically difficult family under the
+existing terminal/growth/credit path. No corner predicate or authored strategy was
+added. It also confirms incomplete retention within these selected histories.
+It does not identify whether the four new losses arise from weight interference,
+retired distinctions, generalization to this orbit or their interaction.
+
+### What actual experience shows
+
+Both arms received eight appearances of every training row. Seed 9's actual
+successful actions, classified only after all play finished:
+
+| Training family | Opportunities per arm | Wins at 0.25 | Wins at 0.50 |
+| --- | ---: | ---: | ---: |
+| Aligned kings, separation two | 1,656 | 1,314 | 925 |
+| Corner (1,2), containing the new development-loss family | 232 | 167 | 130 |
+| Corner (2,1), the old failure family | 160 | 106 | 67 |
+
+Every training position in both corner families produced at least one successful
+action in each seed 9 arm. Training/development orbits are disjoint: this does
+not mean the particular lost development orbit was trained or successfully
+executed. Nor do historical wins establish the final training policy's score.
+
+Within this continuation, the first logged corner (2,1) win occurs at event 4,351
+for 0.25 and 4,341 for 0.50. In the first 512-decision interval, the arms then
+accumulate 18 versus six wins in that family; totals become 106 versus 67 by the
+endpoint. These are actual successes, not all guaranteed exploratory choices:
+the logs do not label the internal exploration coin. More exploration did not
+produce more total successful experience here. Across all three seeds, 0.25
+recorded **4,695/6,144** training mates versus **3,299/6,144** for 0.50. Exploration
+can displace already successful actions; training success and evaluated policy
+quality are distinct measures. The earlier prefix still has no per-action logs.
+
+Normal structural turnover continued. New births/retirements were 178/179 versus
+136/137 for seed 4, 66/64 versus 90/89 for seed 7, and 140/138 versus 124/122 for
+seed 9. Final live populations were 63–64. Survival and these counts do not prove
+adaptive proposal selection, causal maturity, minimality or learned reuse.
+
+### Integrity and retained evidence
+
+All configurations and inherited states matched; only exploration differed.
+Completed shadow histories stayed unchanged. Every block's action/outcome digest
+was reconstructed from its post-feedback log and matched the runner's counts.
+All **18 evaluated payloads** were independently verified against their complete
+reported snapshots; all six final pointers restored. All **162 source payload
+hashes** stayed unchanged. No post-play analysis made additional chess moves.
+
+The first post-play check found two leftover final-evaluation pending markers for
+seed 7. Both arms already had complete endpoint reports and progress records.
+The exact saved payloads, full logs and move counts independently verified their
+completion. The markers are retained and explicitly reconciled in the aggregate;
+no action was replayed and no extra move budget was inferred from stale markers.
+Their persistence is a bookkeeping issue, not evidence of failed learning or an
+established formal-engine defect. Do not use a marker alone to resume a finished
+arm; reconcile it with committed progress and payload identity first.
+
+All **120 new immutable checkpoints** and all six actual-action logs are preserved
+in a verified private archive, SHA256
+`11dd7015e1a1f7cd9988bdb262835821b8fb1aee03d3357c203e6e83be1f4b6e`.
+Trained payloads remain outside git. The final test remains unopened.
+
+### Next bounded target
+
+Keep **0.25 as the unchanged working exploration setting**; this comparison gives
+no benefit for promoting 0.50. The closed run must not be extended automatically.
+The next focused attribution is **loss of the other corner alternative during
+learning**: use the saved seed 9 trajectories and actual-reward logs to examine
+the four newly lost rows, with seed 7's recovered actor as reference. First check
+whether the current saved conditions can support retaining both alternatives;
+then examine selected-action credit and changed/retired contributions. The old
+event-4,096 capacity result does not automatically survive later turnover.
+
+Declare the analysis and any new actor/laboratory transitions before executing
+it. Preserve every outcome; do not replay logged actions as training, supply a
+corner rule, use a fitted solution, freeze all growth or introduce a retention
+controller by assumption. Substantial positive family experience rules out a
+simple family-wide absence of successes in this continuation, but it does not
+prove which local learning law needs correction. Broader orbit coverage, generic
+reuse/simplification and tiny independently trained child-competence/delegation
+remain distinct milestones. Perfect viewed M1 is not their universal prerequisite.
+Main retains its stable learner and original 96-condition default; 64 remains a
+provisional experimental profile.

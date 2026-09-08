@@ -25,6 +25,17 @@ every possible growth mechanism is implemented.
 
 ## When the mechanisms coexist
 
+Learned reuse and simplification are an explicit further structural milestone.
+Aim for compact, behaviorally reliable shared definitions; an exact minimum node
+count is not a gate for learning or delegation. The current birth law proposes
+shallow one-to-three-reader conditions. It does not discover arbitrary nested
+factoring or symmetry sharing. Future generic reuse must preserve terminal and
+action-binding semantics, receive evidence from subsequent real outcomes, and
+protect young jointly useful combinations. Keep this separate from the present
+exploration comparison; the coach never rewards graph shape or supplies chess
+rules. Count shared definitions and measurement complexity as well as physical
+vertices. Smaller graphs are not automatically more general or more stable.
+
 Choosing an already learned strategy happens on each relevant request. It does
 not require growing a node or changing a weight. Fast edge learning subsequently
 adjusts contextual preferences and predictions from eligible actual outcomes.
@@ -125,11 +136,18 @@ distance family matches the July history, but the old corner branch was authored
 Seed 7 acquired a more expressive condition set during ordinary turnover; seed 9
 already admitted perfect ranking on each examined split at both endpoints.
 Its remaining problem cannot simply be declared missing capacity. Failure score
-margins improved without crossing the selection boundary. Next compare the
-existing exploration setting 0.25/0.50 from final seeds 9, 7 and strong reference
-4, with normal growth and all other settings unchanged. Declare budgets first
-and log actual behavior; never route diagnosed families or fitted weights back
-into play. This tests an explanation, not an established corrective rate.
+margins improved without crossing the selection boundary. The subsequent
+`M1_EXPLORATION.md` comparison is complete: 215 tests and 14,592 actual moves.
+Both 0.25/0.50 arms finish 128, 128 and 124 / 128 for seeds 4/7/9, with identical
+final outcome partitions. Higher exploration temporarily worsened two histories
+and gave no final advantage. Seed 7 recovered; seed 9 learned all 17 old failures
+but lost four other corner rows, one orbit. Positive family experience was ample
+enough to reject its complete absence, but does not identify a credit-law defect.
+Keep 0.25. Next declare one saved-trajectory attribution of these four new losses:
+check current structural ability to retain both alternatives and inspect local
+selected-action credit/contribution changes, using recovered seed 7 as reference.
+Earlier capacity results need not survive later turnover. Keep diagnostic answers
+outside play; do not replay logged actions or install a corner/retention rule.
 Remember joint signal and candidate diversity from the linked historical review.
 For future broader coverage, preserve the existing orbit partition: the current
 generator's seed changes both sampling and split assignment. Keep the final test

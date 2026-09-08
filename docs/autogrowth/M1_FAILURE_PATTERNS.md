@@ -255,7 +255,7 @@ per-split ranking capacity before this continuation. More capacity, another node
 type, or copying the historical recognizer is therefore not the leading next
 intervention. Nor has a particular learning rate been identified as the cause.
 
-Next declare a matched ordinary-play comparison of the **existing exploration
+**Follow-up completed in [M1_EXPLORATION.md](M1_EXPLORATION.md):** declare a matched ordinary-play comparison of the **existing exploration
 parameter**, 0.25 versus 0.50, with otherwise unchanged settings and normal growth
 active. Use final seed 9 as the stalled case, seed 7 as the improving/near-boundary
 case and seed 4 as the retained strong reference. These are selected-history
