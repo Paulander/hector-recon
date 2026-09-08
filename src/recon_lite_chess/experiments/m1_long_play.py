@@ -32,13 +32,14 @@ def restore_source(reference, private_source, seed):
     return actor, expected
 
 
-def continue_actor(actor, fens, validation, *, seed, manifest, directory, output, deadline):
+def continue_actor(actor, fens, validation, *, seed, manifest, directory, output, deadline, train_step=None):
     """Fixed chronological milestones; scores never choose the next action/block."""
     directory, output = Path(directory), Path(output)
     state = {'seed': seed, 'role_index': 0, 'next_event': manifest['start_event'], 'organism': actor}
     config, history = asdict(actor.config), prior.digest(actor.shadow.report())
     initial = prior.snapshot(actor)
     blocks, milestones, pending = [], {}, None
+    train_step = prior.train if train_step is None else train_step
     try:
         prior.save_checkpoint(directory, state, manifest)
         start = manifest['start_event']
@@ -47,7 +48,7 @@ def continue_actor(actor, fens, validation, *, seed, manifest, directory, output
             stop = min(start + manifest['block'], next_evaluation)
             pending = {'kind': 'training', 'start': start, 'end': stop, 'max_moves': stop-start}
             prior.atomic_json(output / f'pending-{seed}.json', pending)
-            training = prior.train(state['organism'], fens, manifest['plans'][str(seed)][start:stop],
+            training = train_step(state['organism'], fens, manifest['plans'][str(seed)][start:stop],
                                    start_event=start, deadline=deadline)
             state['next_event'] = stop
             blocks.append({'start': start, 'end': stop, 'training': training})
