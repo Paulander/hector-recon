@@ -1,5 +1,16 @@
 # ReCoN/Hector agent instructions
 
+Current authorized work, 2026-09-15: read `docs/autogrowth/OWNER_FRESH_START.md`.
+The user explicitly requested fresh networks from the beginning, without adding
+split-timing knobs or external macro/network guidance. This authorizes the one
+fixed three-seed (12/13/14), two-arm fresh-start comparison declared there and
+supersedes the older no-automatic-fresh-run note below. Start with zero actions,
+one untrained owner and no inherited feature weights; ownership/exploration are
+active from action zero. Retain local scalar feedback and current development
+rules, random/current control, immutable evidence and bounded execution. No
+strong-prefix experiment, freezing, merging, delayed splitting or main change.
+The private work branch's earlier publication authorization remains in effect.
+
 Latest COMPLETE result,2026-09-15: read `docs/autogrowth/OWNER_BIRTH_SEARCH_RESULTS.md`.
 The fixed two-seed four-arm pilot completed10240 training,2560 scheduled eval,
 2560 frozen reproductions;160 blocks,168 checkpoints and all owner-local residual
