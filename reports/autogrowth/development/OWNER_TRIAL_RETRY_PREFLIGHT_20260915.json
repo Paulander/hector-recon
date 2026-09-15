@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "new_recovery_tests": 3,
+  "junit_sha256": "2caf6a4b3f7c8e9699df7bc45c65ed64cdf3e19e538102bac40f4531ae578137",
+  "new_mechanical_training_actions": 200,
+  "new_mechanical_evaluation_actions": 48,
+  "study_started": false,
+  "original_runtime_files_unchanged": 86,
+  "unchanged_learner_preflight_evidence": "OWNER_TRIAL_LEARNING_PREFLIGHT_20260915.json:35 distinct checks;5 new lifecycle checks repeated on final original source",
+  "handover_published_before_retry": "48e184e33df7307b5abc9926636b93b8456a75d1"
+}

@@ -6,6 +6,12 @@ without the previous conversation. Read this file, RESEARCH_AND_ARCHITECTURE.md,
 OPERATIONS_AND_RECOVERY.md and ../OWNER_TRIAL_LEARNING_RETRY.md, then check live
 files/status rather than assuming the preparation-time state is current.
 
+The separate recovery wrapper is now implemented and its three fixtures passed;
+all86 original runtime files are unchanged. Handover publication preceded retry
+implementation/play at remote48e184e33df7307b5abc9926636b93b8456a75d1.
+For live progress inspect the retry-control files; the status below describes
+the interrupted first attempt, not an assertion that recovery has not advanced.
+
 ## Current instruction and authority
 
 The latest user instruction is: **“First: prepare documents to hand over to a

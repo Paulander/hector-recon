@@ -58,8 +58,8 @@ source pin, remote5277b06/local51140753. All checksums are authoritative in the
 original run/source.json. The new wrapper changes orchestration only.
 
 Use `scripts/autogrowth/retry_owner_trial_learning.py` with separate initialize,
-step/status and verification operations. At preparation this wrapper is not yet
-implemented; do not assume it exists until preflight/source publication is recorded.
+step/status and verification operations. The wrapper is now implemented; three recovery fixtures passed before play.
+The preparation handover was published first at48e184e3.
 The separate directory is `snapshots/autogrowth/owner-trial-learning-retry-20260915`.
 Each training worker restores a sealed checkpoint, runs one64-action block,
 saves/reloads it, evaluates once and seals its journal. Workers exit after each
@@ -74,8 +74,9 @@ progress line. Record parent checkpoint hashes and reused provenance. Keep per-u
 limits of oneCPU,2GiB address space,64MiB per file,90seconds workerCPU/wall and
 95seconds independent timeout with5seconds kill grace for training; allow up to
 180seconds for an arm's frozen verification with185seconds independent timeout.
-Cap cumulative active worker wall time at3,600seconds; time spent between worker
-calls is reported separately. An incomplete unit is charged its full allocated
+Cap cumulative active start/training/verification unit wall time at3,600seconds;
+initialization/finalization have separate180-second non-play limits. Time spent
+between worker calls is reported separately. An incomplete unit is charged its full allocated
 limit for budget accounting if no final resource receipt survives.
 
 These unit execution limits replace the original single3,600-second process

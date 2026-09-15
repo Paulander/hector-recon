@@ -66,8 +66,7 @@ Original study runner: `scripts/autogrowth/run_owner_trial_learning.py`.
 It exports the three unchanged actor factories, exact schedule, training block
 recorder, same-state checks and trial/readiness verifier. Do not edit this pinned
 runner merely to get a recovery script working. The retry wrapper is separate:
-`scripts/autogrowth/retry_owner_trial_learning.py` (initially planned; only run
-after its preflight/publication is recorded).
+`scripts/autogrowth/retry_owner_trial_learning.py` (implemented and verified by three recovery fixtures before play).
 
 Useful tests: `tests/autogrowth/test_owner_trial_learning.py`,
 `test_owner_split_trial.py`, `test_owner_fresh_start.py`, `test_context_decision.py`,
