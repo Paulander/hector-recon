@@ -83,3 +83,8 @@ and compilation; `context_decision.py` for whole-owner cloning and limits;
 `owner_birth_search.py` for the fixed scoring candidate pool;
 `fresh_owner.py` for zero-training initialization;
 `terminal_development.py` for Condition state and ordinary credit.
+
+Follow-up: [OWNERS_COPIES_AND_LIFECYCLE.md](OWNERS_COPIES_AND_LIFECYCLE.md)
+distinguishes execution copies, owner splits and scoring births. It identifies
+lifecycle machinery already reused and explains why old sensor promotion is not
+a drop-in owner lifecycle. Ownership is not a demonstrated maturity replacement.
