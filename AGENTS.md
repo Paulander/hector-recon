@@ -1,5 +1,22 @@
 # ReCoN/Hector agent instructions
 
+Latest COMPLETE result, 2026-09-15: read `docs/autogrowth/OWNER_FRESH_START_RESULTS.md`.
+The user-requested zero-training cohort finished all six arms: seeds12/13/14,
+random/current vs residual/current,1920 training actions each. Final scores are
+15/12/14 vs14/14/16 (41/48 vs44/48). Ranked seed14 reaches16 at768 and retains it
+at all later measured checkpoints; ranked seed12 still loses a boundary B row.
+All11520 training,2976 scheduled eval,2976 frozen reproductions,180 blocks and
+186 checkpoints verify.79 runtime sources match;76 previous sources unchanged;
+52 focused tests pass (six new). Runtime875.678s,40772KiB,oneCPU; no retry or
+active training process. Source local b5c75d44 / remote e3cf9a31 have identical
+trees. All arms split at64/191/192 before their first scoring birth at439–443.
+Keep this observed startup delay separate from the user's later delayed/coarse
+splitting idea; no timing knob or external macro/network guidance was added.
+Preserve active-owner terminal observations and actual scalar feedback only.
+The cohort is CLOSED. Do not extend, retune or start the separate strong-prefix
+retention experiment automatically. Main stays unchanged; private work-branch
+publication remains authorized. Older status entries below are historical.
+
 Current authorized work, 2026-09-15: read `docs/autogrowth/OWNER_FRESH_START.md`.
 The user explicitly requested fresh networks from the beginning, without adding
 split-timing knobs or external macro/network guidance. This authorizes the one

@@ -159,3 +159,18 @@ faster seed11 acquisition and fewer final nodes. It still loses learned B rows
 in seed10. Extra birth opportunities show no consistent advantage. Next define
 a fresh-seed replication and a strong-prefix retention comparison; protection,
 freezing/reopening and factoring remain separate. No additional run is started.
+
+Latest user-directed continuation,2026-09-15: the user explicitly requested fresh
+networks from the beginning and reiterated local, self-contained development
+without external macro/network guidance. The fixed three-seed comparison is now
+complete; see [OWNER_FRESH_START_RESULTS.md](OWNER_FRESH_START_RESULTS.md).
+Zero-training random/current scores15/12/14 versus ranked/current14/14/16.
+Ranked seed14 reaches16 at768 and retains it at later checks; seed12's additional
+B loss remains. All180 blocks and186 checkpoints verify, with52 focused tests
+passing. Starting ownership from zero differs from the earlier learned-prefix
+conversion. Existing early splits delay first ordinary features until439–443
+actions; delayed/coarse splitting remains a later, separate experiment at the
+user's direction. No new timing, freeze, merge or task-oracle mechanism is added.
+The fresh cohort is closed. Keep the random control and treat ranking as an
+experimental option; a separately defined strong-skill retention comparison is
+still outstanding. The recovered architecture plan above remains the plan.
