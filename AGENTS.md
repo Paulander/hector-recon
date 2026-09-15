@@ -1,5 +1,17 @@
 # ReCoN/Hector agent instructions
 
+Current authorized work, 2026-09-15: read `docs/autogrowth/OWNER_HEADROOM.md`.
+The user explicitly said to run the proposed four-versus-eight-owner experiment
+while inspecting Boolean composition and lifecycle support. This authorizes ONE
+fresh fixed seed15/16/17 cohort, two residual/current arms,1920 actions each.
+Only max_leaves differs:4 versus8. Keep all local development/credit/grammar,
+pruning, budgets and A/B/A schedule unchanged. Do not add maturation, k-of-n,
+compound route discovery, depth-dependent timing or teacher guidance in this run.
+The previous cohorts remain CLOSED. OneCPU/2GiB,3600s worker,3630s independent
+stop with5s grace; no automatic retry or extension. Preserve immutable evidence,
+report acquisition/retention AND reduced child exposure/startup delay. Private
+work-branch publication remains authorized; main remains unchanged.
+
 Latest read-only follow-up,2026-09-15: `docs/autogrowth/OWNER_FRESH_FAILURES.md`
 clarifies that the16 evaluation cases are a four-bit Boolean task, not chess.
 Ranked12 peaked15 then ended14 with row10 previously correct and row11 lost,
