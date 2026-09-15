@@ -1,0 +1,48 @@
+{
+  "distinct_passed_tests": 284,
+  "new_tests": 13,
+  "batches": [
+    {
+      "name": "compatibility-focused",
+      "passed": 40,
+      "xml_sha256": "23f39a2b3ffb402aaacb8cdef34c58ae285795cc65bc807e8f7471338a1c8ad1"
+    },
+    {
+      "name": "compatibility-runner-recursive",
+      "passed": 23,
+      "xml_sha256": "35754ac5839cd9ecccd81cdb75fc517c7b62ced6f39b24b331ff49a3e7d0367f"
+    },
+    {
+      "name": "compatibility-final-new",
+      "passed": 13,
+      "xml_sha256": "31a1884d0325e2bd806c8088b8f4357f01b60673b091d65a59f1318a4020f78d"
+    },
+    {
+      "name": "compatibility-legacy-a",
+      "passed": 22,
+      "xml_sha256": "a226f042422f644d48cd6c4c938df64c38a4342fde234cacc42985e38a4b27e5"
+    },
+    {
+      "name": "compatibility-legacy-b",
+      "passed": 45,
+      "xml_sha256": "ae13dd802c7349ff84b8a6d35a89445b148c0709005c397e4cf7e167efce010d"
+    },
+    {
+      "name": "compatibility-legacy-c",
+      "passed": 18,
+      "xml_sha256": "04c2533a5f06a6ccd7427481914854c800b6e083a6d07262f780f4d4a988dc95"
+    },
+    {
+      "name": "compatibility-legacy-d",
+      "passed": 35,
+      "xml_sha256": "750cb589028660f6b5e8cc050baa78bc41ff876cbb33efa46e026aa6a8571c83"
+    },
+    {
+      "name": "compatibility-legacy-e",
+      "passed": 101,
+      "xml_sha256": "6895e129d706998061ab20d6d0abb1c9e8af196f9dd40ee8bb64f7fa2eca4a8b"
+    }
+  ],
+  "implementation_commit": "eb1f0db5",
+  "scope": "All 63 focused/recursive and 221 required legacy checks ran in this increment; repeated 13 new cases counted once."
+}

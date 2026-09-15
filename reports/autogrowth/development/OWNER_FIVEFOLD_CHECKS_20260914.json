@@ -1,0 +1,152 @@
+{
+  "focused_tests_passed": 30,
+  "new_distinct_tests": 4,
+  "prior_full_compatibility_tests": 267,
+  "prior_source_commit": "e39d332a",
+  "run_commit": "66c5f5cd",
+  "junit_sha256": "85796c851e65077e2da40735854d5e524dd17e2ffd1c52523d8871df70f56324",
+  "suites": [
+    {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "30",
+      "time": "14.031",
+      "timestamp": "2026-09-14T16:48:21.087692+02:00",
+      "hostname": "localhost"
+    }
+  ],
+  "test_names": [
+    [
+      "tests.autogrowth.test_owner_nomination_fivefold",
+      "test_fivefold_phase_orders_preserve_original_first_prefix_and_exposures"
+    ],
+    [
+      "tests.autogrowth.test_owner_nomination_fivefold",
+      "test_immutable_recorder_preserves_learning_and_formal_graph"
+    ],
+    [
+      "tests.autogrowth.test_owner_nomination_fivefold",
+      "test_executed_action_survives_feedback_failure"
+    ],
+    [
+      "tests.autogrowth.test_owner_nomination_fivefold",
+      "test_modified_immutable_record_and_duplicate_block_are_rejected"
+    ],
+    [
+      "tests.autogrowth.test_owner_nomination_runner",
+      "test_both_roles_inherit_one_source_and_differ_only_in_permission_to_split"
+    ],
+    [
+      "tests.autogrowth.test_owner_nomination_runner",
+      "test_one_completed_block_seals_actions_updates_and_restored_evaluation"
+    ],
+    [
+      "tests.autogrowth.test_owner_nomination_runner",
+      "test_submitted_action_survives_a_failure_while_applying_feedback"
+    ],
+    [
+      "tests.autogrowth.test_owner_nomination_runner",
+      "test_fixed_schedule_has_exact_counts_and_no_phase_label_sent_to_actor"
+    ],
+    [
+      "tests.autogrowth.test_owner_development",
+      "test_candidate_probing_changes_neither_choices_nor_the_original_weight_update"
+    ],
+    [
+      "tests.autogrowth.test_owner_development",
+      "test_residual_statistics_bind_to_actual_preupdate_prediction_and_invalid_feedback_is_neutral"
+    ],
+    [
+      "tests.autogrowth.test_owner_development",
+      "test_experience_nominates_a_split_and_keeps_parent_evidence_as_ancestry"
+    ],
+    [
+      "tests.autogrowth.test_owner_development",
+      "test_only_the_visited_owner_develops_and_receives_candidate_history"
+    ],
+    [
+      "tests.autogrowth.test_owner_development",
+      "test_local_retirement_preserves_records_and_other_owner_scores"
+    ],
+    [
+      "tests.autogrowth.test_owner_development",
+      "test_budget_exhaustion_keeps_weight_learning_and_records_rejected_nominees"
+    ],
+    [
+      "tests.autogrowth.test_owner_development",
+      "test_checkpoint_restores_nomination_lifecycle_and_branch_choices"
+    ],
+    [
+      "tests.autogrowth.test_context_decision",
+      "test_conversion_and_nested_forks_preserve_all_scores_and_source_state"
+    ],
+    [
+      "tests.autogrowth.test_context_decision",
+      "test_learning_in_one_context_changes_all_its_competitors_but_not_other_scores"
+    ],
+    [
+      "tests.autogrowth.test_context_decision",
+      "test_nested_update_also_preserves_the_other_child_of_the_same_parent"
+    ],
+    [
+      "tests.autogrowth.test_context_decision",
+      "test_credit_keeps_the_original_normalization_and_uses_the_graph_prediction"
+    ],
+    [
+      "tests.autogrowth.test_context_decision",
+      "test_graph_continuation_restores_ownership_rng_and_observation_history"
+    ],
+    [
+      "tests.autogrowth.test_context_decision",
+      "test_feedback_failures_and_pending_mutations_do_not_apply_credit"
+    ],
+    [
+      "tests.autogrowth.test_context_decision",
+      "test_exhausted_split_budget_does_not_partly_mutate_the_actor[limits0]"
+    ],
+    [
+      "tests.autogrowth.test_context_decision",
+      "test_exhausted_split_budget_does_not_partly_mutate_the_actor[limits1]"
+    ],
+    [
+      "tests.autogrowth.test_context_decision",
+      "test_exhausted_split_budget_does_not_partly_mutate_the_actor[limits2]"
+    ],
+    [
+      "tests.autogrowth.test_context_decision",
+      "test_exhausted_split_budget_does_not_partly_mutate_the_actor[limits3]"
+    ],
+    [
+      "tests.autogrowth.test_context_decision",
+      "test_action_dependent_routes_are_rejected_without_executing_an_action"
+    ],
+    [
+      "tests.autogrowth.test_context_decision",
+      "test_more_bindings_keep_existing_engine_graph_and_scoring_weight_aliases"
+    ],
+    [
+      "tests.autogrowth.test_context_decision",
+      "test_no_split_conversion_matches_original_weight_updates_without_lifecycle"
+    ],
+    [
+      "tests.autogrowth.test_context_decision",
+      "test_alias_corruption_is_detected_before_claiming_isolation"
+    ],
+    [
+      "tests.autogrowth.test_context_decision",
+      "test_composed_route_settles_at_the_supported_depth_limit"
+    ]
+  ],
+  "source_sha256": {
+    "scripts/autogrowth/run_owner_nomination_fivefold.py": "f019d578c7a36e335ccebd0c13108cea04c431832eb71b8eabbb8a4e134dc777",
+    "tests/autogrowth/test_owner_nomination_fivefold.py": "b619911be69c8588fd8e3456b7b9d711e4738307b2ef8230bffbff428fe29f77",
+    "docs/autogrowth/OWNER_NOMINATION_FIVEFOLD.md": "4349e62677f6b8b9a3ac0490dd21977bec0b52c2a2ff058ec8d42c690b6c6d42"
+  },
+  "learner_core_files_unchanged": 63,
+  "test_wall_limit_seconds": 120,
+  "test_kill_grace_seconds": 5,
+  "learner_changes": false,
+  "note": "The 267-test suite was passed previously on the unchanged learner. Thirty focused tests were executed for this recorder/schedule change; do not call them a new complete 271-test run."
+}

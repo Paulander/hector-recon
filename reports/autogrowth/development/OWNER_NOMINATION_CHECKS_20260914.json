@@ -1,0 +1,193 @@
+{
+  "distinct_passed_tests": 267,
+  "batches": [
+    {
+      "name": "focused",
+      "tests": 46,
+      "execution": {
+        "test_paths": [
+          "tests/autogrowth/test_owner_development.py",
+          "tests/autogrowth/test_owner_nomination_runner.py",
+          "tests/autogrowth/test_context_decision.py",
+          "tests/autogrowth/test_recursive_context.py",
+          "tests/autogrowth/test_recursive_retention.py",
+          "tests/autogrowth/test_recursive_budget.py"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 21.77075298500131,
+        "peak_rss_kib": 45332,
+        "limits": {
+          "cores": 1,
+          "address_space_bytes": 2147483648,
+          "wall_seconds": 180
+        },
+        "scope": "mechanical tests and required existing controls; no training benchmark"
+      },
+      "xml_sha256": "f7460de9baf2a5b8dbbe70e4eedcc8b0ff81daad194349b297633eb6c0b41cd2"
+    },
+    {
+      "name": "legacy-a",
+      "tests": 22,
+      "execution": {
+        "test_paths": [
+          "tests/autogrowth/test_m1_retention.py",
+          "tests/autogrowth/test_m1_exploration.py",
+          "tests/autogrowth/test_m1_failure_patterns.py"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 22.255170825999812,
+        "peak_rss_kib": 84564,
+        "limits": {
+          "cores": 1,
+          "address_space_bytes": 2147483648,
+          "wall_seconds": 180
+        },
+        "scope": "mechanical tests and required existing controls; no training benchmark"
+      },
+      "xml_sha256": "3dda3a16758e08c0a66d1f2edace53e38a280680f3fd4a5606e220fe7b14214b"
+    },
+    {
+      "name": "legacy-b",
+      "tests": 45,
+      "execution": {
+        "test_paths": [
+          "tests/autogrowth/test_m1_long_play.py",
+          "tests/autogrowth/test_m1_capacity_replication.py",
+          "tests/autogrowth/test_m1_representation.py",
+          "tests/autogrowth/test_m1_ranking_certificate.py",
+          "tests/autogrowth/test_m1_capacity.py",
+          "tests/autogrowth/test_ordinary_m1.py",
+          "tests/autogrowth/test_terminal_development.py"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 133.84578391200012,
+        "peak_rss_kib": 101628,
+        "limits": {
+          "cores": 1,
+          "address_space_bytes": 2147483648,
+          "wall_seconds": 180
+        },
+        "scope": "mechanical tests and required existing controls; no training benchmark"
+      },
+      "xml_sha256": "74c3ceac80689a967deda75dacec28f45bb794325fc0ae2b3d6261aeebacbb43"
+    },
+    {
+      "name": "legacy-c",
+      "tests": 18,
+      "execution": {
+        "test_paths": [
+          "tests/autogrowth/test_fixed_topology_recovery.py",
+          "tests/autogrowth/test_fixed_topology_recovery_experiment.py",
+          "tests/autogrowth/test_trial_recovery_experiment.py"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 135.44336111600023,
+        "peak_rss_kib": 47180,
+        "limits": {
+          "cores": 1,
+          "address_space_bytes": 2147483648,
+          "wall_seconds": 180
+        },
+        "scope": "mechanical tests and required existing controls; no training benchmark"
+      },
+      "xml_sha256": "70525fa13b772493a6c1ad50ec8ac131a2ff8c00d346024f5c749eb3e51802b7"
+    },
+    {
+      "name": "legacy-d",
+      "tests": 35,
+      "execution": {
+        "test_paths": [
+          "tests/autogrowth/test_trial_usefulness.py",
+          "tests/autogrowth/test_trial_usefulness_experiment.py",
+          "tests/autogrowth/test_live_trial.py"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 41.80073209399961,
+        "peak_rss_kib": 46764,
+        "limits": {
+          "cores": 1,
+          "address_space_bytes": 2147483648,
+          "wall_seconds": 180
+        },
+        "scope": "mechanical tests and required existing controls; no training benchmark"
+      },
+      "xml_sha256": "82bb8387db58f517a18e9a1e95ea6310e098785d45ea159f87bc44bd0345599a"
+    },
+    {
+      "name": "legacy-e",
+      "tests": 101,
+      "execution": {
+        "test_paths": [
+          "tests/autogrowth/test_live_trial_experiment.py",
+          "tests/autogrowth/test_residual_shadow.py",
+          "tests/autogrowth/test_residual_shadow_experiment.py",
+          "tests/autogrowth/test_mate_one_attribution.py",
+          "tests/autogrowth/test_mate_one_coach.py",
+          "tests/autogrowth/test_native_local_interaction_v27.py",
+          "tests/test_intrinsic_credit.py",
+          "libs/recon-lite/tests/test_formal_choice.py",
+          "tests/test_fanin_terminals.py"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 57.73012261099939,
+        "peak_rss_kib": 74520,
+        "limits": {
+          "cores": 1,
+          "address_space_bytes": 2147483648,
+          "wall_seconds": 180
+        },
+        "scope": "mechanical tests and required existing controls; no training benchmark"
+      },
+      "xml_sha256": "da36e2ec38ee9861a0ed3198b7c6aa407639619acca80140ddd9868073c601f7"
+    }
+  ],
+  "final_runner_schedule_checks": {
+    "tests": 4,
+    "distinct_tests_already_included": true,
+    "execution": {
+      "test_paths": [
+        "tests/autogrowth/test_owner_nomination_runner.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.8741726560001553,
+      "peak_rss_kib": 43956,
+      "limits": {
+        "cores": 1,
+        "address_space_bytes": 2147483648,
+        "wall_seconds": 180
+      },
+      "scope": "mechanical tests and required existing controls; no training benchmark"
+    }
+  },
+  "engineering_calibration": {
+    "scope": "discarded engineering calibration; planted routing; no actors reused",
+    "training_actions": 32,
+    "evaluation_actions": 32,
+    "four_owner_action_seconds": 0.2580484363437563,
+    "projection_3936_actions_seconds": 1015.6786454490248,
+    "structure": {
+      "owners": 4,
+      "effective_parameters": 36,
+      "physical_nodes": 379,
+      "expression_definitions": 77,
+      "depth": 3,
+      "splits": 3,
+      "pruned": 0,
+      "births_after_conversion": 0,
+      "owner_visits": {
+        "0": 32,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0
+      },
+      "exploration_rng_digest": "82886a28390a34e99eaa786aff8fed92a50c36a877446a65345b80b92b515070"
+    },
+    "peak_rss_kib": 32000
+  },
+  "implementation_commit": "e39d332a",
+  "pilot_protocol": "docs/autogrowth/OWNER_NOMINATION_PILOT.md",
+  "note": "Verification scripts are laboratory controls; no proposed topology or target labels entered training."
+}

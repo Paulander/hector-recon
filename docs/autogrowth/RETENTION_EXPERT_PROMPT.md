@@ -1,8 +1,8 @@
 # Independent expert review: retention in a developing ReCoN
 
 Copy this document into a separate expert instance. It requests analysis, not
-authorization to modify the repository or launch training. The evidence appendix
-will identify the completed retention investigation when available.
+authorization to modify the repository or launch training. The appendices contain
+the completed retention and subsequent feature/credit investigations.
 
 ## Your assignment
 
@@ -275,3 +275,41 @@ and whether generic credit allocation, contextual factoring, internal retention
 or broader training coverage deserves priority instead. Changing eta changes
 future actions and possibly topology; fixed-log replay would not be its valid
 on-policy control. A new sampling pool must preserve the original orbit partition.
+
+## Additional mechanism inspection — 2026-09-09
+
+Read `M1_CORNER_MECHANISM.md` and its linked JSON on the work branch. There is no
+higher corner-goal selector. Multiple broad and conditional cues coexist and
+sum support directly for each candidate action; the choice root selects a move.
+Both rank-alignment condition 23 and file-alignment condition 93 survived the
+loss. Their weights both increased (.72784 -> .85436 and .06513 -> .46536).
+
+The first known pair crossing, actual rewarded event 4,378, increased six active
+conditions by .06978088776 each. Four of those confirm for the other position's
+wrong action and not its mating action, changing its margin by -.2791235510.
+There were no births or retirements at that step. Block reconstruction matched
+saved weights within 2.23e-16.
+
+All 56,312 vectors across eight symmetries of the examined 384 boards obey the
+adapter's transformation law. Absolute distances give identical features under
+axis-preserving reflections; swapping the axes permutes paired coordinates.
+No raw vector has conflicting mate/nonmate labels on this sample. Both corner
+edge flags are true. Random coordinate proposal has equal file/rank marginals,
+but does not tie symmetric weights; few live definitions have their exact
+axis-swapped definition present. Broad binary alignment predicates also duplicate
+integer-distance zero facts, which may affect proposal and credit multiplicity.
+
+New distinction: the FINAL seed-9 graph has two complete gate-activation patterns
+with opposite reward labels across different boards, although raw vectors differ.
+One pattern contains both mating and nonmating TRAIN actions. A single fixed score
+cannot equal +1 and -1 for the same gate vector. Yet perfect per-board ranking
+remains feasible because each board supplies a different alternative set.
+Earlier inspected graphs did not have these collisions. This is not proof that
+the reward-regression optimum must misrank the four losses, nor their isolated
+cause. Examine whether this objective/representation distinction should change
+the next experiment after the already authorized learning-rate comparison.
+
+The .3/.1 comparison keeps the existing boundary and uses actual new play from
+step 4,096. It cannot remove gate aliasing through weight updates alone; future
+ordinary growth can still change the representation. No condition IDs, laboratory
+labels or corner-specific repair rules may enter training.

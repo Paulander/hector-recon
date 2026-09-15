@@ -1,0 +1,212 @@
+{
+  "recorded_on": "2026-09-14",
+  "status": "mechanical_checkpoint_verified",
+  "branch": "codex/context-owned-decisions",
+  "base_commit": "1212bdc4",
+  "passed_distinct": 256,
+  "new_ownership_tests": 15,
+  "required_paths_covered": true,
+  "completed_test_batches": [
+    {
+      "test_paths": [
+        "tests/autogrowth/test_context_decision.py",
+        "tests/autogrowth/test_recursive_context.py",
+        "tests/autogrowth/test_recursive_retention.py",
+        "tests/autogrowth/test_recursive_budget.py",
+        "tests/autogrowth/test_terminal_development.py",
+        "libs/recon-lite/tests/test_formal_choice.py",
+        "tests/test_fanin_terminals.py"
+      ],
+      "elapsed_seconds": 56.99189459899935,
+      "peak_rss_kib": 69132,
+      "exit_code": 0,
+      "scope": "mechanical fixtures and unchanged controls; no training benchmark",
+      "limits": {
+        "cores": 1,
+        "address_space_bytes": 2147483648,
+        "wall_seconds": 180
+      },
+      "passed": 58
+    },
+    {
+      "test_paths": [
+        "tests/autogrowth/test_m1_retention.py",
+        "tests/autogrowth/test_m1_exploration.py",
+        "tests/autogrowth/test_m1_failure_patterns.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 22.25761255800171,
+      "peak_rss_kib": 84516,
+      "limits": {
+        "cores": 1,
+        "address_space_bytes": 2147483648,
+        "wall_seconds": 180
+      },
+      "scope": "mechanical tests and required existing controls; no training benchmark",
+      "passed": 22
+    },
+    {
+      "test_paths": [
+        "tests/autogrowth/test_m1_long_play.py",
+        "tests/autogrowth/test_m1_capacity_replication.py",
+        "tests/autogrowth/test_m1_representation.py",
+        "tests/autogrowth/test_m1_ranking_certificate.py",
+        "tests/autogrowth/test_m1_capacity.py",
+        "tests/autogrowth/test_ordinary_m1.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 85.31476331900012,
+      "peak_rss_kib": 80332,
+      "limits": {
+        "cores": 1,
+        "address_space_bytes": 2147483648,
+        "wall_seconds": 180
+      },
+      "scope": "mechanical tests and required existing controls; no training benchmark",
+      "passed": 30
+    },
+    {
+      "test_paths": [
+        "tests/autogrowth/test_fixed_topology_recovery.py",
+        "tests/autogrowth/test_fixed_topology_recovery_experiment.py",
+        "tests/autogrowth/test_trial_recovery_experiment.py",
+        "tests/autogrowth/test_trial_usefulness.py",
+        "tests/autogrowth/test_trial_usefulness_experiment.py",
+        "tests/autogrowth/test_live_trial.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 172.24390653400042,
+      "peak_rss_kib": 47468,
+      "limits": {
+        "cores": 1,
+        "address_space_bytes": 2147483648,
+        "wall_seconds": 180
+      },
+      "scope": "mechanical tests and required existing controls; no training benchmark",
+      "passed": 53
+    },
+    {
+      "test_paths": [
+        "tests/autogrowth/test_live_trial_experiment.py",
+        "tests/autogrowth/test_residual_shadow.py",
+        "tests/autogrowth/test_residual_shadow_experiment.py",
+        "tests/autogrowth/test_mate_one_attribution.py",
+        "tests/autogrowth/test_mate_one_coach.py",
+        "tests/autogrowth/test_native_local_interaction_v27.py",
+        "tests/test_intrinsic_credit.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 58.3947881109998,
+      "peak_rss_kib": 74512,
+      "limits": {
+        "cores": 1,
+        "address_space_bytes": 2147483648,
+        "wall_seconds": 180
+      },
+      "scope": "mechanical tests and required existing controls; no training benchmark",
+      "passed": 93
+    }
+  ],
+  "peak_test_process_rss_kib": 84516,
+  "rss_scope": "individual test process; not aggregate RSS of multiprocessing children",
+  "completed_batches_elapsed_seconds": 395.2029651210014,
+  "uncompleted_verification_attempts": [
+    {
+      "scope": "initial broad legacy tests",
+      "status": "terminated_by_175_second_worker_alarm",
+      "exit_code": 242,
+      "launcher_issue": "pytest.main from stdin cannot supply an importable __main__ to legacy multiprocessing-spawn tests",
+      "completed_case_count": null
+    },
+    {
+      "scope": "oversized last legacy file batch",
+      "status": "terminated_by_175_second_worker_alarm",
+      "exit_code": 242,
+      "completed_case_count": null,
+      "assertion_failures_reported_before_stop": false
+    }
+  ],
+  "fixture_costs": {
+    "scope": "planted mechanical fixture, no training",
+    "source": {
+      "effective_parameters": 4,
+      "physical_nodes": 27,
+      "expression_definitions": 5,
+      "owners": 1
+    },
+    "converted": {
+      "effective_parameters": 4,
+      "physical_nodes": 31,
+      "expression_definitions": 6,
+      "owners": 1
+    },
+    "one_split": {
+      "effective_parameters": 8,
+      "physical_nodes": 67,
+      "expression_definitions": 16,
+      "owners": 2
+    },
+    "nested_split": {
+      "effective_parameters": 12,
+      "physical_nodes": 109,
+      "expression_definitions": 27,
+      "owners": 3
+    }
+  },
+  "verified_properties": [
+    "source clone preservation",
+    "all fixture action scores preserved at conversion and nested forks",
+    "inactive context scores and parameters unchanged after actual active-context feedback",
+    "active-context acquisition remains possible",
+    "original active credit normalization",
+    "restored continuation and weight alias ownership",
+    "leaf terminals and single-parent SCRIPTs",
+    "binding-invariant routing validation before execution",
+    "atomic split-budget rejection",
+    "formal execution at depth four"
+  ],
+  "limitations": [
+    "routes and source scores planted in fixtures",
+    "fixed owned topology between explicit splits",
+    "no automatic route nomination, birth/pruning, freezing/reopening, or common-trunk factoring",
+    "not a comparative training benchmark or chess performance result"
+  ],
+  "next_checkpoint": "experience-driven owner nomination and local lifecycle",
+  "source_sha256": {
+    "libs/recon-lite/src/recon_lite/formal_engine.py": "0fb872ec58e0dbca8dd26311f2ab679db9917f8d8fc367b36349a010a81aaacd",
+    "libs/recon-lite/src/recon_lite/graph.py": "98784171b2eda47c20c01362e5ef9fe7e925bcd894034d07524a0dcbbb4ec0cf",
+    "libs/recon-lite/tests/test_formal_choice.py": "1a361222f779b94415ef86b36343269dc417e7af3dd3cfc0c9f9c1954b728611",
+    "scripts/autogrowth/guard_recursive_budget.py": "658ef4209ee91a8c572c66fb5e106bb42e63fe9b38f40b410411239223722105",
+    "src/recon_lite_hector/learning/context_decision.py": "5bed88ad545473d57098549abbda3eb1f43edf428ecdbf8425fea65f5667c698",
+    "src/recon_lite_hector/learning/recursive_context.py": "fcb0b9b59e6023886124cefb375a9e73cc06c870f0a779cb137eb687b04eb6a7",
+    "src/recon_lite_hector/learning/terminal_development.py": "2a0b8a60d0aa4ac65edf2a89ddffe882559565ed34741832892d04de1282b7cf",
+    "tests/autogrowth/test_context_decision.py": "26932340d9e60598a4098c012017bab00a57afc93e5e5c7f255899a95700fc5a",
+    "tests/autogrowth/test_fixed_topology_recovery.py": "3140064ecd2b8dba83a9baeb5fdf09c0b47f8fb46b98029468e766fa227e9246",
+    "tests/autogrowth/test_fixed_topology_recovery_experiment.py": "40725d3c603138821191530a8927d49515b2cb8e9883d8d5379ef9d09af5d2cc",
+    "tests/autogrowth/test_live_trial.py": "311fe532b92a2b1aef62abdc4c20b30ccc39a6107d4ab3601c1e9fe32c456168",
+    "tests/autogrowth/test_live_trial_experiment.py": "58e177e096569eda767c9a3ae53b3032c4e8da80d6495b842732b9e266fdd5d2",
+    "tests/autogrowth/test_m1_capacity.py": "a9b011044b78a4c26f5cb8ceaa0fb01b6cc534f28ddee564d83c3ab76bf22e7c",
+    "tests/autogrowth/test_m1_capacity_replication.py": "2e026ff8ae600a3b27476af2eda017908c51f404771a5e49c0628b522f054c23",
+    "tests/autogrowth/test_m1_exploration.py": "a43c40d0f07445c53f4c37dff40397116d9cb54e0a9771b5ac455ff4d8651479",
+    "tests/autogrowth/test_m1_failure_patterns.py": "31504a43a91aa75c25911471e0752490f95cbb262958afeae8d969c27644b6ed",
+    "tests/autogrowth/test_m1_long_play.py": "04badcd212411978855892cd62d1bd13273183ec022d86bbf3b84d89ef0aada2",
+    "tests/autogrowth/test_m1_ranking_certificate.py": "fb50938166fd0cf4ab91e2534015f7d194832bd3e5d5334d1d23fe84530e35d1",
+    "tests/autogrowth/test_m1_representation.py": "178436ebfc9fbac55835cf1a51d5ebb945d9fa32e1459bea71e9e466c809b725",
+    "tests/autogrowth/test_m1_retention.py": "39b9261d1cd8f7538ac2be81d1310e0bd33d32480f37cd20d459df56448eb587",
+    "tests/autogrowth/test_mate_one_attribution.py": "ffcbef6bd4473def663ee4ec9606894d7434ab79e43054ceae915812554f2485",
+    "tests/autogrowth/test_mate_one_coach.py": "f33472f94ba6df39c852d4252e3ae236c601df9ad16886b67521a46957a2d56b",
+    "tests/autogrowth/test_native_local_interaction_v27.py": "26fc301dc66b26622210834c3920a228670b1995abe520b27c11dfc2d66ac111",
+    "tests/autogrowth/test_ordinary_m1.py": "60a58ae3549f7a442f22e9a97d15aca5e2179a8fa0f6703a4e3a83c2cbfe2a50",
+    "tests/autogrowth/test_recursive_budget.py": "121991fb37d632c99ad6b3d832351f639089fb825135ba68e7c2c0ca72e7b9ba",
+    "tests/autogrowth/test_recursive_context.py": "b4b4a165d630f1aebd810b8a891ffa1d1d441794ea48ebe15dfa4332f298f3bd",
+    "tests/autogrowth/test_recursive_retention.py": "5f6f7aac5be884911f8653d0a23b587f3ddf1a9e9b42e711aae836f4c376f6bf",
+    "tests/autogrowth/test_residual_shadow.py": "0759f5922d366eeb2294f144d6316c9e7bdb118361d1b5f68f18d3ac3e5198dd",
+    "tests/autogrowth/test_residual_shadow_experiment.py": "07198a2c68f0379d367d3aae8d224d5da892ec2598799a0a64e1c46dc14f9a62",
+    "tests/autogrowth/test_terminal_development.py": "ef04edd81244b1b27db1c4318cc70b64e291ad61a705ab06444c1ada0e068d0c",
+    "tests/autogrowth/test_trial_recovery_experiment.py": "af8590a20aeaa648945d11dbd7260c4102e3e583601e2c77c81260b8a002951e",
+    "tests/autogrowth/test_trial_usefulness.py": "92d99e75591d4f2135518677ea8fea727c38398c7ea95c7abe513d895f1b3826",
+    "tests/autogrowth/test_trial_usefulness_experiment.py": "c29e7f185bd08029c6044fe935d03e895cd1f26cf2b2c7b88ae3de7ced4e141c",
+    "tests/test_fanin_terminals.py": "ac92d94ee012782ee56820ef49775b2dee2783d24b2eafe967348c1f8358097e",
+    "tests/test_intrinsic_credit.py": "8558f29a5931f325e5872e6e8cdb18fbc85deea667fa96a6a17ca0d5adade182"
+  }
+}

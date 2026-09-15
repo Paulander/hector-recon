@@ -1,0 +1,163 @@
+{
+  "status": "user_reported_pending_archive_verification",
+  "source": "User pasted local Mac summary in this conversation",
+  "seeds": [
+    7,
+    8,
+    9
+  ],
+  "arms": [
+    {
+      "seed": 7,
+      "cap": 6,
+      "start_correct": 12,
+      "final_correct": 16,
+      "gained_B_rows": [
+        2,
+        3,
+        10,
+        11
+      ],
+      "temporarily_lost_A_rows": [
+        4
+      ],
+      "all_listed_losses_recovered": true,
+      "earlier_recovery_than_control_blocks": null,
+      "splits": 6,
+      "max_depth": 3,
+      "max_generation": 1,
+      "physical_nodes": 161
+    },
+    {
+      "seed": 7,
+      "cap": 12,
+      "start_correct": 12,
+      "final_correct": 16,
+      "gained_B_rows": [
+        2,
+        3,
+        10,
+        11
+      ],
+      "temporarily_lost_A_rows": [
+        4
+      ],
+      "all_listed_losses_recovered": true,
+      "earlier_recovery_than_control_blocks": null,
+      "splits": 12,
+      "max_depth": 4,
+      "max_generation": 2,
+      "physical_nodes": 219
+    },
+    {
+      "seed": 8,
+      "cap": 6,
+      "start_correct": 12,
+      "final_correct": 16,
+      "gained_B_rows": [
+        6,
+        7,
+        10,
+        11
+      ],
+      "temporarily_lost_A_rows": [
+        8,
+        9
+      ],
+      "all_listed_losses_recovered": true,
+      "earlier_recovery_than_control_blocks": null,
+      "splits": 6,
+      "max_depth": 3,
+      "max_generation": 2,
+      "physical_nodes": 135
+    },
+    {
+      "seed": 8,
+      "cap": 12,
+      "start_correct": 12,
+      "final_correct": 16,
+      "gained_B_rows": [
+        6,
+        7,
+        10,
+        11
+      ],
+      "temporarily_lost_A_rows": [
+        8,
+        9
+      ],
+      "all_listed_losses_recovered": true,
+      "earlier_recovery_than_control_blocks": 1,
+      "splits": 12,
+      "max_depth": 3,
+      "max_generation": 2,
+      "physical_nodes": 205
+    },
+    {
+      "seed": 9,
+      "cap": 6,
+      "start_correct": 13,
+      "final_correct": 16,
+      "gained_B_rows": [
+        6,
+        10,
+        11
+      ],
+      "temporarily_lost_A_rows": [],
+      "all_listed_losses_recovered": true,
+      "earlier_recovery_than_control_blocks": null,
+      "splits": 6,
+      "max_depth": 3,
+      "max_generation": 2,
+      "physical_nodes": 129
+    },
+    {
+      "seed": 9,
+      "cap": 12,
+      "start_correct": 13,
+      "final_correct": 16,
+      "gained_B_rows": [
+        6,
+        10,
+        11
+      ],
+      "temporarily_lost_A_rows": [],
+      "all_listed_losses_recovered": true,
+      "earlier_recovery_than_control_blocks": null,
+      "splits": 12,
+      "max_depth": 3,
+      "max_generation": 2,
+      "physical_nodes": 159
+    }
+  ],
+  "reported_execution": {
+    "focused_tests_passed": 20,
+    "training_records": 7680,
+    "blocks": 60,
+    "checkpoints": 75,
+    "elapsed_seconds": 124.96,
+    "max_rss_kib": 47040,
+    "workers": 1,
+    "numeric_library_threads": 1,
+    "authoritative_files_verified_before_and_after": 73,
+    "frozen_verification": "reported matched exactly",
+    "archive_integrity": "reported passed unzip -t",
+    "archive_evidence_files": 463
+  },
+  "scheduled_evaluation_actions_independently_checked": false,
+  "earlier_attempt": {
+    "description": "reported initial preflight failure",
+    "cause": null,
+    "actual_training_actions": null
+  },
+  "archives": [
+    {
+      "name": "HECTOR_SPLIT_BUDGET_MAC_20260914_seed789_COMPLETE_NO_VENV.zip",
+      "sha256": "bd27b87f70c98f30446b408388d485af6e814a0e91d9e708daa808c2079ac1cb"
+    },
+    {
+      "name": "HECTOR_SPLIT_BUDGET_MAC_20260914_seed789_INCOMPLETE.zip",
+      "sha256": "2e708607aa9c7e070f358c62dda600c50c8ae7ebbdd8d7957303beac16fa1212"
+    }
+  ]
+}
