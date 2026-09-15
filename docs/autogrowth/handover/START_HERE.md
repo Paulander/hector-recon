@@ -1,5 +1,15 @@
 # HECTOR handover: start here
 
+## Current status: recovery complete
+
+The authorized retry has finished; no training or frozen verification remains.
+Read [completed results](../OWNER_TRIAL_LEARNING_RESULTS.md) and
+[final recovery record](LIVE_RECOVERY.md) first. All nine arms reached1,920,
+all279 checkpoints verified. Scores: current16/12/12, original11/12/10,
+revised14/12/12. Keep current as reference; main unchanged. Do not resume or
+extend this closed cohort. The preparation-time and interruption descriptions
+below are preserved historical context, not current work instructions.
+
 Prepared 2026-09-15 at Oskar Paulander's explicit request, before retrying an
 interrupted experiment. These documents are intended to let a new instance work
 without the previous conversation. Read this file, RESEARCH_AND_ARCHITECTURE.md,
@@ -39,7 +49,7 @@ one accepted trial is permanent knowledge. Do not send emails/messages to others
 - Main is intentionally unchanged at `2aa1ce47a6a93e2571aaa0b02101e9543fe94955`.
 - Local checkout at preparation: `/workspace/scratch/42ed9c9c2a4a/hector-recursive`.
 - Conversation scratch directory: `/workspace/scratch/2d2531e3ef96`.
-- Last published status: remote `af7ed03fa76990e7bf67593f912dcd2e82aa1a06`,
+- Historical interrupted-status publication: remote `af7ed03fa76990e7bf67593f912dcd2e82aa1a06`,
   local `101027614baa6b62013522317a19273d6fee1a9f`, exact common tree
   `ac8c520158ccfb1c8717d21d5287ddc113895304`.
 - Scientific source pin: remote `5277b06cc527cadaef20d818d70fb2d66db5409b`,

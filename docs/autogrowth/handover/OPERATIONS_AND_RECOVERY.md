@@ -1,5 +1,11 @@
 # HECTOR operations and crash recovery
 
+Current state: **COMPLETE**. See LIVE_RECOVERY.md for the final archive (version3)
+and ../OWNER_TRIAL_LEARNING_RESULTS.md for results. The commands below document
+recovery mechanics and history; there is no remaining step/verify work to run.
+In particular, do not execute another frozen verification. Restore/archive checks
+and no-play analysis may inspect existing evidence without training.
+
 ## Inspect before doing anything
 
 The user authorized handover preparation followed by the specific checkpoint
@@ -187,7 +193,7 @@ execution explicitly. Offline arithmetic/capacity inspection uses no environment
 
 After the wrapper completes:
 
-- `summarize_owner_trial_learning.py RUN --output REPORT` computes acquisition,
+- `summarize_owner_trial_retry.py RUN --output REPORT` computes acquisition,
   retained/lost/recovered rows, trial histories and storage counts.
 - `audit_owner_trial_learning.py RUN --output AUDIT` checks all formal raw flags,
   assignment RNG draws, owner-local evidence and trial outcomes/readiness.

@@ -162,12 +162,12 @@ The revised-vs-original trial comparison keeps that schedule the same.
 | Fresh starts, seeds12/13/14 | random/current15/12/14; residual/current14/14/16 | Ranked seed14 retained16 from768; incomplete reliability across seeds |
 | Four/eight owners, seeds15/16/17 | four14/13/15; eight13/16/14 | More capacity won one pair and lost two; many early A-only splits, fewer visits per child |
 | First combined trial, seeds18/19/20 | current16/14/14; trial12/12/12 | Combined rule lost all pairs;2 accepted,12 retired,2 pending trials |
-| Learning-before-assessment, seeds21/22/23 | Interrupted after seed21 controls16/11; revised13 at1536 | Early-negative candidate later accepted, but final comparison unresolved |
+| Learning-before-assessment, seeds21/22/23, recovered | current16/12/12; original11/12/10; revised14/12/12 | Revision improves original trial but not current; five accepted/four pending; all revised committed graphs lack16 capacity |
 
 For exact endpoints, histories, source identities, counts and costs use the
 corresponding reports, not this condensed table. Earlier cohorts are closed;
-only the newly user-authorized recovery of the interrupted 21/22/23 experiment
-is active. Main is not a scientific-promotion shortcut.
+the user-authorized recovery of21/22/23 is also complete and closed. See
+../OWNER_TRIAL_LEARNING_RESULTS.md. Main remains unchanged.
 
 Important prior failures: ranked seed12 reached15 but ended14; row11's own
 feedback improved its correct-action margin by .073 while A examples sharing
@@ -187,7 +187,9 @@ after viewing their performance.
 
 ## What to examine after recovery
 
-First finish the unchanged comparison and compare every seed, retention and cost.
+The unchanged comparison and its no-play audits are complete. The final report
+records retention, cost, capacity and the accepted noise partition. Before any
+new experiment, diagnose those saved histories; no automatic extension is authorized.
 For failures distinguish actual parameter interference from missing representational
 capacity, no discovery, late readiness, unsupported review, pending allocation,
 and retired useful structure. Do not infer the cause from node counts alone.

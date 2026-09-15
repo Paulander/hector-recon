@@ -1,5 +1,16 @@
 # Context-owned decisions: plan and checkpoints
 
+COMPLETE recovery, 2026-09-15: [OWNER_TRIAL_LEARNING_RESULTS.md](OWNER_TRIAL_LEARNING_RESULTS.md).
+Handover was published first; the unchanged seeds21/22/23 experiment then finished.
+Current16/12/12, original trial11/12/10, learning-trial14/12/12 (40/33/38 of48).
+The revision recovers some original-trial loss but does not beat current or solve
+retention. Five revised splits accepted, four pending; no second review completed.
+Seed23 accepts a noise-bit partition. All three revised committed endpoints lack
+joint16 capacity. All270 blocks/279 checkpoints/17,280 training/4,464 evaluation/
+4,464 frozen actions verify;39 repeated physical actions are separately accounted.
+The cohort is closed, no workers remain, no automatic new play or learner change.
+Keep current as reference and main unchanged. Older entries below are historical.
+
 Latest status: [OWNER_TRIAL_LEARNING_STATUS.md](OWNER_TRIAL_LEARNING_STATUS.md).
 The revision is implemented and tested, but its execution session disappeared
 mid-study. Seed21 current/trial completed16/11; revised13 at its1,536 checkpoint,

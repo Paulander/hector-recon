@@ -1,0 +1,89 @@
+{
+  "arms": [
+    {
+      "actions": 1920,
+      "all_assignment_draws_match_independent_rng": true,
+      "all_formal_probe_flags_match_declared_measurements": true,
+      "all_owner_exposure_and_residual_histories_match": true,
+      "all_trial_outcomes_and_child_exposures_match": true,
+      "role": "current",
+      "seed": 21
+    },
+    {
+      "actions": 1920,
+      "all_assignment_draws_match_independent_rng": true,
+      "all_formal_probe_flags_match_declared_measurements": true,
+      "all_owner_exposure_and_residual_histories_match": true,
+      "all_trial_outcomes_and_child_exposures_match": true,
+      "role": "trial",
+      "seed": 21
+    },
+    {
+      "actions": 1920,
+      "all_assignment_draws_match_independent_rng": true,
+      "all_formal_probe_flags_match_declared_measurements": true,
+      "all_owner_exposure_and_residual_histories_match": true,
+      "all_trial_outcomes_and_child_exposures_match": true,
+      "role": "learning-trial",
+      "seed": 21
+    },
+    {
+      "actions": 1920,
+      "all_assignment_draws_match_independent_rng": true,
+      "all_formal_probe_flags_match_declared_measurements": true,
+      "all_owner_exposure_and_residual_histories_match": true,
+      "all_trial_outcomes_and_child_exposures_match": true,
+      "role": "current",
+      "seed": 22
+    },
+    {
+      "actions": 1920,
+      "all_assignment_draws_match_independent_rng": true,
+      "all_formal_probe_flags_match_declared_measurements": true,
+      "all_owner_exposure_and_residual_histories_match": true,
+      "all_trial_outcomes_and_child_exposures_match": true,
+      "role": "trial",
+      "seed": 22
+    },
+    {
+      "actions": 1920,
+      "all_assignment_draws_match_independent_rng": true,
+      "all_formal_probe_flags_match_declared_measurements": true,
+      "all_owner_exposure_and_residual_histories_match": true,
+      "all_trial_outcomes_and_child_exposures_match": true,
+      "role": "learning-trial",
+      "seed": 22
+    },
+    {
+      "actions": 1920,
+      "all_assignment_draws_match_independent_rng": true,
+      "all_formal_probe_flags_match_declared_measurements": true,
+      "all_owner_exposure_and_residual_histories_match": true,
+      "all_trial_outcomes_and_child_exposures_match": true,
+      "role": "current",
+      "seed": 23
+    },
+    {
+      "actions": 1920,
+      "all_assignment_draws_match_independent_rng": true,
+      "all_formal_probe_flags_match_declared_measurements": true,
+      "all_owner_exposure_and_residual_histories_match": true,
+      "all_trial_outcomes_and_child_exposures_match": true,
+      "role": "trial",
+      "seed": 23
+    },
+    {
+      "actions": 1920,
+      "all_assignment_draws_match_independent_rng": true,
+      "all_formal_probe_flags_match_declared_measurements": true,
+      "all_owner_exposure_and_residual_histories_match": true,
+      "all_trial_outcomes_and_child_exposures_match": true,
+      "role": "learning-trial",
+      "seed": 23
+    }
+  ],
+  "new_environment_actions": 0,
+  "source_files": 88,
+  "status": "verified",
+  "training_actions": 17280
+}

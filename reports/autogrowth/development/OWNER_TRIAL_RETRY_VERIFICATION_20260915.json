@@ -1,0 +1,82 @@
+{
+  "all_retry_units_normal_exit": true,
+  "arithmetic_choices_verified": 4464,
+  "capacity": {
+    "exact_infeasibility_certificates": 8,
+    "exact_rational_feasible_witnesses": 1,
+    "installed": false
+  },
+  "failed_units": [],
+  "final_archive": {
+    "bytes": 36276210,
+    "coverage_training_actions": 17280,
+    "current_version_number": 3,
+    "file_id": "file_0000000040b08210900c4d7ad39828be",
+    "library_file_id": "libfile_594e815364a881918743618e665c0e4e",
+    "members": 36641,
+    "path": "/workspace/scratch/2d2531e3ef96/HECTOR_OWNER_TRIAL_RETRY_20260915.zip",
+    "payloads_verified": 36640,
+    "sealed_training_actions": 17280,
+    "sha256": "b1c09311fc891c8f0a5b898b924f4b9cf4871d7f52a9e09e51d5d1878de339ec",
+    "status": "complete"
+  },
+  "known_tail_records_identical": 39,
+  "logical_counts": {
+    "blocks": 270,
+    "checkpoints": 279,
+    "evaluation": 4464,
+    "training": 17280,
+    "verification_actions": 4464
+  },
+  "new_no_play_audit_environment_actions": 0,
+  "original_runtime_files_unchanged": 86,
+  "pending_units": [],
+  "preflight": {
+    "handover_published_before_retry": "48e184e33df7307b5abc9926636b93b8456a75d1",
+    "junit_sha256": "2caf6a4b3f7c8e9699df7bc45c65ed64cdf3e19e538102bac40f4531ae578137",
+    "new_mechanical_evaluation_actions": 48,
+    "new_mechanical_training_actions": 200,
+    "new_recovery_tests": 3,
+    "original_runtime_files_unchanged": 86,
+    "status": "passed",
+    "study_started": false,
+    "unchanged_learner_preflight_evidence": "OWNER_TRIAL_LEARNING_PREFLIGHT_20260915.json:35 distinct checks;5 new lifecycle checks repeated on final original source"
+  },
+  "recovery": {
+    "known_repeated_training": 39,
+    "new_execution": {
+      "evaluation": 3072,
+      "training": 11904,
+      "verification_actions": 4464
+    },
+    "original_status": "incomplete",
+    "original_unrecorded_inflight_execution_unknown": true,
+    "recorded_physical_actions_both_attempts": 26247,
+    "reused_evaluation": 1392,
+    "reused_training": 5376
+  },
+  "retry_source_files_verified": 88,
+  "runtime": {
+    "elapsed_seconds": 1245.2958962539997,
+    "elapsed_seconds_scope": "Sum of retry unit wall time only; excludes reused work and orchestration pauses.",
+    "max_rss_kib": 47468,
+    "max_rss_scope": "Maximum observed start/training/frozen-verification unit RSS; excludes initialization/final report assembly."
+  },
+  "sha256": {
+    "reports/autogrowth/development/OWNER_TRIAL_RETRY_20260915.json": "f1f73f1453697aba5b31787fb6a35cb0f78b38d4d72465dfbf013558aa3a5201",
+    "reports/autogrowth/development/OWNER_TRIAL_RETRY_AUDIT_20260915.json": "d7d141907856c0f2a4ca5fc8534649bc0088dabac4236cb148d0b2e5faf0d404",
+    "reports/autogrowth/development/OWNER_TRIAL_RETRY_CAPACITY_20260915.json": "1c0e22d56910a39cf768366ee5ea681bec7586586924cd16cba718b4cda36d83",
+    "reports/autogrowth/development/OWNER_TRIAL_RETRY_PREFLIGHT_20260915.json": "5b26fd3463ba23805958595fbf5f6b5c4a0fd0ae11f39b0975ef17be3c33b85a",
+    "scripts/autogrowth/summarize_owner_trial_retry.py": "5b96381db22c7a43ffa09b7b9ba2794f6559ca756fdb410b342233f9d2c0069f",
+    "snapshots/autogrowth/owner-trial-learning-retry-20260915/result.json": "4a44047cc2bf8398efe3493129e4fb9378cf21c45dfcfbafe1a0a0ae54574a08",
+    "snapshots/autogrowth/owner-trial-learning-retry-20260915/source.json": "2208cf9ef503800266ba84fc676718e7de510e3a62f8ed65e7301d6bb55915ac"
+  },
+  "source_pins": {
+    "handover_remote_commit": "48e184e33df7307b5abc9926636b93b8456a75d1",
+    "original_source_remote_commit": "5277b06cc527cadaef20d818d70fb2d66db5409b",
+    "retry_source_local_commit": "aa6ef44711ba00876dc99b92807ac4c12812299c",
+    "retry_source_remote_commit": "cebb51bd4e5682ce2f4a6b2e875b1628b3bdd63e",
+    "retry_source_tree": "1051d2273833040eb417204f1baadc1085f2cc34"
+  },
+  "status": "complete and verified"
+}

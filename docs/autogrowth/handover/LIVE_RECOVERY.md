@@ -1,40 +1,60 @@
-# Recovery progress and durable archive
+# Recovery complete: final durable record
 
-This file supplements START_HERE.md. Check raw retry-control/status.json for
-newer progress; this is a durable publication checkpoint, not a live heartbeat.
+Completed2026-09-15. All nine arms reached1,920 actions. No worker, pending unit
+or failed unit remains. All270 blocks and279 checkpoints verify, including all
+4,464 frozen reproductions. Do not resume this closed cohort or run verification
+again. See ../OWNER_TRIAL_LEARNING_RESULTS.md for interpretation and exact tables.
 
-The handover was published before retry at48e184e33df7307b5abc9926636b93b8456a75d1.
-The tested recovery wrapper/source is remotecebb51bd4e5682ce2f4a6b2e875b1628b3bdd63e,
-localaa6ef44711ba00876dc99b92807ac4c12812299c, common tree
-1051d2273833040eb417204f1baadc1085f2cc34. All86 original runtime files stayed
-unchanged; the recovery snapshot additionally hashes the wrapper and retry protocol.
+| Seed | Current | Original trial | Learning-trial |
+| --- | --- | --- | --- |
+| 21 | 16/16 | 11/16 | 14/16 |
+| 22 | 12/16 | 12/16 | 12/16 |
+| 23 | 12/16 | 10/16 | 12/16 |
+| Total | 40/48 | 33/48 | 38/48 |
 
-The retry initialized successfully, reusing84 verified sealed blocks and87
-checkpoints. All39 original uncheckpointed actual executions were reexecuted
-against the real environment and all complete records matched exactly.
-Seed21 is now complete: current16/16, original trial11/16, revised14/16 at1920.
-Seed22 current is also complete at12/16. Its two trial arms and seed23 were still
-pending at this publication point. Frozen verification has not started yet.
-Do not mistake these statements for final cohort results.
+Handover publication preceded retry implementation/play:
+remote48e184e33df7307b5abc9926636b93b8456a75d1.
+Retry source remotecebb51bd4e5682ce2f4a6b2e875b1628b3bdd63e,
+localaa6ef44711ba00876dc99b92807ac4c12812299c,
+common tree1051d2273833040eb417204f1baadc1085f2cc34.
+All86 original runtime files remain unchanged; all88 retry source hashes match.
 
-A verified archive containing all three completed seed21 trajectories was saved:
+## Counts and caveats
+
+The logical study has17,280 training,4,464 scheduled evaluation and4,464 frozen
+reproduction actions. Reused:5,376 training/1,392 evaluation. Newly executed in
+retry:11,904 training/3,072 evaluation/4,464 frozen. All39 known uncheckpointed
+original actions were reexecuted in the environment and matched exactly; they
+were never replayed as logged feedback or double-credited to the learner.
+Known recorded physical work across both attempts is26,247 actions, including
+those39 repetitions. Original unrecorded in-flight work remains unknown.
+
+Independent no-play audits pass: all actual credits, measurement flags, assignment
+RNG, owner/trial histories and4,464 arithmetic choices. Eight exact endpoint
+capacity contradictions and one rational witness; no fitted weights installed.
+All revised endpoints lack16 capacity. Five revised trials accepted, four pending,
+no second review completed; seed23 accepted a noise-bit partition. Current stays
+the reference. No learner retuning or main merge occurred.
+
+## Final archive
 
 - Name: HECTOR_OWNER_TRIAL_RETRY_20260915.zip
 - Library identity: libfile_594e815364a881918743618e665c0e4e
-- File ID at version0: file_0000000079ec81f4a849c0bb53d681ef
-- Version0 size:12,024,530 bytes;11,999 members;11,998 verified payloads
-- Version0 SHA256:81d05130a545506f14074deabfb1d82f2eb910df8a1f6a51a13f14448535ff0a
-- Coverage:5,760 sealed logical training actions; no frozen verification yet
+- Final version:3; file ID:file_0000000040b08210900c4d7ad39828be
+- Size:36,276,210 bytes;36,641 members;36,640 checked payload hashes
+- SHA256:b1c09311fc891c8f0a5b898b924f4b9cf4871d7f52a9e09e51d5d1878de339ec
+- Coverage: complete raw run, final result, all frozen verification receipts,
+  source hashes, reused provenance, environment, unit receipts and recovery JUnit
 - Local path:/workspace/scratch/2d2531e3ef96/HECTOR_OWNER_TRIAL_RETRY_20260915.zip
 
-Later versions will use the same Library identity. Resolve its current version
-before restoring; verify its own SHA256SUMS.json and source pins. The original
-interrupted archive remains separate and unchanged. See OPERATIONS_AND_RECOVERY.md
-for its identity and recovery protocol. Git-backed sources/docs/reports are omitted
-from the raw archives and remain in the private repository.
+Versions0/1/2 were intermediate durable checkpoints. Restore version3 for completed
+evidence. Verify SHA256SUMS.json and source pins. Original interrupted archive
+libfile_1f179c97dea081918faac4def83827cb remains separate and unchanged. Git-backed
+source/docs/reports are omitted from raw ZIP and live in private Paulander/hector-recon,
+branch codex/context-owned-decisions. Main remains
+2aa1ce47a6a93e2571aaa0b02101e9543fe94955. The final report publication is discoverable
+from branch history; its containing commit identifies the final handover version.
 
-Continue the already-authorized remaining units with the retry wrapper. Completed
-worker receipts and sealed block manifests, not tool-session IDs, determine the
-next action. All units have exited normally so far; there has been no score-driven
-extension, learner retuning or main merge. Do not launch the original fresh runner
-on an existing recovery directory or silently repeat an unfinished new unit.
+For a new instance: restore source/docs, read START_HERE.md and final results,
+fetch/verify this archive, then inspect existing reports. There is no authorized
+additional cohort or learner change hidden in the recovery commands.
