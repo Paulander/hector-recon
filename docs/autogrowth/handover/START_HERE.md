@@ -12,6 +12,9 @@ implementation/play at remote48e184e33df7307b5abc9926636b93b8456a75d1.
 For live progress inspect the retry-control files; the status below describes
 the interrupted first attempt, not an assertion that recovery has not advanced.
 
+See [live recovery checkpoint](LIVE_RECOVERY.md) for the retry archive identity
+and latest published progress; raw status can be newer.
+
 ## Current instruction and authority
 
 The latest user instruction is: **“First: prepare documents to hand over to a
