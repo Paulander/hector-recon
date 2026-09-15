@@ -1,5 +1,12 @@
 # Context-owned decisions: plan and checkpoints
 
+Authorized next increment, 2026-09-15: [OWNER_TRIAL_LEARNING.md](OWNER_TRIAL_LEARNING.md).
+Give the same live candidate an exposure-based learning phase before prospective
+assessment, with one preallocated second review. Preserve the current and first
+trial controls. Fresh seeds 21/22/23, three arms, 1,920 actions each; source and
+protocol must be pinned before play. This is a combined lifecycle revision, with
+no threshold tuning, retired-hypothesis revival, external coach or main merge.
+
 Latest integration checkpoint,2026-09-15: [OWNER_SPLIT_TRIAL_RESULTS.md](OWNER_SPLIT_TRIAL_RESULTS.md).
 The user authorized combining owner splits with existing trial-use/lifecycle
 machinery. The fixed seeds18/19/20 comparison completed and lost all three pairs:

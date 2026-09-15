@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "distinct_tests": 35,
+  "new_mechanical_tests": 5,
+  "executions": [
+    {
+      "file": "owner-trial-learning-preflight.xml",
+      "sha256": "2938d1339ee1651e40873ea344ca11bc5f2451ddd2db6c87e684b4bb039558d2",
+      "tests": 35,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "file": "owner-trial-learning-final-preflight.xml",
+      "sha256": "9d15ff37075692d3f3df2770a83ebc001fa86fdd79f3c5b199f1e251e1d48273",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0
+    }
+  ],
+  "final_new_source_rechecked": true,
+  "cohort_started": false,
+  "unchanged_previous_evidence": "OWNER_SPLIT_TRIAL_PREFLIGHT_20260915.json:58 focused checks; earlier runtime control source unchanged"
+}

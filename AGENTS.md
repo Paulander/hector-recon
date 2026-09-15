@@ -1,5 +1,18 @@
 # ReCoN/Hector agent instructions
 
+Current authorization,2026-09-15: read `docs/autogrowth/OWNER_TRIAL_LEARNING.md`.
+The user's latest “Go ahead” authorizes the next learning-before-assessment
+revision:64 real actions each for parent/children,256/512 prospective reviews,
+1536-request lifetime, unchanged gain/support thresholds, same live history.
+One fresh seeds21/22/23 cohort,current/trial/learning-trial,1920 actions each.
+Run mechanical fixtures first and pin source/protocol before study play. Existing
+controls and all earlier CLOSED cohorts stay unchanged. No new play beyond the
+fixed26208 training/evaluation/reproduction actions; no automatic retry/extension.
+All local weight/birth credit continues; no labels, offline repair or macro coach.
+This combines readiness/timing/review changes, not separate causal estimates.
+Final same-owner exclusion remains; live reconsideration is not dormant revival.
+Private work-branch publication remains authorized; main unchanged.
+
 Latest COMPLETE integration result,2026-09-15: read `docs/autogrowth/OWNER_SPLIT_TRIAL_RESULTS.md`.
 Fresh seeds18/19/20 finished current16/14/14 versus trial12/12/12 (44/48 vs36/48).
 The combined owner/TRIAL acceptance rule lost all pairs; keep current4 as reference.
