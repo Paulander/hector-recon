@@ -1,5 +1,12 @@
 # Owners, copies, growth and lifecycle
 
+Latest revision: [OWNER_TRIAL_LEARNING_STATUS.md](OWNER_TRIAL_LEARNING_STATUS.md).
+The separate learning-trial class reuses the existing permission, feedback and
+lifecycle machinery. TRIAL waits for parent/each-child exposure; PROBATION runs
+prospective assessments; MATURE records accepted split evidence while its weights
+remain plastic. The original current/trial classes stay unchanged controls.
+The study was interrupted; do not treat it as proof of improved final learning.
+
 Later experiment: [OWNER_SPLIT_TRIAL_RESULTS.md](OWNER_SPLIT_TRIAL_RESULTS.md)
 records provisional owner trials and their negative first comparison. The diagram
 below remains a faithful explanation of the earlier saved four/eight-owner runs.

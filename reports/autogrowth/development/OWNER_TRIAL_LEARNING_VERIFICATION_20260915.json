@@ -1,0 +1,25 @@
+{
+  "status": "incomplete",
+  "source_files_verified": 86,
+  "unchanged_shared_previous_files": 83,
+  "changed_shared_files": [],
+  "source_local_commit": "51140753e256e8cbd9d50651cc3413aa14355810",
+  "source_remote_commit": "5277b06cc527cadaef20d818d70fb2d66db5409b",
+  "source_tree": "5f1cfbbcf1a5e865a4c81d2adf9e4661817710f7",
+  "archive": {
+    "path": "/workspace/scratch/2d2531e3ef96/HECTOR_OWNER_TRIAL_LEARNING_PARTIAL_20260915.zip",
+    "bytes": 10631144,
+    "sha256": "a4e0b2f9dbc66661f3b11239e7943891385c9ef1efea79f4dcbe37554b92c676",
+    "members": 11269,
+    "payloads_verified": 11268,
+    "source_commit": "5277b06cc527cadaef20d818d70fb2d66db5409b",
+    "source_tree": "5f1cfbbcf1a5e865a4c81d2adf9e4661817710f7",
+    "status": "incomplete"
+  },
+  "archive_saved": true,
+  "distinct_preflight_tests": 35,
+  "new_tests_repeated_on_final_source": 5,
+  "retry_started": false,
+  "new_environment_actions_during_partial_audits": 0,
+  "main_unchanged": "2aa1ce47a6a93e2571aaa0b02101e9543fe94955"
+}

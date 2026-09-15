@@ -1,5 +1,13 @@
 # Context-owned decisions: plan and checkpoints
 
+Latest status: [OWNER_TRIAL_LEARNING_STATUS.md](OWNER_TRIAL_LEARNING_STATUS.md).
+The revision is implemented and tested, but its execution session disappeared
+mid-study. Seed21 current/trial completed16/11; revised13 at its1,536 checkpoint,
+plus39 credited actions without a checkpoint. Seeds22/23 never started. The first
+early-negative split later earned acceptance, supporting the timing concern;
+final superiority is unresolved. All surviving evidence is audited and archived.
+No retry/extension or main merge under the predeclared one-attempt protocol.
+
 Authorized next increment, 2026-09-15: [OWNER_TRIAL_LEARNING.md](OWNER_TRIAL_LEARNING.md).
 Give the same live candidate an exposure-based learning phase before prospective
 assessment, with one preallocated second review. Preserve the current and first

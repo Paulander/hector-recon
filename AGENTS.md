@@ -1,5 +1,27 @@
 # ReCoN/Hector agent instructions
 
+Latest status, 2026-09-15: read `docs/autogrowth/OWNER_TRIAL_LEARNING_STATUS.md`.
+The learning-before-assessment revision is implemented; 35 distinct checks pass,
+including five new checks repeated on final source. The fixed study is INCOMPLETE:
+execution session disappeared, no worker result/exit record, cause unknown.
+Seed21 current/trial finish16/11 at1920. Revised learner is13 at1536, plus39
+credited actions without a checkpoint. Seeds22/23 never started. At common1536
+scores are15/11/13. Do not compare unequal endpoints as a completed study.
+5415 recorded training,1392 scheduled evaluations,84 sealed blocks,87 checkpoints
+survive. No frozen reproduction phase or new audit environment actions. All1392
+saved choices verify arithmetically;86 runtime hashes/83 unchanged shared sources,
+actual records/probes/RNG/local histories and three exact capacity certificates
+verify. Revised committed graph lacks16 capacity; current endpoint has it.
+Same first320 records: old rule rejects root x split at320; revised preserves it
+and accepts at595 after readiness339 and prospective gain+.8265. Two deeper trials
+are still PROBATION. This supports timing, not final superiority or broad retention.
+Raw unsealed tail and observer interruption.json preserved; no fabricated result.
+ZIP a4e0b2f9dbc66661f3b11239e7943891385c9ef1efea79f4dcbe37554b92c676 saved.
+No retry/extension under the declared one-attempt protocol; a future attempt must
+explicitly account for the39 uncheckpointed actions and session loss. No learner
+retuning, replay, main merge or automatic new cohort. Private branch publication
+remains authorized. Older COMPLETE entries below refer to earlier studies.
+
 Current authorization,2026-09-15: read `docs/autogrowth/OWNER_TRIAL_LEARNING.md`.
 The user's latest “Go ahead” authorizes the next learning-before-assessment
 revision:64 real actions each for parent/children,256/512 prospective reviews,
