@@ -174,3 +174,17 @@ user's direction. No new timing, freeze, merge or task-oracle mechanism is added
 The fresh cohort is closed. Keep the random control and treat ranking as an
 experimental option; a separately defined strong-skill retention comparison is
 still outstanding. The recovered architecture plan above remains the plan.
+
+Latest user-directed continuation,2026-09-15: the fixed fresh four/eight-owner
+comparison is complete; see [OWNER_HEADROOM_RESULTS.md](OWNER_HEADROOM_RESULTS.md).
+Only the owner ceiling changed. Final scores14/13/15 versus13/16/14 show mixed
+benefit, delayed scoring births and less child exposure at the same global budget.
+Exact endpoint checks distinguish missing capacity in three graphs from wrong
+learned weights in two others. All180 blocks and186 checkpoints verify;23
+focused checks pass,81 sources match and79 previous runtime sources are unchanged.
+The cohort is closed. Current maturity is unimplemented, and compound definitions
+are not automatically promoted into the frozen route pool or unrestricted birth
+composition. Engine k-of-n and nested Boolean execution do not imply those
+learning mechanisms; the exact distinctions are in CURRENT_COMPOSITION_AND_LIFECYCLE.md.
+Keep the four-owner reference; do not automatically add mechanisms or start
+another run. Main remains unchanged; private work-branch publication is authorized.

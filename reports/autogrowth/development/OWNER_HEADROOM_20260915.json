@@ -1,0 +1,4096 @@
+{
+  "arms": [
+    {
+      "A_retention": {
+        "boundary": 640,
+        "boundary_correct_rows": [
+          0,
+          1,
+          4,
+          5,
+          8,
+          9,
+          12,
+          13
+        ],
+        "context": 0,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          0,
+          1,
+          4,
+          5,
+          8,
+          9,
+          12,
+          13
+        ],
+        "worst_measured_retained": 4
+      },
+      "B_retention": {
+        "boundary": 1280,
+        "boundary_correct_rows": [
+          2,
+          3,
+          7,
+          10,
+          11,
+          14,
+          15
+        ],
+        "context": 1,
+        "final_lost_rows": [
+          7
+        ],
+        "final_retained_rows": [
+          2,
+          3,
+          10,
+          11,
+          14,
+          15
+        ],
+        "worst_measured_retained": 4
+      },
+      "accepted_births": 24,
+      "budget_rejections": [],
+      "direct_identity_zero_credit_births": 0,
+      "final": 14,
+      "final_A_B": [
+        8,
+        6
+      ],
+      "final_failed_rows": [
+        6,
+        7
+      ],
+      "final_live_owner_visits": {
+        "3": 434,
+        "4": 432,
+        "5": 433,
+        "6": 429
+      },
+      "final_structure": {
+        "births_from_zero": 24,
+        "depth": 3,
+        "effective_parameters": 28,
+        "exploration_rng_digest": "27349d773c317621d281cc07f6728c0330abffd63ce824bbd746e8c97d7c100d",
+        "expression_definitions": 66,
+        "owner_visits": {
+          "0": 64,
+          "1": 64,
+          "2": 64,
+          "3": 434,
+          "4": 432,
+          "5": 433,
+          "6": 429
+        },
+        "owners": 4,
+        "physical_nodes": 339,
+        "pruned": 0,
+        "splits": 3
+      },
+      "first_perfect_event": null,
+      "first_scoring_birth": 436,
+      "initial": 8,
+      "limits": {
+        "max_definitions": 256,
+        "max_depth": 4,
+        "max_leaves": 4,
+        "max_parameters": 64,
+        "max_physical_nodes": 2048
+      },
+      "maximum_measured_correct": 14,
+      "nomination_outcomes": {
+        "born": 24
+      },
+      "nominations": 24,
+      "owner_count_trajectory": [
+        [
+          64,
+          2
+        ],
+        [
+          128,
+          2
+        ],
+        [
+          192,
+          4
+        ],
+        [
+          256,
+          4
+        ],
+        [
+          320,
+          4
+        ],
+        [
+          384,
+          4
+        ],
+        [
+          448,
+          4
+        ],
+        [
+          512,
+          4
+        ],
+        [
+          576,
+          4
+        ],
+        [
+          640,
+          4
+        ],
+        [
+          704,
+          4
+        ],
+        [
+          768,
+          4
+        ],
+        [
+          832,
+          4
+        ],
+        [
+          896,
+          4
+        ],
+        [
+          960,
+          4
+        ],
+        [
+          1024,
+          4
+        ],
+        [
+          1088,
+          4
+        ],
+        [
+          1152,
+          4
+        ],
+        [
+          1216,
+          4
+        ],
+        [
+          1280,
+          4
+        ],
+        [
+          1344,
+          4
+        ],
+        [
+          1408,
+          4
+        ],
+        [
+          1472,
+          4
+        ],
+        [
+          1536,
+          4
+        ],
+        [
+          1600,
+          4
+        ],
+        [
+          1664,
+          4
+        ],
+        [
+          1728,
+          4
+        ],
+        [
+          1792,
+          4
+        ],
+        [
+          1856,
+          4
+        ],
+        [
+          1920,
+          4
+        ]
+      ],
+      "peak_nodes": 339,
+      "peak_parameters": 28,
+      "phase_boundaries": {
+        "1280": {
+          "A_B": [
+            5,
+            7
+          ],
+          "correct": 12
+        },
+        "1920": {
+          "A_B": [
+            8,
+            6
+          ],
+          "correct": 14
+        },
+        "640": {
+          "A_B": [
+            8,
+            4
+          ],
+          "correct": 12
+        }
+      },
+      "random_selections": 7,
+      "residual_selections": 17,
+      "role": "owners-4",
+      "row_changes": [
+        {
+          "event": 512,
+          "gains": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "losses": [
+            6,
+            7
+          ]
+        },
+        {
+          "event": 768,
+          "gains": [
+            10,
+            11
+          ],
+          "losses": [
+            8,
+            9
+          ]
+        },
+        {
+          "event": 960,
+          "gains": [
+            7
+          ],
+          "losses": [
+            1,
+            3,
+            5
+          ]
+        },
+        {
+          "event": 1024,
+          "gains": [
+            1,
+            3,
+            5
+          ],
+          "losses": [
+            7
+          ]
+        },
+        {
+          "event": 1088,
+          "gains": [
+            7
+          ],
+          "losses": [
+            5
+          ]
+        },
+        {
+          "event": 1344,
+          "gains": [
+            5
+          ],
+          "losses": [
+            7
+          ]
+        },
+        {
+          "event": 1472,
+          "gains": [
+            8,
+            9
+          ],
+          "losses": [
+            10,
+            11
+          ]
+        },
+        {
+          "event": 1536,
+          "gains": [
+            10,
+            11
+          ],
+          "losses": []
+        },
+        {
+          "event": 1600,
+          "gains": [],
+          "losses": [
+            10,
+            11
+          ]
+        },
+        {
+          "event": 1792,
+          "gains": [
+            10,
+            11
+          ],
+          "losses": []
+        }
+      ],
+      "score_trajectory": [
+        [
+          0,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          64,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          128,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          192,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          256,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          320,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          384,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          448,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          512,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          576,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          640,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          704,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          768,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          832,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          896,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          960,
+          10,
+          [
+            4,
+            6
+          ]
+        ],
+        [
+          1024,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1088,
+          12,
+          [
+            5,
+            7
+          ]
+        ],
+        [
+          1152,
+          12,
+          [
+            5,
+            7
+          ]
+        ],
+        [
+          1216,
+          12,
+          [
+            5,
+            7
+          ]
+        ],
+        [
+          1280,
+          12,
+          [
+            5,
+            7
+          ]
+        ],
+        [
+          1344,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1408,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1472,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1536,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1600,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1664,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1728,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1792,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1856,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1920,
+          14,
+          [
+            8,
+            6
+          ]
+        ]
+      ],
+      "seed": 15,
+      "split_events": [
+        {
+          "episode": 64,
+          "owner": 0,
+          "split": {
+            "candidate": 0,
+            "children": [
+              1,
+              2
+            ],
+            "evidence": "SplitEvidence(n0=34, n1=30, sum0=-19.19702197962811, sum1=16.055478951264014)",
+            "route": "Expression(operator='read', children=(), atom=(0, True))",
+            "score": 19.277395572396625
+          }
+        },
+        {
+          "episode": 187,
+          "owner": 2,
+          "split": {
+            "candidate": 3,
+            "children": [
+              3,
+              4
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=4.091269719436529, sum1=2.342913011035756)",
+            "route": "Expression(operator='read', children=(), atom=(1, False))",
+            "score": 0.047761737184531
+          }
+        },
+        {
+          "episode": 192,
+          "owner": 1,
+          "split": {
+            "candidate": 5,
+            "children": [
+              5,
+              6
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=1.3848401370042225, sum1=-1.5709558280488352)",
+            "route": "Expression(operator='read', children=(), atom=(3, True))",
+            "score": 0.136511402922249
+          }
+        }
+      ],
+      "sustained_measured_perfection_from": null,
+      "training_by_phase": [
+        {
+          "actions": 640,
+          "correct": 381,
+          "start": 0,
+          "stop": 640
+        },
+        {
+          "actions": 640,
+          "correct": 444,
+          "start": 640,
+          "stop": 1280
+        },
+        {
+          "actions": 640,
+          "correct": 513,
+          "start": 1280,
+          "stop": 1920
+        }
+      ],
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 434,
+        "4": 432,
+        "5": 433,
+        "6": 429
+      },
+      "zero_credit_measure_limit": "Direct condition identity only; inherited descendants are distinct identities. A zero count alone does not imply impossibility or causal uselessness."
+    },
+    {
+      "A_retention": {
+        "boundary": 640,
+        "boundary_correct_rows": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "context": 0,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "worst_measured_retained": 4
+      },
+      "B_retention": {
+        "boundary": 1280,
+        "boundary_correct_rows": [
+          3,
+          6,
+          7,
+          14,
+          15
+        ],
+        "context": 1,
+        "final_lost_rows": [
+          7
+        ],
+        "final_retained_rows": [
+          3,
+          6,
+          14,
+          15
+        ],
+        "worst_measured_retained": 4
+      },
+      "accepted_births": 16,
+      "budget_rejections": [],
+      "direct_identity_zero_credit_births": 0,
+      "final": 13,
+      "final_A_B": [
+        7,
+        6
+      ],
+      "final_failed_rows": [
+        4,
+        7,
+        10
+      ],
+      "final_live_owner_visits": {
+        "10": 187,
+        "11": 183,
+        "12": 186,
+        "13": 185,
+        "14": 180,
+        "7": 186,
+        "8": 182,
+        "9": 183
+      },
+      "final_structure": {
+        "births_from_zero": 16,
+        "depth": 4,
+        "effective_parameters": 24,
+        "exploration_rng_digest": "27349d773c317621d281cc07f6728c0330abffd63ce824bbd746e8c97d7c100d",
+        "expression_definitions": 74,
+        "owner_visits": {
+          "0": 64,
+          "1": 64,
+          "10": 187,
+          "11": 183,
+          "12": 186,
+          "13": 185,
+          "14": 180,
+          "2": 64,
+          "3": 64,
+          "4": 64,
+          "5": 64,
+          "6": 64,
+          "7": 186,
+          "8": 182,
+          "9": 183
+        },
+        "owners": 8,
+        "physical_nodes": 365,
+        "pruned": 0,
+        "splits": 7
+      },
+      "first_perfect_event": null,
+      "first_scoring_birth": 920,
+      "initial": 8,
+      "limits": {
+        "max_definitions": 256,
+        "max_depth": 4,
+        "max_leaves": 8,
+        "max_parameters": 64,
+        "max_physical_nodes": 2048
+      },
+      "maximum_measured_correct": 13,
+      "nomination_outcomes": {
+        "born": 16
+      },
+      "nominations": 16,
+      "owner_count_trajectory": [
+        [
+          64,
+          2
+        ],
+        [
+          128,
+          2
+        ],
+        [
+          192,
+          4
+        ],
+        [
+          256,
+          4
+        ],
+        [
+          320,
+          4
+        ],
+        [
+          384,
+          4
+        ],
+        [
+          448,
+          8
+        ],
+        [
+          512,
+          8
+        ],
+        [
+          576,
+          8
+        ],
+        [
+          640,
+          8
+        ],
+        [
+          704,
+          8
+        ],
+        [
+          768,
+          8
+        ],
+        [
+          832,
+          8
+        ],
+        [
+          896,
+          8
+        ],
+        [
+          960,
+          8
+        ],
+        [
+          1024,
+          8
+        ],
+        [
+          1088,
+          8
+        ],
+        [
+          1152,
+          8
+        ],
+        [
+          1216,
+          8
+        ],
+        [
+          1280,
+          8
+        ],
+        [
+          1344,
+          8
+        ],
+        [
+          1408,
+          8
+        ],
+        [
+          1472,
+          8
+        ],
+        [
+          1536,
+          8
+        ],
+        [
+          1600,
+          8
+        ],
+        [
+          1664,
+          8
+        ],
+        [
+          1728,
+          8
+        ],
+        [
+          1792,
+          8
+        ],
+        [
+          1856,
+          8
+        ],
+        [
+          1920,
+          8
+        ]
+      ],
+      "peak_nodes": 365,
+      "peak_parameters": 24,
+      "phase_boundaries": {
+        "1280": {
+          "A_B": [
+            5,
+            5
+          ],
+          "correct": 10
+        },
+        "1920": {
+          "A_B": [
+            7,
+            6
+          ],
+          "correct": 13
+        },
+        "640": {
+          "A_B": [
+            4,
+            4
+          ],
+          "correct": 8
+        }
+      },
+      "random_selections": 6,
+      "residual_selections": 10,
+      "role": "owners-8",
+      "row_changes": [
+        {
+          "event": 1088,
+          "gains": [
+            1,
+            3
+          ],
+          "losses": []
+        },
+        {
+          "event": 1600,
+          "gains": [
+            0,
+            2,
+            5
+          ],
+          "losses": [
+            7
+          ]
+        },
+        {
+          "event": 1792,
+          "gains": [
+            11
+          ],
+          "losses": []
+        }
+      ],
+      "score_trajectory": [
+        [
+          0,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          64,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          128,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          192,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          256,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          320,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          384,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          448,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          512,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          576,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          640,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          704,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          768,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          832,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          896,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          960,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          1024,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          1088,
+          10,
+          [
+            5,
+            5
+          ]
+        ],
+        [
+          1152,
+          10,
+          [
+            5,
+            5
+          ]
+        ],
+        [
+          1216,
+          10,
+          [
+            5,
+            5
+          ]
+        ],
+        [
+          1280,
+          10,
+          [
+            5,
+            5
+          ]
+        ],
+        [
+          1344,
+          10,
+          [
+            5,
+            5
+          ]
+        ],
+        [
+          1408,
+          10,
+          [
+            5,
+            5
+          ]
+        ],
+        [
+          1472,
+          10,
+          [
+            5,
+            5
+          ]
+        ],
+        [
+          1536,
+          10,
+          [
+            5,
+            5
+          ]
+        ],
+        [
+          1600,
+          12,
+          [
+            7,
+            5
+          ]
+        ],
+        [
+          1664,
+          12,
+          [
+            7,
+            5
+          ]
+        ],
+        [
+          1728,
+          12,
+          [
+            7,
+            5
+          ]
+        ],
+        [
+          1792,
+          13,
+          [
+            7,
+            6
+          ]
+        ],
+        [
+          1856,
+          13,
+          [
+            7,
+            6
+          ]
+        ],
+        [
+          1920,
+          13,
+          [
+            7,
+            6
+          ]
+        ]
+      ],
+      "seed": 15,
+      "split_events": [
+        {
+          "episode": 64,
+          "owner": 0,
+          "split": {
+            "candidate": 0,
+            "children": [
+              1,
+              2
+            ],
+            "evidence": "SplitEvidence(n0=34, n1=30, sum0=-19.19702197962811, sum1=16.055478951264014)",
+            "route": "Expression(operator='read', children=(), atom=(0, True))",
+            "score": 19.277395572396625
+          }
+        },
+        {
+          "episode": 187,
+          "owner": 2,
+          "split": {
+            "candidate": 3,
+            "children": [
+              3,
+              4
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=4.091269719436529, sum1=2.342913011035756)",
+            "route": "Expression(operator='read', children=(), atom=(1, False))",
+            "score": 0.047761737184531
+          }
+        },
+        {
+          "episode": 192,
+          "owner": 1,
+          "split": {
+            "candidate": 5,
+            "children": [
+              5,
+              6
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=1.3848401370042225, sum1=-1.5709558280488352)",
+            "route": "Expression(operator='read', children=(), atom=(3, True))",
+            "score": 0.136511402922249
+          }
+        },
+        {
+          "episode": 436,
+          "owner": 4,
+          "split": {
+            "candidate": 5,
+            "children": [
+              7,
+              8
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=0.2461698536338608, sum1=-0.20731408593929168)",
+            "route": "Expression(operator='read', children=(), atom=(3, True))",
+            "score": 0.0032132450539185406
+          }
+        },
+        {
+          "episode": 443,
+          "owner": 3,
+          "split": {
+            "candidate": 5,
+            "children": [
+              9,
+              10
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=-0.42966221832275886, sum1=0.4672937491774123)",
+            "route": "Expression(operator='read', children=(), atom=(3, True))",
+            "score": 0.012570781369283876
+          }
+        },
+        {
+          "episode": 446,
+          "owner": 5,
+          "split": {
+            "candidate": 3,
+            "children": [
+              11,
+              12
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=2.623943937276442, sum1=-2.117083365807401)",
+            "route": "Expression(operator='read', children=(), atom=(1, False))",
+            "score": 0.35120843575916344
+          }
+        },
+        {
+          "episode": 448,
+          "owner": 6,
+          "split": {
+            "candidate": 3,
+            "children": [
+              13,
+              14
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=2.9835990443688893, sum1=-0.6254291623558648)",
+            "route": "Expression(operator='read', children=(), atom=(1, False))",
+            "score": 0.20351694682710772
+          }
+        }
+      ],
+      "sustained_measured_perfection_from": null,
+      "training_by_phase": [
+        {
+          "actions": 640,
+          "correct": 317,
+          "start": 0,
+          "stop": 640
+        },
+        {
+          "actions": 640,
+          "correct": 342,
+          "start": 640,
+          "stop": 1280
+        },
+        {
+          "actions": 640,
+          "correct": 440,
+          "start": 1280,
+          "stop": 1920
+        }
+      ],
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 64,
+        "4": 64,
+        "5": 64,
+        "6": 64,
+        "7": 186,
+        "8": 182,
+        "9": 183,
+        "10": 187,
+        "11": 183,
+        "12": 186,
+        "13": 185,
+        "14": 180
+      },
+      "zero_credit_measure_limit": "Direct condition identity only; inherited descendants are distinct identities. A zero count alone does not imply impossibility or causal uselessness."
+    },
+    {
+      "A_retention": {
+        "boundary": 640,
+        "boundary_correct_rows": [
+          0,
+          1,
+          4,
+          5,
+          8,
+          9,
+          12,
+          13
+        ],
+        "context": 0,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          0,
+          1,
+          4,
+          5,
+          8,
+          9,
+          12,
+          13
+        ],
+        "worst_measured_retained": 6
+      },
+      "B_retention": {
+        "boundary": 1280,
+        "boundary_correct_rows": [
+          2,
+          3,
+          6,
+          7,
+          10,
+          14,
+          15
+        ],
+        "context": 1,
+        "final_lost_rows": [
+          6,
+          10
+        ],
+        "final_retained_rows": [
+          2,
+          3,
+          7,
+          14,
+          15
+        ],
+        "worst_measured_retained": 5
+      },
+      "accepted_births": 24,
+      "budget_rejections": [],
+      "direct_identity_zero_credit_births": 0,
+      "final": 13,
+      "final_A_B": [
+        8,
+        5
+      ],
+      "final_failed_rows": [
+        6,
+        10,
+        11
+      ],
+      "final_live_owner_visits": {
+        "3": 434,
+        "4": 432,
+        "5": 432,
+        "6": 430
+      },
+      "final_structure": {
+        "births_from_zero": 24,
+        "depth": 3,
+        "effective_parameters": 28,
+        "exploration_rng_digest": "204e8b3552cbed070c047b788afddcf6bd518fa2b9e7f504387fdd9b6505e245",
+        "expression_definitions": 64,
+        "owner_visits": {
+          "0": 64,
+          "1": 64,
+          "2": 64,
+          "3": 434,
+          "4": 432,
+          "5": 432,
+          "6": 430
+        },
+        "owners": 4,
+        "physical_nodes": 325,
+        "pruned": 0,
+        "splits": 3
+      },
+      "first_perfect_event": null,
+      "first_scoring_birth": 444,
+      "initial": 8,
+      "limits": {
+        "max_definitions": 256,
+        "max_depth": 4,
+        "max_leaves": 4,
+        "max_parameters": 64,
+        "max_physical_nodes": 2048
+      },
+      "maximum_measured_correct": 15,
+      "nomination_outcomes": {
+        "born": 24
+      },
+      "nominations": 24,
+      "owner_count_trajectory": [
+        [
+          64,
+          2
+        ],
+        [
+          128,
+          2
+        ],
+        [
+          192,
+          4
+        ],
+        [
+          256,
+          4
+        ],
+        [
+          320,
+          4
+        ],
+        [
+          384,
+          4
+        ],
+        [
+          448,
+          4
+        ],
+        [
+          512,
+          4
+        ],
+        [
+          576,
+          4
+        ],
+        [
+          640,
+          4
+        ],
+        [
+          704,
+          4
+        ],
+        [
+          768,
+          4
+        ],
+        [
+          832,
+          4
+        ],
+        [
+          896,
+          4
+        ],
+        [
+          960,
+          4
+        ],
+        [
+          1024,
+          4
+        ],
+        [
+          1088,
+          4
+        ],
+        [
+          1152,
+          4
+        ],
+        [
+          1216,
+          4
+        ],
+        [
+          1280,
+          4
+        ],
+        [
+          1344,
+          4
+        ],
+        [
+          1408,
+          4
+        ],
+        [
+          1472,
+          4
+        ],
+        [
+          1536,
+          4
+        ],
+        [
+          1600,
+          4
+        ],
+        [
+          1664,
+          4
+        ],
+        [
+          1728,
+          4
+        ],
+        [
+          1792,
+          4
+        ],
+        [
+          1856,
+          4
+        ],
+        [
+          1920,
+          4
+        ]
+      ],
+      "peak_nodes": 325,
+      "peak_parameters": 28,
+      "phase_boundaries": {
+        "1280": {
+          "A_B": [
+            8,
+            7
+          ],
+          "correct": 15
+        },
+        "1920": {
+          "A_B": [
+            8,
+            5
+          ],
+          "correct": 13
+        },
+        "640": {
+          "A_B": [
+            8,
+            4
+          ],
+          "correct": 12
+        }
+      },
+      "random_selections": 4,
+      "residual_selections": 20,
+      "role": "owners-4",
+      "row_changes": [
+        {
+          "event": 512,
+          "gains": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "losses": [
+            6,
+            7
+          ]
+        },
+        {
+          "event": 896,
+          "gains": [
+            7
+          ],
+          "losses": [
+            3
+          ]
+        },
+        {
+          "event": 960,
+          "gains": [
+            3
+          ],
+          "losses": []
+        },
+        {
+          "event": 1088,
+          "gains": [
+            6
+          ],
+          "losses": []
+        },
+        {
+          "event": 1152,
+          "gains": [
+            10
+          ],
+          "losses": []
+        },
+        {
+          "event": 1216,
+          "gains": [],
+          "losses": [
+            0,
+            2,
+            4
+          ]
+        },
+        {
+          "event": 1280,
+          "gains": [
+            0,
+            2,
+            4
+          ],
+          "losses": []
+        },
+        {
+          "event": 1472,
+          "gains": [],
+          "losses": [
+            6,
+            10
+          ]
+        }
+      ],
+      "score_trajectory": [
+        [
+          0,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          64,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          128,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          192,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          256,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          320,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          384,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          448,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          512,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          576,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          640,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          704,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          768,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          832,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          896,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          960,
+          13,
+          [
+            8,
+            5
+          ]
+        ],
+        [
+          1024,
+          13,
+          [
+            8,
+            5
+          ]
+        ],
+        [
+          1088,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1152,
+          15,
+          [
+            8,
+            7
+          ]
+        ],
+        [
+          1216,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1280,
+          15,
+          [
+            8,
+            7
+          ]
+        ],
+        [
+          1344,
+          15,
+          [
+            8,
+            7
+          ]
+        ],
+        [
+          1408,
+          15,
+          [
+            8,
+            7
+          ]
+        ],
+        [
+          1472,
+          13,
+          [
+            8,
+            5
+          ]
+        ],
+        [
+          1536,
+          13,
+          [
+            8,
+            5
+          ]
+        ],
+        [
+          1600,
+          13,
+          [
+            8,
+            5
+          ]
+        ],
+        [
+          1664,
+          13,
+          [
+            8,
+            5
+          ]
+        ],
+        [
+          1728,
+          13,
+          [
+            8,
+            5
+          ]
+        ],
+        [
+          1792,
+          13,
+          [
+            8,
+            5
+          ]
+        ],
+        [
+          1856,
+          13,
+          [
+            8,
+            5
+          ]
+        ],
+        [
+          1920,
+          13,
+          [
+            8,
+            5
+          ]
+        ]
+      ],
+      "seed": 16,
+      "split_events": [
+        {
+          "episode": 64,
+          "owner": 0,
+          "split": {
+            "candidate": 1,
+            "children": [
+              1,
+              2
+            ],
+            "evidence": "SplitEvidence(n0=30, n1=34, sum0=-25.890726608176774, sum1=25.312065812836543)",
+            "route": "Expression(operator='read', children=(), atom=(0, True))",
+            "score": 41.18322965935469
+          }
+        },
+        {
+          "episode": 191,
+          "owner": 1,
+          "split": {
+            "candidate": 0,
+            "children": [
+              3,
+              4
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=2.357495706356752, sum1=-5.077537811764372)",
+            "route": "Expression(operator='read', children=(), atom=(3, False))",
+            "score": 0.8637456783685089
+          }
+        },
+        {
+          "episode": 192,
+          "owner": 2,
+          "split": {
+            "candidate": 0,
+            "children": [
+              5,
+              6
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=2.3006041657018317, sum1=0.21138987974036505)",
+            "route": "Expression(operator='read', children=(), atom=(3, False))",
+            "score": 0.06820025519789814
+          }
+        }
+      ],
+      "sustained_measured_perfection_from": null,
+      "training_by_phase": [
+        {
+          "actions": 640,
+          "correct": 393,
+          "start": 0,
+          "stop": 640
+        },
+        {
+          "actions": 640,
+          "correct": 413,
+          "start": 640,
+          "stop": 1280
+        },
+        {
+          "actions": 640,
+          "correct": 535,
+          "start": 1280,
+          "stop": 1920
+        }
+      ],
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 434,
+        "4": 432,
+        "5": 432,
+        "6": 430
+      },
+      "zero_credit_measure_limit": "Direct condition identity only; inherited descendants are distinct identities. A zero count alone does not imply impossibility or causal uselessness."
+    },
+    {
+      "A_retention": {
+        "boundary": 640,
+        "boundary_correct_rows": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "context": 0,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "worst_measured_retained": 4
+      },
+      "B_retention": {
+        "boundary": 1280,
+        "boundary_correct_rows": [
+          2,
+          3,
+          6,
+          7,
+          11,
+          14,
+          15
+        ],
+        "context": 1,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          2,
+          3,
+          6,
+          7,
+          11,
+          14,
+          15
+        ],
+        "worst_measured_retained": 7
+      },
+      "accepted_births": 16,
+      "budget_rejections": [],
+      "direct_identity_zero_credit_births": 1,
+      "final": 16,
+      "final_A_B": [
+        8,
+        8
+      ],
+      "final_failed_rows": [],
+      "final_live_owner_visits": {
+        "10": 183,
+        "11": 182,
+        "12": 188,
+        "13": 186,
+        "14": 182,
+        "7": 185,
+        "8": 183,
+        "9": 183
+      },
+      "final_structure": {
+        "births_from_zero": 16,
+        "depth": 4,
+        "effective_parameters": 24,
+        "exploration_rng_digest": "204e8b3552cbed070c047b788afddcf6bd518fa2b9e7f504387fdd9b6505e245",
+        "expression_definitions": 73,
+        "owner_visits": {
+          "0": 64,
+          "1": 64,
+          "10": 183,
+          "11": 182,
+          "12": 188,
+          "13": 186,
+          "14": 182,
+          "2": 64,
+          "3": 64,
+          "4": 64,
+          "5": 64,
+          "6": 64,
+          "7": 185,
+          "8": 183,
+          "9": 183
+        },
+        "owners": 8,
+        "physical_nodes": 351,
+        "pruned": 0,
+        "splits": 7
+      },
+      "first_perfect_event": 1536,
+      "first_scoring_birth": 917,
+      "initial": 8,
+      "limits": {
+        "max_definitions": 256,
+        "max_depth": 4,
+        "max_leaves": 8,
+        "max_parameters": 64,
+        "max_physical_nodes": 2048
+      },
+      "maximum_measured_correct": 16,
+      "nomination_outcomes": {
+        "born": 16
+      },
+      "nominations": 16,
+      "owner_count_trajectory": [
+        [
+          64,
+          2
+        ],
+        [
+          128,
+          2
+        ],
+        [
+          192,
+          4
+        ],
+        [
+          256,
+          4
+        ],
+        [
+          320,
+          4
+        ],
+        [
+          384,
+          4
+        ],
+        [
+          448,
+          8
+        ],
+        [
+          512,
+          8
+        ],
+        [
+          576,
+          8
+        ],
+        [
+          640,
+          8
+        ],
+        [
+          704,
+          8
+        ],
+        [
+          768,
+          8
+        ],
+        [
+          832,
+          8
+        ],
+        [
+          896,
+          8
+        ],
+        [
+          960,
+          8
+        ],
+        [
+          1024,
+          8
+        ],
+        [
+          1088,
+          8
+        ],
+        [
+          1152,
+          8
+        ],
+        [
+          1216,
+          8
+        ],
+        [
+          1280,
+          8
+        ],
+        [
+          1344,
+          8
+        ],
+        [
+          1408,
+          8
+        ],
+        [
+          1472,
+          8
+        ],
+        [
+          1536,
+          8
+        ],
+        [
+          1600,
+          8
+        ],
+        [
+          1664,
+          8
+        ],
+        [
+          1728,
+          8
+        ],
+        [
+          1792,
+          8
+        ],
+        [
+          1856,
+          8
+        ],
+        [
+          1920,
+          8
+        ]
+      ],
+      "peak_nodes": 351,
+      "peak_parameters": 24,
+      "phase_boundaries": {
+        "1280": {
+          "A_B": [
+            8,
+            7
+          ],
+          "correct": 15
+        },
+        "1920": {
+          "A_B": [
+            8,
+            8
+          ],
+          "correct": 16
+        },
+        "640": {
+          "A_B": [
+            4,
+            4
+          ],
+          "correct": 8
+        }
+      },
+      "random_selections": 3,
+      "residual_selections": 13,
+      "role": "owners-8",
+      "row_changes": [
+        {
+          "event": 960,
+          "gains": [
+            0,
+            2,
+            5,
+            11
+          ],
+          "losses": []
+        },
+        {
+          "event": 1024,
+          "gains": [
+            1,
+            3,
+            4
+          ],
+          "losses": []
+        },
+        {
+          "event": 1536,
+          "gains": [
+            10
+          ],
+          "losses": []
+        }
+      ],
+      "score_trajectory": [
+        [
+          0,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          64,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          128,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          192,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          256,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          320,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          384,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          448,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          512,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          576,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          640,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          704,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          768,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          832,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          896,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          960,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1024,
+          15,
+          [
+            8,
+            7
+          ]
+        ],
+        [
+          1088,
+          15,
+          [
+            8,
+            7
+          ]
+        ],
+        [
+          1152,
+          15,
+          [
+            8,
+            7
+          ]
+        ],
+        [
+          1216,
+          15,
+          [
+            8,
+            7
+          ]
+        ],
+        [
+          1280,
+          15,
+          [
+            8,
+            7
+          ]
+        ],
+        [
+          1344,
+          15,
+          [
+            8,
+            7
+          ]
+        ],
+        [
+          1408,
+          15,
+          [
+            8,
+            7
+          ]
+        ],
+        [
+          1472,
+          15,
+          [
+            8,
+            7
+          ]
+        ],
+        [
+          1536,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1600,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1664,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1728,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1792,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1856,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1920,
+          16,
+          [
+            8,
+            8
+          ]
+        ]
+      ],
+      "seed": 16,
+      "split_events": [
+        {
+          "episode": 64,
+          "owner": 0,
+          "split": {
+            "candidate": 1,
+            "children": [
+              1,
+              2
+            ],
+            "evidence": "SplitEvidence(n0=30, n1=34, sum0=-25.890726608176774, sum1=25.312065812836543)",
+            "route": "Expression(operator='read', children=(), atom=(0, True))",
+            "score": 41.18322965935469
+          }
+        },
+        {
+          "episode": 191,
+          "owner": 1,
+          "split": {
+            "candidate": 0,
+            "children": [
+              3,
+              4
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=2.357495706356752, sum1=-5.077537811764372)",
+            "route": "Expression(operator='read', children=(), atom=(3, False))",
+            "score": 0.8637456783685089
+          }
+        },
+        {
+          "episode": 192,
+          "owner": 2,
+          "split": {
+            "candidate": 0,
+            "children": [
+              5,
+              6
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=2.3006041657018317, sum1=0.21138987974036505)",
+            "route": "Expression(operator='read', children=(), atom=(3, False))",
+            "score": 0.06820025519789814
+          }
+        },
+        {
+          "episode": 444,
+          "owner": 4,
+          "split": {
+            "candidate": 2,
+            "children": [
+              7,
+              8
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=-0.7092051552534515, sum1=0.6766669509563161)",
+            "route": "Expression(operator='read', children=(), atom=(1, True))",
+            "score": 0.030010023355785898
+          }
+        },
+        {
+          "episode": 446,
+          "owner": 6,
+          "split": {
+            "candidate": 2,
+            "children": [
+              9,
+              10
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=3.331291132684166, sum1=-2.1778987486780292)",
+            "route": "Expression(operator='read', children=(), atom=(1, True))",
+            "score": 0.47423708045161866
+          }
+        },
+        {
+          "episode": 447,
+          "owner": 3,
+          "split": {
+            "candidate": 2,
+            "children": [
+              11,
+              12
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=-6.945578079111814, sum1=7.244233676796541)",
+            "route": "Expression(operator='read', children=(), atom=(1, True))",
+            "score": 3.1461055885642963
+          }
+        },
+        {
+          "episode": 448,
+          "owner": 5,
+          "split": {
+            "candidate": 2,
+            "children": [
+              13,
+              14
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=2.914231412397201, sum1=-1.7565054547048427)",
+            "route": "Expression(operator='read', children=(), atom=(1, True))",
+            "score": 0.3408716075266595
+          }
+        }
+      ],
+      "sustained_measured_perfection_from": 1536,
+      "training_by_phase": [
+        {
+          "actions": 640,
+          "correct": 320,
+          "start": 0,
+          "stop": 640
+        },
+        {
+          "actions": 640,
+          "correct": 428,
+          "start": 640,
+          "stop": 1280
+        },
+        {
+          "actions": 640,
+          "correct": 552,
+          "start": 1280,
+          "stop": 1920
+        }
+      ],
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 64,
+        "4": 64,
+        "5": 64,
+        "6": 64,
+        "7": 185,
+        "8": 183,
+        "9": 183,
+        "10": 183,
+        "11": 182,
+        "12": 188,
+        "13": 186,
+        "14": 182
+      },
+      "zero_credit_measure_limit": "Direct condition identity only; inherited descendants are distinct identities. A zero count alone does not imply impossibility or causal uselessness."
+    },
+    {
+      "A_retention": {
+        "boundary": 640,
+        "boundary_correct_rows": [
+          4,
+          5,
+          8,
+          9,
+          12,
+          13
+        ],
+        "context": 0,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          4,
+          5,
+          8,
+          9,
+          12,
+          13
+        ],
+        "worst_measured_retained": 2
+      },
+      "B_retention": {
+        "boundary": 1280,
+        "boundary_correct_rows": [
+          2,
+          3,
+          6,
+          7,
+          10,
+          11,
+          14,
+          15
+        ],
+        "context": 1,
+        "final_lost_rows": [
+          11
+        ],
+        "final_retained_rows": [
+          2,
+          3,
+          6,
+          7,
+          10,
+          14,
+          15
+        ],
+        "worst_measured_retained": 6
+      },
+      "accepted_births": 24,
+      "budget_rejections": [],
+      "direct_identity_zero_credit_births": 0,
+      "final": 15,
+      "final_A_B": [
+        8,
+        7
+      ],
+      "final_failed_rows": [
+        11
+      ],
+      "final_live_owner_visits": {
+        "3": 433,
+        "4": 430,
+        "5": 436,
+        "6": 429
+      },
+      "final_structure": {
+        "births_from_zero": 24,
+        "depth": 3,
+        "effective_parameters": 28,
+        "exploration_rng_digest": "d6a5c2bd30155a0a7122bc7acdd814937db3ddd1bbfc872e73c8daa12be99371",
+        "expression_definitions": 65,
+        "owner_visits": {
+          "0": 64,
+          "1": 64,
+          "2": 64,
+          "3": 433,
+          "4": 430,
+          "5": 436,
+          "6": 429
+        },
+        "owners": 4,
+        "physical_nodes": 333,
+        "pruned": 0,
+        "splits": 3
+      },
+      "first_perfect_event": 1408,
+      "first_scoring_birth": 445,
+      "initial": 8,
+      "limits": {
+        "max_definitions": 256,
+        "max_depth": 4,
+        "max_leaves": 4,
+        "max_parameters": 64,
+        "max_physical_nodes": 2048
+      },
+      "maximum_measured_correct": 16,
+      "nomination_outcomes": {
+        "born": 24
+      },
+      "nominations": 24,
+      "owner_count_trajectory": [
+        [
+          64,
+          2
+        ],
+        [
+          128,
+          2
+        ],
+        [
+          192,
+          4
+        ],
+        [
+          256,
+          4
+        ],
+        [
+          320,
+          4
+        ],
+        [
+          384,
+          4
+        ],
+        [
+          448,
+          4
+        ],
+        [
+          512,
+          4
+        ],
+        [
+          576,
+          4
+        ],
+        [
+          640,
+          4
+        ],
+        [
+          704,
+          4
+        ],
+        [
+          768,
+          4
+        ],
+        [
+          832,
+          4
+        ],
+        [
+          896,
+          4
+        ],
+        [
+          960,
+          4
+        ],
+        [
+          1024,
+          4
+        ],
+        [
+          1088,
+          4
+        ],
+        [
+          1152,
+          4
+        ],
+        [
+          1216,
+          4
+        ],
+        [
+          1280,
+          4
+        ],
+        [
+          1344,
+          4
+        ],
+        [
+          1408,
+          4
+        ],
+        [
+          1472,
+          4
+        ],
+        [
+          1536,
+          4
+        ],
+        [
+          1600,
+          4
+        ],
+        [
+          1664,
+          4
+        ],
+        [
+          1728,
+          4
+        ],
+        [
+          1792,
+          4
+        ],
+        [
+          1856,
+          4
+        ],
+        [
+          1920,
+          4
+        ]
+      ],
+      "peak_nodes": 333,
+      "peak_parameters": 28,
+      "phase_boundaries": {
+        "1280": {
+          "A_B": [
+            4,
+            8
+          ],
+          "correct": 12
+        },
+        "1920": {
+          "A_B": [
+            8,
+            7
+          ],
+          "correct": 15
+        },
+        "640": {
+          "A_B": [
+            6,
+            2
+          ],
+          "correct": 8
+        }
+      },
+      "random_selections": 10,
+      "residual_selections": 14,
+      "role": "owners-4",
+      "row_changes": [
+        {
+          "event": 512,
+          "gains": [
+            4,
+            5
+          ],
+          "losses": [
+            6,
+            7
+          ]
+        },
+        {
+          "event": 704,
+          "gains": [
+            2,
+            3
+          ],
+          "losses": []
+        },
+        {
+          "event": 768,
+          "gains": [
+            10,
+            11
+          ],
+          "losses": [
+            8,
+            9
+          ]
+        },
+        {
+          "event": 832,
+          "gains": [
+            6,
+            7
+          ],
+          "losses": [
+            4,
+            5
+          ]
+        },
+        {
+          "event": 1024,
+          "gains": [
+            0,
+            1
+          ],
+          "losses": []
+        },
+        {
+          "event": 1344,
+          "gains": [
+            4,
+            5
+          ],
+          "losses": []
+        },
+        {
+          "event": 1408,
+          "gains": [
+            8,
+            9
+          ],
+          "losses": []
+        },
+        {
+          "event": 1600,
+          "gains": [],
+          "losses": [
+            10,
+            11
+          ]
+        },
+        {
+          "event": 1664,
+          "gains": [
+            10,
+            11
+          ],
+          "losses": []
+        },
+        {
+          "event": 1728,
+          "gains": [],
+          "losses": [
+            10,
+            11
+          ]
+        },
+        {
+          "event": 1792,
+          "gains": [
+            10,
+            11
+          ],
+          "losses": []
+        },
+        {
+          "event": 1856,
+          "gains": [],
+          "losses": [
+            11
+          ]
+        }
+      ],
+      "score_trajectory": [
+        [
+          0,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          64,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          128,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          192,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          256,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          320,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          384,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          448,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          512,
+          8,
+          [
+            6,
+            2
+          ]
+        ],
+        [
+          576,
+          8,
+          [
+            6,
+            2
+          ]
+        ],
+        [
+          640,
+          8,
+          [
+            6,
+            2
+          ]
+        ],
+        [
+          704,
+          10,
+          [
+            6,
+            4
+          ]
+        ],
+        [
+          768,
+          10,
+          [
+            4,
+            6
+          ]
+        ],
+        [
+          832,
+          10,
+          [
+            2,
+            8
+          ]
+        ],
+        [
+          896,
+          10,
+          [
+            2,
+            8
+          ]
+        ],
+        [
+          960,
+          10,
+          [
+            2,
+            8
+          ]
+        ],
+        [
+          1024,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1088,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1152,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1216,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1280,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1344,
+          14,
+          [
+            6,
+            8
+          ]
+        ],
+        [
+          1408,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1472,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1536,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1600,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1664,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1728,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1792,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1856,
+          15,
+          [
+            8,
+            7
+          ]
+        ],
+        [
+          1920,
+          15,
+          [
+            8,
+            7
+          ]
+        ]
+      ],
+      "seed": 17,
+      "split_events": [
+        {
+          "episode": 64,
+          "owner": 0,
+          "split": {
+            "candidate": 2,
+            "children": [
+              1,
+              2
+            ],
+            "evidence": "SplitEvidence(n0=33, n1=31, sum0=-28.61405422939984, sum1=29.337176984241733)",
+            "route": "Expression(operator='read', children=(), atom=(0, True))",
+            "score": 52.56640978612626
+          }
+        },
+        {
+          "episode": 190,
+          "owner": 1,
+          "split": {
+            "candidate": 1,
+            "children": [
+              3,
+              4
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=3.343262274094765, sum1=-7.1483583809629945)",
+            "route": "Expression(operator='read', children=(), atom=(1, False))",
+            "score": 1.7199078745255405
+          }
+        },
+        {
+          "episode": 192,
+          "owner": 2,
+          "split": {
+            "candidate": 1,
+            "children": [
+              5,
+              6
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=-1.3749793853388041, sum1=1.956660559642891)",
+            "route": "Expression(operator='read', children=(), atom=(1, False))",
+            "score": 0.17343476129683802
+          }
+        }
+      ],
+      "sustained_measured_perfection_from": null,
+      "training_by_phase": [
+        {
+          "actions": 640,
+          "correct": 353,
+          "start": 0,
+          "stop": 640
+        },
+        {
+          "actions": 640,
+          "correct": 483,
+          "start": 640,
+          "stop": 1280
+        },
+        {
+          "actions": 640,
+          "correct": 525,
+          "start": 1280,
+          "stop": 1920
+        }
+      ],
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 433,
+        "4": 430,
+        "5": 436,
+        "6": 429
+      },
+      "zero_credit_measure_limit": "Direct condition identity only; inherited descendants are distinct identities. A zero count alone does not imply impossibility or causal uselessness."
+    },
+    {
+      "A_retention": {
+        "boundary": 640,
+        "boundary_correct_rows": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "context": 0,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "worst_measured_retained": 4
+      },
+      "B_retention": {
+        "boundary": 1280,
+        "boundary_correct_rows": [
+          2,
+          3,
+          6,
+          7,
+          11,
+          14,
+          15
+        ],
+        "context": 1,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          2,
+          3,
+          6,
+          7,
+          11,
+          14,
+          15
+        ],
+        "worst_measured_retained": 7
+      },
+      "accepted_births": 16,
+      "budget_rejections": [],
+      "direct_identity_zero_credit_births": 0,
+      "final": 14,
+      "final_A_B": [
+        6,
+        8
+      ],
+      "final_failed_rows": [
+        4,
+        5
+      ],
+      "final_live_owner_visits": {
+        "10": 183,
+        "11": 180,
+        "12": 185,
+        "13": 188,
+        "14": 184,
+        "7": 183,
+        "8": 186,
+        "9": 183
+      },
+      "final_structure": {
+        "births_from_zero": 16,
+        "depth": 4,
+        "effective_parameters": 24,
+        "exploration_rng_digest": "d6a5c2bd30155a0a7122bc7acdd814937db3ddd1bbfc872e73c8daa12be99371",
+        "expression_definitions": 74,
+        "owner_visits": {
+          "0": 64,
+          "1": 64,
+          "10": 183,
+          "11": 180,
+          "12": 185,
+          "13": 188,
+          "14": 184,
+          "2": 64,
+          "3": 64,
+          "4": 64,
+          "5": 64,
+          "6": 64,
+          "7": 183,
+          "8": 186,
+          "9": 183
+        },
+        "owners": 8,
+        "physical_nodes": 363,
+        "pruned": 0,
+        "splits": 7
+      },
+      "first_perfect_event": null,
+      "first_scoring_birth": 911,
+      "initial": 8,
+      "limits": {
+        "max_definitions": 256,
+        "max_depth": 4,
+        "max_leaves": 8,
+        "max_parameters": 64,
+        "max_physical_nodes": 2048
+      },
+      "maximum_measured_correct": 14,
+      "nomination_outcomes": {
+        "born": 16
+      },
+      "nominations": 16,
+      "owner_count_trajectory": [
+        [
+          64,
+          2
+        ],
+        [
+          128,
+          2
+        ],
+        [
+          192,
+          4
+        ],
+        [
+          256,
+          4
+        ],
+        [
+          320,
+          4
+        ],
+        [
+          384,
+          4
+        ],
+        [
+          448,
+          8
+        ],
+        [
+          512,
+          8
+        ],
+        [
+          576,
+          8
+        ],
+        [
+          640,
+          8
+        ],
+        [
+          704,
+          8
+        ],
+        [
+          768,
+          8
+        ],
+        [
+          832,
+          8
+        ],
+        [
+          896,
+          8
+        ],
+        [
+          960,
+          8
+        ],
+        [
+          1024,
+          8
+        ],
+        [
+          1088,
+          8
+        ],
+        [
+          1152,
+          8
+        ],
+        [
+          1216,
+          8
+        ],
+        [
+          1280,
+          8
+        ],
+        [
+          1344,
+          8
+        ],
+        [
+          1408,
+          8
+        ],
+        [
+          1472,
+          8
+        ],
+        [
+          1536,
+          8
+        ],
+        [
+          1600,
+          8
+        ],
+        [
+          1664,
+          8
+        ],
+        [
+          1728,
+          8
+        ],
+        [
+          1792,
+          8
+        ],
+        [
+          1856,
+          8
+        ],
+        [
+          1920,
+          8
+        ]
+      ],
+      "peak_nodes": 363,
+      "peak_parameters": 24,
+      "phase_boundaries": {
+        "1280": {
+          "A_B": [
+            6,
+            7
+          ],
+          "correct": 13
+        },
+        "1920": {
+          "A_B": [
+            6,
+            8
+          ],
+          "correct": 14
+        },
+        "640": {
+          "A_B": [
+            4,
+            4
+          ],
+          "correct": 8
+        }
+      },
+      "random_selections": 4,
+      "residual_selections": 12,
+      "role": "owners-8",
+      "row_changes": [
+        {
+          "event": 1024,
+          "gains": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "losses": []
+        },
+        {
+          "event": 1088,
+          "gains": [
+            11
+          ],
+          "losses": []
+        },
+        {
+          "event": 1536,
+          "gains": [
+            10
+          ],
+          "losses": []
+        }
+      ],
+      "score_trajectory": [
+        [
+          0,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          64,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          128,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          192,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          256,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          320,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          384,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          448,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          512,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          576,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          640,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          704,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          768,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          832,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          896,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          960,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          1024,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1088,
+          13,
+          [
+            6,
+            7
+          ]
+        ],
+        [
+          1152,
+          13,
+          [
+            6,
+            7
+          ]
+        ],
+        [
+          1216,
+          13,
+          [
+            6,
+            7
+          ]
+        ],
+        [
+          1280,
+          13,
+          [
+            6,
+            7
+          ]
+        ],
+        [
+          1344,
+          13,
+          [
+            6,
+            7
+          ]
+        ],
+        [
+          1408,
+          13,
+          [
+            6,
+            7
+          ]
+        ],
+        [
+          1472,
+          13,
+          [
+            6,
+            7
+          ]
+        ],
+        [
+          1536,
+          14,
+          [
+            6,
+            8
+          ]
+        ],
+        [
+          1600,
+          14,
+          [
+            6,
+            8
+          ]
+        ],
+        [
+          1664,
+          14,
+          [
+            6,
+            8
+          ]
+        ],
+        [
+          1728,
+          14,
+          [
+            6,
+            8
+          ]
+        ],
+        [
+          1792,
+          14,
+          [
+            6,
+            8
+          ]
+        ],
+        [
+          1856,
+          14,
+          [
+            6,
+            8
+          ]
+        ],
+        [
+          1920,
+          14,
+          [
+            6,
+            8
+          ]
+        ]
+      ],
+      "seed": 17,
+      "split_events": [
+        {
+          "episode": 64,
+          "owner": 0,
+          "split": {
+            "candidate": 2,
+            "children": [
+              1,
+              2
+            ],
+            "evidence": "SplitEvidence(n0=33, n1=31, sum0=-28.61405422939984, sum1=29.337176984241733)",
+            "route": "Expression(operator='read', children=(), atom=(0, True))",
+            "score": 52.56640978612626
+          }
+        },
+        {
+          "episode": 190,
+          "owner": 1,
+          "split": {
+            "candidate": 1,
+            "children": [
+              3,
+              4
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=3.343262274094765, sum1=-7.1483583809629945)",
+            "route": "Expression(operator='read', children=(), atom=(1, False))",
+            "score": 1.7199078745255405
+          }
+        },
+        {
+          "episode": 192,
+          "owner": 2,
+          "split": {
+            "candidate": 1,
+            "children": [
+              5,
+              6
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=-1.3749793853388041, sum1=1.956660559642891)",
+            "route": "Expression(operator='read', children=(), atom=(1, False))",
+            "score": 0.17343476129683802
+          }
+        },
+        {
+          "episode": 445,
+          "owner": 3,
+          "split": {
+            "candidate": 3,
+            "children": [
+              7,
+              8
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=-2.9109162447499886, sum1=4.150980719520895)",
+            "route": "Expression(operator='read', children=(), atom=(3, False))",
+            "score": 0.7792248239684113
+          }
+        },
+        {
+          "episode": 446,
+          "owner": 4,
+          "split": {
+            "candidate": 3,
+            "children": [
+              9,
+              10
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=-0.04888338740811693, sum1=0.14410564150255278)",
+            "route": "Expression(operator='read', children=(), atom=(3, False))",
+            "score": 0.0005819494574981767
+          }
+        },
+        {
+          "episode": 447,
+          "owner": 6,
+          "split": {
+            "candidate": 3,
+            "children": [
+              11,
+              12
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=-0.9383804664523571, sum1=2.4660148917205413)",
+            "route": "Expression(operator='read', children=(), atom=(3, False))",
+            "score": 0.1810923086679559
+          }
+        },
+        {
+          "episode": 448,
+          "owner": 5,
+          "split": {
+            "candidate": 3,
+            "children": [
+              13,
+              14
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=-2.5908489434308795, sum1=3.697819002784798)",
+            "route": "Expression(operator='read', children=(), atom=(3, False))",
+            "score": 0.617927258402508
+          }
+        }
+      ],
+      "sustained_measured_perfection_from": null,
+      "training_by_phase": [
+        {
+          "actions": 640,
+          "correct": 313,
+          "start": 0,
+          "stop": 640
+        },
+        {
+          "actions": 640,
+          "correct": 396,
+          "start": 640,
+          "stop": 1280
+        },
+        {
+          "actions": 640,
+          "correct": 448,
+          "start": 1280,
+          "stop": 1920
+        }
+      ],
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 64,
+        "4": 64,
+        "5": 64,
+        "6": 64,
+        "7": 183,
+        "8": 186,
+        "9": 183,
+        "10": 183,
+        "11": 180,
+        "12": 185,
+        "13": 188,
+        "14": 184
+      },
+      "zero_credit_measure_limit": "Direct condition identity only; inherited descendants are distinct identities. A zero count alone does not imply impossibility or causal uselessness."
+    }
+  ],
+  "elapsed_seconds": 982.9862575919979,
+  "max_rss_kib": 41576,
+  "paired_effects": [
+    {
+      "comparison": "eight minus four owners",
+      "final_score_difference": -1,
+      "node_difference": 26,
+      "parameter_difference": -4,
+      "seed": 15
+    },
+    {
+      "comparison": "eight minus four owners",
+      "final_score_difference": 3,
+      "node_difference": 26,
+      "parameter_difference": -4,
+      "seed": 16
+    },
+    {
+      "comparison": "eight minus four owners",
+      "final_score_difference": -1,
+      "node_difference": 30,
+      "parameter_difference": -4,
+      "seed": 17
+    }
+  ],
+  "roles": [
+    "owners-4",
+    "owners-8"
+  ],
+  "seeds": [
+    15,
+    16,
+    17
+  ],
+  "status": "complete",
+  "verification": {
+    "blocks": 180,
+    "checkpoints": 186,
+    "evaluation": 2976,
+    "training": 11520,
+    "verification_actions": 2976
+  }
+}

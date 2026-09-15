@@ -1,0 +1,26 @@
+{
+  "archive": {
+    "bytes": 20509150,
+    "crc_and_all_member_hashes_verified": true,
+    "members": 23967,
+    "name": "HECTOR_OWNER_HEADROOM_20260915.zip",
+    "sha256": "e82a4eccd6e340b6b50443a1ce4d5f5925862ac7a0f65467de457d6f9ea952d8"
+  },
+  "elapsed_seconds": 982.9862575919979,
+  "focused_tests_passed": 23,
+  "max_rss_kib": 41576,
+  "new_training_or_evaluation_in_offline_analysis": 0,
+  "preflight_sha256": "66cf359c1941168fe6be0144e91b842da7b665f4e5fbeccee3b1c9e51a70b0d4",
+  "runtime_source_files": 81,
+  "source_local_commit": "4f779c0a",
+  "source_remote_commit": "1ecb5a00acff6266afb66f1c2a8f1bce92a34311",
+  "status": "complete",
+  "unchanged_previous_runtime_files": 79,
+  "verification": {
+    "blocks": 180,
+    "checkpoints": 186,
+    "evaluation": 2976,
+    "training": 11520,
+    "verification_actions": 2976
+  }
+}

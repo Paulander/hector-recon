@@ -1,5 +1,23 @@
 # ReCoN/Hector agent instructions
 
+Latest COMPLETE result,2026-09-15: read `docs/autogrowth/OWNER_HEADROOM_RESULTS.md`.
+The authorized fresh4/8-owner comparison finished seeds15/16/17: final14/13/15
+versus13/16/14 (42/48 vs43/48), one paired win and two losses for8. Seed16/8
+holds16 from1536; seed17/4 reaches16 then regresses to15. Eight owners delay
+first scoring births to911–920 versus436–445 and receive180–188 visits per
+final owner versus429–436. All extra splits happen before448 in A-only exposure.
+No pruning;24/16 scoring births,28/24 final parameters,325–339/351–365 nodes.
+Final graphs seed15both and17/8 lack16/16 capacity (exact contradictions);
+seed16/4 and17/4 have capacity but wrong learned weights. All final conditions
+remain TRIAL; current maturation is absent. Engine k-of-n/nested Boolean support
+must not be confused with discovery: see CURRENT_COMPOSITION_AND_LIFECYCLE.md.
+All11520 training+2976 eval+2976 frozen actions,180 blocks,186 checkpoints verify.
+81 runtime hashes match;79 previous sources unchanged;23 focused checks pass.
+Runtime982.986s,41576KiB,oneCPU. No retry or process remains. This cohort is CLOSED.
+Do not extend it, add maturation/compound discovery/timing knobs, or launch a new
+experiment automatically. Keep4 as reference; private work-branch publication
+remains authorized and main unchanged. Older status entries below are historical.
+
 Current authorized work, 2026-09-15: read `docs/autogrowth/OWNER_HEADROOM.md`.
 The user explicitly said to run the proposed four-versus-eight-owner experiment
 while inspecting Boolean composition and lifecycle support. This authorizes ONE
