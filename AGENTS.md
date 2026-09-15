@@ -1,5 +1,16 @@
 # ReCoN/Hector agent instructions
 
+Current authorization, 2026-09-15: read `docs/autogrowth/OWNER_SPLIT_TRIAL.md`.
+The user said to implement/run the proposed combination of owner splitting with
+trial acceptance, and explicitly record that integration and its interaction risk.
+One fresh seeds18/19/20 cohort, current versus trial, 1920 actions each is declared.
+Earlier cohorts remain CLOSED. Reuse existing internal permission, actual-outcome
+records and lifecycle states; no oracle, macro coach, k-of-n expansion or merging.
+Ordinary weight learning and local condition growth continue during trials.
+Run mechanical fixtures first; pin the protocol/source before study play.
+Private work-branch publication stays authorized; main remains unchanged.
+Older no-new-mechanism notes below apply to their closed experiments.
+
 Latest COMPLETE result,2026-09-15: read `docs/autogrowth/OWNER_HEADROOM_RESULTS.md`.
 The authorized fresh4/8-owner comparison finished seeds15/16/17: final14/13/15
 versus13/16/14 (42/48 vs43/48), one paired win and two losses for8. Seed16/8

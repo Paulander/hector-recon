@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "tests": 58,
+  "failures": 0,
+  "errors": 0,
+  "junit_sha256": "6ec77a6904f5b27ffd154732237da8aedb64fcd99c5cbcf83364ce5449223ae6",
+  "files": [
+    "libs.recon-lite.tests.test_formal_choice",
+    "tests.autogrowth.test_context_decision",
+    "tests.autogrowth.test_owner_development",
+    "tests.autogrowth.test_owner_fresh_start",
+    "tests.autogrowth.test_owner_headroom",
+    "tests.autogrowth.test_owner_split_trial",
+    "tests.autogrowth.test_trial_usefulness"
+  ],
+  "new_mechanical_tests": 6,
+  "cohort_started": false
+}

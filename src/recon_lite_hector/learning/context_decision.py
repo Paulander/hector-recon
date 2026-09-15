@@ -135,7 +135,7 @@ class ContextDecisionDevelopment(RecursiveDevelopment):
         from dataclasses import replace
 
         limits = self.ownership_limits
-        if len(self.leaves) > limits.max_leaves or len(self.conditions) > limits.max_parameters:
+        if self._leaf_budget_count() > limits.max_leaves or len(self.conditions) > limits.max_parameters:
             raise ValueError("ownership parameter/leaf budget exhausted")
         for leaf in self.leaves.values():
             for cid in leaf.contributions:
@@ -152,6 +152,10 @@ class ContextDecisionDevelopment(RecursiveDevelopment):
         self.slots = 0
         self._ensure_slots(slots)
         self.validate_ownership()
+
+    def _leaf_budget_count(self):
+        """Reserved live partition size; ordinary ownership has no alternatives."""
+        return len(self.leaves)
 
     def _ensure_slots(self, count):
         if count <= self.slots:
@@ -267,7 +271,7 @@ class ContextDecisionDevelopment(RecursiveDevelopment):
             raise ValueError("a scoring parameter must have exactly one owner")
         if len({id(c.weight) for c in self.conditions.values()}) != len(all_ids):
             raise ValueError("scoring parameters alias across contributions")
-        if (float(self.bias) != 0 or len(self.leaves) > limits.max_leaves
+        if (float(self.bias) != 0 or self._leaf_budget_count() > limits.max_leaves
                 or len(all_ids) > limits.max_parameters
                 or len(self.expression_ids) > limits.max_definitions
                 or len(self.graph.nodes) > limits.max_physical_nodes):
