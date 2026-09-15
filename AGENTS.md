@@ -1,5 +1,27 @@
 # ReCoN/Hector agent instructions
 
+Current authorized work, 2026-09-15: read `docs/autogrowth/OWNER_BIRTH_SEARCH.md`.
+The user authorized publication of the recovered private work branch and the
+next experiment. This supersedes older no-publication notes for this branch;
+main is not merged or changed. Remote snapshot d7ec0e1 has exactly the source
+tree of local bc61220e; local history is retained separately because ordinary
+Git transport credentials are unavailable.
+
+The isolated birth-search extension compares random/residual nomination from
+one matched 24-condition pool, crossed with current/extra-after-split opportunity
+scheduling. Only formal selected-binding candidate confirmations and actual
+scalar residuals enter owner-local evidence. Retain unknown/rare/state-only
+eligibility, ancestor evidence, zero initial live weights and ordinary credit.
+No diagnostic repair, new task cues, merging or freezing. The fixed candidate
+pool is an experimental restriction; the historical compatibility actor is not
+the matched random null for this study.
+Reuse seeds10/11 event640 sources, four arms each,1280 actions per arm. Planned
+10240 training+2560 scheduled evaluation+2560 frozen reproduction actions;
+160 blocks,168 new checkpoints. OneCPU/2GiB;3600s worker/3630s independent timeout.
+No automatic retry or extension. Report incomplete evidence if interrupted.
+Only the declared pilot may run; do not resume earlier closed experiments.
+All older status entries below are historical.
+
 Latest COMPLETE result, 2026-09-14: read
 `docs/autogrowth/OWNER_COMPATIBILITY_RESULTS.md` and its predeclared protocol.
 The isolated local contradiction check rejects only proven-impossible NEW births,
