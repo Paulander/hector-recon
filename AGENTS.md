@@ -1,5 +1,16 @@
 # ReCoN/Hector agent instructions
 
+Latest read-only follow-up,2026-09-15: `docs/autogrowth/OWNER_FRESH_FAILURES.md`
+clarifies that the16 evaluation cases are a four-bit Boolean task, not chess.
+Ranked12 peaked15 then ended14 with row10 previously correct and row11 lost,
+recovered and lost again. Ranked13 never exceeded14 and retains the same14 from
+1280 onward; row10 was never correct, row7 was correct until896 then lost at960.
+Both ranked final structures have sufficient16/16 capacity; learned weights
+remain wrong. Actual-credit attribution identifies interference inside owners,
+from both A examples and competing B examples. Random12/13 also lack sufficient
+final structural capacity. No new play or fitted parameters entered the learner.
+Do not call these results chess performance or general loss-free retention.
+
 Latest COMPLETE result, 2026-09-15: read `docs/autogrowth/OWNER_FRESH_START_RESULTS.md`.
 The user-requested zero-training cohort finished all six arms: seeds12/13/14,
 random/current vs residual/current,1920 training actions each. Final scores are

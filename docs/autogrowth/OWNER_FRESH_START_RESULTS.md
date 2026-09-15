@@ -8,6 +8,11 @@ the identical tree as remote `e3cf9a31f1a276eeb4dbe0252f2202825501a297`.
 versus41/48 for random selection across three seeds. It improves two seeds and
 worsens one; retention remains imperfect. No split-timing knob was introduced.**
 
+**Scope: these are all16 states of a four-bit Boolean task, not mate-in-one
+chess positions. No new chess performance was measured in this experiment.**
+See [OWNER_FRESH_FAILURES.md](OWNER_FRESH_FAILURES.md) for the task definition,
+growth/weight-update distinction and the subsequent read-only failure audit.
+
 The user asked to start new networks from the beginning. Each learner therefore
 starts with zero completed actions, one untrained owner, zero-valued learned
 bias, no learned scoring features and no imported checkpoint. A generic unbound
