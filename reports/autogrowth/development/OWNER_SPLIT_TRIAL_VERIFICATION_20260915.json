@@ -1,0 +1,36 @@
+{
+  "actual_process_exit_code": 0,
+  "archive": {
+    "bytes": 25111467,
+    "members": 23969,
+    "result_status": "complete",
+    "sha256": "07a5e36d01dbd91d9e294925b9461c2fe03797fb011ecb732296299f0099d274",
+    "verified_payloads": 23968
+  },
+  "archive_filename": "HECTOR_OWNER_SPLIT_TRIAL_20260915.zip",
+  "cohort_closed": true,
+  "elapsed_seconds": 1002.9017092150025,
+  "focused_tests": 58,
+  "main": "2aa1ce47a6a93e2571aaa0b02101e9543fe94955",
+  "max_rss_kib": 48880,
+  "new_mechanical_tests": 6,
+  "no_main_change": true,
+  "offline_arithmetic_choices": 2976,
+  "offline_new_environment_actions": 0,
+  "prior_source_files_changed": [
+    "src/recon_lite_hector/learning/context_decision.py"
+  ],
+  "prior_source_files_unchanged": 80,
+  "runtime_source_files": 84,
+  "source_local": "41a9e44f3b70df040889a547509c207ae4d93206",
+  "source_remote": "e3754ea4fa9fdd936a3fa5a19958ccc27ba5be63",
+  "source_tree": "e2185a1f1a871d6087b45f75341dba7590ac9283",
+  "status": "verified complete",
+  "verification": {
+    "blocks": 180,
+    "checkpoints": 186,
+    "evaluation": 2976,
+    "training": 11520,
+    "verification_actions": 2976
+  }
+}

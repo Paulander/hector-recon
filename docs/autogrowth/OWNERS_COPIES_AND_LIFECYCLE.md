@@ -1,5 +1,11 @@
 # Owners, copies, growth and lifecycle
 
+Later experiment: [OWNER_SPLIT_TRIAL_RESULTS.md](OWNER_SPLIT_TRIAL_RESULTS.md)
+records provisional owner trials and their negative first comparison. The diagram
+below remains a faithful explanation of the earlier saved four/eight-owner runs.
+Temporary alternatives add stored scorers beyond the committed partition, with
+all parameters/nodes counted. They do not introduce a macro/network router.
+
 Clarification requested2026-09-15 before another learner change or experiment.
 The interactive fragment is `visuals/recon-owners-and-growth.html`. It is a
 self-contained explanation, with no network requests and no training code.

@@ -1,0 +1,62 @@
+{
+  "arms": [
+    {
+      "actions": 1920,
+      "all_assignment_draws_match_independent_rng": true,
+      "all_formal_probe_flags_match_declared_measurements": true,
+      "all_owner_exposure_and_residual_histories_match": true,
+      "all_trial_outcomes_and_child_exposures_match": true,
+      "role": "current",
+      "seed": 18
+    },
+    {
+      "actions": 1920,
+      "all_assignment_draws_match_independent_rng": true,
+      "all_formal_probe_flags_match_declared_measurements": true,
+      "all_owner_exposure_and_residual_histories_match": true,
+      "all_trial_outcomes_and_child_exposures_match": true,
+      "role": "trial",
+      "seed": 18
+    },
+    {
+      "actions": 1920,
+      "all_assignment_draws_match_independent_rng": true,
+      "all_formal_probe_flags_match_declared_measurements": true,
+      "all_owner_exposure_and_residual_histories_match": true,
+      "all_trial_outcomes_and_child_exposures_match": true,
+      "role": "current",
+      "seed": 19
+    },
+    {
+      "actions": 1920,
+      "all_assignment_draws_match_independent_rng": true,
+      "all_formal_probe_flags_match_declared_measurements": true,
+      "all_owner_exposure_and_residual_histories_match": true,
+      "all_trial_outcomes_and_child_exposures_match": true,
+      "role": "trial",
+      "seed": 19
+    },
+    {
+      "actions": 1920,
+      "all_assignment_draws_match_independent_rng": true,
+      "all_formal_probe_flags_match_declared_measurements": true,
+      "all_owner_exposure_and_residual_histories_match": true,
+      "all_trial_outcomes_and_child_exposures_match": true,
+      "role": "current",
+      "seed": 20
+    },
+    {
+      "actions": 1920,
+      "all_assignment_draws_match_independent_rng": true,
+      "all_formal_probe_flags_match_declared_measurements": true,
+      "all_owner_exposure_and_residual_histories_match": true,
+      "all_trial_outcomes_and_child_exposures_match": true,
+      "role": "trial",
+      "seed": 20
+    }
+  ],
+  "new_environment_actions": 0,
+  "source_files": 84,
+  "status": "verified",
+  "training_actions": 11520
+}

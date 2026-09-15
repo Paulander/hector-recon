@@ -1,5 +1,11 @@
 # Composition and lifecycle in the current fresh owner learner
 
+New experimental path: [OWNER_SPLIT_TRIAL_RESULTS.md](OWNER_SPLIT_TRIAL_RESULTS.md)
+records the first combination with provisional split acceptance. It reuses the
+existing lifecycle/permission machinery. The current FreshOwnerDevelopment
+reference described below remains unchanged in behavior; the new trial law lost
+all three pairs and is not promoted to the reference.
+
 Inspected 2026-09-15. These distinctions apply to the active FreshOwnerDevelopment
 path, not every historical class in this repository. No mechanism changes are
 made by this inspection or by the four-versus-eight-owner experiment.

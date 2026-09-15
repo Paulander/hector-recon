@@ -1,6 +1,7 @@
 """Read-only committed-policy retention and full provisional-storage costs."""
 import argparse
 import json
+import itertools
 from pathlib import Path
 
 from summarize_owner_fresh_start import summarize as fresh_summary
@@ -17,6 +18,10 @@ def summarize(path):
         summary['trial_history'] = arm['trial_history']
         summary['trial_counts'] = {state:sum(t['state']==state for t in arm['trial_history'])
                                    for state in ('TRIAL','MATURE','PRUNED')}
+        # The immutable runner's generic field counts all committed splits,
+        # including current-arm automatic ones. Normalize that label here.
+        summary['final_structure']['committed_splits'] = summary['final_structure']['splits']
+        summary['final_structure']['accepted_trials'] = summary['trial_counts']['MATURE']
         summary['trial_assigned_actions'] = sum(r['split_use_assignment'] is not None for r in rows)
         summary['trial_child_actions'] = sum(bool(r['split_use_assignment'] and r['split_use_assignment'][4]) for r in rows)
         summary['training_wall_seconds_including_recording_and_scheduled_eval'] = arm['training_wall_seconds']
@@ -28,6 +33,9 @@ def summarize(path):
             'parameter_action_sum':sum(r['stored_parameters'] for r in rows),
             'note':'Stored allocation at each real training action; not executed FLOPs.'}
         evaluations = [arm['initial'],*arm['evaluations']]
+        states = list(itertools.product((False,True),repeat=4))
+        summary['final_single_input_matches'] = [name for i,name in enumerate(('x','y'))
+            if all((r['action']=='act-b') == states[r['row']][i] for r in evaluations[-1]['rows'])]
         summary['maximum_correct'] = max(e['correct'] for e in evaluations)
         summary['sustained_perfect_from'] = next((e['episode'] for i,e in enumerate(evaluations)
             if all(later['correct']==16 for later in evaluations[i:])),None)

@@ -1,0 +1,6545 @@
+{
+  "arms": [
+    {
+      "A_retention": {
+        "boundary": 640,
+        "boundary_correct_rows": [
+          0,
+          1,
+          8,
+          9,
+          12,
+          13
+        ],
+        "context": 0,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          0,
+          1,
+          8,
+          9,
+          12,
+          13
+        ],
+        "worst_measured_retained": 4
+      },
+      "B_retention": {
+        "boundary": 1280,
+        "boundary_correct_rows": [
+          2,
+          3,
+          6,
+          7,
+          10,
+          11,
+          14,
+          15
+        ],
+        "context": 1,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          2,
+          3,
+          6,
+          7,
+          10,
+          11,
+          14,
+          15
+        ],
+        "worst_measured_retained": 8
+      },
+      "accepted_births": 24,
+      "direct_identity_zero_credit_births": 2,
+      "final": 16,
+      "final_A_B": [
+        8,
+        8
+      ],
+      "final_single_input_matches": [],
+      "final_structure": {
+        "accepted_trials": 0,
+        "births_from_zero": 24,
+        "committed_owners": 4,
+        "committed_splits": 3,
+        "depth": 3,
+        "effective_parameters": 28,
+        "exploration_rng_digest": "bf81d82242460ad37815883a96086e75c7df7db1a20b19b5d38fdc4861ea1629",
+        "expression_definitions": 65,
+        "owner_visits": {
+          "0": 64,
+          "1": 64,
+          "2": 64,
+          "3": 434,
+          "4": 433,
+          "5": 432,
+          "6": 429
+        },
+        "owners": 4,
+        "pending_trials": 0,
+        "physical_nodes": 333,
+        "pruned": 0,
+        "reserved_owners": 4,
+        "resolved_trials": 0,
+        "splits": 3,
+        "stored_scorers": 4
+      },
+      "first_perfect_event": 1216,
+      "first_scoring_birth": 444,
+      "initial": 8,
+      "maximum_correct": 16,
+      "nomination_outcomes": {
+        "born": 24
+      },
+      "nominations": 24,
+      "peak_nodes": 333,
+      "peak_parameters": 28,
+      "phase_boundaries": {
+        "1280": {
+          "A_B": [
+            8,
+            8
+          ],
+          "correct": 16
+        },
+        "1920": {
+          "A_B": [
+            8,
+            8
+          ],
+          "correct": 16
+        },
+        "640": {
+          "A_B": [
+            6,
+            6
+          ],
+          "correct": 12
+        }
+      },
+      "random_selections": 7,
+      "residual_selections": 17,
+      "role": "current",
+      "row_changes": [
+        {
+          "event": 512,
+          "gains": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "losses": []
+        },
+        {
+          "event": 832,
+          "gains": [
+            10,
+            11
+          ],
+          "losses": [
+            8,
+            9
+          ]
+        },
+        {
+          "event": 1024,
+          "gains": [
+            4,
+            5
+          ],
+          "losses": []
+        },
+        {
+          "event": 1216,
+          "gains": [
+            8,
+            9
+          ],
+          "losses": []
+        }
+      ],
+      "row_histories": [
+        {
+          "correct_at": [
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 512,
+          "row": 0
+        },
+        {
+          "correct_at": [
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 512,
+          "row": 1
+        },
+        {
+          "correct_at": [
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 512,
+          "row": 2
+        },
+        {
+          "correct_at": [
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 512,
+          "row": 3
+        },
+        {
+          "correct_at": [
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 1024,
+          "row": 4
+        },
+        {
+          "correct_at": [
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 1024,
+          "row": 5
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 6
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 7
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 8
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 9
+        },
+        {
+          "correct_at": [
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 832,
+          "row": 10
+        },
+        {
+          "correct_at": [
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 832,
+          "row": 11
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 12
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 13
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 14
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 15
+        }
+      ],
+      "score_trajectory": [
+        [
+          0,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          64,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          128,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          192,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          256,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          320,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          384,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          448,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          512,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          576,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          640,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          704,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          768,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          832,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          896,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          960,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1024,
+          14,
+          [
+            6,
+            8
+          ]
+        ],
+        [
+          1088,
+          14,
+          [
+            6,
+            8
+          ]
+        ],
+        [
+          1152,
+          14,
+          [
+            6,
+            8
+          ]
+        ],
+        [
+          1216,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1280,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1344,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1408,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1472,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1536,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1600,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1664,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1728,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1792,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1856,
+          16,
+          [
+            8,
+            8
+          ]
+        ],
+        [
+          1920,
+          16,
+          [
+            8,
+            8
+          ]
+        ]
+      ],
+      "seed": 18,
+      "split_events": [
+        {
+          "episode": 64,
+          "owner": 0,
+          "split": {
+            "candidate": 0,
+            "children": [
+              1,
+              2
+            ],
+            "evidence": "SplitEvidence(n0=35, n1=29, sum0=24.905044840462068, sum1=-25.807203543418105)",
+            "route": "Expression(operator='read', children=(), atom=(0, False))",
+            "score": 40.674955783624306
+          }
+        },
+        {
+          "episode": 190,
+          "owner": 2,
+          "split": {
+            "candidate": 4,
+            "children": [
+              3,
+              4
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=-8.366321596225726, sum1=6.011090551123971)",
+            "route": "Expression(operator='read', children=(), atom=(1, True))",
+            "score": 3.229843438355603
+          }
+        },
+        {
+          "episode": 192,
+          "owner": 1,
+          "split": {
+            "candidate": 4,
+            "children": [
+              5,
+              6
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=4.259813824954678, sum1=-0.0315171372191535)",
+            "route": "Expression(operator='read', children=(), atom=(1, True))",
+            "score": 0.2877425222954966
+          }
+        }
+      ],
+      "storage_cost": {
+        "node_action_sum": 384360,
+        "note": "Stored allocation at each real training action; not executed FLOPs.",
+        "parameter_action_sum": 27240,
+        "peak_nodes": 333,
+        "peak_parameters": 28,
+        "peak_stored_scorers": 4
+      },
+      "sustained_perfect_from": 1216,
+      "training_by_phase": [
+        {
+          "actions": 640,
+          "correct": 338,
+          "start": 0,
+          "stop": 640
+        },
+        {
+          "actions": 640,
+          "correct": 515,
+          "start": 640,
+          "stop": 1280
+        },
+        {
+          "actions": 640,
+          "correct": 564,
+          "start": 1280,
+          "stop": 1920
+        }
+      ],
+      "training_wall_seconds_including_recording_and_scheduled_eval": 130.7993729249938,
+      "trial_assigned_actions": 0,
+      "trial_child_actions": 0,
+      "trial_counts": {
+        "MATURE": 0,
+        "PRUNED": 0,
+        "TRIAL": 0
+      },
+      "trial_history": [],
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 434,
+        "4": 433,
+        "5": 432,
+        "6": 429
+      }
+    },
+    {
+      "A_retention": {
+        "boundary": 640,
+        "boundary_correct_rows": [
+          0,
+          1,
+          4,
+          5,
+          8,
+          9,
+          12,
+          13
+        ],
+        "context": 0,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          0,
+          1,
+          4,
+          5,
+          8,
+          9,
+          12,
+          13
+        ],
+        "worst_measured_retained": 8
+      },
+      "B_retention": {
+        "boundary": 1280,
+        "boundary_correct_rows": [
+          2,
+          3,
+          14,
+          15
+        ],
+        "context": 1,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          2,
+          3,
+          14,
+          15
+        ],
+        "worst_measured_retained": 4
+      },
+      "accepted_births": 26,
+      "direct_identity_zero_credit_births": 1,
+      "final": 12,
+      "final_A_B": [
+        8,
+        4
+      ],
+      "final_single_input_matches": [
+        "x"
+      ],
+      "final_structure": {
+        "accepted_trials": 0,
+        "births_from_zero": 26,
+        "committed_owners": 1,
+        "committed_splits": 0,
+        "depth": 1,
+        "effective_parameters": 21,
+        "exploration_rng_digest": "bf81d82242460ad37815883a96086e75c7df7db1a20b19b5d38fdc4861ea1629",
+        "expression_definitions": 79,
+        "owner_visits": {
+          "0": 1387,
+          "1": 62,
+          "2": 69,
+          "3": 72,
+          "4": 67,
+          "5": 66,
+          "6": 62,
+          "7": 11,
+          "8": 124
+        },
+        "owners": 1,
+        "pending_trials": 0,
+        "physical_nodes": 145,
+        "pruned": 1,
+        "reserved_owners": 1,
+        "resolved_trials": 4,
+        "splits": 0,
+        "stored_scorers": 1
+      },
+      "first_perfect_event": null,
+      "first_scoring_birth": 64,
+      "initial": 8,
+      "maximum_correct": 12,
+      "nomination_outcomes": {
+        "born": 26
+      },
+      "nominations": 26,
+      "peak_nodes": 279,
+      "peak_parameters": 29,
+      "phase_boundaries": {
+        "1280": {
+          "A_B": [
+            8,
+            4
+          ],
+          "correct": 12
+        },
+        "1920": {
+          "A_B": [
+            8,
+            4
+          ],
+          "correct": 12
+        },
+        "640": {
+          "A_B": [
+            8,
+            4
+          ],
+          "correct": 12
+        }
+      },
+      "random_selections": 6,
+      "residual_selections": 20,
+      "role": "trial",
+      "row_changes": [
+        {
+          "event": 384,
+          "gains": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            10,
+            11
+          ],
+          "losses": [
+            6,
+            7,
+            8,
+            9,
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "event": 448,
+          "gains": [
+            7,
+            8,
+            9,
+            12,
+            13,
+            14,
+            15
+          ],
+          "losses": [
+            1,
+            3,
+            5,
+            10,
+            11
+          ]
+        },
+        {
+          "event": 512,
+          "gains": [
+            1,
+            3,
+            5
+          ],
+          "losses": [
+            7
+          ]
+        }
+      ],
+      "row_histories": [
+        {
+          "correct_at": [
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 384,
+          "row": 0
+        },
+        {
+          "correct_at": [
+            384,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 384,
+          "row": 1
+        },
+        {
+          "correct_at": [
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 384,
+          "row": 2
+        },
+        {
+          "correct_at": [
+            384,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 384,
+          "row": 3
+        },
+        {
+          "correct_at": [
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 384,
+          "row": 4
+        },
+        {
+          "correct_at": [
+            384,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 384,
+          "row": 5
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320
+          ],
+          "final_correct": false,
+          "first_correct": 0,
+          "row": 6
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            448
+          ],
+          "final_correct": false,
+          "first_correct": 0,
+          "row": 7
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 8
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 9
+        },
+        {
+          "correct_at": [
+            384
+          ],
+          "final_correct": false,
+          "first_correct": 384,
+          "row": 10
+        },
+        {
+          "correct_at": [
+            384
+          ],
+          "final_correct": false,
+          "first_correct": 384,
+          "row": 11
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 12
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 13
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 14
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 15
+        }
+      ],
+      "score_trajectory": [
+        [
+          0,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          64,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          128,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          192,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          256,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          320,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          384,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          448,
+          10,
+          [
+            6,
+            4
+          ]
+        ],
+        [
+          512,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          576,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          640,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          704,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          768,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          832,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          896,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          960,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1024,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1088,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1152,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1216,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1280,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1344,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1408,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1472,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1536,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1600,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1664,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1728,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1792,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1856,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1920,
+          12,
+          [
+            8,
+            4
+          ]
+        ]
+      ],
+      "seed": 18,
+      "split_events": [],
+      "storage_cost": {
+        "node_action_sum": 296626,
+        "note": "Stored allocation at each real training action; not executed FLOPs.",
+        "parameter_action_sum": 29421,
+        "peak_nodes": 279,
+        "peak_parameters": 29,
+        "peak_stored_scorers": 3
+      },
+      "sustained_perfect_from": null,
+      "training_by_phase": [
+        {
+          "actions": 640,
+          "correct": 355,
+          "start": 0,
+          "stop": 640
+        },
+        {
+          "actions": 640,
+          "correct": 347,
+          "start": 640,
+          "stop": 1280
+        },
+        {
+          "actions": 640,
+          "correct": 536,
+          "start": 1280,
+          "stop": 1920
+        }
+      ],
+      "training_wall_seconds_including_recording_and_scheduled_eval": 85.20196385899908,
+      "trial_assigned_actions": 1024,
+      "trial_child_actions": 533,
+      "trial_counts": {
+        "MATURE": 0,
+        "PRUNED": 4,
+        "TRIAL": 0
+      },
+      "trial_history": [
+        {
+          "born": 64,
+          "children": [
+            1,
+            2
+          ],
+          "parent": 0,
+          "resolution": {
+            "accepted": false,
+            "arm_counts": [
+              125,
+              131
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "1": 62,
+              "2": 69
+            },
+            "episode": 320,
+            "half_gains": [
+              0.1793921423276501,
+              -0.07450980392156863
+            ],
+            "mean_reward_gain": 0.06363358778625955,
+            "reason": "unproven at window end",
+            "supported": true
+          },
+          "route": "Expression(operator='read', children=(), atom=(0, False))",
+          "state": "PRUNED",
+          "summary": {
+            "accepted": false,
+            "arm_counts": [
+              125,
+              131
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "1": 62,
+              "2": 69
+            },
+            "half_gains": [
+              0.1793921423276501,
+              -0.07450980392156863
+            ],
+            "mean_reward_gain": 0.06363358778625955,
+            "supported": true
+          }
+        },
+        {
+          "born": 323,
+          "children": [
+            3,
+            4
+          ],
+          "parent": 0,
+          "resolution": {
+            "accepted": false,
+            "arm_counts": [
+              117,
+              139
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "3": 72,
+              "4": 67
+            },
+            "episode": 579,
+            "half_gains": [
+              -0.12356532356532357,
+              -0.368421052631579
+            ],
+            "mean_reward_gain": -0.21730308061243314,
+            "reason": "unproven at window end",
+            "supported": true
+          },
+          "route": "Expression(operator='read', children=(), atom=(1, True))",
+          "state": "PRUNED",
+          "summary": {
+            "accepted": false,
+            "arm_counts": [
+              117,
+              139
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "3": 72,
+              "4": 67
+            },
+            "half_gains": [
+              -0.12356532356532357,
+              -0.368421052631579
+            ],
+            "mean_reward_gain": -0.21730308061243314,
+            "supported": true
+          }
+        },
+        {
+          "born": 590,
+          "children": [
+            5,
+            6
+          ],
+          "parent": 0,
+          "resolution": {
+            "accepted": false,
+            "arm_counts": [
+              128,
+              128
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "5": 66,
+              "6": 62
+            },
+            "episode": 846,
+            "half_gains": [
+              0.06753119647663325,
+              -0.11499877660875948
+            ],
+            "mean_reward_gain": -0.015625,
+            "reason": "unproven at window end",
+            "supported": true
+          },
+          "route": "Expression(operator='read', children=(), atom=(3, False))",
+          "state": "PRUNED",
+          "summary": {
+            "accepted": false,
+            "arm_counts": [
+              128,
+              128
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "5": 66,
+              "6": 62
+            },
+            "half_gains": [
+              0.06753119647663325,
+              -0.11499877660875948
+            ],
+            "mean_reward_gain": -0.015625,
+            "supported": true
+          }
+        },
+        {
+          "born": 910,
+          "children": [
+            7,
+            8
+          ],
+          "parent": 0,
+          "resolution": {
+            "accepted": false,
+            "arm_counts": [
+              121,
+              135
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "7": 11,
+              "8": 124
+            },
+            "episode": 1166,
+            "half_gains": [
+              -0.12161172161172162,
+              -0.023809523809523808
+            ],
+            "mean_reward_gain": -0.07382920110192838,
+            "reason": "unproven at window end",
+            "supported": false
+          },
+          "route": "Expression(operator='read', children=(), atom=(2, True))",
+          "state": "PRUNED",
+          "summary": {
+            "accepted": false,
+            "arm_counts": [
+              121,
+              135
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "7": 11,
+              "8": 124
+            },
+            "half_gains": [
+              -0.12161172161172162,
+              -0.023809523809523808
+            ],
+            "mean_reward_gain": -0.07382920110192838,
+            "supported": false
+          }
+        }
+      ],
+      "visited_owner_counts": {
+        "0": 1387,
+        "1": 62,
+        "2": 69,
+        "3": 72,
+        "4": 67,
+        "5": 66,
+        "6": 62,
+        "7": 11,
+        "8": 124
+      }
+    },
+    {
+      "A_retention": {
+        "boundary": 640,
+        "boundary_correct_rows": [
+          0,
+          1,
+          4,
+          5,
+          8,
+          9,
+          12,
+          13
+        ],
+        "context": 0,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          0,
+          1,
+          4,
+          5,
+          8,
+          9,
+          12,
+          13
+        ],
+        "worst_measured_retained": 4
+      },
+      "B_retention": {
+        "boundary": 1280,
+        "boundary_correct_rows": [
+          2,
+          3,
+          10,
+          11,
+          14,
+          15
+        ],
+        "context": 1,
+        "final_lost_rows": [
+          11
+        ],
+        "final_retained_rows": [
+          2,
+          3,
+          10,
+          14,
+          15
+        ],
+        "worst_measured_retained": 5
+      },
+      "accepted_births": 24,
+      "direct_identity_zero_credit_births": 0,
+      "final": 14,
+      "final_A_B": [
+        8,
+        6
+      ],
+      "final_single_input_matches": [],
+      "final_structure": {
+        "accepted_trials": 0,
+        "births_from_zero": 24,
+        "committed_owners": 4,
+        "committed_splits": 3,
+        "depth": 3,
+        "effective_parameters": 28,
+        "exploration_rng_digest": "0a1fd9a0c73b75e6de36e0a3a73e52bd6abad44667ed7db47fd0bd7634349ece",
+        "expression_definitions": 65,
+        "owner_visits": {
+          "0": 64,
+          "1": 64,
+          "2": 64,
+          "3": 430,
+          "4": 429,
+          "5": 436,
+          "6": 433
+        },
+        "owners": 4,
+        "pending_trials": 0,
+        "physical_nodes": 329,
+        "pruned": 0,
+        "reserved_owners": 4,
+        "resolved_trials": 0,
+        "splits": 3,
+        "stored_scorers": 4
+      },
+      "first_perfect_event": null,
+      "first_scoring_birth": 439,
+      "initial": 8,
+      "maximum_correct": 14,
+      "nomination_outcomes": {
+        "born": 24
+      },
+      "nominations": 24,
+      "peak_nodes": 329,
+      "peak_parameters": 28,
+      "phase_boundaries": {
+        "1280": {
+          "A_B": [
+            6,
+            6
+          ],
+          "correct": 12
+        },
+        "1920": {
+          "A_B": [
+            8,
+            6
+          ],
+          "correct": 14
+        },
+        "640": {
+          "A_B": [
+            8,
+            4
+          ],
+          "correct": 12
+        }
+      },
+      "random_selections": 3,
+      "residual_selections": 21,
+      "role": "current",
+      "row_changes": [
+        {
+          "event": 512,
+          "gains": [
+            1,
+            3,
+            5
+          ],
+          "losses": [
+            7
+          ]
+        },
+        {
+          "event": 640,
+          "gains": [
+            0,
+            2,
+            4
+          ],
+          "losses": [
+            6
+          ]
+        },
+        {
+          "event": 768,
+          "gains": [
+            6,
+            10,
+            11
+          ],
+          "losses": [
+            2,
+            8,
+            9
+          ]
+        },
+        {
+          "event": 832,
+          "gains": [
+            2
+          ],
+          "losses": [
+            6
+          ]
+        },
+        {
+          "event": 960,
+          "gains": [
+            6,
+            7
+          ],
+          "losses": [
+            1,
+            2,
+            3,
+            5
+          ]
+        },
+        {
+          "event": 1024,
+          "gains": [
+            1,
+            3,
+            5
+          ],
+          "losses": [
+            7
+          ]
+        },
+        {
+          "event": 1280,
+          "gains": [
+            2
+          ],
+          "losses": [
+            6
+          ]
+        },
+        {
+          "event": 1536,
+          "gains": [
+            8
+          ],
+          "losses": [
+            11
+          ]
+        },
+        {
+          "event": 1600,
+          "gains": [
+            9
+          ],
+          "losses": []
+        },
+        {
+          "event": 1728,
+          "gains": [
+            6
+          ],
+          "losses": []
+        }
+      ],
+      "row_histories": [
+        {
+          "correct_at": [
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 640,
+          "row": 0
+        },
+        {
+          "correct_at": [
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 512,
+          "row": 1
+        },
+        {
+          "correct_at": [
+            640,
+            704,
+            832,
+            896,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 640,
+          "row": 2
+        },
+        {
+          "correct_at": [
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 512,
+          "row": 3
+        },
+        {
+          "correct_at": [
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 640,
+          "row": 4
+        },
+        {
+          "correct_at": [
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 512,
+          "row": 5
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            768,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 6
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            960
+          ],
+          "final_correct": false,
+          "first_correct": 0,
+          "row": 7
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 8
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 9
+        },
+        {
+          "correct_at": [
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 768,
+          "row": 10
+        },
+        {
+          "correct_at": [
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472
+          ],
+          "final_correct": false,
+          "first_correct": 768,
+          "row": 11
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 12
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 13
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 14
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 15
+        }
+      ],
+      "score_trajectory": [
+        [
+          0,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          64,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          128,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          192,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          256,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          320,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          384,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          448,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          512,
+          10,
+          [
+            6,
+            4
+          ]
+        ],
+        [
+          576,
+          10,
+          [
+            6,
+            4
+          ]
+        ],
+        [
+          640,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          704,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          768,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          832,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          896,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          960,
+          10,
+          [
+            4,
+            6
+          ]
+        ],
+        [
+          1024,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1088,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1152,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1216,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1280,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1344,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1408,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1472,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1536,
+          12,
+          [
+            7,
+            5
+          ]
+        ],
+        [
+          1600,
+          13,
+          [
+            8,
+            5
+          ]
+        ],
+        [
+          1664,
+          13,
+          [
+            8,
+            5
+          ]
+        ],
+        [
+          1728,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1792,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1856,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1920,
+          14,
+          [
+            8,
+            6
+          ]
+        ]
+      ],
+      "seed": 19,
+      "split_events": [
+        {
+          "episode": 64,
+          "owner": 0,
+          "split": {
+            "candidate": 2,
+            "children": [
+              1,
+              2
+            ],
+            "evidence": "SplitEvidence(n0=27, n1=37, sum0=-19.02969545184874, sum1=17.038845341884038)",
+            "route": "Expression(operator='read', children=(), atom=(0, True))",
+            "score": 21.19681450235649
+          }
+        },
+        {
+          "episode": 189,
+          "owner": 2,
+          "split": {
+            "candidate": 1,
+            "children": [
+              3,
+              4
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=7.353419408795387, sum1=-2.4435935822507684)",
+            "route": "Expression(operator='read', children=(), atom=(1, False))",
+            "score": 1.4997103679176116
+          }
+        },
+        {
+          "episode": 192,
+          "owner": 1,
+          "split": {
+            "candidate": 0,
+            "children": [
+              5,
+              6
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=-2.582514516713876, sum1=3.930453785600315)",
+            "route": "Expression(operator='read', children=(), atom=(3, True))",
+            "score": 0.6627930641710842
+          }
+        }
+      ],
+      "storage_cost": {
+        "node_action_sum": 380470,
+        "note": "Stored allocation at each real training action; not executed FLOPs.",
+        "parameter_action_sum": 27250,
+        "peak_nodes": 329,
+        "peak_parameters": 28,
+        "peak_stored_scorers": 4
+      },
+      "sustained_perfect_from": null,
+      "training_by_phase": [
+        {
+          "actions": 640,
+          "correct": 371,
+          "start": 0,
+          "stop": 640
+        },
+        {
+          "actions": 640,
+          "correct": 427,
+          "start": 640,
+          "stop": 1280
+        },
+        {
+          "actions": 640,
+          "correct": 490,
+          "start": 1280,
+          "stop": 1920
+        }
+      ],
+      "training_wall_seconds_including_recording_and_scheduled_eval": 131.7733061830004,
+      "trial_assigned_actions": 0,
+      "trial_child_actions": 0,
+      "trial_counts": {
+        "MATURE": 0,
+        "PRUNED": 0,
+        "TRIAL": 0
+      },
+      "trial_history": [],
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 430,
+        "4": 429,
+        "5": 436,
+        "6": 433
+      }
+    },
+    {
+      "A_retention": {
+        "boundary": 640,
+        "boundary_correct_rows": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "context": 0,
+        "final_lost_rows": [
+          8,
+          9
+        ],
+        "final_retained_rows": [
+          12,
+          13
+        ],
+        "worst_measured_retained": 2
+      },
+      "B_retention": {
+        "boundary": 1280,
+        "boundary_correct_rows": [
+          2,
+          3,
+          6,
+          7,
+          10,
+          11,
+          14,
+          15
+        ],
+        "context": 1,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          2,
+          3,
+          6,
+          7,
+          10,
+          11,
+          14,
+          15
+        ],
+        "worst_measured_retained": 8
+      },
+      "accepted_births": 23,
+      "direct_identity_zero_credit_births": 2,
+      "final": 12,
+      "final_A_B": [
+        4,
+        8
+      ],
+      "final_single_input_matches": [
+        "y"
+      ],
+      "final_structure": {
+        "accepted_trials": 1,
+        "births_from_zero": 23,
+        "committed_owners": 2,
+        "committed_splits": 1,
+        "depth": 3,
+        "effective_parameters": 49,
+        "exploration_rng_digest": "0a1fd9a0c73b75e6de36e0a3a73e52bd6abad44667ed7db47fd0bd7634349ece",
+        "expression_definitions": 142,
+        "owner_visits": {
+          "0": 588,
+          "1": 53,
+          "10": 65,
+          "11": 38,
+          "12": 38,
+          "2": 60,
+          "3": 61,
+          "4": 67,
+          "5": 433,
+          "6": 336,
+          "7": 71,
+          "8": 50,
+          "9": 60
+        },
+        "owners": 4,
+        "pending_trials": 1,
+        "physical_nodes": 497,
+        "pruned": 2,
+        "reserved_owners": 3,
+        "resolved_trials": 5,
+        "splits": 1,
+        "stored_scorers": 4
+      },
+      "first_perfect_event": null,
+      "first_scoring_birth": 64,
+      "initial": 8,
+      "maximum_correct": 12,
+      "nomination_outcomes": {
+        "born": 23
+      },
+      "nominations": 23,
+      "peak_nodes": 679,
+      "peak_parameters": 61,
+      "phase_boundaries": {
+        "1280": {
+          "A_B": [
+            4,
+            8
+          ],
+          "correct": 12
+        },
+        "1920": {
+          "A_B": [
+            4,
+            8
+          ],
+          "correct": 12
+        },
+        "640": {
+          "A_B": [
+            4,
+            4
+          ],
+          "correct": 8
+        }
+      },
+      "random_selections": 4,
+      "residual_selections": 19,
+      "role": "trial",
+      "row_changes": [
+        {
+          "event": 1024,
+          "gains": [
+            0,
+            1,
+            2,
+            3,
+            10,
+            11
+          ],
+          "losses": [
+            8,
+            9
+          ]
+        }
+      ],
+      "row_histories": [
+        {
+          "correct_at": [
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 1024,
+          "row": 0
+        },
+        {
+          "correct_at": [
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 1024,
+          "row": 1
+        },
+        {
+          "correct_at": [
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 1024,
+          "row": 2
+        },
+        {
+          "correct_at": [
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 1024,
+          "row": 3
+        },
+        {
+          "correct_at": [],
+          "final_correct": false,
+          "first_correct": null,
+          "row": 4
+        },
+        {
+          "correct_at": [],
+          "final_correct": false,
+          "first_correct": null,
+          "row": 5
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 6
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 7
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960
+          ],
+          "final_correct": false,
+          "first_correct": 0,
+          "row": 8
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960
+          ],
+          "final_correct": false,
+          "first_correct": 0,
+          "row": 9
+        },
+        {
+          "correct_at": [
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 1024,
+          "row": 10
+        },
+        {
+          "correct_at": [
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 1024,
+          "row": 11
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 12
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 13
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 14
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 15
+        }
+      ],
+      "score_trajectory": [
+        [
+          0,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          64,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          128,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          192,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          256,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          320,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          384,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          448,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          512,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          576,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          640,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          704,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          768,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          832,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          896,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          960,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          1024,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1088,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1152,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1216,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1280,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1344,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1408,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1472,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1536,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1600,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1664,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1728,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1792,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1856,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1920,
+          12,
+          [
+            4,
+            8
+          ]
+        ]
+      ],
+      "seed": 19,
+      "split_events": [],
+      "storage_cost": {
+        "node_action_sum": 669272,
+        "note": "Stored allocation at each real training action; not executed FLOPs.",
+        "parameter_action_sum": 60759,
+        "peak_nodes": 679,
+        "peak_parameters": 61,
+        "peak_stored_scorers": 6
+      },
+      "sustained_perfect_from": null,
+      "training_by_phase": [
+        {
+          "actions": 640,
+          "correct": 326,
+          "start": 0,
+          "stop": 640
+        },
+        {
+          "actions": 640,
+          "correct": 408,
+          "start": 640,
+          "stop": 1280
+        },
+        {
+          "actions": 640,
+          "correct": 347,
+          "start": 1280,
+          "stop": 1920
+        }
+      ],
+      "training_wall_seconds_including_recording_and_scheduled_eval": 218.05920930900174,
+      "trial_assigned_actions": 1436,
+      "trial_child_actions": 679,
+      "trial_counts": {
+        "MATURE": 1,
+        "PRUNED": 4,
+        "TRIAL": 1
+      },
+      "trial_history": [
+        {
+          "born": 64,
+          "children": [
+            1,
+            2
+          ],
+          "parent": 0,
+          "resolution": {
+            "accepted": false,
+            "arm_counts": [
+              143,
+              113
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "1": 53,
+              "2": 60
+            },
+            "episode": 320,
+            "half_gains": [
+              0.0,
+              0.04546577711885347
+            ],
+            "mean_reward_gain": 0.02326876663159849,
+            "reason": "unproven at window end",
+            "supported": true
+          },
+          "route": "Expression(operator='read', children=(), atom=(0, True))",
+          "state": "PRUNED",
+          "summary": {
+            "accepted": false,
+            "arm_counts": [
+              143,
+              113
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "1": 53,
+              "2": 60
+            },
+            "half_gains": [
+              0.0,
+              0.04546577711885347
+            ],
+            "mean_reward_gain": 0.02326876663159849,
+            "supported": true
+          }
+        },
+        {
+          "born": 369,
+          "children": [
+            3,
+            4
+          ],
+          "parent": 0,
+          "resolution": {
+            "accepted": false,
+            "arm_counts": [
+              128,
+              128
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "3": 61,
+              "4": 67
+            },
+            "episode": 625,
+            "half_gains": [
+              0.15490196078431373,
+              -0.03725490196078431
+            ],
+            "mean_reward_gain": 0.0625,
+            "reason": "unproven at window end",
+            "supported": true
+          },
+          "route": "Expression(operator='read', children=(), atom=(3, True))",
+          "state": "PRUNED",
+          "summary": {
+            "accepted": false,
+            "arm_counts": [
+              128,
+              128
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "3": 61,
+              "4": 67
+            },
+            "half_gains": [
+              0.15490196078431373,
+              -0.03725490196078431
+            ],
+            "mean_reward_gain": 0.0625,
+            "supported": true
+          }
+        },
+        {
+          "born": 689,
+          "children": [
+            5,
+            6
+          ],
+          "parent": 0,
+          "resolution": {
+            "accepted": true,
+            "arm_counts": [
+              140,
+              116
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "5": 65,
+              "6": 51
+            },
+            "episode": 945,
+            "half_gains": [
+              0.3438423645320197,
+              0.1605911330049261
+            ],
+            "mean_reward_gain": 0.2522167487684729,
+            "reason": "accepted empirical access benefit",
+            "supported": true
+          },
+          "route": "Expression(operator='read', children=(), atom=(1, False))",
+          "state": "MATURE",
+          "summary": {
+            "accepted": true,
+            "arm_counts": [
+              140,
+              116
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "5": 65,
+              "6": 51
+            },
+            "half_gains": [
+              0.3438423645320197,
+              0.1605911330049261
+            ],
+            "mean_reward_gain": 0.2522167487684729,
+            "supported": true
+          }
+        },
+        {
+          "born": 979,
+          "children": [
+            7,
+            8
+          ],
+          "parent": 6,
+          "resolution": {
+            "accepted": false,
+            "arm_counts": [
+              135,
+              121
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "7": 71,
+              "8": 50
+            },
+            "episode": 1496,
+            "half_gains": [
+              -0.07976510888182037,
+              0.396078431372549
+            ],
+            "mean_reward_gain": 0.16051423324150596,
+            "reason": "unproven at window end",
+            "supported": true
+          },
+          "route": "Expression(operator='read', children=(), atom=(2, False))",
+          "state": "PRUNED",
+          "summary": {
+            "accepted": false,
+            "arm_counts": [
+              135,
+              121
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "7": 71,
+              "8": 50
+            },
+            "half_gains": [
+              -0.07976510888182037,
+              0.396078431372549
+            ],
+            "mean_reward_gain": 0.16051423324150596,
+            "supported": true
+          }
+        },
+        {
+          "born": 1069,
+          "children": [
+            9,
+            10
+          ],
+          "parent": 5,
+          "resolution": {
+            "accepted": false,
+            "arm_counts": [
+              131,
+              125
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "10": 65,
+              "9": 60
+            },
+            "episode": 1575,
+            "half_gains": [
+              -0.13772893772893768,
+              0.16324535679374388
+            ],
+            "mean_reward_gain": 0.01648854961832058,
+            "reason": "unproven at window end",
+            "supported": true
+          },
+          "route": "Expression(operator='read', children=(), atom=(2, False))",
+          "state": "PRUNED",
+          "summary": {
+            "accepted": false,
+            "arm_counts": [
+              131,
+              125
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "10": 65,
+              "9": 60
+            },
+            "half_gains": [
+              -0.13772893772893768,
+              0.16324535679374388
+            ],
+            "mean_reward_gain": 0.01648854961832058,
+            "supported": true
+          }
+        },
+        {
+          "born": 1606,
+          "children": [
+            11,
+            12
+          ],
+          "parent": 6,
+          "resolution": null,
+          "route": "Expression(operator='read', children=(), atom=(0, True))",
+          "state": "TRIAL",
+          "summary": {
+            "accepted": false,
+            "arm_counts": [
+              80,
+              76
+            ],
+            "assigned": 156,
+            "child_exposures": {
+              "11": 38,
+              "12": 38
+            },
+            "half_gains": [
+              0.24761904761904763,
+              0.160427807486631
+            ],
+            "mean_reward_gain": 0.2118421052631579,
+            "supported": true
+          }
+        }
+      ],
+      "visited_owner_counts": {
+        "0": 588,
+        "1": 53,
+        "2": 60,
+        "3": 61,
+        "4": 67,
+        "5": 433,
+        "6": 336,
+        "7": 71,
+        "8": 50,
+        "9": 60,
+        "10": 65,
+        "11": 38,
+        "12": 38
+      }
+    },
+    {
+      "A_retention": {
+        "boundary": 640,
+        "boundary_correct_rows": [
+          1,
+          5,
+          8,
+          9,
+          12,
+          13
+        ],
+        "context": 0,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          1,
+          5,
+          8,
+          9,
+          12,
+          13
+        ],
+        "worst_measured_retained": 4
+      },
+      "B_retention": {
+        "boundary": 1280,
+        "boundary_correct_rows": [
+          2,
+          3,
+          10,
+          11,
+          14,
+          15
+        ],
+        "context": 1,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          2,
+          3,
+          10,
+          11,
+          14,
+          15
+        ],
+        "worst_measured_retained": 6
+      },
+      "accepted_births": 24,
+      "direct_identity_zero_credit_births": 0,
+      "final": 14,
+      "final_A_B": [
+        8,
+        6
+      ],
+      "final_single_input_matches": [],
+      "final_structure": {
+        "accepted_trials": 0,
+        "births_from_zero": 24,
+        "committed_owners": 4,
+        "committed_splits": 3,
+        "depth": 3,
+        "effective_parameters": 27,
+        "exploration_rng_digest": "17582680d3f8d2524b3ade00880cbbaa4ebd82ce25a105c88f6b06b4383b6949",
+        "expression_definitions": 65,
+        "owner_visits": {
+          "0": 64,
+          "1": 64,
+          "2": 64,
+          "3": 432,
+          "4": 432,
+          "5": 435,
+          "6": 429
+        },
+        "owners": 4,
+        "pending_trials": 0,
+        "physical_nodes": 323,
+        "pruned": 1,
+        "reserved_owners": 4,
+        "resolved_trials": 0,
+        "splits": 3,
+        "stored_scorers": 4
+      },
+      "first_perfect_event": null,
+      "first_scoring_birth": 441,
+      "initial": 8,
+      "maximum_correct": 14,
+      "nomination_outcomes": {
+        "born": 24
+      },
+      "nominations": 24,
+      "peak_nodes": 323,
+      "peak_parameters": 27,
+      "phase_boundaries": {
+        "1280": {
+          "A_B": [
+            6,
+            6
+          ],
+          "correct": 12
+        },
+        "1920": {
+          "A_B": [
+            8,
+            6
+          ],
+          "correct": 14
+        },
+        "640": {
+          "A_B": [
+            6,
+            4
+          ],
+          "correct": 10
+        }
+      },
+      "random_selections": 7,
+      "residual_selections": 17,
+      "role": "current",
+      "row_changes": [
+        {
+          "event": 512,
+          "gains": [
+            1,
+            3,
+            5
+          ],
+          "losses": [
+            7
+          ]
+        },
+        {
+          "event": 768,
+          "gains": [
+            0,
+            2,
+            4
+          ],
+          "losses": [
+            6
+          ]
+        },
+        {
+          "event": 1088,
+          "gains": [
+            10,
+            11
+          ],
+          "losses": [
+            8,
+            9
+          ]
+        },
+        {
+          "event": 1344,
+          "gains": [
+            8,
+            9
+          ],
+          "losses": []
+        }
+      ],
+      "row_histories": [
+        {
+          "correct_at": [
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 768,
+          "row": 0
+        },
+        {
+          "correct_at": [
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 512,
+          "row": 1
+        },
+        {
+          "correct_at": [
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 768,
+          "row": 2
+        },
+        {
+          "correct_at": [
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 512,
+          "row": 3
+        },
+        {
+          "correct_at": [
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 768,
+          "row": 4
+        },
+        {
+          "correct_at": [
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 512,
+          "row": 5
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704
+          ],
+          "final_correct": false,
+          "first_correct": 0,
+          "row": 6
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448
+          ],
+          "final_correct": false,
+          "first_correct": 0,
+          "row": 7
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 8
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 9
+        },
+        {
+          "correct_at": [
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 1088,
+          "row": 10
+        },
+        {
+          "correct_at": [
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 1088,
+          "row": 11
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 12
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 13
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 14
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 15
+        }
+      ],
+      "score_trajectory": [
+        [
+          0,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          64,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          128,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          192,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          256,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          320,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          384,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          448,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          512,
+          10,
+          [
+            6,
+            4
+          ]
+        ],
+        [
+          576,
+          10,
+          [
+            6,
+            4
+          ]
+        ],
+        [
+          640,
+          10,
+          [
+            6,
+            4
+          ]
+        ],
+        [
+          704,
+          10,
+          [
+            6,
+            4
+          ]
+        ],
+        [
+          768,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          832,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          896,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          960,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1024,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1088,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1152,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1216,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1280,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1344,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1408,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1472,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1536,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1600,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1664,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1728,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1792,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1856,
+          14,
+          [
+            8,
+            6
+          ]
+        ],
+        [
+          1920,
+          14,
+          [
+            8,
+            6
+          ]
+        ]
+      ],
+      "seed": 20,
+      "split_events": [
+        {
+          "episode": 64,
+          "owner": 0,
+          "split": {
+            "candidate": 0,
+            "children": [
+              1,
+              2
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=25.3759741913961, sum1=-23.811090776823267)",
+            "route": "Expression(operator='read', children=(), atom=(0, False))",
+            "score": 37.80261500293489
+          }
+        },
+        {
+          "episode": 189,
+          "owner": 1,
+          "split": {
+            "candidate": 1,
+            "children": [
+              3,
+              4
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=1.2832196299352914, sum1=-1.151664830077606)",
+            "route": "Expression(operator='read', children=(), atom=(1, True))",
+            "score": 0.09263534896269217
+          }
+        },
+        {
+          "episode": 192,
+          "owner": 2,
+          "split": {
+            "candidate": 2,
+            "children": [
+              5,
+              6
+            ],
+            "evidence": "SplitEvidence(n0=32, n1=32, sum0=0.7887759379916724, sum1=-3.5788824196444566)",
+            "route": "Expression(operator='read', children=(), atom=(3, False))",
+            "score": 0.2980693676410739
+          }
+        }
+      ],
+      "storage_cost": {
+        "node_action_sum": 381888,
+        "note": "Stored allocation at each real training action; not executed FLOPs.",
+        "parameter_action_sum": 26811,
+        "peak_nodes": 323,
+        "peak_parameters": 27,
+        "peak_stored_scorers": 4
+      },
+      "sustained_perfect_from": null,
+      "training_by_phase": [
+        {
+          "actions": 640,
+          "correct": 364,
+          "start": 0,
+          "stop": 640
+        },
+        {
+          "actions": 640,
+          "correct": 385,
+          "start": 640,
+          "stop": 1280
+        },
+        {
+          "actions": 640,
+          "correct": 535,
+          "start": 1280,
+          "stop": 1920
+        }
+      ],
+      "training_wall_seconds_including_recording_and_scheduled_eval": 129.86578169199493,
+      "trial_assigned_actions": 0,
+      "trial_child_actions": 0,
+      "trial_counts": {
+        "MATURE": 0,
+        "PRUNED": 0,
+        "TRIAL": 0
+      },
+      "trial_history": [],
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 432,
+        "4": 432,
+        "5": 435,
+        "6": 429
+      }
+    },
+    {
+      "A_retention": {
+        "boundary": 640,
+        "boundary_correct_rows": [
+          0,
+          1,
+          4,
+          5,
+          8,
+          9,
+          12,
+          13
+        ],
+        "context": 0,
+        "final_lost_rows": [],
+        "final_retained_rows": [
+          0,
+          1,
+          4,
+          5,
+          8,
+          9,
+          12,
+          13
+        ],
+        "worst_measured_retained": 4
+      },
+      "B_retention": {
+        "boundary": 1280,
+        "boundary_correct_rows": [
+          2,
+          3,
+          6,
+          7,
+          10,
+          11,
+          14,
+          15
+        ],
+        "context": 1,
+        "final_lost_rows": [
+          6,
+          7,
+          10,
+          11
+        ],
+        "final_retained_rows": [
+          2,
+          3,
+          14,
+          15
+        ],
+        "worst_measured_retained": 4
+      },
+      "accepted_births": 24,
+      "direct_identity_zero_credit_births": 0,
+      "final": 12,
+      "final_A_B": [
+        8,
+        4
+      ],
+      "final_single_input_matches": [
+        "x"
+      ],
+      "final_structure": {
+        "accepted_trials": 1,
+        "births_from_zero": 24,
+        "committed_owners": 2,
+        "committed_splits": 1,
+        "depth": 3,
+        "effective_parameters": 56,
+        "exploration_rng_digest": "17582680d3f8d2524b3ade00880cbbaa4ebd82ce25a105c88f6b06b4383b6949",
+        "expression_definitions": 149,
+        "owner_visits": {
+          "0": 697,
+          "1": 66,
+          "10": 118,
+          "11": 9,
+          "12": 7,
+          "2": 55,
+          "3": 66,
+          "4": 58,
+          "5": 114,
+          "6": 17,
+          "7": 406,
+          "8": 293,
+          "9": 14
+        },
+        "owners": 4,
+        "pending_trials": 1,
+        "physical_nodes": 611,
+        "pruned": 3,
+        "reserved_owners": 3,
+        "resolved_trials": 5,
+        "splits": 1,
+        "stored_scorers": 4
+      },
+      "first_perfect_event": null,
+      "first_scoring_birth": 64,
+      "initial": 8,
+      "maximum_correct": 12,
+      "nomination_outcomes": {
+        "born": 24
+      },
+      "nominations": 24,
+      "peak_nodes": 611,
+      "peak_parameters": 56,
+      "phase_boundaries": {
+        "1280": {
+          "A_B": [
+            4,
+            8
+          ],
+          "correct": 12
+        },
+        "1920": {
+          "A_B": [
+            8,
+            4
+          ],
+          "correct": 12
+        },
+        "640": {
+          "A_B": [
+            8,
+            4
+          ],
+          "correct": 12
+        }
+      },
+      "random_selections": 7,
+      "residual_selections": 17,
+      "role": "trial",
+      "row_changes": [
+        {
+          "event": 256,
+          "gains": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "losses": [
+            6,
+            7
+          ]
+        },
+        {
+          "event": 1216,
+          "gains": [
+            6,
+            7,
+            10,
+            11
+          ],
+          "losses": [
+            4,
+            5,
+            8,
+            9
+          ]
+        },
+        {
+          "event": 1408,
+          "gains": [
+            8,
+            9
+          ],
+          "losses": [
+            10,
+            11
+          ]
+        },
+        {
+          "event": 1472,
+          "gains": [
+            4,
+            5
+          ],
+          "losses": [
+            6,
+            7
+          ]
+        }
+      ],
+      "row_histories": [
+        {
+          "correct_at": [
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 256,
+          "row": 0
+        },
+        {
+          "correct_at": [
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 256,
+          "row": 1
+        },
+        {
+          "correct_at": [
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 256,
+          "row": 2
+        },
+        {
+          "correct_at": [
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 256,
+          "row": 3
+        },
+        {
+          "correct_at": [
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 256,
+          "row": 4
+        },
+        {
+          "correct_at": [
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 256,
+          "row": 5
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            1216,
+            1280,
+            1344,
+            1408
+          ],
+          "final_correct": false,
+          "first_correct": 0,
+          "row": 6
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            1216,
+            1280,
+            1344,
+            1408
+          ],
+          "final_correct": false,
+          "first_correct": 0,
+          "row": 7
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 8
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 9
+        },
+        {
+          "correct_at": [
+            1216,
+            1280,
+            1344
+          ],
+          "final_correct": false,
+          "first_correct": 1216,
+          "row": 10
+        },
+        {
+          "correct_at": [
+            1216,
+            1280,
+            1344
+          ],
+          "final_correct": false,
+          "first_correct": 1216,
+          "row": 11
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 12
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 13
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 14
+        },
+        {
+          "correct_at": [
+            0,
+            64,
+            128,
+            192,
+            256,
+            320,
+            384,
+            448,
+            512,
+            576,
+            640,
+            704,
+            768,
+            832,
+            896,
+            960,
+            1024,
+            1088,
+            1152,
+            1216,
+            1280,
+            1344,
+            1408,
+            1472,
+            1536,
+            1600,
+            1664,
+            1728,
+            1792,
+            1856,
+            1920
+          ],
+          "final_correct": true,
+          "first_correct": 0,
+          "row": 15
+        }
+      ],
+      "score_trajectory": [
+        [
+          0,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          64,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          128,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          192,
+          8,
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          256,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          320,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          384,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          448,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          512,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          576,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          640,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          704,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          768,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          832,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          896,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          960,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1024,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1088,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1152,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1216,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1280,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1344,
+          12,
+          [
+            4,
+            8
+          ]
+        ],
+        [
+          1408,
+          12,
+          [
+            6,
+            6
+          ]
+        ],
+        [
+          1472,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1536,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1600,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1664,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1728,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1792,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1856,
+          12,
+          [
+            8,
+            4
+          ]
+        ],
+        [
+          1920,
+          12,
+          [
+            8,
+            4
+          ]
+        ]
+      ],
+      "seed": 20,
+      "split_events": [],
+      "storage_cost": {
+        "node_action_sum": 551046,
+        "note": "Stored allocation at each real training action; not executed FLOPs.",
+        "parameter_action_sum": 52928,
+        "peak_nodes": 611,
+        "peak_parameters": 56,
+        "peak_stored_scorers": 4
+      },
+      "sustained_perfect_from": null,
+      "training_by_phase": [
+        {
+          "actions": 640,
+          "correct": 471,
+          "start": 0,
+          "stop": 640
+        },
+        {
+          "actions": 640,
+          "correct": 389,
+          "start": 640,
+          "stop": 1280
+        },
+        {
+          "actions": 640,
+          "correct": 495,
+          "start": 1280,
+          "stop": 1920
+        }
+      ],
+      "training_wall_seconds_including_recording_and_scheduled_eval": 180.38922482699854,
+      "trial_assigned_actions": 1318,
+      "trial_child_actions": 659,
+      "trial_counts": {
+        "MATURE": 1,
+        "PRUNED": 4,
+        "TRIAL": 1
+      },
+      "trial_history": [
+        {
+          "born": 64,
+          "children": [
+            1,
+            2
+          ],
+          "parent": 0,
+          "resolution": {
+            "accepted": false,
+            "arm_counts": [
+              135,
+              121
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "1": 66,
+              "2": 55
+            },
+            "episode": 320,
+            "half_gains": [
+              -0.0625,
+              -0.5317519149987646
+            ],
+            "mean_reward_gain": -0.3085399449035813,
+            "reason": "unproven at window end",
+            "supported": true
+          },
+          "route": "Expression(operator='read', children=(), atom=(0, False))",
+          "state": "PRUNED",
+          "summary": {
+            "accepted": false,
+            "arm_counts": [
+              135,
+              121
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "1": 66,
+              "2": 55
+            },
+            "half_gains": [
+              -0.0625,
+              -0.5317519149987646
+            ],
+            "mean_reward_gain": -0.3085399449035813,
+            "supported": true
+          }
+        },
+        {
+          "born": 377,
+          "children": [
+            3,
+            4
+          ],
+          "parent": 0,
+          "resolution": {
+            "accepted": false,
+            "arm_counts": [
+              132,
+              124
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "3": 66,
+              "4": 58
+            },
+            "episode": 633,
+            "half_gains": [
+              -0.14901960784313728,
+              -0.21875
+            ],
+            "mean_reward_gain": -0.18523949169110454,
+            "reason": "unproven at window end",
+            "supported": true
+          },
+          "route": "Expression(operator='read', children=(), atom=(3, False))",
+          "state": "PRUNED",
+          "summary": {
+            "accepted": false,
+            "arm_counts": [
+              132,
+              124
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "3": 66,
+              "4": 58
+            },
+            "half_gains": [
+              -0.14901960784313728,
+              -0.21875
+            ],
+            "mean_reward_gain": -0.18523949169110454,
+            "supported": true
+          }
+        },
+        {
+          "born": 693,
+          "children": [
+            5,
+            6
+          ],
+          "parent": 0,
+          "resolution": {
+            "accepted": false,
+            "arm_counts": [
+              125,
+              131
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "5": 114,
+              "6": 17
+            },
+            "episode": 949,
+            "half_gains": [
+              0.05616605616605619,
+              -0.0058651026392961825
+            ],
+            "mean_reward_gain": 0.02430534351145036,
+            "reason": "unproven at window end",
+            "supported": true
+          },
+          "route": "Expression(operator='read', children=(), atom=(2, False))",
+          "state": "PRUNED",
+          "summary": {
+            "accepted": false,
+            "arm_counts": [
+              125,
+              131
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "5": 114,
+              "6": 17
+            },
+            "half_gains": [
+              0.05616605616605619,
+              -0.0058651026392961825
+            ],
+            "mean_reward_gain": 0.02430534351145036,
+            "supported": true
+          }
+        },
+        {
+          "born": 952,
+          "children": [
+            7,
+            8
+          ],
+          "parent": 0,
+          "resolution": {
+            "accepted": true,
+            "arm_counts": [
+              121,
+              135
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "7": 66,
+              "8": 69
+            },
+            "episode": 1208,
+            "half_gains": [
+              0.055297284071446046,
+              0.2862745098039216
+            ],
+            "mean_reward_gain": 0.17177838996020814,
+            "reason": "accepted empirical access benefit",
+            "supported": true
+          },
+          "route": "Expression(operator='read', children=(), atom=(1, True))",
+          "state": "MATURE",
+          "summary": {
+            "accepted": true,
+            "arm_counts": [
+              121,
+              135
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "7": 66,
+              "8": 69
+            },
+            "half_gains": [
+              0.055297284071446046,
+              0.2862745098039216
+            ],
+            "mean_reward_gain": 0.17177838996020814,
+            "supported": true
+          }
+        },
+        {
+          "born": 1323,
+          "children": [
+            9,
+            10
+          ],
+          "parent": 8,
+          "resolution": {
+            "accepted": false,
+            "arm_counts": [
+              124,
+              132
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "10": 118,
+              "9": 14
+            },
+            "episode": 1835,
+            "half_gains": [
+              0.15319990116135407,
+              0.11989234157083428
+            ],
+            "mean_reward_gain": 0.13440860215053763,
+            "reason": "unproven at window end",
+            "supported": false
+          },
+          "route": "Expression(operator='read', children=(), atom=(2, False))",
+          "state": "PRUNED",
+          "summary": {
+            "accepted": false,
+            "arm_counts": [
+              124,
+              132
+            ],
+            "assigned": 256,
+            "child_exposures": {
+              "10": 118,
+              "9": 14
+            },
+            "half_gains": [
+              0.15319990116135407,
+              0.11989234157083428
+            ],
+            "mean_reward_gain": 0.13440860215053763,
+            "supported": false
+          }
+        },
+        {
+          "born": 1844,
+          "children": [
+            11,
+            12
+          ],
+          "parent": 7,
+          "resolution": null,
+          "route": "Expression(operator='read', children=(), atom=(3, False))",
+          "state": "TRIAL",
+          "summary": {
+            "accepted": false,
+            "arm_counts": [
+              22,
+              16
+            ],
+            "assigned": 38,
+            "child_exposures": {
+              "11": 9,
+              "12": 7
+            },
+            "half_gains": [
+              0.11363636363636365,
+              null
+            ],
+            "mean_reward_gain": 0.11363636363636365,
+            "supported": false
+          }
+        }
+      ],
+      "visited_owner_counts": {
+        "0": 697,
+        "1": 66,
+        "2": 55,
+        "3": 66,
+        "4": 58,
+        "5": 114,
+        "6": 17,
+        "7": 406,
+        "8": 293,
+        "9": 14,
+        "10": 118,
+        "11": 9,
+        "12": 7
+      }
+    }
+  ],
+  "elapsed_seconds": 1002.9017092150025,
+  "max_rss_kib": 48880,
+  "paired_effects": [
+    {
+      "comparison": "combined provisional trial rule minus current",
+      "final_score_difference": -4,
+      "node_difference": -188,
+      "parameter_difference": -7,
+      "seed": 18
+    },
+    {
+      "comparison": "combined provisional trial rule minus current",
+      "final_score_difference": -2,
+      "node_difference": 168,
+      "parameter_difference": 21,
+      "seed": 19
+    },
+    {
+      "comparison": "combined provisional trial rule minus current",
+      "final_score_difference": -2,
+      "node_difference": 288,
+      "parameter_difference": 29,
+      "seed": 20
+    }
+  ],
+  "roles": [
+    "current",
+    "trial"
+  ],
+  "seeds": [
+    18,
+    19,
+    20
+  ],
+  "status": "complete",
+  "verification": {
+    "blocks": 180,
+    "checkpoints": 186,
+    "evaluation": 2976,
+    "training": 11520,
+    "verification_actions": 2976
+  }
+}

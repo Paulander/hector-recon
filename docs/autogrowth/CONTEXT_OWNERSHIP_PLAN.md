@@ -1,5 +1,14 @@
 # Context-owned decisions: plan and checkpoints
 
+Latest integration checkpoint,2026-09-15: [OWNER_SPLIT_TRIAL_RESULTS.md](OWNER_SPLIT_TRIAL_RESULTS.md).
+The user authorized combining owner splits with existing trial-use/lifecycle
+machinery. The fixed seeds18/19/20 comparison completed and lost all three pairs:
+current16/14/14 versus trial12/12/12. Keep the current four-owner reference.
+The new trial law and its earlier-birth schedule are an explicit combined
+intervention; no maturation-benefit claim. Next investigate finite assessment,
+rare-child exposure and history-preserving reconsideration before another run.
+The cohort is CLOSED, private work-branch publication authorized, main unchanged.
+
 Started 2026-09-14 on `codex/context-owned-decisions`, from `1212bdc4`.
 User authorized a short plan and starting the separate restructuring prototype.
 No publication or restart of an earlier experiment is implied.

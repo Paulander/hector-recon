@@ -1,5 +1,21 @@
 # ReCoN/Hector agent instructions
 
+Latest COMPLETE integration result,2026-09-15: read `docs/autogrowth/OWNER_SPLIT_TRIAL_RESULTS.md`.
+Fresh seeds18/19/20 finished current16/14/14 versus trial12/12/12 (44/48 vs36/48).
+The combined owner/TRIAL acceptance rule lost all pairs; keep current4 as reference.
+16 trials:2 accepted,12 retired unproven,2 pending. Earlier births64 vs439–444
+did not improve scores. Trial endpoints exactly follow x/y/x and all lack16
+capacity; current19/20 also lack it (five exact contradictions,one witness).
+Seed19 rejected a late-improving split because its early half was negative;
+seed20 rejected a positive-both-halves split with14 rare-child actions vs16
+required. No same-owner reconsideration is another limitation. Keep histories;
+no threshold tuning, replay, retry or extension of this CLOSED cohort.
+11520 training+2976 scheduled+2976 frozen actions,180 blocks,186 checkpoints verify.
+84 source hashes,58 focused checks,all probe flags/assignment RNG/local evidence
+and2976 arithmetic choices verify. Runtime1002.902s,48880KiB,oneCPU; no process
+remains. Private branch publication authorized; main unchanged. Recombination,
+protection and unrestricted compound discovery remain separate.
+
 Current authorization, 2026-09-15: read `docs/autogrowth/OWNER_SPLIT_TRIAL.md`.
 The user said to implement/run the proposed combination of owner splitting with
 trial acceptance, and explicitly record that integration and its interaction risk.

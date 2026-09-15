@@ -75,7 +75,9 @@ def test_bias_prediction_differences_do_not_earn_maturity_and_parent_keeps_learn
     children = a.nominate_split(0,Expression('read',atom=(3,True)))
     a.conditions[a.leaves[children[0]].bias_id].weight.fast = -.7
     a.conditions[a.leaves[children[1]].bias_id].weight.fast = .4
-    for i in range(255): step(a,i%2)  # x=0: every real greedy action-a succeeds.
+    # Bias adds the same score to both actions: identical greedy choices/outcomes
+    # despite different predictions. The formal tie-break selects action-b.
+    for i in range(255): step(a,i%2)
     assert a.split_trials[0].state == StemCellState.TRIAL
     parent_before = copy.deepcopy(a.conditions[a.leaves[0].bias_id])
     step(a,1)
