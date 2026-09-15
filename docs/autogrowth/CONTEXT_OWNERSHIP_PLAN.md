@@ -130,3 +130,32 @@ The compatibility tests intentionally create bounded subprocesses to check their
 existing parallel runners. No task remains running. The machine-readable result,
 source hashes and explicit limits are in
 `reports/autogrowth/development/CONTEXT_OWNERSHIP_CHECKPOINT_20260914.json`.
+
+## Recovered status, 2026-09-15
+
+The original checkpoint sequence above is preserved as history. Current position:
+
+| Step | Status and evidence |
+| --- | --- |
+| Whole-decision ownership and isolation | Implemented; 256 original focused checks passed. |
+| Experience-driven owner nomination | Implemented; short pilot exposed insufficient action distinctions and local exposure. |
+| Longer exposure before changing mechanisms | Fivefold run complete; split and unsplit total25/32 each, with mixed acquisition and selective endpoint retention. |
+| Context-compatible births | Complete; nine impossible births prevented,96 physical nodes saved, identical observed trajectories. |
+| Useful nomination versus opportunity scheduling | Current fixed factorial pilot; see OWNER_BIRTH_SEARCH.md. No outcome is claimed here. |
+| Local protection/freezing/reopening | Not implemented; still a separate mechanism and later comparison. |
+| Strong-skill retention benchmark | Still required; weak prefixes cannot establish broad retention. |
+| Shared execution factoring and duplicate-credit handling | Separate later interventions; neither follows automatically from compatibility. |
+
+The user's September15 instruction authorizes remote publication of this private
+work branch, superseding older no-publication notes for this branch. Main remains
+the stable baseline; promotion must distinguish importing experimental modules
+from making their behavior the default. The branch contains a much larger chain
+of experiments than the compatibility increment alone.
+
+Latest update: the four-arm pilot is now complete; see
+[OWNER_BIRTH_SEARCH_RESULTS.md](OWNER_BIRTH_SEARCH_RESULTS.md). Residual/current
+finishes14/16 and16/16 versus13/16 and16/16 for the matched random control, with
+faster seed11 acquisition and fewer final nodes. It still loses learned B rows
+in seed10. Extra birth opportunities show no consistent advantage. Next define
+a fresh-seed replication and a strong-prefix retention comparison; protection,
+freezing/reopening and factoring remain separate. No additional run is started.

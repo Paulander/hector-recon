@@ -1,0 +1,19 @@
+{
+  "local_implementation_commit": "c834e24a",
+  "remote_source_commit": "3b41349ec4563f2d859b55310532b3bf3703452b",
+  "distinct_passed_tests": 73,
+  "new_tests": 14,
+  "batches": [
+    {
+      "name": "birth-search-focused.xml",
+      "tests": 52,
+      "sha256": "74160720086ee93af450e3faa9c6ce5b53a21ebf34464f9dea12f3dba27eb88a"
+    },
+    {
+      "name": "birth-search-runner.xml",
+      "tests": 21,
+      "sha256": "bafe494eae113e24e357fb87020536835e193fe3f400f6bc740de8581f6059e1"
+    }
+  ],
+  "scope": "New birth nomination/recording and reused owner, compatibility, recursive and checkpoint paths. Original chess/core source unchanged."
+}

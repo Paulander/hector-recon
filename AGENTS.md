@@ -1,5 +1,25 @@
 # ReCoN/Hector agent instructions
 
+Latest COMPLETE result,2026-09-15: read `docs/autogrowth/OWNER_BIRTH_SEARCH_RESULTS.md`.
+The fixed two-seed four-arm pilot completed10240 training,2560 scheduled eval,
+2560 frozen reproductions;160 blocks,168 checkpoints and all owner-local residual
+histories verify. All76 runtime source hashes match;63 original learner/core files
+are unchanged.73 distinct focused checks pass (14 new). Runtime2182.989s,46200KiB,
+one CPU; no retry or active process.
+Final random/current,residual/current,random/extra,residual/extra scores are
+13/14/14/14 for seed10 and16/16/13/16 for seed11. Residual/current reaches seed11
+perfection512 actions earlier than random/current and ends with fewer nodes in
+both seeds. It better retains initial A successes at measured checkpoints, but
+seed10 loses two learned B rows versus one under random/current. Extra births
+are not consistently beneficial. No retention fix or new chess claim.
+Keep compatibility/current schedule and the matched random control. The next
+proposal is a fixed fresh-seed replication and a separately defined strong-prefix
+retention comparison; do not launch either automatically or add freezing/merging.
+The original architecture plan and latest checkpoint map are in
+`CONTEXT_OWNERSHIP_PLAN.md`. Main is unchanged. The user authorized pushing this
+private work branch; snapshot publications preserve exact trees while local
+commit history stays intact. Older status entries below are historical.
+
 Current authorized work, 2026-09-15: read `docs/autogrowth/OWNER_BIRTH_SEARCH.md`.
 The user authorized publication of the recovered private work branch and the
 next experiment. This supersedes older no-publication notes for this branch;

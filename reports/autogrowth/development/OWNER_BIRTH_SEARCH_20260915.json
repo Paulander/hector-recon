@@ -1,0 +1,1994 @@
+{
+  "arms": [
+    {
+      "B_boundary_solved": [
+        2,
+        3,
+        6,
+        7,
+        10,
+        11,
+        14,
+        15
+      ],
+      "B_final_retained": 7,
+      "B_worst_post_boundary_retained": 7,
+      "accepted_births": 15,
+      "born_condition_credited_counts": {
+        "52": 10,
+        "53": 142,
+        "54": 95,
+        "55": 14,
+        "56": 23,
+        "57": 144,
+        "58": 126,
+        "59": 211,
+        "60": 89,
+        "61": 55,
+        "62": 37,
+        "63": 23,
+        "64": 16,
+        "65": 7,
+        "66": 0
+      },
+      "direct_identity_zero_credit_births": 1,
+      "extra_birth_opportunities": 0,
+      "final": 13,
+      "final_A_B": [
+        6,
+        7
+      ],
+      "final_gains_from_prefix": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        11
+      ],
+      "final_losses_from_prefix": [
+        6,
+        8,
+        9
+      ],
+      "final_structure": {
+        "births_after_conversion": 15,
+        "depth": 4,
+        "effective_parameters": 43,
+        "exploration_rng_digest": "75a9d1269cf6e3384566b45f92616e24c1ce24078d4936bcaadba6aa35cb66d0",
+        "expression_definitions": 100,
+        "ordinary_births_after_conversion": 15,
+        "owner_visits": {
+          "0": 704,
+          "1": 64,
+          "2": 64,
+          "3": 236,
+          "4": 308,
+          "5": 272,
+          "6": 272
+        },
+        "owners": 4,
+        "physical_nodes": 529,
+        "pruned": 3,
+        "splits": 3
+      },
+      "initial": 8,
+      "nominations": 15,
+      "prefix_A_solved": [
+        8,
+        9,
+        12,
+        13
+      ],
+      "prefix_A_worst_retained": 2,
+      "random_selections": 15,
+      "residual_selections": 0,
+      "role": "random-current",
+      "row_changes": [
+        {
+          "event": 1024,
+          "gains": [
+            10,
+            11
+          ],
+          "losses": []
+        },
+        {
+          "event": 1152,
+          "gains": [
+            2,
+            3
+          ],
+          "losses": []
+        },
+        {
+          "event": 1600,
+          "gains": [
+            0
+          ],
+          "losses": []
+        },
+        {
+          "event": 1664,
+          "gains": [
+            1,
+            4,
+            5
+          ],
+          "losses": [
+            6,
+            8,
+            9
+          ]
+        }
+      ],
+      "score_trajectory": [
+        [
+          640,
+          8
+        ],
+        [
+          704,
+          8
+        ],
+        [
+          768,
+          8
+        ],
+        [
+          832,
+          8
+        ],
+        [
+          896,
+          8
+        ],
+        [
+          960,
+          8
+        ],
+        [
+          1024,
+          10
+        ],
+        [
+          1088,
+          10
+        ],
+        [
+          1152,
+          12
+        ],
+        [
+          1216,
+          12
+        ],
+        [
+          1280,
+          12
+        ],
+        [
+          1344,
+          12
+        ],
+        [
+          1408,
+          12
+        ],
+        [
+          1472,
+          12
+        ],
+        [
+          1536,
+          12
+        ],
+        [
+          1600,
+          13
+        ],
+        [
+          1664,
+          13
+        ],
+        [
+          1728,
+          13
+        ],
+        [
+          1792,
+          13
+        ],
+        [
+          1856,
+          13
+        ],
+        [
+          1920,
+          13
+        ]
+      ],
+      "seed": 10,
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 236,
+        "4": 308,
+        "5": 272,
+        "6": 272
+      }
+    },
+    {
+      "B_boundary_solved": [
+        2,
+        3,
+        6,
+        7,
+        10,
+        11,
+        14,
+        15
+      ],
+      "B_final_retained": 6,
+      "B_worst_post_boundary_retained": 6,
+      "accepted_births": 15,
+      "born_condition_credited_counts": {
+        "52": 20,
+        "53": 99,
+        "54": 95,
+        "55": 86,
+        "56": 3,
+        "57": 96,
+        "58": 126,
+        "59": 109,
+        "60": 169,
+        "61": 59,
+        "62": 71,
+        "63": 94,
+        "64": 28,
+        "65": 7,
+        "66": 1
+      },
+      "direct_identity_zero_credit_births": 0,
+      "extra_birth_opportunities": 0,
+      "final": 14,
+      "final_A_B": [
+        8,
+        6
+      ],
+      "final_gains_from_prefix": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        11
+      ],
+      "final_losses_from_prefix": [
+        6,
+        7
+      ],
+      "final_structure": {
+        "births_after_conversion": 15,
+        "depth": 4,
+        "effective_parameters": 42,
+        "exploration_rng_digest": "75a9d1269cf6e3384566b45f92616e24c1ce24078d4936bcaadba6aa35cb66d0",
+        "expression_definitions": 100,
+        "ordinary_births_after_conversion": 15,
+        "owner_visits": {
+          "0": 704,
+          "1": 64,
+          "2": 64,
+          "3": 236,
+          "4": 308,
+          "5": 272,
+          "6": 272
+        },
+        "owners": 4,
+        "physical_nodes": 515,
+        "pruned": 4,
+        "splits": 3
+      },
+      "initial": 8,
+      "nominations": 15,
+      "prefix_A_solved": [
+        8,
+        9,
+        12,
+        13
+      ],
+      "prefix_A_worst_retained": 4,
+      "random_selections": 2,
+      "residual_selections": 13,
+      "role": "residual-current",
+      "row_changes": [
+        {
+          "event": 1024,
+          "gains": [
+            2,
+            3,
+            10,
+            11
+          ],
+          "losses": []
+        },
+        {
+          "event": 1152,
+          "gains": [
+            4,
+            5
+          ],
+          "losses": [
+            6,
+            7
+          ]
+        },
+        {
+          "event": 1216,
+          "gains": [
+            6,
+            7
+          ],
+          "losses": [
+            4,
+            5
+          ]
+        },
+        {
+          "event": 1536,
+          "gains": [
+            4,
+            5
+          ],
+          "losses": [
+            6,
+            7
+          ]
+        },
+        {
+          "event": 1600,
+          "gains": [
+            0
+          ],
+          "losses": []
+        },
+        {
+          "event": 1856,
+          "gains": [
+            1
+          ],
+          "losses": []
+        }
+      ],
+      "score_trajectory": [
+        [
+          640,
+          8
+        ],
+        [
+          704,
+          8
+        ],
+        [
+          768,
+          8
+        ],
+        [
+          832,
+          8
+        ],
+        [
+          896,
+          8
+        ],
+        [
+          960,
+          8
+        ],
+        [
+          1024,
+          12
+        ],
+        [
+          1088,
+          12
+        ],
+        [
+          1152,
+          12
+        ],
+        [
+          1216,
+          12
+        ],
+        [
+          1280,
+          12
+        ],
+        [
+          1344,
+          12
+        ],
+        [
+          1408,
+          12
+        ],
+        [
+          1472,
+          12
+        ],
+        [
+          1536,
+          12
+        ],
+        [
+          1600,
+          13
+        ],
+        [
+          1664,
+          13
+        ],
+        [
+          1728,
+          13
+        ],
+        [
+          1792,
+          13
+        ],
+        [
+          1856,
+          14
+        ],
+        [
+          1920,
+          14
+        ]
+      ],
+      "seed": 10,
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 236,
+        "4": 308,
+        "5": 272,
+        "6": 272
+      }
+    },
+    {
+      "B_boundary_solved": [
+        2,
+        3,
+        6,
+        10,
+        11,
+        14,
+        15
+      ],
+      "B_final_retained": 6,
+      "B_worst_post_boundary_retained": 6,
+      "accepted_births": 18,
+      "born_condition_credited_counts": {
+        "24": 6,
+        "39": 30,
+        "56": 17,
+        "57": 138,
+        "58": 60,
+        "59": 100,
+        "60": 5,
+        "61": 43,
+        "62": 15,
+        "63": 17,
+        "64": 184,
+        "65": 135,
+        "66": 5,
+        "67": 2,
+        "68": 94,
+        "69": 20,
+        "70": 2,
+        "71": 15
+      },
+      "direct_identity_zero_credit_births": 0,
+      "extra_birth_opportunities": 3,
+      "final": 14,
+      "final_A_B": [
+        7,
+        7
+      ],
+      "final_gains_from_prefix": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        11
+      ],
+      "final_losses_from_prefix": [
+        6,
+        9
+      ],
+      "final_structure": {
+        "births_after_conversion": 18,
+        "depth": 4,
+        "effective_parameters": 47,
+        "exploration_rng_digest": "75a9d1269cf6e3384566b45f92616e24c1ce24078d4936bcaadba6aa35cb66d0",
+        "expression_definitions": 105,
+        "ordinary_births_after_conversion": 15,
+        "owner_visits": {
+          "0": 704,
+          "1": 64,
+          "2": 64,
+          "3": 236,
+          "4": 308,
+          "5": 272,
+          "6": 272
+        },
+        "owners": 4,
+        "physical_nodes": 579,
+        "pruned": 3,
+        "splits": 3
+      },
+      "initial": 8,
+      "nominations": 18,
+      "prefix_A_solved": [
+        8,
+        9,
+        12,
+        13
+      ],
+      "prefix_A_worst_retained": 2,
+      "random_selections": 18,
+      "residual_selections": 0,
+      "role": "random-extra",
+      "row_changes": [
+        {
+          "event": 768,
+          "gains": [],
+          "losses": [
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "event": 832,
+          "gains": [
+            12,
+            13,
+            14,
+            15
+          ],
+          "losses": []
+        },
+        {
+          "event": 896,
+          "gains": [
+            2,
+            3,
+            10,
+            11
+          ],
+          "losses": []
+        },
+        {
+          "event": 1152,
+          "gains": [
+            5
+          ],
+          "losses": [
+            7
+          ]
+        },
+        {
+          "event": 1536,
+          "gains": [
+            7
+          ],
+          "losses": [
+            6
+          ]
+        },
+        {
+          "event": 1600,
+          "gains": [
+            4
+          ],
+          "losses": []
+        },
+        {
+          "event": 1664,
+          "gains": [
+            0
+          ],
+          "losses": []
+        },
+        {
+          "event": 1920,
+          "gains": [
+            1
+          ],
+          "losses": [
+            9
+          ]
+        }
+      ],
+      "score_trajectory": [
+        [
+          640,
+          8
+        ],
+        [
+          704,
+          8
+        ],
+        [
+          768,
+          4
+        ],
+        [
+          832,
+          8
+        ],
+        [
+          896,
+          12
+        ],
+        [
+          960,
+          12
+        ],
+        [
+          1024,
+          12
+        ],
+        [
+          1088,
+          12
+        ],
+        [
+          1152,
+          12
+        ],
+        [
+          1216,
+          12
+        ],
+        [
+          1280,
+          12
+        ],
+        [
+          1344,
+          12
+        ],
+        [
+          1408,
+          12
+        ],
+        [
+          1472,
+          12
+        ],
+        [
+          1536,
+          12
+        ],
+        [
+          1600,
+          13
+        ],
+        [
+          1664,
+          14
+        ],
+        [
+          1728,
+          14
+        ],
+        [
+          1792,
+          14
+        ],
+        [
+          1856,
+          14
+        ],
+        [
+          1920,
+          14
+        ]
+      ],
+      "seed": 10,
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 236,
+        "4": 308,
+        "5": 272,
+        "6": 272
+      }
+    },
+    {
+      "B_boundary_solved": [
+        2,
+        3,
+        6,
+        7,
+        10,
+        11,
+        14,
+        15
+      ],
+      "B_final_retained": 6,
+      "B_worst_post_boundary_retained": 6,
+      "accepted_births": 18,
+      "born_condition_credited_counts": {
+        "24": 6,
+        "39": 30,
+        "56": 17,
+        "57": 138,
+        "58": 118,
+        "59": 180,
+        "60": 13,
+        "61": 41,
+        "62": 144,
+        "63": 17,
+        "64": 109,
+        "65": 169,
+        "66": 59,
+        "67": 2,
+        "68": 94,
+        "69": 35,
+        "70": 7,
+        "71": 1
+      },
+      "direct_identity_zero_credit_births": 0,
+      "extra_birth_opportunities": 3,
+      "final": 14,
+      "final_A_B": [
+        8,
+        6
+      ],
+      "final_gains_from_prefix": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        11
+      ],
+      "final_losses_from_prefix": [
+        6,
+        7
+      ],
+      "final_structure": {
+        "births_after_conversion": 18,
+        "depth": 4,
+        "effective_parameters": 47,
+        "exploration_rng_digest": "75a9d1269cf6e3384566b45f92616e24c1ce24078d4936bcaadba6aa35cb66d0",
+        "expression_definitions": 105,
+        "ordinary_births_after_conversion": 15,
+        "owner_visits": {
+          "0": 704,
+          "1": 64,
+          "2": 64,
+          "3": 236,
+          "4": 308,
+          "5": 272,
+          "6": 272
+        },
+        "owners": 4,
+        "physical_nodes": 577,
+        "pruned": 3,
+        "splits": 3
+      },
+      "initial": 8,
+      "nominations": 18,
+      "prefix_A_solved": [
+        8,
+        9,
+        12,
+        13
+      ],
+      "prefix_A_worst_retained": 2,
+      "random_selections": 7,
+      "residual_selections": 11,
+      "role": "residual-extra",
+      "row_changes": [
+        {
+          "event": 768,
+          "gains": [],
+          "losses": [
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "event": 832,
+          "gains": [
+            12,
+            13,
+            14,
+            15
+          ],
+          "losses": []
+        },
+        {
+          "event": 896,
+          "gains": [
+            2,
+            3,
+            10,
+            11
+          ],
+          "losses": []
+        },
+        {
+          "event": 1152,
+          "gains": [
+            4,
+            5
+          ],
+          "losses": [
+            6,
+            7
+          ]
+        },
+        {
+          "event": 1216,
+          "gains": [
+            6,
+            7
+          ],
+          "losses": [
+            4,
+            5
+          ]
+        },
+        {
+          "event": 1600,
+          "gains": [
+            0,
+            4,
+            5
+          ],
+          "losses": [
+            6,
+            7
+          ]
+        },
+        {
+          "event": 1856,
+          "gains": [
+            1
+          ],
+          "losses": []
+        }
+      ],
+      "score_trajectory": [
+        [
+          640,
+          8
+        ],
+        [
+          704,
+          8
+        ],
+        [
+          768,
+          4
+        ],
+        [
+          832,
+          8
+        ],
+        [
+          896,
+          12
+        ],
+        [
+          960,
+          12
+        ],
+        [
+          1024,
+          12
+        ],
+        [
+          1088,
+          12
+        ],
+        [
+          1152,
+          12
+        ],
+        [
+          1216,
+          12
+        ],
+        [
+          1280,
+          12
+        ],
+        [
+          1344,
+          12
+        ],
+        [
+          1408,
+          12
+        ],
+        [
+          1472,
+          12
+        ],
+        [
+          1536,
+          12
+        ],
+        [
+          1600,
+          13
+        ],
+        [
+          1664,
+          13
+        ],
+        [
+          1728,
+          13
+        ],
+        [
+          1792,
+          13
+        ],
+        [
+          1856,
+          14
+        ],
+        [
+          1920,
+          14
+        ]
+      ],
+      "seed": 10,
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 236,
+        "4": 308,
+        "5": 272,
+        "6": 272
+      }
+    },
+    {
+      "B_boundary_solved": [
+        2,
+        3,
+        6,
+        7,
+        10,
+        11,
+        14,
+        15
+      ],
+      "B_final_retained": 8,
+      "B_worst_post_boundary_retained": 8,
+      "accepted_births": 14,
+      "born_condition_credited_counts": {
+        "66": 11,
+        "67": 57,
+        "68": 2,
+        "69": 48,
+        "70": 24,
+        "71": 260,
+        "72": 105,
+        "73": 211,
+        "74": 166,
+        "75": 71,
+        "76": 29,
+        "77": 85,
+        "78": 12,
+        "79": 1
+      },
+      "direct_identity_zero_credit_births": 0,
+      "extra_birth_opportunities": 0,
+      "final": 16,
+      "final_A_B": [
+        8,
+        8
+      ],
+      "final_gains_from_prefix": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        10,
+        11,
+        14
+      ],
+      "final_losses_from_prefix": [],
+      "final_structure": {
+        "births_after_conversion": 14,
+        "depth": 4,
+        "effective_parameters": 50,
+        "exploration_rng_digest": "6776ae668e8172e6dcc45504abdc2c929881a1d3a6a9835d3347faaa8bc03396",
+        "expression_definitions": 109,
+        "ordinary_births_after_conversion": 14,
+        "owner_visits": {
+          "0": 704,
+          "1": 64,
+          "2": 64,
+          "3": 243,
+          "4": 617,
+          "5": 116,
+          "6": 112
+        },
+        "owners": 4,
+        "physical_nodes": 633,
+        "pruned": 3,
+        "splits": 3
+      },
+      "initial": 6,
+      "nominations": 14,
+      "prefix_A_solved": [
+        8,
+        9,
+        12,
+        13
+      ],
+      "prefix_A_worst_retained": 1,
+      "random_selections": 14,
+      "residual_selections": 0,
+      "role": "random-current",
+      "row_changes": [
+        {
+          "event": 704,
+          "gains": [
+            2,
+            3,
+            6,
+            10,
+            11,
+            14
+          ],
+          "losses": []
+        },
+        {
+          "event": 1344,
+          "gains": [
+            1,
+            4,
+            5
+          ],
+          "losses": [
+            9,
+            12,
+            13
+          ]
+        },
+        {
+          "event": 1408,
+          "gains": [
+            9,
+            12,
+            13
+          ],
+          "losses": [
+            1,
+            4,
+            5
+          ]
+        },
+        {
+          "event": 1472,
+          "gains": [
+            0,
+            1,
+            4,
+            5
+          ],
+          "losses": [
+            8,
+            9,
+            12
+          ]
+        },
+        {
+          "event": 1600,
+          "gains": [
+            12
+          ],
+          "losses": []
+        },
+        {
+          "event": 1664,
+          "gains": [
+            8
+          ],
+          "losses": [
+            0
+          ]
+        },
+        {
+          "event": 1856,
+          "gains": [
+            0
+          ],
+          "losses": []
+        },
+        {
+          "event": 1920,
+          "gains": [
+            9
+          ],
+          "losses": []
+        }
+      ],
+      "score_trajectory": [
+        [
+          640,
+          6
+        ],
+        [
+          704,
+          12
+        ],
+        [
+          768,
+          12
+        ],
+        [
+          832,
+          12
+        ],
+        [
+          896,
+          12
+        ],
+        [
+          960,
+          12
+        ],
+        [
+          1024,
+          12
+        ],
+        [
+          1088,
+          12
+        ],
+        [
+          1152,
+          12
+        ],
+        [
+          1216,
+          12
+        ],
+        [
+          1280,
+          12
+        ],
+        [
+          1344,
+          12
+        ],
+        [
+          1408,
+          12
+        ],
+        [
+          1472,
+          13
+        ],
+        [
+          1536,
+          13
+        ],
+        [
+          1600,
+          14
+        ],
+        [
+          1664,
+          14
+        ],
+        [
+          1728,
+          14
+        ],
+        [
+          1792,
+          14
+        ],
+        [
+          1856,
+          15
+        ],
+        [
+          1920,
+          16
+        ]
+      ],
+      "seed": 11,
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 243,
+        "4": 617,
+        "5": 116,
+        "6": 112
+      }
+    },
+    {
+      "B_boundary_solved": [
+        2,
+        3,
+        6,
+        7,
+        10,
+        11,
+        14,
+        15
+      ],
+      "B_final_retained": 8,
+      "B_worst_post_boundary_retained": 8,
+      "accepted_births": 14,
+      "born_condition_credited_counts": {
+        "66": 14,
+        "67": 57,
+        "68": 2,
+        "69": 48,
+        "70": 24,
+        "71": 511,
+        "72": 17,
+        "73": 91,
+        "74": 24,
+        "75": 8,
+        "76": 29,
+        "77": 42,
+        "78": 53,
+        "79": 22
+      },
+      "direct_identity_zero_credit_births": 0,
+      "extra_birth_opportunities": 0,
+      "final": 16,
+      "final_A_B": [
+        8,
+        8
+      ],
+      "final_gains_from_prefix": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        10,
+        11,
+        14
+      ],
+      "final_losses_from_prefix": [],
+      "final_structure": {
+        "births_after_conversion": 14,
+        "depth": 4,
+        "effective_parameters": 47,
+        "exploration_rng_digest": "6776ae668e8172e6dcc45504abdc2c929881a1d3a6a9835d3347faaa8bc03396",
+        "expression_definitions": 109,
+        "ordinary_births_after_conversion": 14,
+        "owner_visits": {
+          "0": 704,
+          "1": 64,
+          "2": 64,
+          "3": 243,
+          "4": 617,
+          "5": 116,
+          "6": 112
+        },
+        "owners": 4,
+        "physical_nodes": 605,
+        "pruned": 6,
+        "splits": 3
+      },
+      "initial": 6,
+      "nominations": 14,
+      "prefix_A_solved": [
+        8,
+        9,
+        12,
+        13
+      ],
+      "prefix_A_worst_retained": 3,
+      "random_selections": 5,
+      "residual_selections": 9,
+      "role": "residual-current",
+      "row_changes": [
+        {
+          "event": 704,
+          "gains": [
+            2,
+            3,
+            6,
+            10,
+            11,
+            14
+          ],
+          "losses": []
+        },
+        {
+          "event": 1344,
+          "gains": [
+            0,
+            1,
+            4,
+            5
+          ],
+          "losses": [
+            12
+          ]
+        },
+        {
+          "event": 1408,
+          "gains": [
+            12
+          ],
+          "losses": []
+        }
+      ],
+      "score_trajectory": [
+        [
+          640,
+          6
+        ],
+        [
+          704,
+          12
+        ],
+        [
+          768,
+          12
+        ],
+        [
+          832,
+          12
+        ],
+        [
+          896,
+          12
+        ],
+        [
+          960,
+          12
+        ],
+        [
+          1024,
+          12
+        ],
+        [
+          1088,
+          12
+        ],
+        [
+          1152,
+          12
+        ],
+        [
+          1216,
+          12
+        ],
+        [
+          1280,
+          12
+        ],
+        [
+          1344,
+          15
+        ],
+        [
+          1408,
+          16
+        ],
+        [
+          1472,
+          16
+        ],
+        [
+          1536,
+          16
+        ],
+        [
+          1600,
+          16
+        ],
+        [
+          1664,
+          16
+        ],
+        [
+          1728,
+          16
+        ],
+        [
+          1792,
+          16
+        ],
+        [
+          1856,
+          16
+        ],
+        [
+          1920,
+          16
+        ]
+      ],
+      "seed": 11,
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 243,
+        "4": 617,
+        "5": 116,
+        "6": 112
+      }
+    },
+    {
+      "B_boundary_solved": [
+        2,
+        3,
+        6,
+        7,
+        10,
+        11,
+        14,
+        15
+      ],
+      "B_final_retained": 8,
+      "B_worst_post_boundary_retained": 8,
+      "accepted_births": 17,
+      "born_condition_credited_counts": {
+        "30": 19,
+        "49": 129,
+        "70": 112,
+        "71": 45,
+        "72": 58,
+        "73": 2,
+        "74": 4,
+        "75": 24,
+        "76": 130,
+        "77": 245,
+        "78": 106,
+        "79": 29,
+        "80": 72,
+        "81": 105,
+        "82": 169,
+        "83": 94,
+        "84": 1
+      },
+      "direct_identity_zero_credit_births": 0,
+      "extra_birth_opportunities": 3,
+      "final": 13,
+      "final_A_B": [
+        5,
+        8
+      ],
+      "final_gains_from_prefix": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        10,
+        11,
+        14
+      ],
+      "final_losses_from_prefix": [
+        9,
+        12,
+        13
+      ],
+      "final_structure": {
+        "births_after_conversion": 17,
+        "depth": 4,
+        "effective_parameters": 53,
+        "exploration_rng_digest": "6776ae668e8172e6dcc45504abdc2c929881a1d3a6a9835d3347faaa8bc03396",
+        "expression_definitions": 114,
+        "ordinary_births_after_conversion": 14,
+        "owner_visits": {
+          "0": 704,
+          "1": 64,
+          "2": 64,
+          "3": 243,
+          "4": 617,
+          "5": 116,
+          "6": 112
+        },
+        "owners": 4,
+        "physical_nodes": 671,
+        "pruned": 4,
+        "splits": 3
+      },
+      "initial": 6,
+      "nominations": 17,
+      "prefix_A_solved": [
+        8,
+        9,
+        12,
+        13
+      ],
+      "prefix_A_worst_retained": 1,
+      "random_selections": 17,
+      "residual_selections": 0,
+      "role": "random-extra",
+      "row_changes": [
+        {
+          "event": 704,
+          "gains": [
+            2,
+            3,
+            6,
+            10,
+            11,
+            14
+          ],
+          "losses": []
+        },
+        {
+          "event": 1344,
+          "gains": [
+            4
+          ],
+          "losses": [
+            12
+          ]
+        },
+        {
+          "event": 1408,
+          "gains": [
+            12
+          ],
+          "losses": [
+            4
+          ]
+        },
+        {
+          "event": 1536,
+          "gains": [
+            1
+          ],
+          "losses": []
+        },
+        {
+          "event": 1728,
+          "gains": [
+            0,
+            5
+          ],
+          "losses": [
+            9,
+            13
+          ]
+        },
+        {
+          "event": 1856,
+          "gains": [
+            4
+          ],
+          "losses": [
+            12
+          ]
+        }
+      ],
+      "score_trajectory": [
+        [
+          640,
+          6
+        ],
+        [
+          704,
+          12
+        ],
+        [
+          768,
+          12
+        ],
+        [
+          832,
+          12
+        ],
+        [
+          896,
+          12
+        ],
+        [
+          960,
+          12
+        ],
+        [
+          1024,
+          12
+        ],
+        [
+          1088,
+          12
+        ],
+        [
+          1152,
+          12
+        ],
+        [
+          1216,
+          12
+        ],
+        [
+          1280,
+          12
+        ],
+        [
+          1344,
+          12
+        ],
+        [
+          1408,
+          12
+        ],
+        [
+          1472,
+          12
+        ],
+        [
+          1536,
+          13
+        ],
+        [
+          1600,
+          13
+        ],
+        [
+          1664,
+          13
+        ],
+        [
+          1728,
+          13
+        ],
+        [
+          1792,
+          13
+        ],
+        [
+          1856,
+          13
+        ],
+        [
+          1920,
+          13
+        ]
+      ],
+      "seed": 11,
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 243,
+        "4": 617,
+        "5": 116,
+        "6": 112
+      }
+    },
+    {
+      "B_boundary_solved": [
+        2,
+        3,
+        6,
+        7,
+        10,
+        11,
+        14,
+        15
+      ],
+      "B_final_retained": 8,
+      "B_worst_post_boundary_retained": 8,
+      "accepted_births": 17,
+      "born_condition_credited_counts": {
+        "30": 19,
+        "49": 129,
+        "70": 112,
+        "71": 45,
+        "72": 58,
+        "73": 2,
+        "74": 20,
+        "75": 4,
+        "76": 224,
+        "77": 448,
+        "78": 15,
+        "79": 24,
+        "80": 8,
+        "81": 29,
+        "82": 42,
+        "83": 58,
+        "84": 9
+      },
+      "direct_identity_zero_credit_births": 0,
+      "extra_birth_opportunities": 3,
+      "final": 16,
+      "final_A_B": [
+        8,
+        8
+      ],
+      "final_gains_from_prefix": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        10,
+        11,
+        14
+      ],
+      "final_losses_from_prefix": [],
+      "final_structure": {
+        "births_after_conversion": 17,
+        "depth": 4,
+        "effective_parameters": 52,
+        "exploration_rng_digest": "6776ae668e8172e6dcc45504abdc2c929881a1d3a6a9835d3347faaa8bc03396",
+        "expression_definitions": 114,
+        "ordinary_births_after_conversion": 14,
+        "owner_visits": {
+          "0": 704,
+          "1": 64,
+          "2": 64,
+          "3": 243,
+          "4": 617,
+          "5": 116,
+          "6": 112
+        },
+        "owners": 4,
+        "physical_nodes": 665,
+        "pruned": 5,
+        "splits": 3
+      },
+      "initial": 6,
+      "nominations": 17,
+      "prefix_A_solved": [
+        8,
+        9,
+        12,
+        13
+      ],
+      "prefix_A_worst_retained": 3,
+      "random_selections": 7,
+      "residual_selections": 10,
+      "role": "residual-extra",
+      "row_changes": [
+        {
+          "event": 704,
+          "gains": [
+            2,
+            3,
+            6,
+            10,
+            11,
+            14
+          ],
+          "losses": []
+        },
+        {
+          "event": 1344,
+          "gains": [
+            4
+          ],
+          "losses": [
+            12
+          ]
+        },
+        {
+          "event": 1408,
+          "gains": [
+            0,
+            1,
+            5
+          ],
+          "losses": []
+        },
+        {
+          "event": 1472,
+          "gains": [
+            12
+          ],
+          "losses": []
+        }
+      ],
+      "score_trajectory": [
+        [
+          640,
+          6
+        ],
+        [
+          704,
+          12
+        ],
+        [
+          768,
+          12
+        ],
+        [
+          832,
+          12
+        ],
+        [
+          896,
+          12
+        ],
+        [
+          960,
+          12
+        ],
+        [
+          1024,
+          12
+        ],
+        [
+          1088,
+          12
+        ],
+        [
+          1152,
+          12
+        ],
+        [
+          1216,
+          12
+        ],
+        [
+          1280,
+          12
+        ],
+        [
+          1344,
+          12
+        ],
+        [
+          1408,
+          15
+        ],
+        [
+          1472,
+          16
+        ],
+        [
+          1536,
+          16
+        ],
+        [
+          1600,
+          16
+        ],
+        [
+          1664,
+          16
+        ],
+        [
+          1728,
+          16
+        ],
+        [
+          1792,
+          16
+        ],
+        [
+          1856,
+          16
+        ],
+        [
+          1920,
+          16
+        ]
+      ],
+      "seed": 11,
+      "visited_owner_counts": {
+        "0": 64,
+        "1": 64,
+        "2": 64,
+        "3": 243,
+        "4": 617,
+        "5": 116,
+        "6": 112
+      }
+    }
+  ],
+  "elapsed_seconds": 2182.9889015120025,
+  "max_rss_kib": 46200,
+  "paired_effects": [
+    {
+      "birth_difference": 0,
+      "comparison": "residual minus random",
+      "final_score_difference": 1,
+      "schedule": "current",
+      "seed": 10
+    },
+    {
+      "birth_difference": 0,
+      "comparison": "residual minus random",
+      "final_score_difference": 0,
+      "schedule": "extra",
+      "seed": 10
+    },
+    {
+      "birth_difference": 3,
+      "comparison": "extra minus current",
+      "final_score_difference": 1,
+      "mode": "random",
+      "seed": 10
+    },
+    {
+      "birth_difference": 3,
+      "comparison": "extra minus current",
+      "final_score_difference": 0,
+      "mode": "residual",
+      "seed": 10
+    },
+    {
+      "birth_difference": 0,
+      "comparison": "residual minus random",
+      "final_score_difference": 0,
+      "schedule": "current",
+      "seed": 11
+    },
+    {
+      "birth_difference": 0,
+      "comparison": "residual minus random",
+      "final_score_difference": 3,
+      "schedule": "extra",
+      "seed": 11
+    },
+    {
+      "birth_difference": 3,
+      "comparison": "extra minus current",
+      "final_score_difference": -3,
+      "mode": "random",
+      "seed": 11
+    },
+    {
+      "birth_difference": 3,
+      "comparison": "extra minus current",
+      "final_score_difference": 0,
+      "mode": "residual",
+      "seed": 11
+    }
+  ],
+  "status": "complete",
+  "verification": {
+    "blocks": 160,
+    "checkpoints": 168,
+    "evaluation": 2560,
+    "training": 10240,
+    "verification_actions": 2560
+  }
+}
