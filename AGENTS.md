@@ -1,5 +1,18 @@
 # ReCoN/Hector agent instructions
 
+LATEST USER AUTHORIZATION,2026-09-15: prepare comprehensive handover first, then
+retry the interrupted previous step. Read docs/autogrowth/handover/START_HERE.md
+and docs/autogrowth/OWNER_TRIAL_LEARNING_RETRY.md. This explicitly supersedes the
+older no-retry restriction for this recovery. Preserve original evidence; reuse
+84 sealed blocks/87 checkpoints, restore revised seed21 at1536, reexecute the39
+uncheckpointed actions against the real environment with exact-log comparison,
+then finish the unchanged21/22/23 cohort. No logged feedback enters training.
+New retry allocation:11904 training+3072 scheduled+4464 frozen=19440 actions;
+39 are known repeated actual training executions, not an extra independent sample.
+Prepare/publish handover before retry; verify/pin separate recovery wrapper first.
+Private work-branch publication stays authorized; main and learner settings stay
+unchanged. Continue already-authorized sealed units without asking again.
+
 Latest status, 2026-09-15: read `docs/autogrowth/OWNER_TRIAL_LEARNING_STATUS.md`.
 The learning-before-assessment revision is implemented; 35 distinct checks pass,
 including five new checks repeated on final source. The fixed study is INCOMPLETE:
