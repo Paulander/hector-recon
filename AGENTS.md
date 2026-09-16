@@ -1,5 +1,13 @@
 # ReCoN/Hector agent instructions
 
+LATEST read-only attribution, 2026-09-16:
+`docs/autogrowth/OWNER_SPLIT_USEFULNESS_AUDIT.md`. All first x trials had
+adequate exposure but negative prospective use gain; row-stratification stays
+negative. The current trial replaces a parent with independently copied child
+scorers and credits only the active owner, so it does not test cooperative
+parent-child reward propagation. A route-gated residual child is a proposed
+next bounded hypothesis, not an implemented or verified repair. No new play.
+
 LATEST bounded pilot, 2026-09-16: read
 `docs/autogrowth/OWNER_ACTION_BALANCE_RESULTS.md` and its declared protocol.
 Fresh Boolean seeds33/34/35 completed: current40/48, action-contrast37/48,
