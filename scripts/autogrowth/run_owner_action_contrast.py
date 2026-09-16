@@ -70,6 +70,11 @@ def trial_history(actor):
             for t in [*actor.split_trial_history, *actor.split_trials.values()]]
 
 
+def verify_extra(_output):
+    """No additional state exists in the original action-contrast pilot."""
+    return {}
+
+
 def verify(output, hashes):
     for name, expected in hashes.items():
         assert digest((ROOT/name).read_bytes()) == digest((output/'source-snapshot'/name).read_bytes()) == expected
@@ -172,6 +177,7 @@ def run(path):
                 final_rngs.append(actor.exploration_rng.getstate())
             assert all(state == final_rngs[0] for state in final_rngs)
         report['verification'] = verify(output, hashes)
+        report['extra_verification'] = verify_extra(output)
         report['status'] = 'complete'
     except BaseException as error:
         report.update(status='incomplete', error=f'{type(error).__name__}: {error}')

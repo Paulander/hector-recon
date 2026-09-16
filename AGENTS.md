@@ -1,5 +1,18 @@
 # ReCoN/Hector agent instructions
 
+LATEST bounded pilot, 2026-09-16: read
+`docs/autogrowth/OWNER_ACTION_BALANCE_RESULTS.md` and its declared protocol.
+Fresh Boolean seeds33/34/35 completed: current40/48, action-contrast37/48,
+owner-balance40/48. Owner-local exploration increased rare-action coverage and
+nominated x early in all three seeds, but all first x splits were prospectively
+pruned; only seed34 later accepted a y split at substantial topology cost.
+This is not a chess result or evidence of beneficial structural growth. The
+current owner learner remains reference. Raw evidence is archived locally; no
+workers remain and no automatic continuation is authorized. Local active
+weights receive environmental reward, but no independently rewarded SCRIPT
+goal hierarchy exists. Investigate split usefulness from saved evidence before
+another learner change or longer run. Older entries below are historical.
+
 COMPLETE recovery, 2026-09-15: `docs/autogrowth/OWNER_TRIAL_LEARNING_RESULTS.md`.
 Handover was published first; the unchanged seeds21/22/23 experiment then finished.
 Current16/12/12, original trial11/12/10, learning-trial14/12/12 (40/33/38 of48).
