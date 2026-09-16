@@ -61,7 +61,7 @@ if __name__ == "__main__":
     parser.add_argument("--seconds", type=int, default=620)
     parser.add_argument("command", nargs=argparse.REMAINDER)
     args = parser.parse_args()
-    if not 1 <= args.seconds <= 620 or not args.command:
-        parser.error("a command and a 1..620 second budget are required")
+    if not 1 <= args.seconds <= 3600 or not args.command:
+        parser.error("a command and a 1..3600 second budget are required")
     command = args.command[1:] if args.command[0] == "--" else args.command
     sys.exit(guard(command, args.seconds))

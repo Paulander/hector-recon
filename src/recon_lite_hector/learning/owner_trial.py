@@ -263,6 +263,9 @@ class TrialOwnerDevelopment(FreshOwnerDevelopment):
     def split_decision(self, owner, route):
         raise RuntimeError("provisional law requires nominate_split and actual outcome acceptance")
 
+    def _nomination_score(self, owner, index, evidence):
+        return evidence.score(self.development_config.min_support)
+
     def _run_development(self, owner):
         retired = self._retire_local(owner)
         # Continue the ordinary local opportunity even when nomination succeeds.
@@ -276,7 +279,7 @@ class TrialOwnerDevelopment(FreshOwnerDevelopment):
                 and self._leaf_budget_count() < self.ownership_limits.max_leaves):
             choices = []
             for index, evidence in self.owner_evidence[owner].items():
-                score = evidence.score(self.development_config.min_support)
+                score = self._nomination_score(owner, index, evidence)
                 key = self._split_key(self.owner_candidates[index])
                 if score is not None and score > 0 and key not in self.split_tried.get(owner, set()):
                     choices.append((score, index))

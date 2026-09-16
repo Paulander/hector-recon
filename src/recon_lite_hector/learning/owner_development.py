@@ -129,10 +129,14 @@ class AdaptiveOwnerDevelopment(ContextDecisionDevelopment):
         evidence = self.owner_evidence[owner]
         for index, enabled in enumerate(observations):
             evidence.setdefault(index, SplitEvidence()).add(enabled, reward - prediction)
+        self._record_nomination_outcome(owner, feedback.action, reward - prediction, observations)
         self.candidate_pending = None
         self.owner_visits[owner] += 1
         if self.owner_visits[owner] % self.development_config.develop_every == 0:
             self._develop_owner(owner)
+
+    def _record_nomination_outcome(self, owner, action, residual, observations):
+        """Extension point for owner-local evidence from the executed action only."""
 
     def split_decision(self, owner, route):
         children = super().split_decision(owner, route)
