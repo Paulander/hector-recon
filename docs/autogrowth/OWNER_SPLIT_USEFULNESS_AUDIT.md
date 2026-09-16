@@ -40,11 +40,15 @@ The x nomination was behaviorally relevant but not evidence that a copied
 child scorer would add value. At birth, seed 33's parent and children had no
 action-conditioned expression; the parent later acquired an x/z/action
 expression with more exposure. Seed 34's `x=false` child inherited an
-`x=true AND act-b` expression that can never activate inside its route, leaving
-it action-blind until a later local birth. Seed 35's `x=true` child inherited a
-similarly incompatible `x=false` expression. Thus copying every parent
-condition creates dead or redundant child parameters, while each child gets
-only about one quarter of the region's training actions during the trial.
+`x=true AND act-b` expression that can never activate inside its route; seed
+35's `x=true` child inherited a similarly incompatible `x=false` expression.
+These are silent *conditions inside valid children*, not impossible child
+paths. Importantly, a silent copied condition was also silent for the parent
+in that same region: exact score inheritance means it causes no immediate
+policy loss. It consumes resources, while the children subsequently learn
+and grow from only about one quarter of the region's training actions each.
+The stronger first-principles diagnosis is in
+[OWNER_MECHANISM_FIRST_PRINCIPLES.md](OWNER_MECHANISM_FIRST_PRINCIPLES.md).
 
 The owner-balanced exploration law made this sharper in some runs: it boosts
 the locally least-sampled action at the existing 0.25 exploration events.
@@ -83,25 +87,18 @@ no parent–child contribution or reward-propagation contract in this path.
 The test legitimately asks whether replacing the parent with children helps;
 it does not test whether useful local specialists can cooperate with a parent.
 
-The most economical next hypothesis is a **route-gated residual child**, not a
-general intrinsic-reward system: keep the parent scorer active for every
-action, initialize the child contribution at zero, and let the child add a
-small action-conditioned correction when its route is active. The joint
-prediction receives one environmental outcome; eligible parent and child
-weights can both receive portions of its prediction error, with explicit
-normalization to avoid double credit. Parent-only versus parent-plus-residual
-access can still be prospectively compared. A child then serves its parent
-by improving the jointly selected action, not by maximizing activation.
-The route and contribution must remain formal graph conditions, not an opaque
-Python action picker or externally supplied subgoal.
-This is a proposed local credit contract, not a proven repair.
+The more precise next hypothesis is a **route-and-action interaction bud**,
+not another copied decision owner or a general intrinsic-reward system. Keep
+the parent scorer active and let a zero-weight, action-sensitive formal
+condition add a local correction. The current selected-action error can then
+credit that condition through the existing normalized update. The route and
+action-affordance inputs must be formal graph signals, not an opaque Python
+action picker or externally supplied subgoal. This is a proposed repair, not
+a proven one.
 
-First test it data-free: zero-residual behavior must exactly match the parent;
-an incompatible inherited condition must not consume a live parameter;
-actual outcome credit must reach the parent on both access arms and the child
-only when active; no unchosen action gets feedback; snapshot/replay must be
-exact. Then use a tiny bounded Boolean comparison against the current cloned
-trial, with separate reporting for context A/B, prospective gain, topology,
-and retained parent competence. Reject it if the residual does not improve
-prospective use or again trades away the already solved region. Do not launch
-a chess or long run on this audit alone.
+Before any future play, require exact initial-score preservation, a genuinely
+action-discriminating bud inside its route, actual-outcome credit only for the
+selected action, continuing parent credit, finite resources and exact replay.
+Then a separate bounded Boolean comparison can report context A/B behavior,
+topology and retained parent competence. No test or new play was run as part
+of this first-principles correction; do not launch chess or a long run on it.

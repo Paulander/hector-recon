@@ -1,5 +1,17 @@
 # ReCoN/Hector agent instructions
 
+LATEST first-principles correction, 2026-09-16:
+`docs/autogrowth/OWNER_MECHANISM_FIRST_PRINCIPLES.md`. The compatibility rule
+rejects proven-impossible NEW conditions, not copied inherited ones. An
+inherited condition silent under a valid child route wastes structure but
+cannot itself cause immediate forgetting: split scores are inherited exactly.
+The deeper mismatch is that action-contrast evidence requests a route × action
+interaction while the mutation forks complete scorers without creating an
+action-sensitive scoring direction. The proposed next repair is a zero-weight
+route-and-affordance contribution attached to the parent, with existing actual
+selected-action credit; not a new reward for mere activation. This is design
+only: no learner edit, test, replay or new training yet. Previous audit amended.
+
 LATEST read-only attribution, 2026-09-16:
 `docs/autogrowth/OWNER_SPLIT_USEFULNESS_AUDIT.md`. All first x trials had
 adequate exposure but negative prospective use gain; row-stratification stays
