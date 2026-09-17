@@ -1,5 +1,12 @@
 # ReCoN‑lite (Request–Confirmation Network) — Chess Sandbox
 
+**Validated selective M1 baseline (2026-09-17):** the packaged learned actor
+passes all 1,512 legal White-to-move KRK mate-in-one placements in the declared
+no-draw-history scope. [Implementation, trained artifact and verification](docs/SELECTIVE_M1_BASELINE.md).
+Local growth and weight learning remain active; no correct-move labels or authored
+corner strategies enter learning. Mate-in-two remains research. The restart
+notes below describe the earlier baseline, preserved for context.
+
 > **Official restart: mate-in-one through learned feature terminals.** The default
 > `TerminalOrganism` reads declared coordinates through terminals, selects actions
 > in the persistent formal graph and executes them through an actuator terminal.

@@ -20,6 +20,9 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 include = ["recon_lite_chess*", "recon_lite_hector*"]
 
+[tool.setuptools.package-data]
+recon_lite_chess = ["checkpoints/*.pkl.gz", "checkpoints/*.json"]
+
 [tool.uv.workspace]
 members = ["libs/recon-lite"]
 

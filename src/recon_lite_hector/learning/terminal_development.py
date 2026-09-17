@@ -243,6 +243,14 @@ class TerminalDevelopment:
             node.meta.pop("reading", None)
             node.meta.pop("emitted", None)
 
+    def _before_execute(self, engine, env, *, event_id, slot, prediction, learn):
+        """Extension point after graph choice, before the observation frame closes."""
+        pass
+
+    def _exploration_slot(self, engine, env, bindings):
+        """Select an internally boosted binding; ordinary actors remain uniform."""
+        return self.rng.randrange(len(bindings))
+
     def act(self, port: FeaturePort, *, event_id: int, learn: bool) -> str | None:
         if learn and event_id <= self.last_event:
             raise ValueError("action event must increase; cannot duplicate credit")
@@ -276,13 +284,14 @@ class TerminalDevelopment:
             node.meta["actuator_identity"] = bindings[slot] if slot < len(bindings) else "unbound"
             if slot >= len(bindings):
                 node.state = NodeState.FAILED
+        env["bindings"] = bindings
         exploration = {}
         if learn and self.rng.random() < self.config.exploration:
             # A bounded internal stochastic signal; no environment measurements
             # or outcome labels determine which legal binding is explored.
             bound = 1.0 + 2.0 * (abs(float(self.bias)) + sum(abs(float(c.weight)) for c in self.conditions.values()))
-            exploration[self.rng.randrange(len(bindings))] = bound
-        env.update(bindings=bindings, exploration=exploration)
+            exploration[self._exploration_slot(engine, env, bindings)] = bound
+        env["exploration"] = exploration
         engine.request(ACTION_CHOICE)
         engine.run(max_ticks=40, env=env,
                    until=lambda e: e.g.nodes[ACTION_CHOICE].state in
@@ -293,6 +302,8 @@ class TerminalDevelopment:
         active = tuple(cid for cid in self.conditions
                        if self.graph.nodes[f"gate:{slot}:{cid}"].state == NodeState.CONFIRMED)
         prediction = self.graph.nodes[selected].activation.value - exploration.get(slot, 0.0)
+        self._before_execute(engine, env, event_id=event_id, slot=slot,
+                             prediction=prediction, learn=learn)
         engine.request("execute")
         engine.run(max_ticks=16, env=env,
                    until=lambda e: e.g.nodes["execute"].state in (NodeState.CONFIRMED, NodeState.FAILED))

@@ -1,0 +1,81 @@
+{
+  "artifact_bytes": 375475,
+  "artifact_sha256": "52c226628e5f8d09520c82a0b24dcb2e88ecf4e81ebb1746850df852a16000ff",
+  "birth_search": {
+    "candidates": 64,
+    "extra_after_split": false,
+    "min_support": 4,
+    "mode": "residual",
+    "random_fraction": 0.25
+  },
+  "chess": "1.11.2",
+  "completed_actions": 2048,
+  "config": {
+    "births_per_episode": 2,
+    "consolidate_every": 32,
+    "consolidation_rate": 0.1,
+    "eligibility_decay": 0.8,
+    "exploration": 0.25,
+    "grace_episodes": 256,
+    "learning_rate": 0.3,
+    "max_conditions": 96,
+    "prune_weight": 0.02
+  },
+  "conversion": "Actor only, no weight/topology/config/history changes; schedule omitted",
+  "development": {
+    "candidates": 42,
+    "develop_every": 64,
+    "min_support": 4,
+    "split_enabled": false
+  },
+  "format": "selective-m1-actor.v1",
+  "limits": {
+    "max_definitions": 512,
+    "max_depth": 4,
+    "max_leaves": 1,
+    "max_parameters": 96,
+    "max_physical_nodes": 32768
+  },
+  "original_checkpoint_sha256": "ae8d5c2e64f6c14e98cca5440db9885e3bfde4e67e728e628838427889f99b96",
+  "original_code_sha256": "fa7ad67ce5176f144e51667bb46ff8712ff3d8ac3da24f41d24bc0ae021185bd",
+  "prospective_resource_cost": 0.25,
+  "python": [
+    "3",
+    "12"
+  ],
+  "reclosure_enabled": false,
+  "retention": "224/224 at all nine checks across 1024 additional ordinary actions",
+  "scope": "1512 legal White-to-move KRK mate-in-one positions / 189 D4 orbits; ordinary placement scope, no draw history",
+  "scope_completion": {
+    "positions": 128,
+    "mating_orbits": 16,
+    "receipts_sha256": "bfc5230a77ac7e28e63e0c15ee4c53ef1d051899adab4cc4c1e068227e59fa25",
+    "validation_panel_sha256": "6878f477fef7258eff2e822b328a21abe4631f0a57021b16cbe282b1d83f0eb9"
+  },
+  "seed": 61,
+  "source_commit": "12fa306c",
+  "topology": {
+    "conditions": 12,
+    "definitions": 168,
+    "edges": 13564,
+    "nodes": 3405
+  },
+  "validation_panel_sha256": "715f57634af5cd64b877069baa4b4865f3b9a02abb1dbfb39ecaf73e6817e405",
+  "validation_sources": {
+    "confirmation": {
+      "path": "selective_m1_confirmation_seed61/fresh-evaluation.json",
+      "positions": 80,
+      "sha256": "0a73bde833913d177df38bdcbf8b7dfbc383ab80f764f088d2cfeb083cffa668"
+    },
+    "development": {
+      "path": "selective_m1_retention_seed61/development-000002048.json",
+      "positions": 224,
+      "sha256": "1db68a977d2977aa29609b36a6eeecf27e10f8b955a47d9994b402ba3e3b0f24"
+    },
+    "train": {
+      "path": "selective_m1_confirmation_seed61/training-evaluation.json",
+      "positions": 1080,
+      "sha256": "ced3722b92c3f01daa5a92a11d2f2b2156bcfa6a62c508d27a1687ca8371b80c"
+    }
+  }
+}

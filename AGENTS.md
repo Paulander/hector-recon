@@ -1,5 +1,17 @@
 # ReCoN/Hector agent instructions
 
+LATEST VALIDATED BASELINE, 2026-09-17: read `docs/SELECTIVE_M1_BASELINE.md`.
+The selective actor trained from scalar played-move outcomes and passed all
+1,512 legal White-to-move KRK mate-in-one placements (189 D4 orbits; no draw
+history). Preserve its immutable packaged checkpoint; load a copy for new work.
+Its weights and local growth remain plastic. No M2 capability, seed-robust
+convergence or perpetual retention is claimed. The user retired the old M1
+partition reservation for new development; old result files remain unopened.
+The following earlier status/results are historical; their architecture and
+information-boundary rules still apply. Do not import historical teachers or
+coach-selected solutions into the learned curriculum. Existing base-terminal
+APIs/defaults remain available beside the newly promoted selective factory.
+
 `main` is the official restart line from 2026-09-06. The active claim is narrow:
 the M1 learner respects the terminal observation/action boundary and receives only
 action-bound scalar outcomes. It has not demonstrated adaptive topology growth,
