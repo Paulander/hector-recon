@@ -1,0 +1,1189 @@
+{
+  "actors": [
+    {
+      "acquisition": true,
+      "censuses": [
+        {
+          "adjacent_losses": null,
+          "completed": 1536,
+          "coverage": 1512,
+          "losses_from_fixed2048": null
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2048,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2304,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2560,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2816,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 3072,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        }
+      ],
+      "evaluation_actions": 9072,
+      "final_state_sha256": "8be2bba1bc13b49e0f65a1c9a18d2040867d4fef4ef56409d63db8d9df09e2a8",
+      "final_topology": {
+        "conditions": 17,
+        "definitions": 176,
+        "edges": 13244,
+        "nodes": 3365,
+        "slots": 20
+      },
+      "first_observed_perfection": 1536,
+      "joint_success": true,
+      "lifecycle_deltas": {
+        "action_bud_history": 47,
+        "birth_nominations": 0,
+        "birth_proposals": 0,
+        "development_history": 48,
+        "history": 0,
+        "ownership_history": 0,
+        "prospective_history": 73,
+        "reclosure_history": 0,
+        "refinement_history": 1,
+        "retirement_history": 32,
+        "splits": 0
+      },
+      "producer_manifest": {
+        "sha256": "0f731c8adcfbd89683eb9e0efe0248e09ddf7e1583ab9d0d4e614159a85e5c99",
+        "workspace_relative_path": "native-selective-m1-readiness-20260925/evidence/producer_202609250801_data/manifest.json"
+      },
+      "provenance": "REUSED_VERIFIED",
+      "retention": true,
+      "seed": 202609250801,
+      "training_actions": 3072,
+      "verification": {
+        "checkpoints": 25,
+        "cold_at": 2048,
+        "native_evaluation_reconstruction_calls": 9072,
+        "native_training_reconstruction_calls": 3072,
+        "status": "PASS"
+      },
+      "verifier_completion": {
+        "sha256": "cd33a3b609e5af81574b82ef5aa6a92fa7d3883806b162898d196ca32693c5e1",
+        "workspace_relative_path": "native-selective-m1-readiness-20260925/evidence/verifier_202609250801_data/COMPLETE.json"
+      }
+    },
+    {
+      "acquisition": true,
+      "censuses": [
+        {
+          "adjacent_losses": null,
+          "completed": 1536,
+          "coverage": 1512,
+          "losses_from_fixed2048": null
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2048,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2304,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2560,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2816,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 3072,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        }
+      ],
+      "evaluation_actions": 9072,
+      "final_state_sha256": "d8b6c9fd745aa5fb458decd70fa21840e7fef01aa109f1f1c412f92a51ad6fb8",
+      "final_topology": {
+        "conditions": 13,
+        "definitions": 178,
+        "edges": 13004,
+        "nodes": 3265,
+        "slots": 20
+      },
+      "first_observed_perfection": 1536,
+      "joint_success": true,
+      "lifecycle_deltas": {
+        "action_bud_history": 47,
+        "birth_nominations": 0,
+        "birth_proposals": 0,
+        "development_history": 48,
+        "history": 0,
+        "ownership_history": 0,
+        "prospective_history": 122,
+        "reclosure_history": 0,
+        "refinement_history": 1,
+        "retirement_history": 36,
+        "splits": 0
+      },
+      "producer_manifest": {
+        "sha256": "8585495c5ee1481b12fc5c5aff31172a02365cf42594f6e9062f263754f069a3",
+        "workspace_relative_path": "native-selective-m1-readiness-20260925/evidence/producer_202609250802_data/manifest.json"
+      },
+      "provenance": "REUSED_VERIFIED",
+      "retention": true,
+      "seed": 202609250802,
+      "training_actions": 3072,
+      "verification": {
+        "checkpoints": 25,
+        "cold_at": 2048,
+        "native_evaluation_reconstruction_calls": 9072,
+        "native_training_reconstruction_calls": 3072,
+        "status": "PASS"
+      },
+      "verifier_completion": {
+        "sha256": "b730c49b54a31abf3805351277b4b9138feca2bce90c2cb8e0ce46bf71da5422",
+        "workspace_relative_path": "native-selective-m1-readiness-20260925/evidence/verifier_202609250802_data/COMPLETE.json"
+      }
+    },
+    {
+      "acquisition": true,
+      "censuses": [
+        {
+          "adjacent_losses": null,
+          "completed": 1536,
+          "coverage": 1512,
+          "losses_from_fixed2048": null
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2048,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2304,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2560,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2816,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 3072,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        }
+      ],
+      "evaluation_actions": 9072,
+      "final_state_sha256": "2837a091978cccff0c8a974c079f2b14b61a6085cad6cfb09d5c33bf14c87668",
+      "final_topology": {
+        "conditions": 16,
+        "definitions": 179,
+        "edges": 13684,
+        "nodes": 3445,
+        "slots": 20
+      },
+      "first_observed_perfection": 1536,
+      "joint_success": true,
+      "lifecycle_deltas": {
+        "action_bud_history": 45,
+        "birth_nominations": 0,
+        "birth_proposals": 0,
+        "development_history": 48,
+        "history": 0,
+        "ownership_history": 0,
+        "prospective_history": 109,
+        "reclosure_history": 0,
+        "refinement_history": 3,
+        "retirement_history": 33,
+        "splits": 0
+      },
+      "producer_manifest": {
+        "sha256": "fe32300e98580232fac58260303655bdf483524eefd9b5ad73080676a2db7c14",
+        "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/producer_202609250803_data/manifest.json"
+      },
+      "provenance": "AUTHORIZED_TECHNICAL_RERUN",
+      "retention": true,
+      "seed": 202609250803,
+      "training_actions": 3072,
+      "verification": {
+        "checkpoints": 25,
+        "cold_at": 2048,
+        "native_evaluation_reconstruction_calls": 9072,
+        "native_training_reconstruction_calls": 3072,
+        "status": "PASS"
+      },
+      "verifier_completion": {
+        "sha256": "ad5aeb6d3017354961f1fec30569ab2569b5accdfb3d3dcd4d17e246e700200e",
+        "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/verifier_202609250803_data/COMPLETE.json"
+      }
+    },
+    {
+      "acquisition": true,
+      "censuses": [
+        {
+          "adjacent_losses": null,
+          "completed": 1536,
+          "coverage": 1512,
+          "losses_from_fixed2048": null
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2048,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2304,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2560,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2816,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 3072,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        }
+      ],
+      "evaluation_actions": 9072,
+      "final_state_sha256": "6142a867f4e35c9187789e7b8e906cf484db7c873b496079a718cb8b6ad3cfd0",
+      "final_topology": {
+        "conditions": 21,
+        "definitions": 177,
+        "edges": 14044,
+        "nodes": 3565,
+        "slots": 20
+      },
+      "first_observed_perfection": 1536,
+      "joint_success": true,
+      "lifecycle_deltas": {
+        "action_bud_history": 48,
+        "birth_nominations": 0,
+        "birth_proposals": 0,
+        "development_history": 48,
+        "history": 0,
+        "ownership_history": 0,
+        "prospective_history": 158,
+        "reclosure_history": 0,
+        "refinement_history": 0,
+        "retirement_history": 28,
+        "splits": 0
+      },
+      "producer_manifest": {
+        "sha256": "79767753937f7abb7b08cbefb652142ed95ca0c0814e40fa9f0e1dc8ff03bf0c",
+        "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/producer_202609250804_data/manifest.json"
+      },
+      "provenance": "AUTHORIZED_TECHNICAL_RERUN",
+      "retention": true,
+      "seed": 202609250804,
+      "training_actions": 3072,
+      "verification": {
+        "checkpoints": 25,
+        "cold_at": 2048,
+        "native_evaluation_reconstruction_calls": 9072,
+        "native_training_reconstruction_calls": 3072,
+        "status": "PASS"
+      },
+      "verifier_completion": {
+        "sha256": "b3c6682c6edb2ba18e01be74eacb3457441219d585a7a10e33df146d9b14837f",
+        "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/verifier_202609250804_data/COMPLETE.json"
+      }
+    },
+    {
+      "acquisition": true,
+      "censuses": [
+        {
+          "adjacent_losses": null,
+          "completed": 1536,
+          "coverage": 1512,
+          "losses_from_fixed2048": null
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2048,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2304,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2560,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2816,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 3072,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        }
+      ],
+      "evaluation_actions": 9072,
+      "final_state_sha256": "db266af2ee43f1e5ccb79b8475dfc797fc38379446b92d4fe3370a01d58fb4aa",
+      "final_topology": {
+        "conditions": 18,
+        "definitions": 172,
+        "edges": 13084,
+        "nodes": 3345,
+        "slots": 20
+      },
+      "first_observed_perfection": 1536,
+      "joint_success": true,
+      "lifecycle_deltas": {
+        "action_bud_history": 46,
+        "birth_nominations": 0,
+        "birth_proposals": 0,
+        "development_history": 48,
+        "history": 0,
+        "ownership_history": 0,
+        "prospective_history": 151,
+        "reclosure_history": 0,
+        "refinement_history": 2,
+        "retirement_history": 31,
+        "splits": 0
+      },
+      "producer_manifest": {
+        "sha256": "8d0d4f1cb81571f0584e3eb08da3d6703ef87308417d1d59a29766c00d3a5ed0",
+        "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/producer_202609250805_data/manifest.json"
+      },
+      "provenance": "FIRST_EXECUTION",
+      "retention": true,
+      "seed": 202609250805,
+      "training_actions": 3072,
+      "verification": {
+        "checkpoints": 25,
+        "cold_at": 2048,
+        "native_evaluation_reconstruction_calls": 9072,
+        "native_training_reconstruction_calls": 3072,
+        "status": "PASS"
+      },
+      "verifier_completion": {
+        "sha256": "c454d658142e9fb2a03fbf737854f2420703516f551d462d56bc16c56dff5985",
+        "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/verifier_202609250805_data/COMPLETE.json"
+      }
+    },
+    {
+      "acquisition": true,
+      "censuses": [
+        {
+          "adjacent_losses": null,
+          "completed": 1536,
+          "coverage": 1512,
+          "losses_from_fixed2048": null
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2048,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2304,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2560,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2816,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 3072,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        }
+      ],
+      "evaluation_actions": 9072,
+      "final_state_sha256": "83deca3cfc244757dc39482390bbb5a4b7ea862830248ca3a75844db7151b9ba",
+      "final_topology": {
+        "conditions": 19,
+        "definitions": 179,
+        "edges": 13764,
+        "nodes": 3525,
+        "slots": 20
+      },
+      "first_observed_perfection": 1536,
+      "joint_success": true,
+      "lifecycle_deltas": {
+        "action_bud_history": 47,
+        "birth_nominations": 0,
+        "birth_proposals": 0,
+        "development_history": 48,
+        "history": 0,
+        "ownership_history": 0,
+        "prospective_history": 119,
+        "reclosure_history": 0,
+        "refinement_history": 1,
+        "retirement_history": 30,
+        "splits": 0
+      },
+      "producer_manifest": {
+        "sha256": "8b245ffeb7ad8fd17fb66690ca03ca3842c3b33d5e21897f8eba4f5ab5abd324",
+        "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/producer_202609250806_data/manifest.json"
+      },
+      "provenance": "FIRST_EXECUTION",
+      "retention": true,
+      "seed": 202609250806,
+      "training_actions": 3072,
+      "verification": {
+        "checkpoints": 25,
+        "cold_at": 2048,
+        "native_evaluation_reconstruction_calls": 9072,
+        "native_training_reconstruction_calls": 3072,
+        "status": "PASS"
+      },
+      "verifier_completion": {
+        "sha256": "a657c7eeca22164bde0400878a7d2e6fe3b363b892914b34913683e20b985f1e",
+        "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/verifier_202609250806_data/COMPLETE.json"
+      }
+    },
+    {
+      "acquisition": true,
+      "censuses": [
+        {
+          "adjacent_losses": null,
+          "completed": 1536,
+          "coverage": 1512,
+          "losses_from_fixed2048": null
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2048,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2304,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2560,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2816,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 3072,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        }
+      ],
+      "evaluation_actions": 9072,
+      "final_state_sha256": "176d5b7cce478071ba5a9379a259c415a97504aeaf5d214411d503662e7469eb",
+      "final_topology": {
+        "conditions": 11,
+        "definitions": 176,
+        "edges": 12164,
+        "nodes": 3105,
+        "slots": 20
+      },
+      "first_observed_perfection": 1536,
+      "joint_success": true,
+      "lifecycle_deltas": {
+        "action_bud_history": 48,
+        "birth_nominations": 0,
+        "birth_proposals": 0,
+        "development_history": 48,
+        "history": 0,
+        "ownership_history": 0,
+        "prospective_history": 116,
+        "reclosure_history": 0,
+        "refinement_history": 0,
+        "retirement_history": 38,
+        "splits": 0
+      },
+      "producer_manifest": {
+        "sha256": "e9cd4b507a9d37e2d23635767dbb31f920c69d6dcb27272cb63230749c32ea86",
+        "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/producer_202609250807_data/manifest.json"
+      },
+      "provenance": "FIRST_EXECUTION",
+      "retention": true,
+      "seed": 202609250807,
+      "training_actions": 3072,
+      "verification": {
+        "checkpoints": 25,
+        "cold_at": 2048,
+        "native_evaluation_reconstruction_calls": 9072,
+        "native_training_reconstruction_calls": 3072,
+        "status": "PASS"
+      },
+      "verifier_completion": {
+        "sha256": "795dea8abcc35304260a2455df8c639ae64fbaa20104ff588af2e6f57dbb0ae5",
+        "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/verifier_202609250807_data/COMPLETE.json"
+      }
+    },
+    {
+      "acquisition": true,
+      "censuses": [
+        {
+          "adjacent_losses": null,
+          "completed": 1536,
+          "coverage": 1512,
+          "losses_from_fixed2048": null
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2048,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2304,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2560,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 2816,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        },
+        {
+          "adjacent_losses": [],
+          "completed": 3072,
+          "coverage": 1512,
+          "losses_from_fixed2048": []
+        }
+      ],
+      "evaluation_actions": 9072,
+      "final_state_sha256": "bff6e40f5331f566041f34c76a8b94992b6ee16dd65321d4e9698d8542ff921f",
+      "final_topology": {
+        "conditions": 24,
+        "definitions": 180,
+        "edges": 14804,
+        "nodes": 3765,
+        "slots": 20
+      },
+      "first_observed_perfection": 1536,
+      "joint_success": true,
+      "lifecycle_deltas": {
+        "action_bud_history": 44,
+        "birth_nominations": 0,
+        "birth_proposals": 0,
+        "development_history": 48,
+        "history": 0,
+        "ownership_history": 0,
+        "prospective_history": 132,
+        "reclosure_history": 0,
+        "refinement_history": 4,
+        "retirement_history": 25,
+        "splits": 0
+      },
+      "producer_manifest": {
+        "sha256": "0fa6a893b752ad4d1e8b3c2f52ca58378178ca2601cee372d4b241d29f3b987d",
+        "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/producer_202609250808_data/manifest.json"
+      },
+      "provenance": "FIRST_EXECUTION",
+      "retention": true,
+      "seed": 202609250808,
+      "training_actions": 3072,
+      "verification": {
+        "checkpoints": 25,
+        "cold_at": 2048,
+        "native_evaluation_reconstruction_calls": 9072,
+        "native_training_reconstruction_calls": 3072,
+        "status": "PASS"
+      },
+      "verifier_completion": {
+        "sha256": "378dda7b08d27e474b0bcc77dc0431812049e42bf55a882fc56e9621531e84d8",
+        "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/verifier_202609250808_data/COMPLETE.json"
+      }
+    }
+  ],
+  "archive": {
+    "dependency_note": "Recovery bundle references retained 801/802 and earlier pinned inputs. Keep the referenced prior packages; this compact ledger does not redistribute the complete evidence corpus.",
+    "files": 1692,
+    "final_external_guard_status": "PASS",
+    "historical_dependencies_included": false,
+    "process_group_cleanup_complete": true,
+    "readback_status": "PASS",
+    "sha256": "06f3e29ecfb138a10034a4da3495cf1d5d1471bfc9dfda72d1c8fb808e9d781c",
+    "uncompressed_bytes": 1003604669,
+    "worker_returncode": 0,
+    "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/recovery_archive_data/native-selective-m1-recovery-20260927.tar.gz"
+  },
+  "cohort": {
+    "declared_seeds": 8,
+    "expected_evaluation_actions": 72576,
+    "expected_training_actions": 24576,
+    "expected_unique_checkpoints": 200,
+    "interval_unit": "seed; positions and censuses are correlated, not independent replicates",
+    "joint_success_95pct_clopper_pearson": [
+      0.6305833524471809,
+      1.0
+    ],
+    "joint_successes": 8,
+    "scientific_gate": "PASS"
+  },
+  "configuration": {
+    "acquisition_actions": 2048,
+    "birth_candidates": 64,
+    "birth_random_fraction": 0.25,
+    "birth_search_mode": "residual",
+    "births_per_episode": 2,
+    "consolidate_every": 32,
+    "consolidation_rate": 0.1,
+    "continuation_actions": 1024,
+    "credit": "unchanged ordinary selected-action residual credit",
+    "develop_every": 64,
+    "eligibility_decay": 0.8,
+    "entry_point": "recon_lite_chess.coach.selective.create_actor",
+    "exploration": 0.25,
+    "extra_after_split": false,
+    "grace_episodes": 256,
+    "initial_learned_predicates": 0,
+    "initial_owned_scoring_contributors": 1,
+    "initial_weights": "zero",
+    "learning_and_growth_during_continuation": true,
+    "learning_rate": 0.3,
+    "max_conditions": 96,
+    "max_definitions": 512,
+    "max_depth": 4,
+    "max_leaves": 1,
+    "max_parameters": 96,
+    "max_physical_nodes": 32768,
+    "min_support": 4,
+    "owner_candidates": 42,
+    "prospective_resource_cost": 0.25,
+    "prune_weight": 0.02,
+    "reclosure": false,
+    "relational_sensor_coordinates": 16,
+    "role": "selective",
+    "training_actions_per_actor": 3072,
+    "whole_owner_splitting": false
+  },
+  "criterion": {
+    "acquisition": "1512/1512 at action 2048",
+    "censuses": [
+      1536,
+      2048,
+      2304,
+      2560,
+      2816,
+      3072
+    ],
+    "denominator": 8,
+    "operational_hurdle": 6,
+    "retention": "1512/1512 at all four continuation censuses",
+    "retention_resolution": "sampled checkpoints; no claim about all intervening updates"
+  },
+  "environment": {
+    "PYTHONHASHSEED": "0",
+    "chess": "1.11.2",
+    "numerical_threads": 1,
+    "numpy": "2.3.5",
+    "python": "3.12"
+  },
+  "limitations": [
+    "Known M1 population; no unseen-position generalization claim.",
+    "Eight successes do not guarantee population reliability or universal convergence.",
+    "Retention is sampled, not uninterrupted or lifelong.",
+    "Supplied sensors/readers/grammar and Python developmental control; not one physical node or unrestricted self-organization.",
+    "No causal ablation establishing necessity of any individual growth mechanism.",
+    "No M2 or availability competence claim.",
+    "Original 803/804 resource completion remains unresolved; accepted reruns have complete verification."
+  ],
+  "population": {
+    "d4_orbits": 189,
+    "positions": 1512,
+    "status": "known development/regression population, not an untouched generalization test",
+    "task": "legal White-to-move KRK mate-in-one piece placements, no draw history"
+  },
+  "purpose": "Portable summary and integrity index; full replay requires external sealed research packages and their referenced dependencies.",
+  "recorded_date": "2026-09-28",
+  "recovery": "native-selective-m1-recovery-20260927",
+  "schema": "native-m1-replication-publication-v1",
+  "sealed_evidence": [
+    {
+      "sha256": "44962aadeb62361b1ddbe67dd6ac03fa3e5403641fdf02b71ee58df0f9bf3678",
+      "workspace_relative_path": "native-selective-m1-recovery-20260927/REPORT.md"
+    },
+    {
+      "sha256": "f5f875491084d4c1aef8a2b02aab8282c99d4079595bf7b5cd95515feecfa514",
+      "workspace_relative_path": "native-selective-m1-recovery-20260927/PROTOCOL.md"
+    },
+    {
+      "sha256": "3299500904180cc320fa6304916247fda3d444163de472defc423fcb56c30b86",
+      "workspace_relative_path": "native-selective-m1-recovery-20260927/SCIENTIFIC_PROTOCOL_REFERENCE.md"
+    },
+    {
+      "sha256": "b0944be0342949766fed2e34598829c8644202cf7d48279ec900c46c4c0b1c3c",
+      "workspace_relative_path": "native-selective-m1-recovery-20260927/SOURCE_PINS.json"
+    },
+    {
+      "sha256": "10a920556d83504de5116d7ea1e95b72bddb6aee572fb1d94a83d29345897ed5",
+      "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/statistics_final_data/COHORT.json"
+    },
+    {
+      "sha256": "1fe2002b8c570019a9d460ec73d77d64480787ccf28918669ffce692081e89c7",
+      "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/recovery_integrity_data/INTEGRITY.json"
+    },
+    {
+      "sha256": "e40f690dc0d987858f8272a9b4c3e49cc89ebe8f612a0743793f5029631cf9d0",
+      "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/recovery_archive_data/ARCHIVE_VERIFICATION.json"
+    },
+    {
+      "sha256": "3eb6306d05905e6fcb8a739501b74f3d58e04aa0a5fa39fd2ea6450fb4118ad0",
+      "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/recovery_archive/result.json"
+    }
+  ],
+  "source": {
+    "learner_lineage_commit": "12fa306c",
+    "milestone_runtime_changes": 0,
+    "original_publication_files_matched": 32,
+    "publication_manifest": {
+      "sha256": "2c8102fd8a1082bbcc62e5b4d1234313bbc451430872936a5598e479f32ed14c",
+      "workspace_relative_path": "selective-m1-modern/docs/SELECTIVE_M1_PUBLICATION_MANIFEST.json"
+    },
+    "published_implementation_commit": "b0bc0c6fe26eba5bd3a0985403ca5a7b5a0b0130",
+    "runtime_dependencies": [
+      {
+        "git_blob_sha1": "918d886f920a0a1d13d3d4b594b2a6f9aa2642de",
+        "path": "libs/recon-lite/src/recon_lite/__init__.py"
+      },
+      {
+        "git_blob_sha1": "3dc1f76bc69e3f559bee6253b24fc93acee9e1f9",
+        "path": "libs/recon-lite/src/recon_lite/__version__.py"
+      },
+      {
+        "git_blob_sha1": "804c1a658e99b47c4d8ddf248cacf516b16a55b1",
+        "path": "libs/recon-lite/src/recon_lite/causal_rent.py"
+      },
+      {
+        "git_blob_sha1": "73edd739f0c5b764daf8e728bc07d6546ef88de4",
+        "path": "libs/recon-lite/src/recon_lite/choice_genome.py"
+      },
+      {
+        "git_blob_sha1": "45c1371ce2d3e1541d4058fe0a9a5cbd59611e2d",
+        "path": "libs/recon-lite/src/recon_lite/core/activations.py"
+      },
+      {
+        "git_blob_sha1": "074330165320bc6de53ef5c0734e7a2dad8e5f22",
+        "path": "libs/recon-lite/src/recon_lite/engine.py"
+      },
+      {
+        "git_blob_sha1": "bf7a8c3792b5002cc60d86b01fe7528568aa7b3d",
+        "path": "libs/recon-lite/src/recon_lite/episodic_composition.py"
+      },
+      {
+        "git_blob_sha1": "7d701b57cf7bbf2258ab7e1b6e568643127a3c17",
+        "path": "libs/recon-lite/src/recon_lite/formal_engine.py"
+      },
+      {
+        "git_blob_sha1": "57fb6f163c1caf805316a05696f81ff1a1031ba1",
+        "path": "libs/recon-lite/src/recon_lite/frame_context.py"
+      },
+      {
+        "git_blob_sha1": "e488333e43561b6db816a36ec64a02359db4a146",
+        "path": "libs/recon-lite/src/recon_lite/graph.py"
+      },
+      {
+        "git_blob_sha1": "55625417a30c05d7e7035ee9707f8e5874634cf6",
+        "path": "libs/recon-lite/src/recon_lite/logger.py"
+      },
+      {
+        "git_blob_sha1": "b0f6a76db16b385323a338080c367f980d371301",
+        "path": "libs/recon-lite/src/recon_lite/online_composition.py"
+      },
+      {
+        "git_blob_sha1": "63837e40b64c8e18d31e526d68b0216b15620034",
+        "path": "libs/recon-lite/src/recon_lite/robust_policy.py"
+      },
+      {
+        "git_blob_sha1": "2f48197cdb0a53be5ff8276c6cd82c8630806b49",
+        "path": "libs/recon-lite/src/recon_lite/robust_return.py"
+      },
+      {
+        "git_blob_sha1": "8682369293a5913abbf7728deb411b4258349bed",
+        "path": "libs/recon-lite/src/recon_lite/time/microtick.py"
+      },
+      {
+        "git_blob_sha1": "6c5372db4459c6579ae236d1788b11179086dbd5",
+        "path": "libs/recon-lite/src/recon_lite/trace_db.py"
+      },
+      {
+        "git_blob_sha1": "1d87119ae0796441ae1a62968e69ded960799d23",
+        "path": "src/recon_lite_chess/__init__.py"
+      },
+      {
+        "git_blob_sha1": "8503d4ad8f695aabbbc3f61f3cb6537cb84006f3",
+        "path": "src/recon_lite_chess/actuators.py"
+      },
+      {
+        "git_blob_sha1": "1d402e4f2741e7f39b85425451283ce47dadfa10",
+        "path": "src/recon_lite_chess/actuators_blend.py"
+      },
+      {
+        "git_blob_sha1": "577fa3922fb437b97286fd84e0c29de433bc9a39",
+        "path": "src/recon_lite_chess/coach/__init__.py"
+      },
+      {
+        "git_blob_sha1": "c4b1ac38bca137ca73f5f4d5f0ef1d7d7a47cd6e",
+        "path": "src/recon_lite_chess/coach/pretrained.py"
+      },
+      {
+        "git_blob_sha1": "e8f2dafbbf0c3d0f71707507457de2ef21d4bbbd",
+        "path": "src/recon_lite_chess/coach/selective.py"
+      },
+      {
+        "git_blob_sha1": "1a7375216e2536586c9b3d9f607345da6109283d",
+        "path": "src/recon_lite_chess/coach/terminal.py"
+      },
+      {
+        "git_blob_sha1": "af365f33fa74efd811da27179d88ad51e25c4aea",
+        "path": "src/recon_lite_chess/endgame_utils.py"
+      },
+      {
+        "git_blob_sha1": "59a9c7552a3fbfb1c250017a7d52aed753212a52",
+        "path": "src/recon_lite_chess/goal_actuators.py"
+      },
+      {
+        "git_blob_sha1": "fc77c7af2b66f3c0790434ebf8bf4616484ef32b",
+        "path": "src/recon_lite_chess/krk_nodes.py"
+      },
+      {
+        "git_blob_sha1": "363ca1bb016919562e48fcb616ef3f44eee59b34",
+        "path": "src/recon_lite_chess/krk_strategy.py"
+      },
+      {
+        "git_blob_sha1": "37e2158be566a4e51a5f93dfc23a371744cf9b7a",
+        "path": "src/recon_lite_chess/predicates.py"
+      },
+      {
+        "git_blob_sha1": "31a58d1aa19f1f072cf09a1b7d56137fb77cec3b",
+        "path": "src/recon_lite_chess/routing/__init__.py"
+      },
+      {
+        "git_blob_sha1": "545f3a15a026bc5e654ad1b5f8d03cb4894c41d9",
+        "path": "src/recon_lite_chess/routing/contracts.py"
+      },
+      {
+        "git_blob_sha1": "9ea1f4d02dbdffb161e084db295fd0d81d48a5ae",
+        "path": "src/recon_lite_chess/routing/handoff_analysis.py"
+      },
+      {
+        "git_blob_sha1": "d204000cc564518fcb94f7fc8a85e1d5be7772ab",
+        "path": "src/recon_lite_chess/routing/shadow_queue.py"
+      },
+      {
+        "git_blob_sha1": "8e91c641f2b2f1c981135ab2ab1eba5a1e4736a3",
+        "path": "src/recon_lite_chess/scripts/__init__.py"
+      },
+      {
+        "git_blob_sha1": "a7683ede583fd95709966d8b05268d840ec90947",
+        "path": "src/recon_lite_chess/scripts/kpk.py"
+      },
+      {
+        "git_blob_sha1": "35fc07d7ffce3a88a4c0a056cae93b0c6c7c1a58",
+        "path": "src/recon_lite_chess/scripts/kqk.py"
+      },
+      {
+        "git_blob_sha1": "2e54abd6f26cf7672f0f06ffdf78b153fd39d5a6",
+        "path": "src/recon_lite_chess/scripts/middlegame.py"
+      },
+      {
+        "git_blob_sha1": "939703249df1e975f40da464745ceacab1560897",
+        "path": "src/recon_lite_chess/scripts/opening.py"
+      },
+      {
+        "git_blob_sha1": "030c94bf5f2a37dbd14f6fadec3324487ea3e926",
+        "path": "src/recon_lite_chess/scripts/rook_endings.py"
+      },
+      {
+        "git_blob_sha1": "7df132857250ea89722f80e2645a4930d4a422b2",
+        "path": "src/recon_lite_chess/scripts/stalemate_detector.py"
+      },
+      {
+        "git_blob_sha1": "7466717be5e12127659bc7ed3ec482ecc4de002b",
+        "path": "src/recon_lite_chess/sensors/__init__.py"
+      },
+      {
+        "git_blob_sha1": "b0712d7fb254e7210061a9887c47d8aecf0a054d",
+        "path": "src/recon_lite_chess/sensors/material.py"
+      },
+      {
+        "git_blob_sha1": "1677250a3ce0055f8030288e0fed64eff63ab44d",
+        "path": "src/recon_lite_chess/sensors/phase.py"
+      },
+      {
+        "git_blob_sha1": "8073c61c9d36cb10974c39674ee27e139a67563e",
+        "path": "src/recon_lite_chess/sensors/structure.py"
+      },
+      {
+        "git_blob_sha1": "c25563e401de2489c0c5b1e1b13a2063b495de25",
+        "path": "src/recon_lite_chess/sensors/tactics.py"
+      },
+      {
+        "git_blob_sha1": "9daf3186389f82655288cf922522c642e775ab1c",
+        "path": "src/recon_lite_chess/strategy/__init__.py"
+      },
+      {
+        "git_blob_sha1": "977f5064e973c6fe7b341055ccac1f5ff7aedbd3",
+        "path": "src/recon_lite_chess/strategy/move_generators.py"
+      },
+      {
+        "git_blob_sha1": "22ebd4f8dde7079b87c2dadaeba780146f9bb91a",
+        "path": "src/recon_lite_hector/__init__.py"
+      },
+      {
+        "git_blob_sha1": "547b43835b28dcce48263ad475f8eed97d0ea858",
+        "path": "src/recon_lite_hector/graph.py"
+      },
+      {
+        "git_blob_sha1": "8d040af1aa72421f26faf023116d23b52c70198d",
+        "path": "src/recon_lite_hector/learning/__init__.py"
+      },
+      {
+        "git_blob_sha1": "7612c22fa9bb70f91b159d57b34b65e2dda8f067",
+        "path": "src/recon_lite_hector/learning/compatible_owner.py"
+      },
+      {
+        "git_blob_sha1": "1ec6d6878d68b8fc54bbbecfd40ac03021047189",
+        "path": "src/recon_lite_hector/learning/context_compatibility.py"
+      },
+      {
+        "git_blob_sha1": "8e60e55f7803b39c265683bb6e18d429bb53c691",
+        "path": "src/recon_lite_hector/learning/context_decision.py"
+      },
+      {
+        "git_blob_sha1": "2d4a057456b83b4d8d5d9f3bbdff3e8cf3a402f8",
+        "path": "src/recon_lite_hector/learning/fresh_owner.py"
+      },
+      {
+        "git_blob_sha1": "8cb08301b5f7e968eb2c8c41f5823b2692ea1f85",
+        "path": "src/recon_lite_hector/learning/intrinsic_credit.py"
+      },
+      {
+        "git_blob_sha1": "cfae3cccda7df2c49c223d26fa26535f481006b2",
+        "path": "src/recon_lite_hector/learning/m5_structure.py"
+      },
+      {
+        "git_blob_sha1": "4fe974a65960926f659e6ea80850e27f0715597c",
+        "path": "src/recon_lite_hector/learning/owner_birth_search.py"
+      },
+      {
+        "git_blob_sha1": "7cd3a3de919eaf62a06accc8f89f5f3e93fb9d58",
+        "path": "src/recon_lite_hector/learning/owner_development.py"
+      },
+      {
+        "git_blob_sha1": "e25facafa805b4e8987e3569d8acce4cfd064938",
+        "path": "src/recon_lite_hector/learning/recursive_context.py"
+      },
+      {
+        "git_blob_sha1": "a2bf5da6e968c89295748d1685b91d6c8b490d02",
+        "path": "src/recon_lite_hector/learning/refining_route_action.py"
+      },
+      {
+        "git_blob_sha1": "f8ef8174728a0ffca50f8280e25d25836c9d4601",
+        "path": "src/recon_lite_hector/learning/residual_shadow.py"
+      },
+      {
+        "git_blob_sha1": "fa4e558a40e6b517aee8765fcd595d421a1107d5",
+        "path": "src/recon_lite_hector/learning/route_action_bud.py"
+      },
+      {
+        "git_blob_sha1": "42f49280c5e40a3835aaead102d5e88aabdac06a",
+        "path": "src/recon_lite_hector/learning/terminal_development.py"
+      },
+      {
+        "git_blob_sha1": "dd42f007d6dfa35c6acc082c14ea991f3cdf0eaa",
+        "path": "src/recon_lite_hector/models/__init__.py"
+      },
+      {
+        "git_blob_sha1": "6f2e083b31a774ec07b84c0689d808d1e87c44e0",
+        "path": "src/recon_lite_hector/models/registry.py"
+      },
+      {
+        "git_blob_sha1": "283e14416c1869ae81ea67d5f6abf5df4531ab21",
+        "path": "src/recon_lite_hector/nodes/__init__.py"
+      },
+      {
+        "git_blob_sha1": "55f1f4b3927f6825fe77b3921297045daec68f88",
+        "path": "src/recon_lite_hector/nodes/stem_cell.py"
+      },
+      {
+        "git_blob_sha1": "7f25fbbe66619ff6c53dc4ddb8c4066db992b784",
+        "path": "src/recon_lite_hector/plasticity/__init__.py"
+      },
+      {
+        "git_blob_sha1": "21e187170557dbfb3aec2f5815aa6bd156225e31",
+        "path": "src/recon_lite_hector/plasticity/bandit.py"
+      },
+      {
+        "git_blob_sha1": "befa75f679b24e8a38698a869dab23d2e42fc434",
+        "path": "src/recon_lite_hector/plasticity/consolidate.py"
+      },
+      {
+        "git_blob_sha1": "a893800001723ae2733638bbc02bef54b7356a73",
+        "path": "src/recon_lite_hector/plasticity/fast.py"
+      },
+      {
+        "git_blob_sha1": "aecf3312ec58067aef5ab6686277c65c5fff6160",
+        "path": "src/recon_lite_hector/plasticity/modulation.py"
+      },
+      {
+        "git_blob_sha1": "4a0ec6835f6e624340c83e0b78952ef620cab0a9",
+        "path": "src/recon_lite_hector/trace_db.py"
+      }
+    ],
+    "runtime_dependency_blobs_matched": 72,
+    "validated_local_candidate_commit": "3e581a1ca1c8be0db0eccf57cc378457408affe6"
+  },
+  "study": "native-selective-m1-replication-20260925-v1",
+  "technical_recovery": {
+    "accepted_counts": {
+      "actors": 8,
+      "checkpoints": 200,
+      "evaluation_actions": 72576,
+      "training_actions": 24576
+    },
+    "comparisons": [
+      {
+        "allowed_transport_differences": [
+          "physical gzip checkpoint SHA256 references",
+          "independently hashed census rows containing those references"
+        ],
+        "historical_manifest": {
+          "sha256": "4b5c04a24320ae36c6483dcbda53569435ac38f7b46149c0811c7d169bc98d96",
+          "workspace_relative_path": "native-selective-m1-readiness-20260925/evidence/producer_202609250803_data/manifest.json"
+        },
+        "historical_resource_completion": "UNRESOLVED",
+        "recovery_manifest": {
+          "sha256": "fe32300e98580232fac58260303655bdf483524eefd9b5ad73080676a2db7c14",
+          "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/producer_202609250803_data/manifest.json"
+        },
+        "seed": 202609250803,
+        "semantic_status": "EXACT_MATCH"
+      },
+      {
+        "allowed_transport_differences": [
+          "physical gzip checkpoint SHA256 references",
+          "independently hashed census rows containing those references"
+        ],
+        "historical_manifest": {
+          "sha256": "78c8d9f60693e63ab4cbf77c9f3641b46d84ace86600c86e453aa29e8941fc9c",
+          "workspace_relative_path": "native-selective-m1-readiness-20260925/evidence/producer_202609250804_data/manifest.json"
+        },
+        "historical_resource_completion": "UNRESOLVED",
+        "recovery_manifest": {
+          "sha256": "79767753937f7abb7b08cbefb652142ed95ca0c0814e40fa9f0e1dc8ff03bf0c",
+          "workspace_relative_path": "native-selective-m1-recovery-20260927/evidence/producer_202609250804_data/manifest.json"
+        },
+        "seed": 202609250804,
+        "semantic_status": "EXACT_MATCH"
+      }
+    ],
+    "explicitly_authorized_rerun_seeds": [
+      202609250803,
+      202609250804
+    ],
+    "first_execution_seeds": [
+      202609250805,
+      202609250806,
+      202609250807,
+      202609250808
+    ],
+    "old_physical_checkpoints_replayed_by_closure": false,
+    "performance_based_retry": false,
+    "reused_verified_seeds": [
+      202609250801,
+      202609250802
+    ],
+    "superseded_attempt_counts": {
+      "actors": 2,
+      "checkpoints": 50,
+      "evaluation_actions": 18144,
+      "guard_completion": "UNRESOLVED",
+      "training_actions": 6144
+    }
+  },
+  "training_pool": {
+    "positions": 1080,
+    "schedule": "separate Random(seed), shuffle complete index list on exhaustion, walk without replacement",
+    "sha256": "4873e9642b95b7f6f91e484e71ba0c7babb90b53e2054c97d6f360ab7e8a60d1",
+    "workspace_relative_path": "context-owned-decisions/reports/autogrowth/development/selective_m1_pool_v1_20260917/train.txt"
+  }
+}

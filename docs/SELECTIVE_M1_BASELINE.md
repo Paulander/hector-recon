@@ -1,5 +1,11 @@
 # Validated selective mate-in-one baseline
 
+**2026-09-28 update:** the unchanged selective implementation now has a completed
+[eight-seed fresh-start replication](NATIVE_M1_REPLICATION_20260928.md): every
+actor passed all six full-population censuses while continuing plastic learning.
+That report and its recovery disclosure govern the new claim. The seed-61
+artifact, evidence and verification below remain the original 2026-09-17 record.
+
 Source: `12fa306c` (`codex/selective-m1-curriculum`). Modern-main integration
 target: `2aa1ce47a6a93e2571aaa0b02101e9543fe94955`, tree
 `6f6fc10b6d0fbfd7c6fc83d5f7b45237ff583960`. The older candidate `cbfdf9cb`
@@ -26,7 +32,9 @@ this claim. Greedy evaluation is perfect on this scope; deliberately exploratory
 training is not. These receipts are now regression material, not fresh evidence
 for selecting future tuned networks.
 
-This does not prove seed-robust convergence, perpetual retention, calibrated
+The original single-seed result did not establish seed-robust convergence. The
+later replication establishes success in eight declared fresh starts; neither
+study proves universal convergence, perpetual retention, calibrated
 recognition of competence on non-M1 boards, M2 performance or learned temporal
 handover. The first M2 implementation is a separate work branch.
 
@@ -52,6 +60,11 @@ learning rate .3, development every 64 actions, 96 owned parameters. Slow
 consolidation currently transfers the bias only, not all condition weights.
 
 ## Minimal integration and compatibility
+
+The described 32-file publication landed on main in
+[`b0bc0c6f`](https://github.com/Paulander/hector-recon/commit/b0bc0c6fe26eba5bd3a0985403ca5a7b5a0b0130).
+The eight-seed milestone adds evidence and documentation without changing that
+runtime. The integration discussion below records the original publication work.
 
 The actual modern main already contains the exact formal engine, graph, frame
 support, full stem-cell module, chess terminal adapter and namespace packages
