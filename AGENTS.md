@@ -1,21 +1,28 @@
 # ReCoN/Hector agent instructions
 
-LATEST VALIDATED BASELINE, 2026-09-17: read `docs/SELECTIVE_M1_BASELINE.md`.
-The selective actor trained from scalar played-move outcomes and passed all
-1,512 legal White-to-move KRK mate-in-one placements (189 D4 orbits; no draw
-history). Preserve its immutable packaged checkpoint; load a copy for new work.
-Its weights and local growth remain plastic. No M2 capability, seed-robust
-convergence or perpetual retention is claimed. The user retired the old M1
-partition reservation for new development; old result files remain unopened.
-The following earlier status/results are historical; their architecture and
-information-boundary rules still apply. Do not import historical teachers or
-coach-selected solutions into the learned curriculum. Existing base-terminal
-APIs/defaults remain available beside the newly promoted selective factory.
+LATEST VALIDATED MILESTONE, 2026-09-28: read
+`docs/NATIVE_M1_REPLICATION_20260928.md` and its compact evidence ledger.
+Eight fresh selective actors passed 1,512/1,512 at all six censuses from action
+1,536 through 3,072, with ordinary credit and growth still enabled. All accepted
+actors have independent native replay and checkpoint verification. The explicit
+technical-rerun amendment and unresolved original resource receipts are retained.
+This establishes repeated acquisition and sampled retention in the known KRK M1
+population, not unrestricted structural discovery, unseen-position generalization,
+M2, a population-reliability guarantee or perpetual retention.
 
-`main` is the official restart line from 2026-09-06. The active claim is narrow:
-the M1 learner respects the terminal observation/action boundary and receives only
-action-bound scalar outcomes. It has not demonstrated adaptive topology growth,
-strategic competence, handover, full KRK or a learned world model.
+The unchanged implementation is already published on main. For fresh learning,
+use the zero-state selective factory, never the packaged learned actor.
+`docs/SELECTIVE_M1_BASELINE.md` describes the separate historical seed-61 artifact;
+preserve it and load a copy when a trained reference is intended. The user retired
+the old M1 partition reservation for development; the evaluated population is now
+known regression material. Do not import historical teachers or coach-selected
+solutions into learning. Existing base-terminal APIs/defaults remain available.
+
+`main` remains the official restart line from 2026-09-06. The milestone above
+supersedes the older status and experiment recommendations below; their enduring
+architecture and information-boundary rules still apply. The learner receives
+action-bound scalar outcomes through the terminal boundary. Strategic competence,
+handover, full KRK play and a learned world model remain unestablished.
 
 Read these current documents before changing the learner:
 
@@ -61,8 +68,10 @@ representation.
 
 - `action_choice` confirms that one action was selected. It is not goal success,
   competence, availability or transferable child value.
-- Current conditions are randomly proposed and behaviorally weighted. Do not
-  call this adaptive structural discovery.
+- Distinguish random ordinary proposals from the selective learner's
+  feedback-guided buds and prospective refinements. The M1 replication records
+  real growth, but has no ablation identifying a necessary mechanism and does
+  not establish unrestricted or graph-learned structural self-organization.
 - Participation and outcome correlation do not establish PROBATION, maturity or
   causal usefulness. Use prospective comparisons for those claims.
 - Fast-to-slow transfer that preserves the effective sum is bookkeeping until a

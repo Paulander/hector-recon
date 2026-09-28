@@ -1,20 +1,27 @@
 # ReCoN‑lite (Request–Confirmation Network) — Chess Sandbox
 
-**Validated selective M1 baseline (2026-09-17):** the packaged learned actor
-passes all 1,512 legal White-to-move KRK mate-in-one placements in the declared
-no-draw-history scope. [Implementation, trained artifact and verification](docs/SELECTIVE_M1_BASELINE.md).
-Local growth and weight learning remain active; no correct-move labels or authored
-corner strategies enter learning. Mate-in-two remains research. The restart
-notes below describe the earlier baseline, preserved for context.
+**Replicated native M1 milestone (2026-09-28):** eight fresh selective actors
+each solved all 1,512 positions in the declared KRK mate-in-one population at
+every scheduled census from action 1,536 through 3,072. Ordinary credit, births,
+refinement and pruning remained enabled. Full independent replay, integrity and
+archive verification passed under the disclosed technical-recovery amendment.
+[Eight-seed results, configuration and evidence](docs/NATIVE_M1_REPLICATION_20260928.md).
 
-> **Official restart: mate-in-one through learned feature terminals.** The default
+Use the selective factory for fresh learning; the
+[original packaged seed-61 actor](docs/SELECTIVE_M1_BASELINE.md) remains a separate,
+still-plastic reference. Generic sensors and construction rules are supplied;
+learned branches and correct moves are not. This is the known M1 population with
+sampled retention, not M2 or a guarantee of lifelong retention. Existing APIs and
+defaults remain unchanged.
+
+> **Historical restart (2026-09-06): mate-in-one through learned feature terminals.** The default
 > `TerminalOrganism` reads declared coordinates through terminals, selects actions
 > in the persistent formal graph and executes them through an actuator terminal.
 > The coach returns scalar outcome feedback. See [the measured result, limits and
 > launch commands](docs/autogrowth/MATE_ONE_COACH.md). Adaptive structural discovery
 > and learned module handover remain to be demonstrated.
 
-> **Current direction:** `main` is the clean terminal baseline. Read the
+> **Historical restart direction:** `main` was the clean terminal baseline. Read the
 > [official continuation](docs/autogrowth/OFFICIAL_CONTINUATION_20260906.md) and
 > [architecture constitution](docs/autogrowth/ARCHITECTURE_CONSTITUTION.md).
 > The present claim is boundary purity, not adaptive growth, KRK mastery or
