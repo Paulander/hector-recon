@@ -1,0 +1,466 @@
+{
+  "schema": "recon.chess.source-baselines.v1",
+  "status": "Reference patches only; neither is applied to the branch runtime.",
+  "published_parent": "1fd332c16eeb2ac27c5ef2dba8520cb55284cab2",
+  "modular": {
+    "schema": "recon.chess.modular-source-preservation.v1",
+    "created": "2026-11-13",
+    "purpose": "Authenticated source delta for review; not applied to runtime and not a learner integration.",
+    "baseline_commit": "989cfb7e3f826ab71c05c590deacda259d72da2d",
+    "qualified_source_root": "/Users/banquo/Documents/ChatGPT/Hector-Recon/m2-modular-learning-pilot-execution-20261010-code",
+    "declaration_path": "/Users/banquo/Documents/ChatGPT/Hector-Recon/m2-modular-pilot-fixture-repair-execution-20261010/DECLARATION_frozen.json",
+    "declaration_sha256": "edd5f402e25861a5e97144552c128eb0ec277e034ad0f99c0b3f5e4ae0a8f2d0",
+    "source_reuse_record": "/Users/banquo/Documents/ChatGPT/Hector-Recon/m2-modular-pilot-fixture-repair-execution-20261010/SOURCE_REUSE_INITIAL.json",
+    "source_reuse_sha256": "e8e8f135af71b0d29d1121da9eba0ddcf4bde9c8f791e44e84691ce7cec3884b",
+    "patch_sha256": "fdd569b5a38d9c115c1a3033714e98ad95f60acfaea39bb6c549945be61f55b1",
+    "patch_bytes": 543021,
+    "changed_paths": 28,
+    "declared_source_files": [
+      {
+        "path": "libs/recon-lite/src/recon_lite/__init__.py",
+        "sha256": "919490aa8b703eeb9ab8162539d7b945e041fa1d947e5055a717c6f271e4ff83",
+        "bytes": 2855
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/__version__.py",
+        "sha256": "91447944015cec709e8aa7655f7e9d64e1e4508e7023a57fe3746911c0fc6fed",
+        "bytes": 22
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/binding/manager.py",
+        "sha256": "5eb59edda722e9024cbf6e2eb6948752e434c86bdbda5ee5a5d328fadab3cf9b",
+        "bytes": 4735
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/causal_rent.py",
+        "sha256": "a97333bd13cb4e4f88ca45d295656a2641af57447e10fd18c6a3a8d7e50de75b",
+        "bytes": 7164
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/choice_genome.py",
+        "sha256": "f87c32e6629c589fff638d80bf00434d451a77b2c29df0c1279922ff87e50b57",
+        "bytes": 5203
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/core/activations.py",
+        "sha256": "a736530827bd21f4b58868e9b9f45a7494ee904762fde9f8eee202147deaa280",
+        "bytes": 3562
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/engine.py",
+        "sha256": "68e04dec07cd5487b2103ff736a6bac63d52e93dfe528db096ad946f1807544a",
+        "bytes": 36007
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/episodic_composition.py",
+        "sha256": "38fc9d725ccbbaafa1af4b3fb485c4f6a33f670f0148dae0fba131bdbdad2828",
+        "bytes": 80544
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/examples/__init__.py",
+        "sha256": "96b012bba1c43244a933b02e4afef25246001371910833f41e7778f0df11ecb1",
+        "bytes": 57
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/examples/gridworld.py",
+        "sha256": "88fbc2ef7c78db2983a3bb03f832f310ddb85fb23531d5e707c472f0489d2840",
+        "bytes": 11489
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/formal_engine.py",
+        "sha256": "95b649d2ed35b12bbb36eccad3ae0e729bfeb8b8905b92a15305128c32256307",
+        "bytes": 28623
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/frame_context.py",
+        "sha256": "2acc51b1db9f761fd8406b6f72e19a2cb0047b8413050371d7ac694adb8bffe4",
+        "bytes": 12021
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/graph.py",
+        "sha256": "98784171b2eda47c20c01362e5ef9fe7e925bcd894034d07524a0dcbbb4ec0cf",
+        "bytes": 22579
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/logger.py",
+        "sha256": "10c377f5c7a436a32c1c1460baa85c3815924b1a90e2a5bb37c739fec2661309",
+        "bytes": 2645
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/macrograph.py",
+        "sha256": "78582c3da6c8f786f1cd7ecab537bcddeb9aa772d03a19bb23f34b69fdc6b37d",
+        "bytes": 11755
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/online_composition.py",
+        "sha256": "176882d00af0ef660e635051f0e8f12f208e028e55836cd648353af0db267ecf",
+        "bytes": 31075
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/plugins.py",
+        "sha256": "aabe9ffb53b3081c8ff632e56727cdf69b1db6d5152d2b263f41ff02352e99cb",
+        "bytes": 536
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/robust_policy.py",
+        "sha256": "2d564513d205a29a3b63498384b0a4cffca1fef889369e4d82b371440445f8b0",
+        "bytes": 5685
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/robust_return.py",
+        "sha256": "a6e14edb6fa47f8c865265234073bc3c52d6f888d5c9231a35af7c99648169c8",
+        "bytes": 7025
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/time/microtick.py",
+        "sha256": "567a587e4c1589066fc2000174b9bdd787e71189788c5935d7baafd5603d478a",
+        "bytes": 2481
+      },
+      {
+        "path": "libs/recon-lite/src/recon_lite/trace_db.py",
+        "sha256": "fc7d91b0611d561e9885245395b6512c2ca204241d62810121856252ab63e95b",
+        "bytes": 15571
+      },
+      {
+        "path": "src/recon_lite_chess/autogrowth/mate_horizon_opponent.py",
+        "sha256": "4dcba3f011643d8e0256640b7a3466207a75c2c4c8a8a218cf3fcaeb5f54b5ff",
+        "bytes": 2341
+      },
+      {
+        "path": "src/recon_lite_chess/coach/__init__.py",
+        "sha256": "1394c6de4f89ef73043dc7971860fe83dc69b8b77ad282b259160fe303a2cbf4",
+        "bytes": 70
+      },
+      {
+        "path": "src/recon_lite_chess/coach/canary_census_semantics.py",
+        "sha256": "331f9587ae68378f5c737a39b275152d7d1f6ec6600a10ac43b712a5c0955945",
+        "bytes": 42417
+      },
+      {
+        "path": "src/recon_lite_chess/coach/canary_census_stages.py",
+        "sha256": "ff3a8322500450fa8e73ce6cbde383bb0ea7cd2a3e02fcd69d492189ffb3806d",
+        "bytes": 15815
+      },
+      {
+        "path": "src/recon_lite_chess/coach/canary_evaluation_capsule.py",
+        "sha256": "25a2f8c436f182e07d0ede1d76492d1e6772025d72512f8bad6e097bc567168c",
+        "bytes": 24266
+      },
+      {
+        "path": "src/recon_lite_chess/coach/canary_trajectory_stages.py",
+        "sha256": "d4a4d512552e41871167c95a47c71e4ef650b40c6e9caa70803ebda2d86186a4",
+        "bytes": 25555
+      },
+      {
+        "path": "src/recon_lite_chess/coach/canary_trajectory_verify.py",
+        "sha256": "1dbb7a33ad2d585d34afe776a3f39e22f5db6b4776194637b9570b86a7987868",
+        "bytes": 56136
+      },
+      {
+        "path": "src/recon_lite_chess/coach/exercise.py",
+        "sha256": "15fe2d216c601eac84a6e57a8aaf8b3b95f73ca4b7be5db89da51bc35da20910",
+        "bytes": 3068
+      },
+      {
+        "path": "src/recon_lite_chess/coach/interface.py",
+        "sha256": "ca84a6eb9a5bad6470fcc65993f4207371eed60be452cc3df8d12aad01ff60cf",
+        "bytes": 1423
+      },
+      {
+        "path": "src/recon_lite_chess/coach/m2_evidence.py",
+        "sha256": "58bc4e5f51a0ab29e693b13b19d51ef4a7cd074c61a6aba082f597f20799f527",
+        "bytes": 6852
+      },
+      {
+        "path": "src/recon_lite_chess/coach/m2_migration.py",
+        "sha256": "9aa5230efcd63b6eb0af394ef428690c59aa5ed560012a556958624438106d4e",
+        "bytes": 5584
+      },
+      {
+        "path": "src/recon_lite_chess/coach/m2_runner.py",
+        "sha256": "15531653b9561a798cdbc248439a5f8e9d0069a0b2a789835e40187105c0126e",
+        "bytes": 31275
+      },
+      {
+        "path": "src/recon_lite_chess/coach/m2_schema.py",
+        "sha256": "56c9b7a74962c127a9927062a4b3525c9841e183dd6a7a74d00cfc1cb7d5873a",
+        "bytes": 3853
+      },
+      {
+        "path": "src/recon_lite_chess/coach/m2_verify.py",
+        "sha256": "214806e6593e28e7ae5a19abe9562b50fb05b30611f6aa3a5fa9be241ec650ae",
+        "bytes": 17461
+      },
+      {
+        "path": "src/recon_lite_chess/coach/mate_two.py",
+        "sha256": "c05b8db43a0a99ceae6207f3a6ccaa187f3fe06f61b8cde20a3998d458f2e24f",
+        "bytes": 9884
+      },
+      {
+        "path": "src/recon_lite_chess/coach/modular_canary.py",
+        "sha256": "92254a2170189e3d51336719630c131a0d67aa68f6afb61bbc422134b5e8e7bf",
+        "bytes": 41051
+      },
+      {
+        "path": "src/recon_lite_chess/coach/modular_canary_execution.py",
+        "sha256": "c499ac8cce65280775d21a1468a103cc67bb5ea424625601ebecd9b7f6cb7b10",
+        "bytes": 32406
+      },
+      {
+        "path": "src/recon_lite_chess/coach/modular_evaluation_batch.py",
+        "sha256": "09cb609ce181c958c62dc442890ce3386b8226b1021fd47ad9ddd82767f6c070",
+        "bytes": 22293
+      },
+      {
+        "path": "src/recon_lite_chess/coach/modular_evaluation_child.py",
+        "sha256": "ac5d73a1a3b378504a472c011bdfad7723b29d766186a9459c9aba46f7f0ac45",
+        "bytes": 9654
+      },
+      {
+        "path": "src/recon_lite_chess/coach/modular_evaluation_isolation.py",
+        "sha256": "878055cf34d19d968c73717bc4aa384149b71901ff8bca38bc6eb0c4a2991f1e",
+        "bytes": 5882
+      },
+      {
+        "path": "src/recon_lite_chess/coach/modular_evaluation_m1_batch.py",
+        "sha256": "f6bb0b659f46c8d6fa14d05e3816c647877e87902892fd05d8d1d460db75eb7d",
+        "bytes": 20076
+      },
+      {
+        "path": "src/recon_lite_chess/coach/modular_evaluation_streaming_digest.py",
+        "sha256": "cd17087eef7824da564841563b40222d90afbe7a209582ce29f6afa44c3488ee",
+        "bytes": 9867
+      },
+      {
+        "path": "src/recon_lite_chess/coach/modular_evaluation_workspace.py",
+        "sha256": "21360a710c94f7269663e9c634f69d66037fb37113e6ebe3d01a8830da11cd40",
+        "bytes": 18798
+      },
+      {
+        "path": "src/recon_lite_chess/coach/modular_ports.py",
+        "sha256": "7418286a4ad0a82b6b23a9fe4cd9a7113edce73a2b13467f4c037794128c8315",
+        "bytes": 8685
+      },
+      {
+        "path": "src/recon_lite_chess/coach/native.py",
+        "sha256": "389b32647fcc9236bd9e5c4e17a0a18b2147d09e71156c662afa3775c4d80c06",
+        "bytes": 5399
+      },
+      {
+        "path": "src/recon_lite_chess/coach/native_modular.py",
+        "sha256": "8864f77a0c3f611e4d78343f7b818d83866de1bbb6097932bd1c8a94f554e12e",
+        "bytes": 21630
+      },
+      {
+        "path": "src/recon_lite_chess/coach/pools.py",
+        "sha256": "fd1339ce577c2075243f82fcf5d0c437bc2ab9e46efab1558b72c47737d8e26a",
+        "bytes": 4569
+      },
+      {
+        "path": "src/recon_lite_chess/coach/pretrained.py",
+        "sha256": "006b6c84e4248bbebe51792163a7b26b17386804cd00fe6a4471e73bfb7d30f1",
+        "bytes": 2255
+      },
+      {
+        "path": "src/recon_lite_chess/coach/runner.py",
+        "sha256": "df99eb250bef236e86ce31bcc43457c037d48b735ecb1721ecd38b3d5e5cdfa4",
+        "bytes": 13454
+      },
+      {
+        "path": "src/recon_lite_chess/coach/selective.py",
+        "sha256": "528ba4aab6e4781a9319c8c8add8a91ae0a61b921bbad952a9aa8933cde8c28a",
+        "bytes": 3556
+      },
+      {
+        "path": "src/recon_lite_chess/coach/strict_m2_pool.py",
+        "sha256": "951dc606fee8ebfd52c75a0679338322224432c3ed58bcde17cea8355589239b",
+        "bytes": 10088
+      },
+      {
+        "path": "src/recon_lite_chess/coach/terminal.py",
+        "sha256": "38f4046ea354acb150f36b24cdbb49e78b9aee0d58ca32d15bb5da4bab4fc662",
+        "bytes": 3022
+      },
+      {
+        "path": "src/recon_lite_hector/learning/__init__.py",
+        "sha256": "245af9c5e6c355044540e63e3180b055a1308066a9b22a872fee20ebba89e217",
+        "bytes": 1116
+      },
+      {
+        "path": "src/recon_lite_hector/learning/baseline.py",
+        "sha256": "6879eea3f95300cbcf03ad90919c9e12c4545b6ce4d3f7dd3fe6e5ebeabd6781",
+        "bytes": 38621
+      },
+      {
+        "path": "src/recon_lite_hector/learning/baseline_viz.py",
+        "sha256": "49095b46889b79f483ecd46206159a899b7a9c82874416b237b35b4e4fda4b1d",
+        "bytes": 8674
+      },
+      {
+        "path": "src/recon_lite_hector/learning/compatible_owner.py",
+        "sha256": "de89f376f47cc866b5e280b9abf88ef64b770906352dc24b596884247c611f68",
+        "bytes": 3998
+      },
+      {
+        "path": "src/recon_lite_hector/learning/context_compatibility.py",
+        "sha256": "90e1f93fe8f1c0abfc25f19e7e10e57b91934e9d134988e1209abc8a140f0fda",
+        "bytes": 5706
+      },
+      {
+        "path": "src/recon_lite_hector/learning/context_decision.py",
+        "sha256": "9f33d8657b2acc06349516f6f8e0e634c9cde69931e3d8d17bb676a83368eb31",
+        "bytes": 16424
+      },
+      {
+        "path": "src/recon_lite_hector/learning/fresh_owner.py",
+        "sha256": "f6b06a472b24a88001c45e29798100ae1f8e4cef1458107187b59fc9a7f9a59d",
+        "bytes": 1980
+      },
+      {
+        "path": "src/recon_lite_hector/learning/intrinsic_credit.py",
+        "sha256": "bd706017f3ced6ad97da0feef3f7fc18ca5a3033a08c8ec97d3ef793bea554d5",
+        "bytes": 56741
+      },
+      {
+        "path": "src/recon_lite_hector/learning/m5_structure.py",
+        "sha256": "0d6d4a28d950f5c5caea5484bd2a7c44b7585d6b2e6f79be3631ca735426af05",
+        "bytes": 95939
+      },
+      {
+        "path": "src/recon_lite_hector/learning/modular_credit.py",
+        "sha256": "b63c6bc21da6c89078f67b5696d34a1f01241ef06f72ff96850c7f4470e06be1",
+        "bytes": 23455
+      },
+      {
+        "path": "src/recon_lite_hector/learning/modular_graph.py",
+        "sha256": "74093f19a2aab2f04b61b48d9592a3efe9eb7a8901a680f12117b0d92b9875e6",
+        "bytes": 20241
+      },
+      {
+        "path": "src/recon_lite_hector/learning/owner_birth_search.py",
+        "sha256": "ae3cb89a8c74ca5d6412aa0fd89d007eca8737fc56d76b1e1a976bc073e17534",
+        "bytes": 10546
+      },
+      {
+        "path": "src/recon_lite_hector/learning/owner_development.py",
+        "sha256": "ced303eff7f495b1c6afbbdc192f8ac58001be69f432b1ab52f67defd98296f9",
+        "bytes": 11269
+      },
+      {
+        "path": "src/recon_lite_hector/learning/recursive_context.py",
+        "sha256": "fcb0b9b59e6023886124cefb375a9e73cc06c870f0a779cb137eb687b04eb6a7",
+        "bytes": 16669
+      },
+      {
+        "path": "src/recon_lite_hector/learning/refining_route_action.py",
+        "sha256": "1df0899515662fd6ed5fd9ac6d1c0b1f816927cb362bf353910a0e35755ee87e",
+        "bytes": 23872
+      },
+      {
+        "path": "src/recon_lite_hector/learning/residual_shadow.py",
+        "sha256": "cbbe2921e59c0dbd3264f863af45df53272faa93698a5abe46b577368af669ee",
+        "bytes": 12436
+      },
+      {
+        "path": "src/recon_lite_hector/learning/route_action_bud.py",
+        "sha256": "548fa8175a1076364d3d947f668bf61be6ea3ddda9c095c9101a0c5b2d40db1d",
+        "bytes": 9767
+      },
+      {
+        "path": "src/recon_lite_hector/learning/selective_episode.py",
+        "sha256": "434bc6cb3f58068e23529a3a754cbc0064c8d02bffe25db8ad2719b18ab60bcb",
+        "bytes": 26192
+      },
+      {
+        "path": "src/recon_lite_hector/learning/sweep_engine.py",
+        "sha256": "b0110ef49b21297111fb38334ff72ece09ca6ac996f3ef678750c403e7b2dc44",
+        "bytes": 35803
+      },
+      {
+        "path": "src/recon_lite_hector/learning/terminal_development.py",
+        "sha256": "29c26c70560ffe5a6ffb2979ba0df827736c1a164167da7953469d597927108e",
+        "bytes": 24361
+      },
+      {
+        "path": "src/recon_lite_hector/nodes/__init__.py",
+        "sha256": "7a02f2aa65bb422166d1cb94a4b0abe6fc811901cf7a6946a4be0b11afcef831",
+        "bytes": 400
+      },
+      {
+        "path": "src/recon_lite_hector/nodes/binding_space.py",
+        "sha256": "83f981efb34ad49c7e81c542a9bf8b6566705d562005fb9353af880cf4f81627",
+        "bytes": 14076
+      },
+      {
+        "path": "src/recon_lite_hector/nodes/pack_template.py",
+        "sha256": "e403bea60245b128c221b45700de1081374eb9325fac0b698fd529277be206f6",
+        "bytes": 34029
+      },
+      {
+        "path": "src/recon_lite_hector/nodes/stem_cell.py",
+        "sha256": "cc5dee612dca639d3dcc03588b7c772db3745323d8244fdd59b48916dacd0081",
+        "bytes": 186928
+      }
+    ],
+    "validation": {
+      "source_files_matched": 77,
+      "patch_check": "PASS",
+      "reconstructed_source_hashes": "PASS",
+      "native_execution": false,
+      "training": false
+    },
+    "sparse_discovery_commit": "f942b93af15f4b527bd4d289a3a2d2f54ffff796",
+    "patch": "modular-pilot-20261010.patch"
+  },
+  "sparse": {
+    "baseline_commit": "989cfb7e3f826ab71c05c590deacda259d72da2d",
+    "source_commit": "f942b93af15f4b527bd4d289a3a2d2f54ffff796",
+    "patch": "sparse-discovery-f942b93a.patch",
+    "patch_sha256": "60b4c87d778940eaafe142c64fdad67c234182a1b292e325f44ce3476cd823e4",
+    "patch_bytes": 92312,
+    "files": [
+      {
+        "path": "docs/SPARSE_DISCOVERY_DESIGN.md",
+        "sha256": "024d94547be40af31232fc5fb2f278e56400f14c10cfc241801e8899734346d1",
+        "bytes": 5145
+      },
+      {
+        "path": "docs/SPARSE_DISCOVERY_M1_PILOT_RUNNER.md",
+        "sha256": "57ec1496a13875c327240485a4b09e7cf18a12e9d69d5bf059d6f063a57dc30f",
+        "bytes": 4864
+      },
+      {
+        "path": "docs/SPARSE_DISCOVERY_M1_PROTOCOL.md",
+        "sha256": "1f08476f0fc998e6eb9f76eca1f419e0ad599adf34a74c3806cabb6c29ca35bf",
+        "bytes": 7939
+      },
+      {
+        "path": "src/recon_lite_hector/learning/sparse_discovery.py",
+        "sha256": "c201e9309cb7ca9ecdf8caaa1cada58ae8c3a2e46facbe1a60b4b3b0a233216d",
+        "bytes": 20143
+      },
+      {
+        "path": "tests/autogrowth/test_sparse_discovery.py",
+        "sha256": "3e2309261c08956918efb10ce75dfb1f926264d5c7e0c5393446d50be67b55b8",
+        "bytes": 17147
+      },
+      {
+        "path": "tests/test_sparse_discovery_runner.py",
+        "sha256": "de196c152f1483997bfd2c2aa28a658f19d4a5619aa715e66baeadaab738c6e7",
+        "bytes": 8371
+      },
+      {
+        "path": "tools/sparse_discovery_m1_pilot.py",
+        "sha256": "a601badd546d6c58a4043271ac2294e12225649b129f78b2704eb2a6cec0eddb",
+        "bytes": 25364
+      }
+    ],
+    "validation": {
+      "patch_check": "PASS",
+      "reconstructed_file_hashes": "PASS",
+      "source_files": 7,
+      "native_execution": false,
+      "training": false
+    }
+  }
+}

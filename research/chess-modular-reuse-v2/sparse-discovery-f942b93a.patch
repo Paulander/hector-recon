@@ -1,0 +1,1862 @@
+diff --git a/docs/SPARSE_DISCOVERY_DESIGN.md b/docs/SPARSE_DISCOVERY_DESIGN.md
+new file mode 100644
+index 00000000..1262d4de
+--- /dev/null
++++ b/docs/SPARSE_DISCOVERY_DESIGN.md
+@@ -0,0 +1,85 @@
++# Sparse terminal discovery version 1
++
++2026-10-21. The user authorized an isolated combined implementation and a fresh
++M1 exploratory run if mechanism checks pass. This supersedes the earlier
++design-only stopping point for this branch; it changes no existing study.
++
++The retained core supplies formal request/confirmation, generic Boolean scripts,
++typed terminal measurement, legal primitive bindings and ordinary residual credit.
++The fresh organism has five control vertices, zero reader definitions and zero
++scoring conditions, with one shared zero bias. It does not call the selective
++initializer or create its 42+38 equality banks.
++
++Version 1 deliberately uses the existing finite equality-reader family: a reader
++chooses a typed coordinate/value test; one-to-three readers form AND, OR or
++exactly-one scripts. These are generic supplied operators. Discovery selects
++coordinate/value regions and useful compositions, not a new operator vocabulary
++or continuous prototype-learning law. There is no supplied state/action partition
++or feature-name interpretation. A richer reader family remains a separate test.
++
++## Birth and prospective admission
++
++At the first real selected action the organism samples at most 16 trial masks.
++Only their selected-binding measurements are obtained through formal terminals.
++Half the proposal opportunities may extend an existing live or immature mask
++with another sampled coordinate; the rest sample fresh masks. No marginal
++maturity requirement blocks jointly useful trials. Trials persist at most 256
++actual observations; all definitions and evidence survive as history after exit.
++
++The first 32 actual observations fit a residual offset on active occurrences.
++That offset then freezes. Later receipts compare the actual saved prediction
++against that prediction plus the frozen offset when the candidate is active.
++The first prospective score needs 32 later observations and at least four active
++occurrences in each window. Mean squared-error reduction minus 0.0001 per reader
++is nomination evidence, not causal policy value. Negative useful offsets qualify.
++
++Every 32 observations, at most one zero-weight contribution is admitted. With
++probability .25 the choice can be exploratory among supported proposals,
++including not-yet-completely-reviewed ones; a fully reviewed nonpositive score
++vetoes this route. Otherwise the best positive prospective score is selected.
++No fitted offset is installed as an action weight. Subsequent actual behavior
++must learn the new coefficient through ordinary residual credit.
++
++## Credit and retirement
++
++Only bias and the actual selected active scoring conditions receive
++alpha*(reward-saved_prediction)/(1+active_conditions), with alpha=.3. Probes
++never enter this denominator or receive real action credit. Exploration=.25 is
++unchanged. Bias fast/slow transfer preserves its effective sum and is not called
++retention protection.
++
++Live terms accumulate pre-update leave-one-out prediction gains on selected
++receipts. At age 256, a complete 128-receipt window with at least four active
++receipts and mean gain below minus the resource charge may retire one term per
++boundary. Other removal evidence resets after a scoring-structure change.
++This is an observational predictive-removal hypothesis, not guaranteed safe
++retention. Coefficient magnitude alone is not a removal rule.
++
++Readers used by any live or trial script remain instantiated. Boundary rebuilds
++reclaim only orphan physical probe/readers, preserving surviving weights and
++retired hypothesis history. Limits are 96 live scoring conditions, 16 trials and
++8192 physical nodes. A genuine budget/semantic failure aborts rather than quietly
++falling back to another chooser.
++
++## Scope of the first M1 run
++
++The initial chess pilot uses the unchanged declared 16-coordinate geometric
++feature space and only actual selected-move outcomes. This isolates dynamic
++reader/composition discovery; it does not claim a raw-board learned sensor basis.
++All learning stays plastic. One prospectively pinned fresh seed and fixed budget
++make an exploratory run, not a reliability, superiority or autonomous general
++script-induction result. Failed learning is preserved without parameter tuning.
++
++Mated positions have no legal move and do not fit this action interface. Mate-in-0
++recognition is recorded as a separate future observation/goal-detection task,
++with completed-state outcomes and nonmated controls. An independently learned
++recognizer could later make fallible predictions on imagined feature frames.
++It must not query hypothetical environment checkmate labels or turn imagined
++outcomes into real reinforcement. This packet does not implement that interface.
++
++The M1 pilot already records each actual after-position and its real outcome.
++Those observed successful and unsuccessful after-positions could later ground
++an M0 recognition task without asking for hypothetical labels. Positive mated
++examples alone would permit an always-confirming detector, so nonmated and
++stalemate controls matter. Minimizing a recognizer is a subsequent compression
++question; this first run does not teach it a supplied checkmate predicate.
+diff --git a/docs/SPARSE_DISCOVERY_M1_PILOT_RUNNER.md b/docs/SPARSE_DISCOVERY_M1_PILOT_RUNNER.md
+new file mode 100644
+index 00000000..bb6886b0
+--- /dev/null
++++ b/docs/SPARSE_DISCOVERY_M1_PILOT_RUNNER.md
+@@ -0,0 +1,84 @@
++# Sparse discovery: one exploratory native M1 pilot
++
++The runner `tools/sparse_discovery_m1_pilot.py` exercises the opt-in discovery
++organism. It does not change the production initializer, credit law or M2.
++
++The scientific identity is seed `202610210901`, 3,072 actual one-move training
++attempts: 2,048 acquisition actions and 1,024 continuation actions. An independent
++schedule RNG samples the known 1,512-position M1 population uniformly. Preparation
++exports only FEN strings from the two existing regression-receipt files; their
++saved actions and rewards never enter the organism.
++
++The actor begins with five generic physical interface/controller vertices,
++one zero-weight bias, no readers and no scoring conditions. The declared
++16-coordinate geometric schema remains a substantial supplied embodiment prior.
++New sparse proposals use only the declared coordinate types/domains and their
++own later selected-action observations.
++
++## What an admission means
++
++Admission means a proposal becomes a zero-weight scoring contributor. Ordinary
++subsequent selected-action residual credit determines its actual influence.
++It does not mean causal usefulness, mature competence or successful behavior.
++
++Admission reasons are reported separately as `exploratory` and
++`prospective_prediction`. With the defaults, exploratory admission can occur
++at the first 32-observation boundary after sufficient discovery activation,
++before any prospective validation observations. The report separately counts
++admissions before a complete prospective review. Do not call every admission
++"relevance confirmed". A positive reviewed prediction gain is also predictive
++evidence, not a causal intervention or demonstrated behavioral improvement.
++
++## Evidence and verification scope
++
++The producer saves complete action/outcome, credit, lifecycle and inventory
++records; native checkpoints at actions 0/512/1024/1536/2048/2560/3072; and greedy
++full-population censuses at 0/1536/2048/3072 using disposable actor copies.
++
++A fresh process reconstructs every training choice, selected outcome and
++development event. Separate scalar arithmetic checks the prediction and every
++active/inactive credit recipient before consolidation/development. Checkpoint
++comparison covers the **declared behavioral/development snapshot**, not every
++physical or historical field. Complete pickled checkpoints remain saved and
++hash-bound; cold continuations compare actual subsequent behavior and the same
++declared snapshot. Transient graph request states/activations and omitted
++historical fields are not independently compared. This limitation must remain
++explicit in the final report.
++
++One actor and four sampled censuses cannot establish continuous retention,
++seed reliability, unseen-position generalization or the advantage of the
++relevance selector over matched random development.
++
++## Operational boundary
++
++The default complete ceiling is four hours, including a real second native
++replay and sealing. Production receives at most half of the substantive clock;
++five minutes remain reserved for sealing. Both phases have sampled 2 GiB RSS
++guards and suspension-inclusive wall deadlines. These are enforced limits,
++not a guarantee that every possible grown trajectory completes. Short-worker
++RSS samples are sampled observations, not exact high-water memory measurements.
++
++The output directory and scientific identity claim are exclusive. Failure
++preserves the partial evidence; changing output paths does not free the seed
++for another scientific attempt. A harmless child first qualifies actual RSS
++sampling. Sandbox permission for `/bin/ps` is therefore needed before science.
++The runner owns and cleans its child process groups and optional idle-sleep
++assertion. Source pins cover actual imported repository/chess modules and the
++interpreter binary; unrelated historical trees are not traversed.
++
++## Engineering evidence
++
++`runner-engineering-001` produced 32 engineering actions but failed replay on a
++tuple/list JSON comparison defect. The original source bytes were reconstructed
++by reverting that single comparison and matched exactly to the original source
++SHA256, then saved append-only under its `historical-source/` directory. Original
++records, failures and original checksum inventory were not edited.
++
++`runner-engineering-002` independently verified the same 32-event engineering
++stream, three checkpoints, two cold continuations and two eight-position censuses.
++Its original runner bytes were also preserved before these reporting-only
++clarifications. Neither engineering attempt consumes the scientific identity or
++establishes M1 learning benefit. Focused tests cover credit corruption, checkpoint
++hash corruption, source changes, input isolation, JSON representation and
++deadline/memory cleanup; unit guard tests inject RSS samples, while engineering
++execution obtains actual owned-child samples.
+diff --git a/docs/SPARSE_DISCOVERY_M1_PROTOCOL.md b/docs/SPARSE_DISCOVERY_M1_PROTOCOL.md
+new file mode 100644
+index 00000000..35d10493
+--- /dev/null
++++ b/docs/SPARSE_DISCOVERY_M1_PROTOCOL.md
+@@ -0,0 +1,133 @@
++# First sparse discovery native M1 pilot
++
++Prospective protocol, 2026-10-21. The user's latest request authorizes this
++isolated implementation and an M1 training run if mechanical checks pass. It
++supersedes the previous investigation handoff's design-only stopping point.
++No existing learner defaults, M1/M2 studies or historical evidence are changed.
++
++## Question and interpretation
++
++Can one fresh native organism, starting without instantiated input readers or
++scoring conditions, acquire useful M1 behavior while dynamically proposing,
++reviewing, admitting and retaining its own sparse reader/composition population?
++
++This is one exploratory trajectory. It is not a paired superiority study,
++population-reliability result, full sensor-family discovery or an adoption gate.
++The old M1 milestone remains the supplied-vocabulary behavioral reference.
++
++The fresh graph has five generic control nodes, one shared zero bias, zero
++conditions/readers and no pretrained prefix. The unchanged 16-coordinate
++geometric feature space is explicitly supplied embodiment. Finite equality
++readers and AND/OR/exactly-one scripts are generic supplied grammar. Neither
++relevant coordinates nor a mating formula is supplied. All new parameters and
++decisions obey SPARSE_DISCOVERY_DESIGN.md; ordinary alpha=.3, epsilon=.25 and
++selected-action residual credit remain fixed.
++
++## Prelaunch mechanism evidence
++
++The independent design review found no launch-blocking information leak or
++credit defect. Focused checks cover the fresh population, native terminal and
++action authority, unchanged active/inactive recipients, strict prospective
++windows, negative offsets, young joint trials, dependencies/history, retirement,
++checkpoint continuation and guard failure modes.
++
++Two small native runner attempts used a distinct engineering seed. Attempt001
++preserves a tuple/list serialization-comparison defect; attempt002 reconstructed
++32 actions, three checkpoints, two cold continuations and two eight-board
++censuses. Exact original runner bytes for both are retained. Later guard and
++reporting changes have focused tests; each real launch qualifies actual RSS
++sampling before any scientific identity is claimed.
++
++The separate, prospectively fixed anonymous engineering exercise used three
++seeds101/102/103 and1024 actions each, with private signal-coordinate permutations,
++two nuisance bits and selected-action-only XOR feedback. They admitted28/26/24
++conditions and received911/923/838 nonzero scoring-credit receipts. Final strict
++greedy choices were16/16,16/16,8/16 across four contexts and four nuisance values.
++No seed or parameter was changed in response. This establishes a working
++discovery/credit path and preserves incomplete learning in one case; it does not
++establish that this selector outperforms random admission or will solve chess.
++
++## Fixed scientific work
++
++- One fresh seed:202610210901. It has not been used by engineering. The exclusive
++  persistent identity claim precedes actor creation and is never cleared after
++  a failed attempt.
++- Exactly3072 real one-White-move training actions:2048 acquisition plus1024
++  continuation. No performance-dependent extension, retry, replacement seed,
++  changed constants or installed fitted weights.
++- The known1512-position M1 population is exported as FEN strings only from the
++  two pinned existing regression files. Correct moves/rewards in those files
++  are not passed to the organism. This is known-population development evidence,
++  not unseen-position generalization.
++- An independent seeded coach RNG draws a population index uniformly per action;
++  learner topology, residuals, trials and outcomes never alter this schedule.
++- The existing chess feature port supplies only declared current-board/candidate
++  measurements. The native graph selects and actually executes one legal move.
++  Feedback is+1 for its observed checkmate,-1 otherwise. No alternative outcome,
++  mate-in-0 lesson, teacher recognizer, after-state evaluator or strategic label
++  enters discovery.
++- Nonlearning full1512-position greedy censuses at0/1536/2048/3072, each through a
++  disposable copy. Training state and RNG must remain unchanged by evaluations.
++- Checkpoints at0/512/1024/1536/2048/2560/3072. Save the complete opaque object,
++  its transport hash, the declared behavioral/development snapshot and schedule.
++
++## Measurements and verdict
++
++Primary descriptive output is census coverage out of1512 and its solved-row
++transitions. Report acquisition at sampled1536/2048 and continuation retention
++at3072, including losses as well as gains. Matching the full M1 benchmark means
++1512/1512 at all three noninitial censuses; a lesser score remains a valid
++exploratory result, not something to rerun or tune away.
++
++Report physical nodes, binding slots, distinct live/trial reader definitions,
++scoring conditions, parameter count and development history separately. Separate
++prospectively scored admissions from exploratory admissions, including those with
++no completed later review. Count actual post-birth active updates and retirements.
++Predictive relevance is not automatically policy value or causal usefulness.
++The first study has no matched random arm and cannot identify selector advantage.
++
++Independent native generative reconstruction must reproduce every training
++action/outcome, learning receipt, lifecycle event, checkpoint snapshot and census.
++Independent scalar arithmetic checks bias and active fast increments, unchanged
++inactive/slow coefficients at credit stage and the saved native prediction sum.
++Restore all own checkpoints after checking their transport hashes; verify the
++next saved transition from the six nonterminal cold checkpoints. This checks the
++declared state and continuation, not a claim to compare every transient physical
++node field in an independently implemented verifier.
++
++An actual source, semantic, integrity or resource failure stops the attempt and
++retains a partial result. Technical censoring is distinct from learning failure.
++No practical learning verdict is accepted before full declared reconstruction.
++
++## Resources and execution
++
++Use the explicit project Python3.12 environment, isolated worktree src and
++libs/recon-lite/src, one numerical thread and at most one native worker. Pin
++actual runtime dependencies and the runner after the prospective source commit.
++Do not hash or copy all historical studies.
++
++The launcher has a four-hour ceiling from its own invocation, including production,
++replay and checksum readback. It reserves the second real replay pass and five
++minutes for completion reporting. Each worker is sampled against2GiB RSS, with
++actual sampling permission qualified before scientific initialization. A live
++worker with unavailable RSS sampling aborts. These are sampled limits and
++empirical engineering checks, not a theorem about peak memory or every reachable
++future graph. The learner separately enforces8192 physical nodes.
++
++The32-action engineering path does not measure the largest future grown graph.
++It establishes execution and reconstruction mechanics; a genuine later growth
++cost failure will be reported as such rather than used to waive checks. Preserve
++all records and source hashes on interruption. A task-owned idle-sleep assertion
++may run and is cleaned at exit. No global power settings or external storage
++reorganization is needed.
++
++The exact output is
++/Users/banquo/Documents/ChatGPT/Hector-Recon/sparse-terminal-discovery-20261021-evidence/m1-pilot-901.
++The launcher refuses an existing output or previously consumed scientific seed.
++At completion retain compact full records, seven checkpoints, censuses, source
++pins, actual resource receipts, reconstruction and checksum readback. Do not
++introduce another archive/qualification framework.
++
++Stop after this attempt and its report. No further cohort, new credit law,
++mate-in-0 classifier, M2 integration, merge, push or default adoption follows
++automatically, regardless of score.
+diff --git a/src/recon_lite_hector/learning/sparse_discovery.py b/src/recon_lite_hector/learning/sparse_discovery.py
+new file mode 100644
+index 00000000..88ed48a6
+--- /dev/null
++++ b/src/recon_lite_hector/learning/sparse_discovery.py
+@@ -0,0 +1,420 @@
++"""Dynamic sparse readers on the native executor, with selected-only evidence.
++
++This opt-in organism starts without a reader bank or scoring conditions. Small
++random coordinate/value masks become real terminal/SCRIPT probes. A discovery
++window freezes a residual offset; only later observations review its predictive
++gain. Admitted contributions start at zero and receive ordinary residual credit.
++Prediction-based nomination/removal is not causal usefulness or consolidation.
++"""
++from __future__ import annotations
++
++from collections import deque
++from dataclasses import asdict, dataclass
++import math
++import random
++
++from recon_lite.graph import Node, NodeState, NodeType
++from .terminal_development import (
++    ACTION_CHOICE, Condition, PlasticWeight, TerminalDevelopment, _reader,
++)
++
++
++@dataclass(frozen=True)
++class DiscoveryConfig:
++    trial_capacity: int = 16
++    develop_every: int = 32
++    discovery_steps: int = 32
++    validation_steps: int = 32
++    min_active: int = 4
++    trial_age: int = 256
++    max_atoms: int = 3
++    max_nodes: int = 8192
++    retirement_window: int = 128
++    retirement_age: int = 256
++    random_fraction: float = 0.25
++    resource_cost: float = 0.0001
++
++    def __post_init__(self):
++        integers = (self.trial_capacity, self.develop_every, self.discovery_steps,
++                    self.validation_steps, self.min_active, self.trial_age,
++                    self.max_atoms, self.max_nodes, self.retirement_window,
++                    self.retirement_age)
++        if any(type(x) is not int or x < 1 for x in integers):
++            raise ValueError('discovery budgets must be positive integers')
++        if self.trial_age < self.discovery_steps + self.validation_steps:
++            raise ValueError('trial lifetime must permit a prospective review')
++        if not math.isfinite(self.random_fraction) or not 0 < self.random_fraction <= 1:
++            raise ValueError('a bounded nonzero exploratory admission route is required')
++        if not math.isfinite(self.resource_cost) or self.resource_cost < 0:
++            raise ValueError('resource charge must be finite and nonnegative')
++
++
++@dataclass
++class SparseTrial:
++    identity: int
++    atoms: tuple
++    operator: str
++    born: int
++    discovery_count: int = 0
++    discovery_active: int = 0
++    discovery_sum: float = 0.0
++    frozen_offset: float | None = None
++    validation_count: int = 0
++    validation_active: int = 0
++    validation_gain: float = 0.0
++
++    @property
++    def key(self):
++        return self.operator, self.atoms
++
++    def record(self, active, residual, config):
++        if not math.isfinite(residual):
++            raise ValueError('trial residual must be finite')
++        if self.frozen_offset is None:
++            self.discovery_count += 1
++            if active:
++                self.discovery_active += 1
++                self.discovery_sum += residual
++            if self.discovery_count >= config.discovery_steps:
++                self.frozen_offset = (self.discovery_sum / self.discovery_active
++                                      if self.discovery_active else 0.0)
++            # The receipt which freezes the coefficient is never validation.
++            return
++        self.validation_count += 1
++        if active:
++            self.validation_active += 1
++            offset = self.frozen_offset
++            self.validation_gain += residual * residual - (residual - offset) ** 2
++
++    def score(self, config):
++        if (self.frozen_offset is None
++                or self.discovery_active < config.min_active
++                or self.validation_count < config.validation_steps
++                or self.validation_active < config.min_active):
++            return None
++        return (self.validation_gain / self.validation_count
++                - config.resource_cost * len(self.atoms))
++
++
++class SparseDiscoveryDevelopment(TerminalDevelopment):
++    """A minimally seeded, immediate-feedback discovery organism.
++
++    Equality regions and AND/OR/exactly-one are supplied generic grammar, not
++    newly invented operators. Coordinate/value readers are instantiated only
++    for sampled hypotheses. No declared state/action partition is supplied.
++    """
++
++    def __init__(self, *, seed=1, config=None, discovery=None):
++        super().__init__(seed=seed, config=config)
++        self.discovery = discovery or DiscoveryConfig()
++        self.proposal_rng = random.Random(f'sparse-discovery:{seed}')
++        self.trials = {}
++        self.next_trial = 0
++        self.seen = set()
++        self.trial_archive = []
++        self.retired_history = []
++        self.live_evidence = {}
++        self.probe_slots = set()
++        self.observation_pending = None
++        self.last_credit = None
++        self.events = []
++        self.structure_version = 0
++        self._check_budget()
++
++    def _birth(self):
++        # The ancestor calls this after ordinary feedback. Never install its
++        # eager condition population or bypass this organism's evidence law.
++        return
++
++    def _prune(self):
++        # Coefficient magnitude alone does not establish dispensability.
++        return
++
++    def __getstate__(self):
++        if self.observation_pending is not None:
++            raise RuntimeError('checkpoint requires completed discovery feedback')
++        return super().__getstate__()
++
++    def act(self, port, *, event_id, learn):
++        if self.pending or self.observation_pending is not None:
++            raise RuntimeError('sparse discovery requires immediate matching feedback')
++        return super().act(port, event_id=event_id, learn=learn)
++
++    def _check_budget(self):
++        if len(self.graph.nodes) > self.discovery.max_nodes:
++            raise ValueError('sparse discovery physical node budget exceeded')
++
++    def _ensure_slots(self, count):
++        super()._ensure_slots(count)
++        self._check_budget()
++
++    def _reset(self):
++        super()._reset()
++        for node in self.graph.nodes.values():
++            if node.meta.get('discovery_trial'):
++                node.activation.value = 1.0
++
++    def _proposal(self):
++        maximum = min(self.discovery.max_atoms, len(self.schema))
++        parents = [c.atoms for c in self.conditions.values() if len(c.atoms) < maximum]
++        # Immature parents are equally eligible: no marginal maturity gate.
++        parents += [t.atoms for t in self.trials.values() if len(t.atoms) < maximum]
++        if parents and self.proposal_rng.random() < 0.5:
++            atoms = self.proposal_rng.choice(parents)
++            available = [i for i in range(len(self.schema))
++                         if i not in {index for index, _ in atoms}]
++            index = self.proposal_rng.choice(available)
++            atom = index, self.proposal_rng.choice(self.schema[index].values)
++            return 'and', tuple(sorted((*atoms, atom)))
++        sizes = tuple(range(1, maximum + 1))
++        size = self.proposal_rng.choices(sizes, weights=[1 / x for x in sizes])[0]
++        indices = self.proposal_rng.sample(range(len(self.schema)), size)
++        atoms = tuple(sorted((i, self.proposal_rng.choice(self.schema[i].values))
++                             for i in indices))
++        operator = (self.proposal_rng.choices(('and', 'or', 'xor'), (8, 1, 1))[0]
++                    if size > 1 else 'and')
++        return operator, atoms
++
++    def _refill_trials(self):
++        if self.schema is None:
++            return
++        attempts = 0
++        while len(self.trials) < self.discovery.trial_capacity and attempts < 128:
++            attempts += 1
++            key = self._proposal()
++            if key in self.seen:
++                continue
++            self.seen.add(key)
++            identity = self.next_trial
++            self.next_trial += 1
++            trial = SparseTrial(identity, key[1], key[0], self.completed)
++            self.trials[identity] = trial
++            for slot in sorted(self.probe_slots):
++                self._add_trial_slot(slot, trial)
++            self.events.append({'kind': 'trial_birth', 'at': self.completed,
++                                'trial': identity, 'operator': key[0], 'atoms': key[1]})
++        self._check_budget()
++
++    def _add_trial_slot(self, slot, trial):
++        root = f'discovery-probe:{slot}'
++        if root not in self.graph.nodes:
++            self.graph.add_node(Node(root, NodeType.SCRIPT,
++                                     meta={'confirm_policy': 'weighted_evidence'}))
++        gate = f'discovery-trial:{slot}:{trial.identity}'
++        if gate in self.graph.nodes:
++            return
++        self.graph.add_node(Node(gate, NodeType.SCRIPT,
++            meta={'confirm_policy': trial.operator, 'discovery_trial': True}))
++        self.graph.nodes[gate].activation.value = 1.0
++        self.graph.add_hierarchy_pair(root, gate)
++        for index, expected in trial.atoms:
++            terminal = f'read:{slot}:{index}:{int(expected)}'
++            if terminal not in self.graph.nodes:
++                self.graph.add_node(Node(terminal, NodeType.TERMINAL, predicate=_reader,
++                                         meta={'slot': slot, 'atom': (index, expected)}))
++            self.graph.add_hierarchy_pair(gate, terminal)
++
++    def _before_execute(self, engine, env, *, event_id, slot, prediction, learn):
++        if not learn:
++            return
++        self._refill_trials()
++        self.probe_slots.add(slot)
++        for trial in self.trials.values():
++            self._add_trial_slot(slot, trial)
++        values = {}
++        if self.trials:
++            self.graph.validate_formal_pairs()
++            root = f'discovery-probe:{slot}'
++            engine.request(root)
++            engine.run(max_ticks=40, env=env, until=lambda e:
++                       self.graph.nodes[root].state in (NodeState.CONFIRMED, NodeState.FAILED))
++            for identity in self.trials:
++                state = self.graph.nodes[f'discovery-trial:{slot}:{identity}'].state
++                if state not in (NodeState.CONFIRMED, NodeState.FAILED):
++                    raise RuntimeError('discovery probe did not settle')
++                values[identity] = state == NodeState.CONFIRMED
++        active = tuple(cid for cid in self.conditions
++                       if self.graph.nodes[f'gate:{slot}:{cid}'].state == NodeState.CONFIRMED)
++        self.observation_pending = {
++            'event_id': event_id, 'action': env['bindings'][slot],
++            'prediction': prediction, 'active': active, 'trial_values': values,
++            'condition_weights': {cid: float(c.weight) for cid, c in self.conditions.items()},
++        }
++        self._check_budget()
++
++    def _weights(self):
++        return {'bias': [self.bias.fast, self.bias.slow],
++                'conditions': {str(cid): [c.weight.fast, c.weight.slow]
++                               for cid, c in self.conditions.items()}}
++
++    def observe(self, feedback):
++        observation = self.observation_pending
++        if (len(self.pending) != 1 or observation is None
++                or (feedback.event_id, feedback.action) != self.pending[0][:2]
++                or (feedback.event_id, feedback.action)
++                != (observation['event_id'], observation['action'])):
++            raise ValueError('outcome must bind to the actual pending discovery action')
++        reward = float(feedback.reward)
++        if not math.isfinite(reward):
++            raise ValueError('reward must be finite')
++        _, action, prediction, active = self.pending[0]
++        if prediction != observation['prediction'] or active != observation['active']:
++            raise RuntimeError('discovery and scoring participation disagree')
++        before = self._weights()
++        residual = reward - prediction
++        delta = self.config.learning_rate * residual / (1 + len(active))
++        self.bias.fast += delta
++        for cid in active:
++            condition = self.conditions[cid]
++            condition.weight.fast += delta
++            condition.stats.record_activation(ACTION_CHOICE)
++            condition.stats.record_confirm(self.completed, ACTION_CHOICE)
++            condition.stats.record_correlation(
++                'positive' if reward > 0 else 'negative' if reward < 0 else 'neutral')
++        for condition in self.conditions.values():
++            condition.stats.record_request(ACTION_CHOICE)
++        self.last_credit = {'event_id': feedback.event_id, 'action': action,
++            'reward': reward, 'prediction': prediction, 'active': active,
++            'delta': delta, 'weights_before': before,
++            'weights_after_credit': self._weights()}
++        for identity, enabled in observation['trial_values'].items():
++            self.trials[identity].record(enabled, residual, self.discovery)
++        for cid, weight in observation['condition_weights'].items():
++            enabled = cid in active
++            without = prediction - weight if enabled else prediction
++            gain = (reward - without) ** 2 - residual ** 2
++            self.live_evidence.setdefault(cid, deque(
++                maxlen=self.discovery.retirement_window)).append((enabled, gain))
++        self.pending.clear()
++        self.observation_pending = None
++        self.completed += 1
++        if self.completed % self.config.consolidate_every == 0:
++            self.bias.consolidate(self.config.consolidation_rate)
++        if self.completed % self.discovery.develop_every == 0:
++            self._develop()
++
++    def _retire_one(self):
++        choices = []
++        for cid, condition in self.conditions.items():
++            evidence = self.live_evidence.get(cid, ())
++            if (self.completed - condition.born < self.discovery.retirement_age
++                    or len(evidence) < self.discovery.retirement_window
++                    or sum(enabled for enabled, _ in evidence) < self.discovery.min_active):
++                continue
++            score = sum(gain for _, gain in evidence) / len(evidence)
++            if score < -self.discovery.resource_cost * len(condition.atoms):
++                choices.append((score, cid))
++        if not choices:
++            return False
++        score, cid = min(choices)
++        condition = self.conditions.pop(cid)
++        self.live_evidence.pop(cid, None)
++        self.retired_conditions[(condition.operator, condition.atoms)] = condition
++        self.retired_history.append({'at': self.completed, 'condition': cid,
++            'operator': condition.operator, 'atoms': condition.atoms,
++            'weight': float(condition.weight), 'predictive_gain': score})
++        self.events.append({'kind': 'retirement', **self.retired_history[-1]})
++        self.pruned += 1
++        return True
++
++    def _admit_one(self):
++        if len(self.conditions) >= self.config.max_conditions:
++            self.events.append({'kind': 'scoring_budget', 'at': self.completed})
++            return False
++        eligible = []
++        ranked = []
++        for trial in self.trials.values():
++            if (trial.frozen_offset is None
++                    or trial.discovery_active < self.discovery.min_active):
++                continue
++            score = trial.score(self.discovery)
++            # Fully reviewed negative proposals never use the exploratory route.
++            if score is not None and score <= 0:
++                continue
++            eligible.append(trial)
++            if score is not None:
++                ranked.append((score, trial.identity))
++        exploratory = self.proposal_rng.random() < self.discovery.random_fraction
++        if exploratory and eligible:
++            trial = self.proposal_rng.choice(eligible)
++            reason = 'exploratory'
++        elif ranked:
++            _, identity = max(ranked, key=lambda x: (x[0], -x[1]))
++            trial, reason = self.trials[identity], 'prospective_prediction'
++        else:
++            return False
++        cid = self.next_condition
++        self.next_condition += 1
++        self.conditions[cid] = Condition(cid, trial.atoms, trial.operator,
++                                         self.completed, weight=PlasticWeight())
++        self.trial_archive.append({'status': 'admitted', 'at': self.completed,
++                                   'condition': cid, 'trial': asdict(trial)})
++        self.trials.pop(trial.identity)
++        self.events.append({'kind': 'admission', 'at': self.completed,
++            'condition': cid, 'trial': trial.identity, 'operator': trial.operator,
++            'atoms': trial.atoms, 'reason': reason, 'initial_weight': 0.0,
++            'predictive_score': trial.score(self.discovery)})
++        return True
++
++    def _develop(self):
++        removed = self._retire_one()
++        admitted = self._admit_one()
++        for identity, trial in tuple(self.trials.items()):
++            if self.completed - trial.born >= self.discovery.trial_age:
++                self.trial_archive.append({'status': 'expired', 'at': self.completed,
++                                           'trial': asdict(trial)})
++                self.events.append({'kind': 'trial_expiration', 'at': self.completed,
++                    'trial': identity, 'discovery_active': trial.discovery_active,
++                    'validation_active': trial.validation_active,
++                    'predictive_score': trial.score(self.discovery)})
++                self.trials.pop(identity)
++        # Rebuild reclaims orphan probe/readers without losing any hypothesis
++        # evidence or replacing surviving learned weight objects.
++        scaffold = TerminalDevelopment(seed=0, config=self.config)
++        scaffold.conditions, scaffold.bias = self.conditions, self.bias
++        scaffold._ensure_slots(self.slots)
++        self.graph = scaffold.graph
++        self._refill_trials()
++        for slot in sorted(self.probe_slots):
++            for trial in self.trials.values():
++                self._add_trial_slot(slot, trial)
++        if removed or admitted:
++            self.structure_version += 1
++            # Removal scores from the old joint scorer cannot delete another
++            # correlated term without new evidence in the changed scorer.
++            self.live_evidence.clear()
++        self.graph.validate_formal_pairs()
++        self._check_budget()
++
++    def inventory(self):
++        readers = {atom for condition in self.conditions.values() for atom in condition.atoms}
++        readers.update(atom for trial in self.trials.values() for atom in trial.atoms)
++        return {'nodes': len(self.graph.nodes), 'edges': len(self.graph.edges),
++                'slots': self.slots, 'live_conditions': len(self.conditions),
++                'scoring_parameters': 1 + len(self.conditions),
++                'trial_count': len(self.trials), 'unique_reader_definitions': len(readers),
++                'seen_hypotheses': len(self.seen), 'completed': self.completed,
++                'structure_version': self.structure_version}
++
++    def state_snapshot(self):
++        structural = ('slot', 'atom', 'condition_id', 'confirm_policy', 'discovery_trial')
++        return {'config': asdict(self.config), 'discovery': asdict(self.discovery),
++            'schema': None if self.schema is None else
++                      [(c.name, list(c.values)) for c in self.schema],
++            'completed': self.completed, 'last_event': self.last_event,
++            'next_trial': self.next_trial, 'next_condition': self.next_condition,
++            'weights': self._weights(),
++            'conditions': [(cid, c.atoms, c.operator, c.born, c.stats.to_dict())
++                           for cid, c in self.conditions.items()],
++            'trials': [asdict(t) for t in self.trials.values()],
++            'seen': sorted(self.seen, key=repr), 'trial_archive': self.trial_archive,
++            'retired_history': self.retired_history,
++            'live_evidence': {str(k): list(v) for k, v in self.live_evidence.items()},
++            'probe_slots': sorted(self.probe_slots), 'events': self.events,
++            'rng': self.rng.getstate(), 'proposal_rng': self.proposal_rng.getstate(),
++            'inventory': self.inventory(),
++            'graph_nodes': [(nid, node.ntype.name,
++                {k: node.meta[k] for k in structural if k in node.meta})
++                for nid, node in sorted(self.graph.nodes.items())],
++            'graph_edges': sorted((e.src, e.dst, e.ltype.name, float(e.w))
++                                   for e in self.graph.edges)}
+diff --git a/tests/autogrowth/test_sparse_discovery.py b/tests/autogrowth/test_sparse_discovery.py
+new file mode 100644
+index 00000000..74c07d5c
+--- /dev/null
++++ b/tests/autogrowth/test_sparse_discovery.py
+@@ -0,0 +1,394 @@
++"""Focused discovery mechanics, not an efficacy or chess-performance study.
++
++Planted conditions below isolate execution and credit. They do not count as
++evidence that the learner discovers useful structure by itself.
++"""
++from dataclasses import replace
++import inspect
++import pickle
++
++import pytest
++
++from recon_lite.graph import LinkType, NodeType
++from recon_lite_chess.coach.interface import Feedback
++from recon_lite_hector.learning.sparse_discovery import (
++    DiscoveryConfig, SparseDiscoveryDevelopment, SparseTrial,
++)
++from recon_lite_hector.learning.terminal_development import (
++    Condition, Coordinate, DevelopmentConfig, PlasticWeight, _reader,
++)
++
++
++BOOL = (False, True)
++
++
++class VectorPort:
++    """Opaque bindings and a typed vector reachable only through terminals."""
++
++    schema = tuple(Coordinate(name, BOOL) for name in ("q0", "q1", "q2"))
++
++    def __init__(self, x=False, y=False, *, names=("a", "b"), schema=None):
++        self.row = (x, y)
++        self.names = names
++        self.executed = None
++        self.reads = []
++        if schema is not None:
++            self.schema = schema
++
++    def bindings(self):
++        assert inspect.currentframe().f_back.f_code.co_name == "_catalog"
++        return self.names
++
++    def measure(self, coordinate, binding):
++        assert inspect.currentframe().f_back.f_code.co_name == "_reader"
++        self.reads.append((coordinate, binding))
++        return (*self.row, binding == self.names[1])[coordinate]
++
++    def execute(self, binding):
++        assert inspect.currentframe().f_back.f_code.co_name == "_actuator"
++        assert self.executed is None
++        assert binding in self.names
++        self.executed = binding
++
++
++def actor(seed=7, **discovery):
++    return SparseDiscoveryDevelopment(
++        seed=seed,
++        config=DevelopmentConfig(exploration=0, consolidate_every=10000),
++        discovery=replace(DiscoveryConfig(), **discovery),
++    )
++
++
++def planted(learner, atoms, weight=0.0, operator="and"):
++    """An explicitly planted mechanical fixture, never an efficacy result."""
++    learner.schema = VectorPort.schema
++    cid = learner.next_condition
++    learner.next_condition += 1
++    condition = Condition(cid, tuple(atoms), operator, learner.completed,
++                          weight=PlasticWeight(fast=weight))
++    learner.conditions[cid] = condition
++    for slot in range(learner.slots):
++        learner._add_condition_slot(condition, slot)
++    return condition
++
++
++def step(learner, event, x=False, y=False, reward=1.0, **port_options):
++    port = VectorPort(x, y, **port_options)
++    action = learner.act(port, event_id=event, learn=True)
++    learner.observe(Feedback(event, action, reward))
++    return port, action
++
++
++def test_minimal_initializer_has_no_sensor_bank_or_planted_solution():
++    learner = actor()
++    assert learner.schema is None
++    assert not learner.conditions and not learner.retired_conditions
++    assert learner.completed == 0 and float(learner.bias) == 0
++    assert not any(node.predicate is _reader for node in learner.graph.nodes.values())
++    assert len(learner.graph.nodes) < 20
++    assert all(not learner.graph.children(nid)
++               for nid, node in learner.graph.nodes.items()
++               if node.ntype == NodeType.TERMINAL)
++
++
++def test_new_trial_observations_are_selected_only_and_terminal_mediated():
++    learner = actor()
++    port = VectorPort(True, False)
++    action = learner.act(port, event_id=0, learn=True)
++    assert action == port.executed
++    assert port.reads  # Discovery genuinely observes candidate readers.
++    assert all(binding == action for _, binding in port.reads)
++    assert all(0 <= index < len(port.schema) for index, _ in port.reads)
++    learner.graph.validate_formal_pairs()
++    learner.observe(Feedback(0, action, -1))
++
++
++def test_probe_activity_does_not_dilute_ordinary_selected_action_credit():
++    learner = actor()
++    condition = planted(learner, ((2, True),), weight=0.4)
++    port = VectorPort()
++    action = learner.act(port, event_id=0, learn=True)
++    event, token, prediction, active = learner.pending[-1]
++    assert (event, token) == (0, action)
++    assert active == (condition.identity,)
++    assert prediction == pytest.approx(0.4)
++    delta = learner.config.learning_rate * (1 - prediction) / 2
++    learner.observe(Feedback(0, action, 1))
++    assert learner.bias.fast == pytest.approx(delta)
++    assert condition.weight.fast == pytest.approx(0.4 + delta)
++    assert condition.stats.credit_stats.total_correlations == 1
++
++
++def test_graph_evidence_edge_controls_real_actuator_selection():
++    learner = actor()
++    condition = planted(learner, ((2, True),), weight=2)
++    assert learner.act(VectorPort(), event_id=0, learn=False) == "b"
++    for slot in range(learner.slots):
++        learner.graph.edge_by_key[(f"gate:{slot}:{condition.identity}",
++                                   f"option:{slot}", LinkType.SUR)].w = -2.0
++    assert learner.act(VectorPort(), event_id=1, learn=False) == "a"
++
++
++def test_outcome_identity_finiteness_and_single_credit_are_enforced():
++    learner = actor()
++    port = VectorPort()
++    action = learner.act(port, event_id=3, learn=True)
++    with pytest.raises(ValueError, match="bind|latest|identity"):
++        learner.observe(Feedback(3, "not-the-selected-token", 1))
++    with pytest.raises(ValueError, match="finite"):
++        learner.observe(Feedback(3, action, float("nan")))
++    with pytest.raises(RuntimeError, match="outcome|pending|feedback"):
++        pickle.dumps(learner)
++    learner.observe(Feedback(3, action, -1))
++    with pytest.raises((RuntimeError, ValueError), match="awaiting|pending|outcome"):
++        learner.observe(Feedback(3, action, -1))
++    with pytest.raises(ValueError, match="increase"):
++        learner.act(VectorPort(), event_id=3, learn=True)
++
++
++def test_coordinate_names_and_opaque_binding_names_do_not_guide_birth():
++    ordinary = actor(17)
++    renamed = actor(17)
++    other_schema = tuple(Coordinate(name, BOOL) for name in
++                         ("mate_detector", "red_herring", "hidden_answer"))
++    for event in range(64):
++        x, y = bool(event % 2), bool(event % 3)
++        p0, a0 = step(ordinary, event, x, y, reward=(-1 if event % 3 else 1))
++        p1, a1 = step(renamed, event, x, y, reward=(-1 if event % 3 else 1),
++                      names=("different-a", "different-b"), schema=other_schema)
++        assert p0.names.index(a0) == p1.names.index(a1)
++        assert ordinary.rng.getstate() == renamed.rng.getstate()
++        assert [(c.operator, c.atoms, float(c.weight))
++                for c in ordinary.conditions.values()] == [
++                    (c.operator, c.atoms, float(c.weight))
++                    for c in renamed.conditions.values()]
++
++
++def test_unread_coordinate_does_not_influence_planted_policy():
++    learner = actor()
++    planted(learner, ((2, True),), weight=1)
++    rng = learner.rng.getstate()
++    for x in BOOL:
++        for y in BOOL:
++            port = VectorPort(x, y)
++            assert learner.act(port, event_id=0, learn=False) == "b"
++            assert all(index == 2 for index, _ in port.reads)
++    assert learner.rng.getstate() == rng
++
++
++def test_native_reader_rejects_wrong_scalar_type():
++    learner = actor()
++    planted(learner, ((0, True),), weight=1)
++    with pytest.raises(ValueError, match="typed domain"):
++        learner.act(VectorPort(1, False), event_id=0, learn=False)
++
++
++def test_checkpoint_resume_preserves_discovery_rng_and_weight_aliases():
++    learner = actor(31)
++    for event in range(40):
++        step(learner, event, bool(event % 2), bool(event % 3),
++             reward=(1 if event % 4 == 0 else -1))
++    restored = pickle.loads(pickle.dumps(learner))
++    for event in range(40, 72):
++        row = bool(event % 2), bool(event % 3)
++        ports = [VectorPort(*row), VectorPort(*row)]
++        actions = [o.act(p, event_id=event, learn=True)
++                   for o, p in zip((learner, restored), ports)]
++        assert actions[0] == actions[1]
++        for organism, action in zip((learner, restored), actions):
++            organism.observe(Feedback(event, action, 1 if event % 4 == 0 else -1))
++        assert learner.state_snapshot() == restored.state_snapshot()
++        assert learner.events == restored.events
++        assert learner.rng.getstate() == restored.rng.getstate()
++    for condition in restored.conditions.values():
++        for slot in range(restored.slots):
++            edge = restored.graph.edge_by_key[(f"gate:{slot}:{condition.identity}",
++                                               f"option:{slot}", LinkType.SUR)]
++            assert edge.w is condition.weight
++
++
++def test_evaluation_on_a_private_copy_cannot_mutate_training_state():
++    learner = actor(41)
++    for event in range(10):
++        step(learner, event, bool(event % 2), bool(event % 3), reward=-1)
++    frozen = pickle.dumps(learner)
++    evaluation = pickle.loads(frozen)
++    count = evaluation.completed
++    state = evaluation.rng.getstate()
++    for x in BOOL:
++        for y in BOOL:
++            evaluation.act(VectorPort(x, y), event_id=0, learn=False)
++    assert pickle.dumps(learner) == frozen
++    assert evaluation.completed == count
++    assert evaluation.rng.getstate() == state
++
++
++def test_discovery_fit_is_frozen_before_strictly_later_validation():
++    config = replace(DiscoveryConfig(), discovery_steps=4, validation_steps=4,
++                     min_active=4, resource_cost=0)
++    trial = SparseTrial(0, ((0, True),), "and", 0)
++    for _ in range(4):
++        trial.record(True, 2.0, config)
++    assert trial.frozen_offset == pytest.approx(2)
++    assert trial.discovery_count == 4
++    assert trial.validation_count == 0
++    assert trial.score(config) is None
++    # Opposite future receipts expose the discovery overfit. They must never
++    # refit the originally favourable offset or enter its discovery sample.
++    for _ in range(4):
++        trial.record(True, -2.0, config)
++    assert trial.frozen_offset == pytest.approx(2)
++    assert trial.discovery_count == 4
++    assert trial.validation_count == 4
++    assert trial.score(config) == pytest.approx(-12)
++
++
++def test_negative_predictive_offset_can_be_useful_and_eligible():
++    config = replace(DiscoveryConfig(), discovery_steps=4, validation_steps=4,
++                     min_active=4, resource_cost=0)
++    trial = SparseTrial(3, ((0, True),), "and", 0)
++    for _ in range(8):
++        trial.record(True, -2.0, config)
++    assert trial.frozen_offset == pytest.approx(-2)
++    assert trial.score(config) == pytest.approx(4)
++
++
++def test_joint_trial_can_qualify_without_any_marginal_reader_maturation():
++    # Deliberately planted evidence isolates eligibility; this is not a claim
++    # that sampling has autonomously found this joint-only feature.
++    config = replace(DiscoveryConfig(), discovery_steps=4, validation_steps=4,
++                     min_active=2, resource_cost=0)
++    trial = SparseTrial(5, ((0, True), (1, True)), "and", 0)
++    for _ in range(2):
++        for active, residual in ((False, -1.0), (True, 1.0)):
++            trial.record(active, residual, config)
++    assert trial.frozen_offset == pytest.approx(1)
++    assert trial.score(config) is None
++    for _ in range(2):
++        for active, residual in ((False, -1.0), (True, 1.0)):
++            trial.record(active, residual, config)
++    assert trial.score(config) == pytest.approx(0.5)
++
++
++def test_fully_reviewed_harmful_candidate_cannot_use_random_admission():
++    learner = actor(random_fraction=1, discovery_steps=4, validation_steps=4,
++                    min_active=4, resource_cost=0)
++    learner.schema = VectorPort.schema
++    harmful = SparseTrial(1, ((0, True),), "and", 0)
++    helpful = SparseTrial(2, ((0, True), (1, True)), "and", 0)
++    for _ in range(4):
++        harmful.record(True, 2, learner.discovery)
++        helpful.record(True, -2, learner.discovery)
++    for _ in range(4):
++        harmful.record(True, -2, learner.discovery)
++        helpful.record(True, -2, learner.discovery)
++    learner.trials = {1: harmful, 2: helpful}
++    assert learner._admit_one()
++    assert learner.events[-1]["trial"] == 2
++    assert learner.events[-1]["initial_weight"] == 0
++    assert len(learner.conditions) == 1
++    assert float(next(iter(learner.conditions.values())).weight) == 0
++    assert not learner._admit_one()
++    assert learner.trials == {1: harmful}
++
++
++def test_retirement_keeps_shared_and_trial_reader_dependencies_and_history(monkeypatch):
++    learner = actor(retirement_window=4, retirement_age=4, min_active=1)
++    doomed = planted(learner, ((0, True), (1, True)), weight=1)
++    retained = planted(learner, ((0, True), (2, True)), weight=1)
++    learner._ensure_slots(2)
++    trial = SparseTrial(3, ((1, False),), "and", 300)
++    learner.trials = {3: trial}
++    learner.seen = {(c.operator, c.atoms) for c in learner.conditions.values()} | {trial.key}
++    learner.probe_slots = {0}
++    learner._add_trial_slot(0, trial)
++    learner.completed = 300
++    learner.live_evidence = {doomed.identity: [(True, -1)] * 4,
++                             retained.identity: [(True, 1)] * 4}
++    monkeypatch.setattr(learner, "_refill_trials", lambda: None)
++    learner._develop()
++    assert doomed.identity not in learner.conditions
++    assert learner.conditions == {retained.identity: retained}
++    assert (doomed.operator, doomed.atoms) in learner.retired_conditions
++    assert (doomed.operator, doomed.atoms) in learner.seen
++    assert learner.retired_history[-1]["condition"] == doomed.identity
++    assert "read:0:0:1" in learner.graph.nodes  # Shared live dependency.
++    assert "read:0:1:0" in learner.graph.nodes  # Non-scoring trial dependency.
++    assert "read:0:1:1" not in learner.graph.nodes  # Orphan is reclaimed.
++    assert not learner.live_evidence  # Old scorer's deletion evidence expires.
++    for slot in range(2):
++        assert learner.graph.edge_by_key[(f"gate:{slot}:{retained.identity}",
++                                          f"option:{slot}", LinkType.SUR)].w is retained.weight
++    learner.graph.validate_formal_pairs()
++
++
++def test_only_one_negative_gain_retirement_then_fresh_evidence_is_required(monkeypatch):
++    learner = actor(retirement_window=4, retirement_age=4, min_active=1)
++    first = planted(learner, ((0, True),), weight=1)
++    second = planted(learner, ((1, True),), weight=1)
++    learner._ensure_slots(2)
++    learner.completed = 300
++    learner.live_evidence = {first.identity: [(True, -2)] * 4,
++                             second.identity: [(True, -1)] * 4}
++    monkeypatch.setattr(learner, "_refill_trials", lambda: None)
++    learner._develop()
++    assert set(learner.conditions) == {second.identity}
++    assert len(learner.retired_history) == 1
++    learner._develop()
++    assert set(learner.conditions) == {second.identity}
++    assert len(learner.retired_history) == 1
++
++
++def test_tiny_but_predictively_useful_contributor_is_not_magnitude_pruned(monkeypatch):
++    learner = actor(retirement_window=4, retirement_age=4, min_active=1)
++    tiny = planted(learner, ((0, True),), weight=0.00001)
++    learner._ensure_slots(2)
++    learner.completed = 300
++    learner.live_evidence = {tiny.identity: [(True, 0.000001)] * 4}
++    monkeypatch.setattr(learner, "_refill_trials", lambda: None)
++    learner._prune()
++    learner._develop()
++    assert learner.conditions == {tiny.identity: tiny}
++    assert not learner.retired_history
++
++
++def test_one_receipt_only_changes_eligible_fast_weights_before_transfer():
++    learner = actor()
++    active = planted(learner, ((2, True),), weight=1)
++    inactive = planted(learner, ((2, False),), weight=0.2)
++    learner.bias.fast, learner.bias.slow = 0.1, 0.2
++    active.weight.slow = 0.5
++    inactive.weight.slow = 0.1
++    port = VectorPort()
++    action = learner.act(port, event_id=0, learn=True)
++    assert action == "b"
++    _, _, prediction, eligible = learner.pending[-1]
++    assert eligible == (active.identity,)
++    delta = learner.config.learning_rate * (-1 - prediction) / 2
++    learner.observe(Feedback(0, action, -1))
++    assert learner.completed == 1
++    assert learner.bias.fast == pytest.approx(0.1 + delta)
++    assert active.weight.fast == pytest.approx(1 + delta)
++    assert inactive.weight.fast == 0.2
++    assert (learner.bias.slow, active.weight.slow, inactive.weight.slow) == (0.2, 0.5, 0.1)
++
++
++def test_ranked_admission_requires_complete_strictly_later_validation(monkeypatch):
++    learner = actor(discovery_steps=4, validation_steps=4, min_active=4,
++                    resource_cost=0)
++    learner.schema = VectorPort.schema
++    trial = SparseTrial(4, ((0, True), (1, True)), "and", 0)
++    for _ in range(4):
++        trial.record(True, -1, learner.discovery)
++    learner.trials = {trial.identity: trial}
++    # This explicit fixture disables only the exploratory branch of arbitration.
++    # It does not change the actor's nonzero random-admission configuration.
++    monkeypatch.setattr(learner.proposal_rng, "random", lambda: 1.0)
++    assert not learner._admit_one()
++    for _ in range(3):
++        trial.record(True, -1, learner.discovery)
++        assert not learner._admit_one()
++    trial.record(True, -1, learner.discovery)
++    assert learner._admit_one()
++    assert learner.events[-1]["reason"] == "prospective_prediction"
++    assert learner.events[-1]["initial_weight"] == 0
+diff --git a/tests/test_sparse_discovery_runner.py b/tests/test_sparse_discovery_runner.py
+new file mode 100644
+index 00000000..5508e356
+--- /dev/null
++++ b/tests/test_sparse_discovery_runner.py
+@@ -0,0 +1,200 @@
++"""Focused evidence/guard checks; these are not scientific learning actors."""
++from __future__ import annotations
++
++import copy
++import gzip
++import importlib.util
++import json
++from pathlib import Path
++import random
++import sys
++import time
++
++import pytest
++
++
++RUNNER = Path(__file__).resolve().parents[1] / "tools/sparse_discovery_m1_pilot.py"
++spec = importlib.util.spec_from_file_location("sparse_pilot_runner", RUNNER)
++runner = importlib.util.module_from_spec(spec)
++sys.modules[spec.name] = runner
++spec.loader.exec_module(runner)
++
++
++def sample_credit():
++    before = {"bias": [0.2, 0.1], "conditions": {"1": [0.3, 0.1], "2": [-0.4, 0.2]}}
++    # Selected1 is active;2 is a present but inactive parameter.
++    prediction = sum(before["bias"]) + sum(before["conditions"]["1"])
++    delta = 0.3 * (1.0 - prediction) / 2
++    after = copy.deepcopy(before)
++    after["bias"][0] += delta
++    after["conditions"]["1"][0] += delta
++    return {"event_id": 0, "action": "opaque", "reward": 1.0,
++            "prediction": prediction, "active": [1],
++            "weights_before": before, "weights_after_credit": after}
++
++
++def test_scalar_credit_exactly_checks_active_bias_and_inactive_coefficients():
++    receipt = sample_credit()
++    assert runner.verify_credit(receipt, alpha=0.3) == 0.3 * (1 - receipt["prediction"]) / 2
++
++
++@pytest.mark.parametrize("mutation", ["inactive", "slow", "bias", "missing", "duplicate", "prediction"])
++def test_scalar_credit_rejects_corruption(mutation):
++    receipt = sample_credit()
++    if mutation == "inactive":
++        receipt["weights_after_credit"]["conditions"]["2"][0] += 0.01
++    elif mutation == "slow":
++        receipt["weights_after_credit"]["conditions"]["1"][1] += 0.01
++    elif mutation == "bias":
++        receipt["weights_after_credit"]["bias"][0] += 0.01
++    elif mutation == "missing":
++        receipt["active"] = [98]
++    elif mutation == "duplicate":
++        receipt["active"] = [1, 1]
++    else:
++        receipt["prediction"] += 0.01
++    with pytest.raises(RuntimeError):
++        runner.verify_credit(receipt, alpha=0.3)
++
++
++def test_empty_active_receipt_still_credits_bias():
++    receipt = {"reward": -1.0, "prediction": 0.0, "active": [],
++               "weights_before": {"bias": [0.0, 0.0], "conditions": {}},
++               "weights_after_credit": {"bias": [-0.3, 0.0], "conditions": {}}}
++    assert runner.verify_credit(receipt, alpha=0.3) == -0.3
++
++
++def test_zero_residual_is_no_change():
++    receipt = {"reward": 1.0, "prediction": 1.0, "active": [],
++               "weights_before": {"bias": [0.75, 0.25], "conditions": {}},
++               "weights_after_credit": {"bias": [0.75, 0.25], "conditions": {}}}
++    assert runner.verify_credit(receipt, alpha=0.3) == 0.0
++
++
++def test_native_tuple_records_compare_in_declared_json_representation():
++    native = {"active": (2, 3), "lifecycle": [{"atoms": ((1, True), (3, 2))}]}
++    saved = json.loads(runner.canonical(native))
++    assert native != saved
++    assert runner.canonical(native) == runner.canonical(saved)
++
++
++def test_population_export_discards_move_labels(monkeypatch, tmp_path):
++    inputs = []
++    for start in (0, 756):
++        path = tmp_path / f"pool{start}.json.gz"
++        path.write_bytes(gzip.compress(json.dumps([
++            {"fen": f"position{i}", "action": "TEACHER_MOVE", "reward": 1000}
++            for i in range(start, start + 756)]).encode()))
++        inputs.append(path)
++    monkeypatch.setattr(runner, "POOL_FILES", tuple(inputs))
++    fens, hashes = runner.load_fens()
++    assert len(fens) == 1512 and fens[0] == "position0"
++    assert "TEACHER_MOVE" not in runner.canonical(fens)
++    assert len(hashes) == 2
++
++
++def test_population_duplicate_is_rejected(monkeypatch, tmp_path):
++    path = tmp_path / "bad.gz"
++    path.write_bytes(gzip.compress(json.dumps([{"fen": "same"}] * 1512).encode()))
++    monkeypatch.setattr(runner, "POOL_FILES", (path,))
++    with pytest.raises(RuntimeError, match="unique"):
++        runner.load_fens()
++
++
++class CheckpointActor:
++    def __init__(self):
++        self.value = 3
++
++    def state_snapshot(self):
++        return {"value": self.value}
++
++
++def test_checkpoint_restores_declared_snapshot_and_random_schedule(tmp_path):
++    actor = CheckpointActor()
++    schedule = random.Random(17)
++    runner.save_checkpoint(actor, schedule, tmp_path, 0)
++    restored, state, sidecar = runner.restore_checkpoint(tmp_path, 0)
++    assert restored.state_snapshot() == actor.state_snapshot()
++    assert state == schedule.getstate()
++    payload = tmp_path / "checkpoint_0000.pkl.gz"
++    payload.write_bytes(payload.read_bytes() + b"corruption")
++    with pytest.raises(RuntimeError, match="hash"):
++        runner.restore_checkpoint(tmp_path, 0)
++
++
++def test_exploratory_admission_is_distinct_from_complete_prospective_review():
++    events = [{"kind": "trial_birth"},
++              {"kind": "admission", "reason": "exploratory", "predictive_score": None},
++              {"kind": "admission", "reason": "exploratory", "predictive_score": 0.1},
++              {"kind": "admission", "reason": "prospective_prediction", "predictive_score": 0.2}]
++    assert runner.admission_summary(events) == {
++        "by_reason": {"exploratory": 2, "prospective_prediction": 1},
++        "before_complete_prospective_review": 1}
++
++
++def test_source_binding_rejects_changed_runtime(tmp_path):
++    source = tmp_path / "runtime.py"
++    source.write_text("original")
++    pins = {str(source): runner.digest_bytes(source.read_bytes())}
++    runner.check_sources(pins)
++    source.write_text("changed")
++    with pytest.raises(RuntimeError, match="source changed"):
++        runner.check_sources(pins)
++
++
++def test_resource_guard_terminates_and_records_failed_child(tmp_path):
++    output = tmp_path / "deadline.log"
++    with pytest.raises(RuntimeError, match="wall deadline"):
++        runner.guarded_worker([sys.executable, "-c", "import time; time.sleep(20)"],
++                              output, deadline=time.time() + 0.2,
++                              memory_bytes=2 * 1024**3, interval=0.02,
++                              rss_sampler=lambda pid: 1)
++    receipt = runner.read_json(output.with_suffix(".resource.json"))
++    assert receipt["abort_reason"] == "suspension-inclusive wall deadline"
++    assert receipt["exit_code"] is not None
++    assert receipt["elapsed_wall_seconds"] < 5
++
++
++def test_resource_guard_memory_abort_and_cleanup(tmp_path):
++    output = tmp_path / "memory.log"
++    with pytest.raises(RuntimeError, match="RSS cap"):
++        runner.guarded_worker([sys.executable, "-c", "import time; time.sleep(20)"],
++                              output, deadline=time.time() + 5,
++                              memory_bytes=1000, interval=0.02,
++                              rss_sampler=lambda pid: 1001)
++    receipt = runner.read_json(output.with_suffix(".resource.json"))
++    assert receipt["abort_reason"] == "sampled RSS cap"
++    assert receipt["exit_code"] is not None
++    assert receipt["rss_samples"] == 1
++
++
++def test_resource_guard_fails_closed_when_live_child_has_no_memory_sample(tmp_path):
++    output = tmp_path / "missing-sample.log"
++    with pytest.raises(RuntimeError, match="missing owned-child RSS sample"):
++        runner.guarded_worker([sys.executable, "-c", "import time; time.sleep(20)"],
++                              output, deadline=time.time() + 5,
++                              memory_bytes=2 * 1024**3,
++                              rss_sampler=lambda pid: None)
++    receipt = runner.read_json(output.with_suffix(".resource.json"))
++    assert receipt["abort_reason"] == "missing owned-child RSS sample"
++    assert receipt["rss_samples"] == 0
++    assert receipt["exit_code"] is not None
++
++
++def test_missing_sample_after_normal_child_exit_is_an_allowed_race(tmp_path):
++    def sample_after_exit(pid):
++        time.sleep(0.2)
++        return None
++
++    receipt = runner.guarded_worker([sys.executable, "-c", "pass"], tmp_path / "exit-race.log",
++                                    deadline=time.time() + 5, memory_bytes=2 * 1024**3,
++                                    interval=0.01, rss_sampler=sample_after_exit)
++    assert receipt["exit_code"] == 0
++    assert receipt["abort_reason"] is None
++
++
++def test_seal_verifies_every_local_file_without_historical_walk(tmp_path):
++    (tmp_path / "only.txt").write_text("evidence")
++    runner.seal(tmp_path)
++    assert (tmp_path / "SHA256SUMS.txt").read_text() == (
++        runner.digest_bytes(b"evidence") + "  only.txt\n")
+diff --git a/tools/sparse_discovery_m1_pilot.py b/tools/sparse_discovery_m1_pilot.py
+new file mode 100644
+index 00000000..b0f7b94f
+--- /dev/null
++++ b/tools/sparse_discovery_m1_pilot.py
+@@ -0,0 +1,504 @@
++#!/usr/bin/env python3
++"""One fresh exploratory M1 actor, with bounded production and native replay.
++
++This runner does not select mechanisms, tune parameters, or claim a replication
++gate. The saved M1 regression receipts supply FENs only; their moves and rewards
++are never sent to the learner. Scientific and engineering namespaces are separate.
++"""
++from __future__ import annotations
++
++import argparse
++import copy
++from dataclasses import asdict
++import gzip
++import hashlib
++import json
++import math
++import os
++from pathlib import Path
++import pickle
++import platform
++import random
++import signal
++import subprocess
++import sys
++import time
++import traceback
++
++ROOT = Path(__file__).resolve().parents[1]
++PYTHON = Path("/Users/banquo/Documents/ChatGPT/Hector-Recon/project-runtimes/modular-pilot-runtime-20261009/venv/bin/python")
++SEED = 202610210901
++SCIENTIFIC_EVENTS = 3072
++CHECKPOINTS = (0, 512, 1024, 1536, 2048, 2560, 3072)
++CENSUSES = (0, 1536, 2048, 3072)
++POOL_FILES = tuple(ROOT / "tests/autogrowth/data/selective_m1" / name for name in
++                   ("m1_validated_receipts.json.gz", "m1_scope_completion_receipts.json.gz"))
++
++
++def canonical(value):
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False)
++
++
++def digest_bytes(value):
++    return hashlib.sha256(value).hexdigest()
++
++
++def read_json(path):
++    return json.loads(Path(path).read_text())
++
++
++def write_json(path, value):
++    Path(path).write_text(canonical(value) + "\n")
++
++
++def append_json(path, value):
++    with Path(path).open("a") as handle:
++        handle.write(canonical(value) + "\n")
++        handle.flush()
++
++
++def check(condition, message):
++    if not condition:
++        raise RuntimeError(message)
++
++
++def runtime_sources():
++    """Only imported repository runtime modules, plus this runner."""
++    selected = {str(Path(__file__).resolve())}
++    roots = (ROOT / "src", ROOT / "libs/recon-lite/src")
++    for module_name, module in tuple(sys.modules.items()):
++        name = getattr(module, "__file__", None)
++        if name:
++            path = Path(name).resolve()
++            if path.suffix == ".py" and (any(path.is_relative_to(root) for root in roots)
++                                        or module_name == "chess" or module_name.startswith("chess.")):
++                selected.add(str(path))
++    return {path: digest_bytes(Path(path).read_bytes()) for path in sorted(selected)}
++
++
++def check_sources(expected):
++    for path, sha in expected.items():
++        check(digest_bytes(Path(path).read_bytes()) == sha, f"source changed: {path}")
++
++
++def load_fens():
++    """Export only position strings from the known regression population."""
++    fens = []
++    inputs = {}
++    for path in POOL_FILES:
++        raw = path.read_bytes()
++        inputs[str(path)] = digest_bytes(raw)
++        rows = json.loads(gzip.decompress(raw))
++        fens.extend(row["fen"] for row in rows)
++    check(len(fens) == 1512 and len(set(fens)) == 1512, "M1 population must be exactly1512 unique FENs")
++    return tuple(fens), inputs
++
++
++def create_actor(seed):
++    # Resolve the actual embodiment dependencies before the source census.
++    from recon_lite_chess.coach.interface import Feedback  # noqa: F401
++    from recon_lite_chess.coach.terminal import ChessFeaturePort  # noqa: F401
++    from recon_lite_hector.learning.sparse_discovery import SparseDiscoveryDevelopment
++
++    actor = SparseDiscoveryDevelopment(seed=seed)
++    # Marker selects the existing typed terminal adapter; it supplies no detector.
++    actor.embodiment = "typed_feature_terminals_v1"
++    check(actor.completed == 0 and not actor.conditions, "fresh actor must have zero conditions")
++    return actor
++
++
++def weight_pair(value):
++    if isinstance(value, dict):
++        return [float(value["fast"]), float(value["slow"])]
++    return [float(value[0]), float(value[1])]
++
++
++def normalized_weights(value):
++    return {"bias": weight_pair(value["bias"]), "conditions": {
++        str(key): weight_pair(pair) for key, pair in value["conditions"].items()}}
++
++
++def weights(actor):
++    return {"bias": [actor.bias.fast, actor.bias.slow], "conditions": {
++        str(cid): [condition.weight.fast, condition.weight.slow]
++        for cid, condition in actor.conditions.items()}}
++
++
++def admission_summary(events):
++    reasons = {}
++    incomplete_reviews = 0
++    for event in events:
++        if event["kind"] == "admission":
++            reason = event["reason"]
++            reasons[reason] = reasons.get(reason, 0) + 1
++            incomplete_reviews += event["predictive_score"] is None
++    return {"by_reason": reasons,
++            "before_complete_prospective_review": incomplete_reviews}
++
++
++def verify_credit(credit, *, alpha):
++    """Independent scalar arithmetic, before consolidation or development."""
++    before = normalized_weights(credit["weights_before"])
++    after = normalized_weights(credit["weights_after_credit"])
++    active = tuple(map(str, credit["active"]))
++    check(len(active) == len(set(active)), "duplicate eligible contributor")
++    check(set(before["conditions"]) == set(after["conditions"]), "credit changed contributor identities")
++    check(set(active) <= set(before["conditions"]), "credit references absent contributor")
++    prediction, reward = float(credit["prediction"]), float(credit["reward"])
++    check(math.isfinite(prediction) and reward in (-1.0, 1.0), "invalid one-step credit values")
++    # The graph's native sum is checked with rounding tolerance; scalar update
++    # additions below are computed in the same declared one-step convention.
++    reconstructed = sum(before["bias"])
++    for cid in active:
++        reconstructed += sum(before["conditions"][cid])
++    check(math.isclose(reconstructed, prediction, rel_tol=0.0, abs_tol=2e-10), "prediction does not equal active shared weights")
++    delta = alpha * (reward - prediction) / (1 + len(active))
++    expected = copy.deepcopy(before)
++    expected["bias"][0] += delta
++    for cid in active:
++        expected["conditions"][cid][0] += delta
++    check(expected == after, "independent selected-action learning arithmetic differs")
++    return delta
++
++
++def step(actor, fen, event):
++    """Grade only the real submitted move; no alternative outcome queries."""
++    import chess
++    from recon_lite_chess.coach.interface import Feedback
++    from recon_lite_chess.coach.terminal import ChessFeaturePort
++
++    board = chess.Board(fen)
++    check(board.is_valid() and board.turn == chess.WHITE and not board.is_game_over(), "invalid live M1 exercise")
++    port = ChessFeaturePort(board)
++    lifecycle_start = len(actor.events)
++    action = actor.act(port, event_id=event, learn=True)
++    check(action == port.executed and action is not None, "graph-selected actuator did not execute")
++    before = weights(actor)
++    reward = 1.0 if board.is_checkmate() else -1.0
++    actor.observe(Feedback(event, action, reward))
++    credit = copy.deepcopy(actor.last_credit)
++    check(credit["event_id"] == event and credit["action"] == action and credit["reward"] == reward,
++          "credit does not bind to actual action/outcome")
++    check(normalized_weights(credit["weights_before"]) == before, "credit input weights differ from actual actor")
++    verify_credit(credit, alpha=actor.config.learning_rate)
++    return {"event": event, "action": action, "reward": reward,
++            "after_fen": board.fen(), "credit": credit,
++            "lifecycle": copy.deepcopy(actor.events[lifecycle_start:]),
++            "inventory": actor.inventory()}
++
++
++def census(actor, fens, event):
++    """One disposable copy; zero feedback or returned outcomes enter learning."""
++    import chess
++    from recon_lite_chess.coach.terminal import ChessFeaturePort
++
++    before = canonical(actor.state_snapshot())
++    probe = copy.deepcopy(actor)
++    rows = []
++    for index, fen in enumerate(fens):
++        board = chess.Board(fen)
++        port = ChessFeaturePort(board)
++        action = probe.act(port, event_id=event, learn=False)
++        check(action == port.executed and action is not None, "evaluation actuator did not execute")
++        rows.append({"index": index, "action": action, "mate": board.is_checkmate()})
++    check(canonical(actor.state_snapshot()) == before, "evaluation mutated original actor")
++    check(probe.completed == actor.completed and probe.rng.getstate() == actor.rng.getstate(),
++          "greedy evaluation changed learning/RNG state")
++    return {"completed": event, "solved": sum(row["mate"] for row in rows),
++            "total": len(rows), "rows": rows}
++
++
++def save_checkpoint(actor, schedule, directory, completed):
++    stem = directory / f"checkpoint_{completed:04d}"
++    payload = gzip.compress(pickle.dumps({"actor": actor, "schedule": schedule.getstate()},
++                                         protocol=pickle.HIGHEST_PROTOCOL), mtime=0)
++    stem.with_suffix(".pkl.gz").write_bytes(payload)
++    write_json(stem.with_suffix(".json"), {"completed": completed,
++               "payload_sha256": digest_bytes(payload), "snapshot": actor.state_snapshot(),
++               "schedule": schedule.getstate()})
++
++
++def restore_checkpoint(directory, completed):
++    stem = directory / f"checkpoint_{completed:04d}"
++    sidecar = read_json(stem.with_suffix(".json"))
++    payload = stem.with_suffix(".pkl.gz").read_bytes()
++    check(digest_bytes(payload) == sidecar["payload_sha256"], "checkpoint payload hash mismatch")
++    # Only this task's own source-pinned, hash-verified checkpoints are loaded.
++    restored = pickle.loads(gzip.decompress(payload))
++    check(canonical(restored["actor"].state_snapshot()) == canonical(sidecar["snapshot"]),
++          "checkpoint restoration differs from declared behavioral/development snapshot")
++    check(canonical(restored["schedule"]) == canonical(sidecar["schedule"]), "checkpoint schedule mismatch")
++    return restored["actor"], restored["schedule"], sidecar
++
++
++def worker_produce(args):
++    directory = Path(args.output)
++    fens, inputs = load_fens()
++    if args.engineering:
++        fens = fens[:args.panel]
++    actor = create_actor(args.seed)
++    schedule = random.Random(args.seed ^ 0x7363686564756C65)
++    sources = runtime_sources()
++    checkpoints = CHECKPOINTS if not args.engineering else tuple(sorted({0, args.events // 2, args.events}))
++    censuses = CENSUSES if not args.engineering else (0, args.events)
++    manifest = {"kind": "engineering-only" if args.engineering else "exploratory-fresh-native-M1",
++                "seed": args.seed, "events": args.events, "checkpoints": checkpoints,
++                "censuses": censuses, "population": len(fens), "pool_inputs": inputs,
++                "fen_sha256": digest_bytes(canonical(fens).encode()), "sources": sources,
++                "python": sys.version, "executable": sys.executable,
++                "python_binary_sha256": digest_bytes(Path(sys.executable).resolve().read_bytes()),
++                "platform": platform.platform(), "config": asdict(actor.config),
++                "discovery": asdict(actor.discovery),
++                "schedule": "independent Random(seed xor0x7363686564756C65); uniform known-population FEN index",
++                "scope": "one exploratory actor; census retention only, no population reliability or discovery-selector advantage claim"}
++    write_json(directory / "manifest.json", manifest)
++    write_json(directory / "initial_inventory.json", actor.inventory())
++    for completed in range(args.events + 1):
++        if completed in checkpoints:
++            save_checkpoint(actor, schedule, directory, completed)
++        if completed in censuses:
++            result = census(actor, fens, completed)
++            write_json(directory / f"census_{completed:04d}.json", result)
++            print(f"census{completed}: {result['solved']}/{result['total']}", flush=True)
++        if completed == args.events:
++            break
++        index = schedule.randrange(len(fens))
++        record = step(actor, fens[index], completed)
++        record["fen_index"] = index
++        append_json(directory / "actions.jsonl", record)
++        if (completed + 1) % 64 == 0:
++            print(f"training{completed + 1}/{args.events}; {actor.inventory()}", flush=True)
++    check_sources(sources)
++    check(runtime_sources() == sources, "runtime dependency set changed after pinning")
++    write_json(directory / "producer_complete.json", {"events": args.events,
++               "inventory": actor.inventory(), "admissions": admission_summary(actor.events),
++               "final_snapshot_sha256": digest_bytes(canonical(actor.state_snapshot()).encode())})
++
++
++def worker_verify(args):
++    directory = Path(args.output)
++    manifest = read_json(directory / "manifest.json")
++    check(digest_bytes(Path(sys.executable).resolve().read_bytes()) == manifest["python_binary_sha256"],
++          "Python runtime binary differs")
++    check_sources(manifest["sources"])
++    fens, inputs = load_fens()
++    check(inputs == manifest["pool_inputs"], "pool input changed")
++    fens = fens[:manifest["population"]]
++    check(digest_bytes(canonical(fens).encode()) == manifest["fen_sha256"], "exported FEN population differs")
++    actor = create_actor(manifest["seed"])
++    check(runtime_sources() == manifest["sources"], "replay source set differs")
++    schedule = random.Random(manifest["seed"] ^ 0x7363686564756C65)
++    actions = (directory / "actions.jsonl").open()
++    verified_events = 0
++    cold = []
++    for completed in range(manifest["events"] + 1):
++        if completed in manifest["checkpoints"]:
++            restored, saved_schedule, sidecar = restore_checkpoint(directory, completed)
++            check(canonical(actor.state_snapshot()) == canonical(sidecar["snapshot"]),
++                  f"generative checkpoint mismatch at{completed}")
++            check(canonical(schedule.getstate()) == canonical(saved_schedule), "generative schedule mismatch")
++            if completed < manifest["events"]:
++                continuation_schedule = random.Random()
++                continuation_schedule.setstate(saved_schedule)
++                index = continuation_schedule.randrange(len(fens))
++                continued = step(restored, fens[index], completed)
++                native_copy = copy.deepcopy(actor)
++                check(step(native_copy, fens[index], completed) == continued, "cold continuation receipt differs")
++                check(canonical(native_copy.state_snapshot()) == canonical(restored.state_snapshot()),
++                      "cold continuation state differs")
++                cold.append(completed)
++        if completed in manifest["censuses"]:
++            check(census(actor, fens, completed) == read_json(directory / f"census_{completed:04d}.json"),
++                  f"independent greedy census differs at{completed}")
++        if completed == manifest["events"]:
++            break
++        line = actions.readline()
++        check(bool(line), "missing saved scientific event")
++        saved = json.loads(line)
++        index = schedule.randrange(len(fens))
++        check(saved["fen_index"] == index, "native independent schedule differs")
++        verify_credit(saved["credit"], alpha=actor.config.learning_rate)
++        actual = step(actor, fens[index], completed)
++        actual["fen_index"] = index
++        check(canonical(actual) == canonical(saved), f"native generative event differs at{completed}")
++        verified_events += 1
++        if verified_events % 128 == 0:
++            print(f"verified{verified_events}/{manifest['events']}", flush=True)
++    check(not actions.readline(), "unexpected extra scientific event")
++    actions.close()
++    check_sources(manifest["sources"])
++    check(verified_events == manifest["events"], "incomplete independent reconstruction")
++    endpoint = read_json(directory / "producer_complete.json")
++    check(endpoint["admissions"] == admission_summary(actor.events), "admission-reason census differs")
++    check(endpoint["final_snapshot_sha256"] == digest_bytes(canonical(actor.state_snapshot()).encode()),
++          "final actor differs from producer")
++    write_json(directory / "verification.json", {"passed": True, "events": verified_events,
++               "checkpoints": manifest["checkpoints"], "cold_continuations": cold,
++               "censuses": manifest["censuses"], "arithmetic": "every selected-action receipt; inactive and slow coefficients unchanged at credit stage"})
++
++
++def sample_rss(pid):
++    sample = subprocess.run(["/bin/ps", "-o", "rss=", "-p", str(pid)],
++                            capture_output=True, text=True, timeout=5, check=False)
++    value = sample.stdout.strip()
++    return int(value) * 1024 if value else None
++
++
++def guarded_worker(command, output, *, deadline, memory_bytes, interval=0.5,
++                   rss_sampler=sample_rss):
++    """Guard one owned process group; workers deliberately spawn no children."""
++    started = time.time()
++    log = Path(output)
++    maximum = 0
++    samples = 0
++    process = None
++    reason = None
++    with log.open("wb") as handle:
++        try:
++            process = subprocess.Popen(command, stdout=handle, stderr=subprocess.STDOUT,
++                                       start_new_session=True, cwd=ROOT)
++            while process.poll() is None:
++                if time.time() >= deadline:
++                    reason = "suspension-inclusive wall deadline"
++                    raise RuntimeError(reason)
++                rss = rss_sampler(process.pid)
++                if rss is None and process.poll() is None:
++                    reason = "missing owned-child RSS sample"
++                    raise RuntimeError(reason)
++                if rss is not None:
++                    maximum = max(maximum, rss)
++                    samples += 1
++                    if rss > memory_bytes:
++                        reason = "sampled RSS cap"
++                        raise RuntimeError(reason)
++                time.sleep(interval)
++            check(process.returncode == 0, f"worker failed with exit{process.returncode}; see{log}")
++        finally:
++            if process is not None and process.poll() is None:
++                try:
++                    os.killpg(process.pid, signal.SIGTERM)
++                except ProcessLookupError:
++                    pass
++                try:
++                    process.wait(timeout=3)
++                except subprocess.TimeoutExpired:
++                    try:
++                        os.killpg(process.pid, signal.SIGKILL)
++                    except ProcessLookupError:
++                        pass
++                    process.wait(timeout=3)
++            receipt = {"pid": process.pid if process else None, "started_unix": started,
++                       "elapsed_wall_seconds": time.time() - started,
++                       "sampled_peak_rss_bytes": maximum, "rss_samples": samples,
++                       "memory_cap_bytes": memory_bytes, "deadline_unix": deadline,
++                       "exit_code": process.returncode if process else None,
++                       "abort_reason": reason, "command": command}
++            write_json(log.with_suffix(".resource.json"), receipt)
++    return receipt
++
++
++def seal(directory):
++    rows = []
++    for path in sorted(directory.rglob("*")):
++        if path.is_file() and path.name != "SHA256SUMS.txt":
++            rows.append(f"{digest_bytes(path.read_bytes())}  {path.relative_to(directory)}")
++    (directory / "SHA256SUMS.txt").write_text("\n".join(rows) + "\n")
++    for line in rows:
++        sha, relative = line.split("  ", 1)
++        check(digest_bytes((directory / relative).read_bytes()) == sha, "sealed artifact reread differs")
++
++
++def run(args):
++    directory = Path(args.output).resolve()
++    directory.mkdir(parents=True, exist_ok=False)
++    started = time.time()
++    deadline = started + args.hours * 3600
++    reserve = 300.0 if not args.engineering else 15.0
++    write_json(directory / "RUNNING.json", {"seed": args.seed, "events": args.events,
++               "started_unix": started, "deadline_unix": deadline,
++               "engineering": args.engineering, "immutable_scientific_identity": not args.engineering})
++    environment = os.environ.copy()
++    environment.update({"PYTHONPATH": f"{ROOT / 'src'}:{ROOT / 'libs/recon-lite/src'}",
++                        "PYTHONHASHSEED": "0", "OMP_NUM_THREADS": "1",
++                        "OPENBLAS_NUM_THREADS": "1", "MKL_NUM_THREADS": "1"})
++    # Environment is set before child creation; no uncontrolled interpreter search.
++    os.environ.update(environment)
++    base = [str(PYTHON), str(Path(__file__).resolve()), "--output", str(directory),
++            "--seed", str(args.seed), "--events", str(args.events), "--panel", str(args.panel)]
++    if args.engineering:
++        base.append("--engineering")
++    assertion = None
++    try:
++        check(Path(sys.executable).resolve() == PYTHON.resolve(), "run under the explicit qualified Python")
++        qualification = guarded_worker(
++            [str(PYTHON), "-c", "import time; time.sleep(0.3)"],
++            directory / "guard_qualification.log", deadline=min(deadline - reserve, time.time() + 10),
++            memory_bytes=2 * 1024**3)
++        check(qualification["rss_samples"] > 0, "no real owned-child RSS sample obtained")
++        if not args.engineering:
++            identities = ROOT / "pilot-identities"
++            identities.mkdir(exist_ok=True)
++            # Exclusive, persistent claim: a failed partial attempt still owns
++            # its scientific identity. A second directory is not a fresh seed.
++            with (identities / f"scientific_{args.seed}.json").open("x") as handle:
++                handle.write(canonical({"seed": args.seed, "output": str(directory),
++                                        "started_unix": started}) + "\n")
++        # Task-owned assertion is optional and always cleaned; no global setting.
++        if Path("/usr/bin/caffeinate").exists():
++            assertion = subprocess.Popen(["/usr/bin/caffeinate", "-i", "-w", str(os.getpid())],
++                                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
++        # Reserve half the substantive clock for an actual second native pass.
++        # A resource abort is permitted; this is not a proof of completion.
++        producer_deadline = started + (args.hours * 3600 - reserve) / 2
++        production = guarded_worker(base + ["--mode", "produce"], directory / "producer.log",
++                                    deadline=producer_deadline, memory_bytes=2 * 1024**3)
++        check(time.time() < deadline - reserve, "no remaining verification budget")
++        verification = guarded_worker(base + ["--mode", "verify"], directory / "verifier.log",
++                                      deadline=deadline - reserve, memory_bytes=2 * 1024**3)
++        verified = read_json(directory / "verification.json")
++        check(verified["passed"], "scientific closure did not pass")
++        manifest = read_json(directory / "manifest.json")
++        scores = {str(event): read_json(directory / f"census_{event:04d}.json")["solved"]
++                  for event in manifest["censuses"]}
++        write_json(directory / "RESULT.json", {"status": "VERIFIED", "kind": manifest["kind"],
++                   "events": args.events, "population": manifest["population"], "scores": scores,
++                   "initial_inventory": read_json(directory / "initial_inventory.json"),
++                   "final_inventory": read_json(directory / "producer_complete.json")["inventory"],
++                   "admissions": read_json(directory / "producer_complete.json")["admissions"],
++                   "checkpoint_scope": "declared behavioral/development snapshot plus saved complete checkpoint and cold continuation; transient graph states/activations are not independently compared",
++                   "producer_resources": production, "replay_resources": verification,
++                   "elapsed_wall_seconds": time.time() - started,
++                   "limitations": "one exploratory actor; known M1 positions; sampled retention; no matched-control benefit claim"})
++    except BaseException as error:
++        write_json(directory / "FAILURE.json", {"type": type(error).__name__, "message": str(error),
++                   "traceback": traceback.format_exc(), "elapsed_wall_seconds": time.time() - started})
++        raise
++    finally:
++        if assertion is not None:
++            assertion.terminate()
++            assertion.wait(timeout=5)
++        (directory / "RUNNING.json").rename(directory / "ATTEMPT.json")
++        seal(directory)
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--mode", choices=("run", "produce", "verify"), default="run")
++    parser.add_argument("--output", required=True)
++    parser.add_argument("--seed", type=int, default=SEED)
++    parser.add_argument("--events", type=int, default=SCIENTIFIC_EVENTS)
++    parser.add_argument("--hours", type=float, default=4.0)
++    parser.add_argument("--engineering", action="store_true")
++    parser.add_argument("--panel", type=int, default=8)
++    args = parser.parse_args()
++    check(args.events > 0 and args.hours > 0 and args.panel > 0, "positive budgets required")
++    if args.engineering:
++        check(args.seed != SEED, "engineering must not consume scientific seed")
++    else:
++        check(args.seed == SEED and args.events == SCIENTIFIC_EVENTS,
++              "scientific identity and complete event budget are prospectively fixed")
++    {"run": run, "produce": worker_produce, "verify": worker_verify}[args.mode](args)
++
++
++if __name__ == "__main__":
++    main()

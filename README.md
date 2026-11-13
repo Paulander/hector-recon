@@ -16,6 +16,8 @@ defaults remain unchanged.
 
 **Research handoff (2026-11-13):** [current findings and chess preparation](docs/RESEARCH_HANDOFF_20261113.md) · [source and evidence index](docs/RESEARCH_EVIDENCE_20261113.md).
 
+**Chess continuation branch:** [start here](docs/CHESS_CONTINUATION.md). Experimental source is preserved for review; this branch has not combined the learners or changed runtime defaults.
+
 > **Historical restart (2026-09-06): mate-in-one through learned feature terminals.** The default
 > `TerminalOrganism` reads declared coordinates through terminals, selects actions
 > in the persistent formal graph and executes them through an actuator terminal.
