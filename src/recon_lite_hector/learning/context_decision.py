@@ -233,6 +233,10 @@ class ContextDecisionDevelopment(RecursiveDevelopment):
         if learn:
             self.owner_pending = (event_id, env["bindings"][slot], owners[slot])
 
+    def _weight_credit_multiplier(self):
+        """Scale weight credit only; evidence and lifetime units stay unscaled."""
+        return 1.0
+
     def observe(self, feedback):
         if (not self.pending or self.owner_pending is None
                 or (feedback.event_id, feedback.action) != self.pending[-1][:2]
@@ -247,7 +251,14 @@ class ContextDecisionDevelopment(RecursiveDevelopment):
         if leaf.bias_id not in active or not set(active) <= set(leaf.contributions):
             raise RuntimeError("credit crossed decision ownership")
         # Bias is an explicit active contribution here: len(active) == 1+k.
-        delta = self.config.learning_rate * (reward - prediction) / len(active)
+        multiplier = self._weight_credit_multiplier()
+        if not math.isfinite(multiplier) or multiplier < 0:
+            raise RuntimeError("weight credit multiplier must be finite and nonnegative")
+        if multiplier == 1.0:
+            delta = self.config.learning_rate * (reward - prediction) / len(active)
+        else:
+            delta = (self.config.learning_rate * multiplier
+                     * (reward - prediction) / len(active))
         for cid in active:
             condition = self.conditions[cid]
             condition.weight.fast += delta

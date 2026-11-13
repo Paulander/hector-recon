@@ -1,0 +1,49 @@
+{
+  "base_commit": "f84853a29dee267e72cf97795ee80f86bb40617b",
+  "date": "2026-11-13",
+  "development_notes": [
+    "An initial local test caught an omitted import, corrected before final checks",
+    "Final review improved bud-identity recording and labelled boost-subtracted score roundoff; final full30-case suite passed"
+  ],
+  "final_checks": {
+    "focused_tests_passed": 30,
+    "reconciliation": "1052 producer files; 1024 records joined to prior own-choice replays; no native execution or checkpoint load",
+    "reused_geometry_and_schema_definitions": "six exact source definitions match authenticated October pilot",
+    "test_log": "FOCUSED_TESTS.txt",
+    "whitespace_check": "PASS"
+  },
+  "historical_evidence_modified": false,
+  "implementation_scope": {
+    "architecture": "supplied independent child-practice exercise; not learned parent routing",
+    "evidence": "raw outcome/residual, unchanged lifetime and review counts",
+    "finisher": "greedy disposable copy, caller-supplied; no trained checkpoint loaded in preparation",
+    "initialization": "bias-only scoring; supplied reader/candidate machinery, not sparse minimal-start",
+    "learner": "existing prospective owner learner with unchanged pilot Setup parameters",
+    "new_generic_hook": "_weight_credit_multiplier returns1 by default",
+    "technical_errors": "not converted into negative training labels; partial action prefix retained; no automatic retry",
+    "weight_credit": "existing residual correction, explicit bias and original denominator; .8 if M1 actually commits, otherwise1"
+  },
+  "main_modified": false,
+  "remaining": [
+    "Pin authenticated M1 input and assess finisher support separately from Setup failures",
+    "Pin scientific control, seeds, orbit-disjoint pools, useful-performance and retention criteria",
+    "Measure and admit bounded execution/evaluation/replay costs before scientific launch",
+    "Standalone-to-modular mounting parity remains untested",
+    "Sparse discovery modular compatibility requires an explicit adapter",
+    "Historical fixed512 semantic V/second native dependence pass and final seal remain incomplete"
+  ],
+  "schema": "chess.setup-practice-preparation.v1",
+  "scientific_actors_initialized": 0,
+  "scientific_training": false,
+  "source_and_result_sha256": {
+    "research/chess-modular-reuse-v2/FOCUSED_TESTS.txt": "eca96629e1b9cc027248b9d9bcb79299104af043efd9bfa139bf15b03710eab0",
+    "research/chess-modular-reuse-v2/SAVED_CONTINUATION_REVIEW.json": "225dfcfd3eeae92b7c042531dac4996110984a6004c93ff30383c14a47d9628f",
+    "src/recon_lite_chess/coach/m2_schema.py": "d7f6e64dd42e4032fa0e734b41633bc82c59bada481f2004927d4f8684b1ac97",
+    "src/recon_lite_chess/coach/setup_practice.py": "01dadefc37e0cae1bccd0703553dcacad427a252c071cd028c4cafc09034f68d",
+    "src/recon_lite_hector/learning/context_decision.py": "d2dd61b1153ac94e278af2297fdc7f22f01211445a45979e0bf62467220256fc",
+    "tests/autogrowth/test_context_decision.py": "26932340d9e60598a4098c012017bab00a57afc93e5e5c7f255899a95700fc5a",
+    "tests/autogrowth/test_setup_practice.py": "bf2ca44cf2e656f172ff9ed90c107dc26f4776e9acd9f3777b40a2e64f38cb8d",
+    "tools/review_saved_modular_continuation.py": "52f21894c52b46d75f10d6dbcb58a377547c36f57388568df208baad43c4422f"
+  },
+  "status": "COMPONENT_IMPLEMENTED_SYNTHETIC_CHECKS_PASS_NO_SCIENTIFIC_LAUNCH"
+}

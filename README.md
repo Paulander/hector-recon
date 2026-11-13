@@ -16,7 +16,7 @@ defaults remain unchanged.
 
 **Research handoff (2026-11-13):** [current findings and chess preparation](docs/RESEARCH_HANDOFF_20261113.md) · [source and evidence index](docs/RESEARCH_EVIDENCE_20261113.md).
 
-**Chess continuation branch:** [start here](docs/CHESS_CONTINUATION.md). Experimental source is preserved for review; this branch has not combined the learners or changed runtime defaults.
+**Chess continuation branch:** [start here](docs/CHESS_CONTINUATION.md). Includes an opt-in Setup-practice component and saved M2 evidence reconciliation. Sparse/modular integration and scientific training remain pending; runtime defaults are unchanged.
 
 > **Historical restart (2026-09-06): mate-in-one through learned feature terminals.** The default
 > `TerminalOrganism` reads declared coordinates through terminals, selects actions

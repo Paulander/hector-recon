@@ -1,0 +1,258 @@
+{
+  "arms": {
+    "frozen": {
+      "census_status": "PROVISIONAL_NOT_REVERIFIED",
+      "counts": {
+        "m1_episodes": 128,
+        "m1_setup_first": 19,
+        "m1_setup_selections": 19,
+        "m2_episodes": 384,
+        "m2_setup_first": 163,
+        "m2_setup_selections": 304,
+        "setup_applied_observations": 323,
+        "setup_menus_with_feature_contrast": 233,
+        "setup_menus_with_score_contrast": 223,
+        "setup_negative_target_frames": 306,
+        "setup_nonbias_nonzero_contributor_updates": 37,
+        "setup_nonbias_nonzero_frames": 25,
+        "setup_nonbias_positive_target_frames": 1,
+        "setup_positive_target_frames": 17
+      },
+      "first_feature_contrast_episode": 28,
+      "first_nonbias_nonzero_credit_episode": 28,
+      "first_score_contrast_episode": 31,
+      "original_V_status": "FAIL_BEFORE_ENTRY_UNCHANGED",
+      "setup_births": [
+        {
+          "born_completed": 64,
+          "condition": 1,
+          "episode": 15,
+          "kind": "bud",
+          "module": "setup",
+          "sha256": "e52cfba7b566161b06ce43c3a0773e992e667cbaa14d2f07d83cf952820f8e27"
+        },
+        {
+          "born_completed": 128,
+          "condition": 2,
+          "episode": 165,
+          "kind": "bud",
+          "module": "setup",
+          "sha256": "bb9de4d899b4d0fdddd0ccd9cf81b05d92e95a42e095fc1faae6bb3ef2245a2e"
+        },
+        {
+          "born_completed": 192,
+          "condition": 3,
+          "episode": 287,
+          "kind": "bud",
+          "module": "setup",
+          "sha256": "0d0c1f3151ecc28e08f858616a57aa529d732745e8872b32e64f99d1d2107cda"
+        },
+        {
+          "born_completed": 256,
+          "condition": 4,
+          "episode": 358,
+          "kind": "bud",
+          "module": "setup",
+          "sha256": "3b2b4c172d1a7f1d0ad15ce681f01b714d3f888f077beabd23158765bb7b7745"
+        },
+        {
+          "born_completed": 320,
+          "condition": 5,
+          "episode": 427,
+          "kind": "bud",
+          "module": "setup",
+          "sha256": "7c9f08fb0112e572b674a0ce71f5edadf71a19ab4cf9f194197d51e39938cfb2"
+        },
+        {
+          "born_completed": 384,
+          "condition": 6,
+          "episode": 507,
+          "kind": "bud",
+          "module": "setup",
+          "sha256": "675b5dac6555fb967985ba07f941e4b592e69b085f4d30fbacbf3f3beea2804e"
+        }
+      ],
+      "setup_completed_after": 385,
+      "setup_completed_before": 62,
+      "setup_term_exposure": {
+        "1": {
+          "birth_episode": 15,
+          "first_update_episode": 28,
+          "last_update_episode": 380,
+          "negative_target_updates": 3,
+          "positive_target_updates": 0,
+          "updates": 3
+        },
+        "2": {
+          "birth_episode": 165,
+          "first_update_episode": 273,
+          "last_update_episode": 273,
+          "negative_target_updates": 1,
+          "positive_target_updates": 0,
+          "updates": 1
+        },
+        "3": {
+          "birth_episode": 287,
+          "first_update_episode": 302,
+          "last_update_episode": 507,
+          "negative_target_updates": 18,
+          "positive_target_updates": 1,
+          "updates": 19
+        },
+        "4": {
+          "birth_episode": 358,
+          "first_update_episode": 386,
+          "last_update_episode": 507,
+          "negative_target_updates": 11,
+          "positive_target_updates": 1,
+          "updates": 12
+        },
+        "5": {
+          "birth_episode": 427,
+          "first_update_episode": 463,
+          "last_update_episode": 477,
+          "negative_target_updates": 2,
+          "positive_target_updates": 0,
+          "updates": 2
+        },
+        "6": {
+          "birth_episode": 507,
+          "first_update_episode": null,
+          "last_update_episode": null,
+          "negative_target_updates": 0,
+          "positive_target_updates": 0,
+          "updates": 0
+        }
+      },
+      "successful_training_sequences": {
+        "m1:m1": 109,
+        "m2:m1->m1": 3,
+        "m2:setup->m1": 17
+      },
+      "white_actions": 839
+    },
+    "plastic": {
+      "census_status": "PROVISIONAL_NOT_REVERIFIED",
+      "counts": {
+        "m1_episodes": 128,
+        "m1_setup_first": 19,
+        "m1_setup_selections": 19,
+        "m2_episodes": 384,
+        "m2_setup_first": 124,
+        "m2_setup_selections": 215,
+        "setup_applied_observations": 234,
+        "setup_menus_with_feature_contrast": 103,
+        "setup_menus_with_score_contrast": 100,
+        "setup_negative_target_frames": 219,
+        "setup_nonbias_nonzero_contributor_updates": 38,
+        "setup_nonbias_nonzero_frames": 26,
+        "setup_nonbias_positive_target_frames": 3,
+        "setup_positive_target_frames": 15
+      },
+      "first_feature_contrast_episode": 50,
+      "first_nonbias_nonzero_credit_episode": 83,
+      "first_score_contrast_episode": 89,
+      "original_V_status": "FAIL_BEFORE_ENTRY_UNCHANGED",
+      "setup_births": [
+        {
+          "born_completed": 64,
+          "condition": 1,
+          "episode": 31,
+          "kind": "bud",
+          "module": "setup",
+          "sha256": "9dd2ec25fa37101eca77335f770f8da94d151116c73f78c7d3cbeda8414fb741"
+        },
+        {
+          "born_completed": 128,
+          "condition": 2,
+          "episode": 244,
+          "kind": "bud",
+          "module": "setup",
+          "sha256": "9ccb4db5a9edc41748ef1fdfdf6116660100ada3f29156ff7b541a3751e621da"
+        },
+        {
+          "born_completed": 192,
+          "condition": 3,
+          "episode": 390,
+          "kind": "bud",
+          "module": "setup",
+          "sha256": "a60124b7aadb2c778914dda9a324e930245ae63555f1b300336d148381c381ab"
+        },
+        {
+          "born_completed": 256,
+          "condition": 4,
+          "episode": 457,
+          "kind": "bud",
+          "module": "setup",
+          "sha256": "ab8eb87ce10a89557f0c959247e029143d6c48dc219cb99e13ad52f1fb802d29"
+        }
+      ],
+      "setup_completed_after": 293,
+      "setup_completed_before": 59,
+      "setup_term_exposure": {
+        "1": {
+          "birth_episode": 31,
+          "first_update_episode": 83,
+          "last_update_episode": 480,
+          "negative_target_updates": 8,
+          "positive_target_updates": 0,
+          "updates": 8
+        },
+        "2": {
+          "birth_episode": 244,
+          "first_update_episode": 253,
+          "last_update_episode": 493,
+          "negative_target_updates": 6,
+          "positive_target_updates": 0,
+          "updates": 6
+        },
+        "3": {
+          "birth_episode": 390,
+          "first_update_episode": 398,
+          "last_update_episode": 511,
+          "negative_target_updates": 9,
+          "positive_target_updates": 3,
+          "updates": 12
+        },
+        "4": {
+          "birth_episode": 457,
+          "first_update_episode": 462,
+          "last_update_episode": 511,
+          "negative_target_updates": 9,
+          "positive_target_updates": 3,
+          "updates": 12
+        }
+      },
+      "successful_training_sequences": {
+        "m1:m1": 104,
+        "m2:m1->m1": 10,
+        "m2:setup->m1": 15
+      },
+      "white_actions": 841
+    }
+  },
+  "checkpoint_deserializations": 0,
+  "inputs": {
+    "/Users/banquo/Documents/ChatGPT/Hector-Recon/m2-modular-512-verification-recovery-20261021-saved-closure/FINAL_PARTIAL_LEDGER.json": "7e1c76f1c9101fc5e43b46e95ffb3a441bd85c361780fba6968e30a4985ff0a2",
+    "/Users/banquo/Documents/ChatGPT/Hector-Recon/m2-modular-512-verification-recovery-20261021-saved-closure/receipts/frozen/C_COMPLETE.json": "5a84708acc97fcece7d7fe2f8e658d673fb3957a305a2af0749eb4015c7a629c",
+    "/Users/banquo/Documents/ChatGPT/Hector-Recon/m2-modular-512-verification-recovery-20261021-saved-closure/receipts/frozen/R_PENDING.json": "e3b51698c1bb89d5d076d566a07fac443f43a330e5a0fbb4cfdd3fce8e8e5fbb",
+    "/Users/banquo/Documents/ChatGPT/Hector-Recon/m2-modular-512-verification-recovery-20261021-saved-closure/receipts/plastic/C_COMPLETE.json": "5249162322b9ce795342ab6a85401e6f15d6f12e87dbff5984de46825ddfe8da",
+    "/Users/banquo/Documents/ChatGPT/Hector-Recon/m2-modular-512-verification-recovery-20261021-saved-closure/receipts/plastic/R_PENDING.json": "048941ff6093eb44f9147978aabc68dfbc15b1fc87223cf364dc26dc11df5c60",
+    "/Users/banquo/Documents/ChatGPT/Hector-Recon/m2-modular-512-verification-recovery-20261021-saved-closure/receipts/recovery_C_frozen_v1/guard.json": "3763fd83f68159e14231ba1cc6bc2bbf93e01a64ee57ec414e9b80c3b6a6f71b",
+    "/Users/banquo/Documents/ChatGPT/Hector-Recon/m2-modular-512-verification-recovery-20261021-saved-closure/receipts/recovery_C_plastic_v1/guard.json": "105bdbb294eef73c3cfe7b726c2a2ba352346a586fd934a7e4a07d0024d08e00",
+    "/Users/banquo/Documents/ChatGPT/Hector-Recon/m2-modular-512-verification-recovery-20261021-saved-closure/receipts/recovery_R_frozen_v1/guard.json": "1c7ac3da8309e57e0fa583b1240580bccb336823743d1d6714654b5546de8fd0",
+    "/Users/banquo/Documents/ChatGPT/Hector-Recon/m2-modular-512-verification-recovery-20261021-saved-closure/receipts/recovery_R_plastic_v1/guard.json": "3ac91e949c1d0ffdba520579f97317d85185dc6429df6ebb1959b022e0b5d3a5",
+    "/Users/banquo/Documents/ChatGPT/Hector-Recon/m2-modular-512-verification-recovery-20261021-saved-closure/receipts/recovery_V_frozen_v1/guard.json": "0875639f43a7b2812628f265a20e4fdecd51b0ceafb3127527db2f570963961b",
+    "/Users/banquo/Documents/ChatGPT/Hector-Recon/m2-modular-512-verification-recovery-20261021-saved-closure/receipts/recovery_V_plastic_v1/guard.json": "b29dfd6a36b3fac0d618cc7de8a29b4e710a851f09ea52d189d41166536d3c3b",
+    "/Volumes/T7/ReCoN-Archives/active-scientific-executions/m2-modular-512-verification-recovery-20261021/PRODUCER_MATERIALIZATION.json": "ff0a4a745e19eeb135e259f286ecd3dba91c5ceecd9cbca099a7ce0a885d8e1d"
+  },
+  "new_native_calls": 0,
+  "new_training": 0,
+  "not_final_scientific_acceptance": true,
+  "producer_bytes_checked": 61529391,
+  "producer_files_checked": 1052,
+  "replayed_episode_records_joined": 1024,
+  "schema": "chess.saved-continuation-opportunity-review.v1",
+  "source_sha256": "52f21894c52b46d75f10d6dbcb58a377547c36f57388568df208baad43c4422f",
+  "status": "SCOPED_SAVED_RECORD_RECONCILIATION_PASS"
+}

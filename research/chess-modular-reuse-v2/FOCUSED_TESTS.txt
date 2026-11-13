@@ -1,0 +1,6 @@
+Command: ../project-runtimes/modular-pilot-runtime-20261009/venv/bin/python -B -m pytest -q -p no:cacheprovider tests/autogrowth/test_setup_practice.py tests/autogrowth/test_context_decision.py
+Environment: PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 PYTHONPATH=src:libs/recon-lite/src
+..............................                                           [100%]
+30 passed in 21.70s
+
+Exit: 0; wall seconds: 21.988
