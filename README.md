@@ -14,6 +14,8 @@ learned branches and correct moves are not. This is the known M1 population with
 sampled retention, not M2 or a guarantee of lifelong retention. Existing APIs and
 defaults remain unchanged.
 
+**Research handoff (2026-11-13):** [current findings and chess preparation](docs/RESEARCH_HANDOFF_20261113.md) · [source and evidence index](docs/RESEARCH_EVIDENCE_20261113.md).
+
 > **Historical restart (2026-09-06): mate-in-one through learned feature terminals.** The default
 > `TerminalOrganism` reads declared coordinates through terminals, selects actions
 > in the persistent formal graph and executes them through an actuator terminal.
